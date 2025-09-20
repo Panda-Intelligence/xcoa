@@ -1,21 +1,17 @@
 'use client';
 
 import { useState } from 'react';
-import { 
-  Shield, 
-  CheckCircle, 
+import {
+  Shield,
+  CheckCircle,
   AlertCircle,
   Clock,
   DollarSign,
-  TrendingUp,
-  Download,
-  Users
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Progress } from '@/components/ui/progress';
 
 interface LicenseCheckResult {
   scale: {
@@ -66,9 +62,9 @@ export function LicenseBatchChecker({ scaleIds, onLicenseCheck }: LicenseBatchCh
           ...checkParams,
         }),
       });
-      
+
       const data = await response.json();
-      
+
       if (response.ok) {
         setResults(data.results);
         setSummary(data.summary);
@@ -106,13 +102,13 @@ export function LicenseBatchChecker({ scaleIds, onLicenseCheck }: LicenseBatchCh
           检查 {scaleIds.length} 个量表的使用许可状态
         </CardDescription>
       </CardHeader>
-      
+
       <CardContent className="space-y-4">
         {/* 检查参数设置 */}
         <div className="grid grid-cols-2 gap-4">
           <div>
             <label className="text-sm font-medium">预期用途</label>
-            <Select value={checkParams.intendedUse} onValueChange={(value) => 
+            <Select value={checkParams.intendedUse} onValueChange={(value) =>
               setCheckParams(prev => ({ ...prev, intendedUse: value }))}>
               <SelectTrigger>
                 <SelectValue />
@@ -126,10 +122,10 @@ export function LicenseBatchChecker({ scaleIds, onLicenseCheck }: LicenseBatchCh
               </SelectContent>
             </Select>
           </div>
-          
+
           <div>
             <label className="text-sm font-medium">机构类型</label>
-            <Select value={checkParams.organizationType} onValueChange={(value) => 
+            <Select value={checkParams.organizationType} onValueChange={(value) =>
               setCheckParams(prev => ({ ...prev, organizationType: value }))}>
               <SelectTrigger>
                 <SelectValue />
@@ -146,7 +142,7 @@ export function LicenseBatchChecker({ scaleIds, onLicenseCheck }: LicenseBatchCh
           </div>
         </div>
 
-        <Button 
+        <Button
           onClick={handleLicenseCheck}
           disabled={loading}
           className="w-full"
@@ -177,7 +173,7 @@ export function LicenseBatchChecker({ scaleIds, onLicenseCheck }: LicenseBatchCh
                   </div>
                 </div>
               </Card>
-              
+
               <Card className="p-3">
                 <div className="flex items-center space-x-2">
                   <AlertCircle className="w-4 h-4 text-orange-600" />
@@ -187,7 +183,7 @@ export function LicenseBatchChecker({ scaleIds, onLicenseCheck }: LicenseBatchCh
                   </div>
                 </div>
               </Card>
-              
+
               <Card className="p-3">
                 <div className="flex items-center space-x-2">
                   <DollarSign className="w-4 h-4 text-blue-600" />
@@ -216,7 +212,7 @@ export function LicenseBatchChecker({ scaleIds, onLicenseCheck }: LicenseBatchCh
                         </div>
                       </div>
                     </div>
-                    
+
                     <div className="flex items-center space-x-2">
                       {getLicenseIcon(result.license.canUseDirectly, result.license.requiresPermission)}
                       <span className="text-sm">
@@ -227,7 +223,7 @@ export function LicenseBatchChecker({ scaleIds, onLicenseCheck }: LicenseBatchCh
                       </Badge>
                     </div>
                   </div>
-                  
+
                   {result.license.restrictions.length > 0 && (
                     <div className="mt-2 text-xs text-muted-foreground">
                       限制: {result.license.restrictions.join(', ')}

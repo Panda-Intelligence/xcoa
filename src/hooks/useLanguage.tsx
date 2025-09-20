@@ -13,7 +13,7 @@ interface LanguageContextType {
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
 // 翻译数据缓存
-let translations: Record<Language, any> = {
+const translations: Record<Language, any> = {
   zh: {},
   en: {},
 };
@@ -69,7 +69,7 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
   const setLanguage = (lang: Language) => {
     setLanguageState(lang);
     localStorage.setItem('xcoa-language', lang);
-    
+
     // 预加载另一种语言的翻译
     const otherLang = lang === 'zh' ? 'en' : 'zh';
     loadTranslations(otherLang);
@@ -81,7 +81,7 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
     }
 
     const translation = getNestedValue(translations[language], key);
-    
+
     if (translation) {
       return translation;
     }
@@ -89,7 +89,7 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
     // 尝试从另一种语言获取翻译
     const fallbackLang = language === 'zh' ? 'en' : 'zh';
     const fallbackTranslation = getNestedValue(translations[fallbackLang], key);
-    
+
     if (fallbackTranslation) {
       return fallbackTranslation;
     }

@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { type NextRequest, NextResponse } from 'next/server';
 // import { getCloudflareContext } from '@opennextjs/cloudflare';
 import { getDB } from '@/db';
 import { ecoaScaleTable } from '@/db/schema';
@@ -12,14 +12,14 @@ const generateEmbeddingSchema = z.object({
 });
 
 // 计算向量相似度 (余弦相似度)
-function cosineSimilarity(vecA: number[], vecB: number[]): number {
-  const dotProduct = vecA.reduce((sum, a, i) => sum + a * vecB[i], 0);
-  const magnitudeA = Math.sqrt(vecA.reduce((sum, a) => sum + a * a, 0));
-  const magnitudeB = Math.sqrt(vecB.reduce((sum, b) => sum + b * b, 0));
-  
-  if (magnitudeA === 0 || magnitudeB === 0) return 0;
-  return dotProduct / (magnitudeA * magnitudeB);
-}
+// function cosineSimilarity(vecA: number[], vecB: number[]): number {
+//   const dotProduct = vecA.reduce((sum, a, i) => sum + a * vecB[i], 0);
+//   const magnitudeA = Math.sqrt(vecA.reduce((sum, a) => sum + a * a, 0));
+//   const magnitudeB = Math.sqrt(vecB.reduce((sum, b) => sum + b * b, 0));
+
+//   if (magnitudeA === 0 || magnitudeB === 0) return 0;
+//   return dotProduct / (magnitudeA * magnitudeB);
+// }
 
 // 使用 Workers AI 生成文本嵌入
 async function generateEmbedding(text: string): Promise<number[]> {
@@ -32,7 +32,7 @@ async function generateEmbedding(text: string): Promise<number[]> {
     // 在生产环境中才导入和使用 getCloudflareContext
     const { getCloudflareContext } = await import('@opennextjs/cloudflare');
     const { env } = getCloudflareContext();
-    
+
     if (!env.AI) {
       throw new Error('Workers AI not available');
     }
@@ -59,21 +59,21 @@ export async function POST(request: NextRequest) {
     try {
       const body = await request.json();
       const { text, scaleId } = generateEmbeddingSchema.parse(body);
-      
+
       // 生成嵌入向量
       const embedding = await generateEmbedding(text);
-      
+
       // 如果提供了 scaleId，则更新数据库中的向量
       if (scaleId) {
         const db = getDB();
         await db
           .update(ecoaScaleTable)
-          .set({ 
+          .set({
             searchVector: JSON.stringify(embedding)
           })
           .where(eq(ecoaScaleTable.id, scaleId));
       }
-      
+
       return NextResponse.json({
         embedding,
         dimensions: embedding.length,
@@ -84,7 +84,7 @@ export async function POST(request: NextRequest) {
 
     } catch (error) {
       console.error('Generate embedding API error:', error);
-      
+
       if (error instanceof z.ZodError) {
         return NextResponse.json(
           { error: 'Invalid request parameters', details: error.errors },
@@ -109,7 +109,7 @@ export async function PUT(request: NextRequest) {
   return withRateLimit(async () => {
     try {
       const db = getDB();
-      
+
       // 获取所有需要更新向量的量表
       const scales = await db
         .select({
@@ -138,11 +138,11 @@ export async function PUT(request: NextRequest) {
 
           // 生成嵌入向量
           const embedding = await generateEmbedding(embeddingText);
-          
+
           // 更新数据库
           await db
             .update(ecoaScaleTable)
-            .set({ 
+            .set({
               searchVector: JSON.stringify(embedding)
             })
             .where(eq(ecoaScaleTable.id, scale.id));
@@ -166,7 +166,7 @@ export async function PUT(request: NextRequest) {
           });
         }
       }
-      
+
       return NextResponse.json({
         message: 'Batch embedding update completed',
         totalScales: scales.length,

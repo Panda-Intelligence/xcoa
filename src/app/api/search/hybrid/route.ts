@@ -1,12 +1,12 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { type NextRequest, NextResponse } from 'next/server';
 import { getDB } from '@/db';
-import { 
-  ecoaScaleTable, 
-  ecoaCategoryTable, 
-  userSearchHistoryTable, 
+import {
+  ecoaScaleTable,
+  ecoaCategoryTable,
+  userSearchHistoryTable,
   scaleUsageTable
 } from '@/db/schema';
-import { and, or, like, desc, eq, sql } from 'drizzle-orm';
+import { and, or, like, eq, sql } from 'drizzle-orm';
 import { getSessionFromCookie } from '@/utils/auth';
 import { getIP } from '@/utils/get-IP';
 import { withRateLimit } from '@/utils/with-rate-limit';
@@ -29,27 +29,27 @@ const SEMANTIC_KEYWORDS = {
   '抑郁': ['depression', 'depressive', 'mood', 'phq', 'beck', 'hamilton'],
   '情绪': ['mood', 'emotion', 'feeling', 'affect'],
   '心情': ['mood', 'depression', 'sadness'],
-  
+
   // 焦虑症相关
   '焦虑': ['anxiety', 'gad', 'panic', 'worry', 'stress'],
   '担心': ['worry', 'anxiety', 'concern'],
   '恐慌': ['panic', 'anxiety', 'fear'],
-  
+
   // 认知功能相关
   '认知': ['cognitive', 'memory', 'attention', 'executive', 'mmse', 'moca'],
   '记忆': ['memory', 'cognitive', 'recall', 'recognition'],
   '注意力': ['attention', 'concentration', 'focus'],
   '痴呆': ['dementia', 'alzheimer', 'cognitive', 'mmse'],
-  
+
   // 生活质量相关
   '生活质量': ['quality of life', 'qol', 'functioning', 'wellbeing', 'sf-36', 'eortc'],
   '功能': ['function', 'functioning', 'disability', 'activity'],
   '健康': ['health', 'wellbeing', 'wellness'],
-  
+
   // 疼痛相关
   '疼痛': ['pain', 'ache', 'discomfort', 'neuropathic'],
   '疼': ['pain', 'ache'],
-  
+
   // 症状筛查
   '筛查': ['screening', 'assessment', 'evaluation', 'scale'],
   '评估': ['assessment', 'evaluation', 'measure', 'scale'],
@@ -59,13 +59,13 @@ const SEMANTIC_KEYWORDS = {
 // 扩展查询词汇
 function expandQuery(query: string): string[] {
   const expandedTerms = [query.toLowerCase()];
-  
+
   for (const [chinese, englishTerms] of Object.entries(SEMANTIC_KEYWORDS)) {
     if (query.includes(chinese)) {
       expandedTerms.push(...englishTerms);
     }
   }
-  
+
   // 处理常见缩写
   const abbreviations: Record<string, string[]> = {
     'phq': ['patient health questionnaire', '患者健康问卷'],
@@ -74,13 +74,13 @@ function expandQuery(query: string): string[] {
     'sf': ['short form', '简明'],
     'eortc': ['european organisation research treatment cancer', '欧洲癌症'],
   };
-  
+
   for (const [abbr, expansions] of Object.entries(abbreviations)) {
     if (query.toLowerCase().includes(abbr)) {
       expandedTerms.push(...expansions);
     }
   }
-  
+
   return [...new Set(expandedTerms)];
 }
 
@@ -88,7 +88,7 @@ function expandQuery(query: string): string[] {
 function calculateKeywordScore(scale: any, query: string): number {
   let score = 0;
   const queryLower = query.toLowerCase();
-  
+
   // 精确匹配缩写获得最高分
   if (scale.acronym?.toLowerCase() === queryLower) {
     score = 100;
@@ -109,7 +109,7 @@ function calculateKeywordScore(scale: any, query: string): number {
   else {
     score = 40;
   }
-  
+
   return score;
 }
 
@@ -125,10 +125,10 @@ function calculateSemanticScore(scale: any, expandedTerms: string[]): number {
     scale.targetPopulation || '',
     JSON.stringify(scale.domains || [])
   ].join(' ').toLowerCase();
-  
+
   expandedTerms.forEach(term => {
     const termLower = term.toLowerCase();
-    
+
     // 精确匹配缩写
     if (scale.acronym && scale.acronym.toLowerCase() === termLower) {
       score += 50;
@@ -146,7 +146,7 @@ function calculateSemanticScore(scale: any, expandedTerms: string[]): number {
       score += 15;
     }
   });
-  
+
   return score;
 }
 
@@ -157,27 +157,27 @@ export async function POST(request: NextRequest) {
       const session = await getSessionFromCookie();
       const user = session?.user;
       const ip = getIP(request);
-      
+
       const body = await request.json();
-      const { 
-        query, 
-        category, 
-        sortBy, 
-        page, 
-        limit, 
+      const {
+        query,
+        category,
+        sortBy,
+        page,
+        limit,
         includeSemanticExpansion,
         semanticWeight,
         keywordWeight
       } = hybridSearchRequestSchema.parse(body);
-      
+
       // 构建基础查询条件
       const baseConditions = [eq(ecoaScaleTable.isPublic, 1)];
-      
+
       // 扩展查询词汇（如果启用语义扩展）
       const expandedTerms = includeSemanticExpansion ? expandQuery(query) : [query];
-      
+
       // 构建搜索条件
-      const searchConditions = expandedTerms.map(term => 
+      const searchConditions = expandedTerms.map(term =>
         or(
           like(sql`LOWER(${ecoaScaleTable.name})`, `%${term}%`),
           like(sql`LOWER(${ecoaScaleTable.nameEn})`, `%${term}%`),
@@ -188,16 +188,16 @@ export async function POST(request: NextRequest) {
           like(sql`LOWER(${ecoaScaleTable.domains})`, `%${term}%`)
         )
       );
-      
+
       if (searchConditions.length > 0) {
         baseConditions.push(or(...searchConditions));
       }
-      
+
       // 添加分类筛选
       if (category && category !== 'all') {
         baseConditions.push(eq(ecoaScaleTable.categoryId, category));
       }
-      
+
       // 执行搜索查询
       const results = await db
         .select({
@@ -224,26 +224,26 @@ export async function POST(request: NextRequest) {
         .from(ecoaScaleTable)
         .leftJoin(ecoaCategoryTable, eq(ecoaScaleTable.categoryId, ecoaCategoryTable.id))
         .where(and(...baseConditions));
-      
+
       // 计算混合评分
       const scoredResults = results.map(result => {
         const keywordScore = calculateKeywordScore(result, query);
         const semanticScore = calculateSemanticScore(result, expandedTerms);
-        
+
         // 混合评分：加权平均
         const hybridScore = (keywordScore * keywordWeight) + (semanticScore * semanticWeight);
-        
+
         // 基于使用频率和验证状态的加权
         let finalScore = hybridScore;
         finalScore += Math.min((result.usageCount || 0) * 0.1, 10);
         if (result.validationStatus === 'validated') {
           finalScore += 5;
         }
-        
+
         return {
           ...result,
           keyword_score: Math.round(keywordScore),
-          semantic_score: Math.round(semanticScore), 
+          semantic_score: Math.round(semanticScore),
           hybrid_score: Math.round(hybridScore),
           final_score: Math.round(finalScore),
           match_score: Math.round(finalScore),
@@ -252,7 +252,7 @@ export async function POST(request: NextRequest) {
           validation_status: result.validationStatus,
         };
       });
-      
+
       // 排序
       let sortedResults = scoredResults;
       switch (sortBy) {
@@ -270,22 +270,22 @@ export async function POST(request: NextRequest) {
           sortedResults = scoredResults.sort((a, b) => b.final_score - a.final_score);
           break;
       }
-      
+
       // 分页
       const offset = (page - 1) * limit;
       const paginatedResults = sortedResults.slice(offset, offset + limit);
-      
+
       // 记录搜索历史
       if (user) {
         try {
           await db.insert(userSearchHistoryTable).values({
             userId: user.id,
             query,
-            filters: JSON.stringify({ 
-              category, 
-              includeSemanticExpansion, 
-              semanticWeight, 
-              keywordWeight 
+            filters: JSON.stringify({
+              category,
+              includeSemanticExpansion,
+              semanticWeight,
+              keywordWeight
             }),
             resultsCount: paginatedResults.length,
             searchType: 'hybrid',
@@ -295,7 +295,7 @@ export async function POST(request: NextRequest) {
           console.warn('Failed to save search history:', error);
         }
       }
-      
+
       // 记录量表使用情况
       for (const result of paginatedResults.slice(0, 10)) {
         try {
@@ -310,7 +310,7 @@ export async function POST(request: NextRequest) {
           console.warn('Failed to save usage record:', error);
         }
       }
-      
+
       return NextResponse.json({
         results: paginatedResults,
         pagination: {
@@ -342,7 +342,7 @@ export async function POST(request: NextRequest) {
 
     } catch (error) {
       console.error('Hybrid search API error:', error);
-      
+
       if (error instanceof z.ZodError) {
         return NextResponse.json(
           { error: 'Invalid request parameters', details: error.errors },

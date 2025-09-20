@@ -5,11 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Search, Sparkles } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
 
-interface HeroSectionProps {
-  onStartSearch: () => void;
-}
-
-export function HeroSection(_props: HeroSectionProps) {
+export function HeroSection() {
   const { t } = useLanguage()
 
   const onStartSearch = () => {

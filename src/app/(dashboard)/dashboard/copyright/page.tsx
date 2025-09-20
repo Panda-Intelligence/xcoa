@@ -1,25 +1,19 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { PageHeader } from '@/components/page-header';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { 
-  Shield, 
-  Search, 
-  CheckCircle, 
-  AlertCircle, 
+import {
+  Shield,
+  Search,
+  CheckCircle,
+  AlertCircle,
   MessageSquare,
   DollarSign,
-  Clock,
-  Building,
-  Mail,
-  Phone,
-  Globe,
-  ExternalLink,
   Plus
 } from 'lucide-react';
 import Link from 'next/link';
@@ -61,14 +55,14 @@ export default function CopyrightPage() {
   // 搜索量表以添加到批量检查
   const searchScales = async () => {
     if (!scaleQuery.trim()) return;
-    
+
     try {
       const response = await fetch('/api/search', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ query: scaleQuery, limit: 10 }),
       });
-      
+
       const data = await response.json();
       setSearchResults(data.results || []);
     } catch (error) {
@@ -93,7 +87,7 @@ export default function CopyrightPage() {
   // 批量检查许可
   const checkLicenses = async () => {
     if (scaleIds.length === 0) return;
-    
+
     setLoading(true);
     try {
       const response = await fetch('/api/licenses/check', {
@@ -101,7 +95,7 @@ export default function CopyrightPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ scaleIds, ...checkParams }),
       });
-      
+
       const data = await response.json();
       setLicenseResults(data.results || []);
       setSummary(data.summary || null);
@@ -130,7 +124,7 @@ export default function CopyrightPage() {
           { href: "/dashboard/copyright", label: "版权服务" }
         ]}
       />
-      
+
       <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
         <Tabs defaultValue="batch-check" className="w-full">
           <TabsList className="grid w-full grid-cols-3">
@@ -138,7 +132,7 @@ export default function CopyrightPage() {
             <TabsTrigger value="tickets">我的工单</TabsTrigger>
             <TabsTrigger value="guidelines">使用指南</TabsTrigger>
           </TabsList>
-          
+
           <TabsContent value="batch-check" className="space-y-4">
             {/* 量表选择 */}
             <Card>
@@ -151,7 +145,7 @@ export default function CopyrightPage() {
                   一次性检查多个量表的使用许可状态
                 </CardDescription>
               </CardHeader>
-              
+
               <CardContent className="space-y-4">
                 {/* 添加量表 */}
                 <div className="flex space-x-2">
@@ -214,7 +208,7 @@ export default function CopyrightPage() {
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <label className="text-sm font-medium">预期用途</label>
-                    <select 
+                    <select
                       value={checkParams.intendedUse}
                       onChange={(e) => setCheckParams(prev => ({ ...prev, intendedUse: e.target.value }))}
                       className="w-full mt-1 px-3 py-2 border rounded-md text-sm"
@@ -226,7 +220,7 @@ export default function CopyrightPage() {
                       <option value="personal">个人使用</option>
                     </select>
                   </div>
-                  
+
                   <div>
                     <label className="text-sm font-medium">机构类型</label>
                     <select
@@ -245,7 +239,7 @@ export default function CopyrightPage() {
                 </div>
 
                 {/* 检查按钮 */}
-                <Button 
+                <Button
                   onClick={checkLicenses}
                   disabled={scaleIds.length === 0 || loading}
                   className="w-full"
@@ -261,7 +255,7 @@ export default function CopyrightPage() {
                 <CardHeader>
                   <CardTitle>许可检查结果</CardTitle>
                 </CardHeader>
-                
+
                 <CardContent className="space-y-4">
                   {/* 汇总统计 */}
                   <div className="grid grid-cols-3 gap-4">
@@ -274,7 +268,7 @@ export default function CopyrightPage() {
                         </div>
                       </div>
                     </Card>
-                    
+
                     <Card className="p-3">
                       <div className="flex items-center space-x-2">
                         <AlertCircle className="w-4 h-4 text-orange-600" />
@@ -284,7 +278,7 @@ export default function CopyrightPage() {
                         </div>
                       </div>
                     </Card>
-                    
+
                     <Card className="p-3">
                       <div className="flex items-center space-x-2">
                         <DollarSign className="w-4 h-4 text-blue-600" />
@@ -312,7 +306,7 @@ export default function CopyrightPage() {
                               </div>
                             </div>
                           </div>
-                          
+
                           <div className="flex space-x-2">
                             {result.license.canUseDirectly ? (
                               <Badge variant="default" className="bg-green-100 text-green-800">
@@ -335,7 +329,7 @@ export default function CopyrightPage() {
               </Card>
             )}
           </TabsContent>
-          
+
           <TabsContent value="tickets" className="space-y-4">
             <Card>
               <CardHeader>
@@ -353,7 +347,7 @@ export default function CopyrightPage() {
                   跟踪您的版权联系请求状态
                 </CardDescription>
               </CardHeader>
-              
+
               <CardContent>
                 <div className="text-center py-8 text-muted-foreground">
                   <MessageSquare className="w-12 h-12 mx-auto mb-4 opacity-50" />
@@ -363,7 +357,7 @@ export default function CopyrightPage() {
               </CardContent>
             </Card>
           </TabsContent>
-          
+
           <TabsContent value="guidelines" className="space-y-4">
             <Card>
               <CardHeader>
@@ -372,7 +366,7 @@ export default function CopyrightPage() {
                   了解不同许可类型和使用要求
                 </CardDescription>
               </CardHeader>
-              
+
               <CardContent className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <Card className="p-4 bg-green-50 border-green-200">
@@ -462,14 +456,14 @@ export default function CopyrightPage() {
               </CardContent>
             </Card>
           </TabsContent>
-          
+
           <TabsContent value="tickets">
             <Card>
               <CardHeader>
                 <CardTitle>联系工单管理</CardTitle>
                 <CardDescription>功能开发中，即将上线</CardDescription>
               </CardHeader>
-              
+
               <CardContent>
                 <div className="text-center py-8 text-muted-foreground">
                   <MessageSquare className="w-12 h-12 mx-auto mb-4 opacity-50" />
@@ -479,14 +473,14 @@ export default function CopyrightPage() {
               </CardContent>
             </Card>
           </TabsContent>
-          
+
           <TabsContent value="guidelines">
             <Card>
               <CardHeader>
                 <CardTitle>版权合规指南</CardTitle>
                 <CardDescription>详细的版权使用规范和建议</CardDescription>
               </CardHeader>
-              
+
               <CardContent>
                 <div className="prose max-w-none text-sm">
                   <h4>版权合规的重要性</h4>
@@ -494,7 +488,7 @@ export default function CopyrightPage() {
                     使用未经授权的评估量表可能面临法律风险，包括版权侵权诉讼和经济损失。
                     xCOA 平台帮助您识别许可要求并联系版权方获得合法授权。
                   </p>
-                  
+
                   <h4>不同用途的许可要求</h4>
                   <ul>
                     <li><strong>学术研究:</strong> 通常享有优惠或免费许可</li>
@@ -502,7 +496,7 @@ export default function CopyrightPage() {
                     <li><strong>商业用途:</strong> 通常需要付费许可</li>
                     <li><strong>药物试验:</strong> 需要严格的许可和监管合规</li>
                   </ul>
-                  
+
                   <h4>许可申请流程</h4>
                   <ol>
                     <li>确定量表的版权状态和许可类型</li>

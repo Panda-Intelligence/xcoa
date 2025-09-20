@@ -1,12 +1,12 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { type NextRequest, NextResponse } from 'next/server';
 import { getDB } from '@/db';
-import { 
-  userTable, 
-  ecoaScaleTable, 
+import {
+  userTable,
+  ecoaScaleTable,
   creditTransactionTable,
-  scaleUsageTable 
+  scaleUsageTable
 } from '@/db/schema';
-import { eq, desc, and, sql } from 'drizzle-orm';
+import { eq, sql } from 'drizzle-orm';
 import { getSessionFromCookie } from '@/utils/auth';
 import { getIP } from '@/utils/get-IP';
 import { withRateLimit } from '@/utils/with-rate-limit';
@@ -16,7 +16,7 @@ import { createId } from '@paralleldrive/cuid2';
 const copyrightServiceRequestSchema = z.object({
   scaleId: z.string(),
   serviceType: z.enum(['view_contact_info', 'initiate_contact', 'bulk_contact', 'priority_contact']),
-  
+
   // 仅当 serviceType 为 initiate_contact 时需要
   contactRequest: z.object({
     requestType: z.enum(['license_inquiry', 'usage_request', 'pricing_info', 'support', 'bulk_license']),
@@ -31,18 +31,18 @@ const copyrightServiceRequestSchema = z.object({
 });
 
 // 获取用户团队类型和定价
-async function getUserTeamType(userId: string): Promise<{teamType: string, pricing: any}> {
+async function getUserTeamType(userId: string): Promise<{ teamType: string, pricing: any }> {
   const db = getDB();
-  
+
   try {
     const result = await db.execute(sql`
       SELECT teamType, organizationName, organizationSize, currentCredits
       FROM user WHERE id = ${userId}
     `);
-    
+
     const userInfo = result.results?.[0] as any;
     const teamType = userInfo?.teamType || 'individual_researcher';
-    
+
     // 根据团队类型计算定价
     const pricingTiers = {
       individual_researcher: { contact: 2, interpretation: 1, priority: 5 },
@@ -54,7 +54,7 @@ async function getUserTeamType(userId: string): Promise<{teamType: string, prici
       government: { contact: 8, interpretation: 3, priority: 15 },
       nonprofit: { contact: 5, interpretation: 2, priority: 10 },
     };
-    
+
     return {
       teamType,
       pricing: pricingTiers[teamType as keyof typeof pricingTiers] || pricingTiers.individual_researcher,
@@ -76,17 +76,17 @@ export async function POST(request: NextRequest) {
       const session = await getSessionFromCookie();
       const user = session?.user;
       const ip = getIP(request);
-      
+
       if (!user) {
         return NextResponse.json({ error: 'Authentication required' }, { status: 401 });
       }
-      
+
       const body = await request.json();
       const serviceRequest = copyrightServiceRequestSchema.parse(body);
-      
+
       // 获取用户信息和定价
       const { teamType, pricing } = await getUserTeamType(user.id);
-      
+
       // 获取用户当前积分
       const [userInfo] = await db
         .select({
@@ -123,7 +123,7 @@ export async function POST(request: NextRequest) {
       let copyrightContact = null;
       if (scale.psychometricProperties) {
         try {
-          const props = typeof scale.psychometricProperties === 'string' 
+          const props = typeof scale.psychometricProperties === 'string'
             ? JSON.parse(scale.psychometricProperties)
             : scale.psychometricProperties;
           copyrightContact = props.copyrightContact || null;
@@ -144,7 +144,7 @@ export async function POST(request: NextRequest) {
         case 'view_contact_info':
           // 查看联系信息 - 消耗积分
           const viewCost = pricing.contact;
-          
+
           if (userInfo.currentCredits < viewCost) {
             return NextResponse.json({
               error: 'Insufficient credits',
@@ -234,9 +234,9 @@ ${userInfo.firstName} ${userInfo.lastName}`,
             );
           }
 
-          const contactCost = serviceRequest.contactRequest.priority === 'urgent' ? 
+          const contactCost = serviceRequest.contactRequest.priority === 'urgent' ?
             pricing.contact * 2 : pricing.contact;
-          
+
           if (userInfo.currentCredits < contactCost) {
             return NextResponse.json({
               error: 'Insufficient credits',
@@ -261,7 +261,7 @@ ${userInfo.firstName} ${userInfo.lastName}`,
               ${ticketId}, ${user.id}, ${serviceRequest.scaleId}, ${ticketNumber},
               ${`${serviceRequest.contactRequest.requestType} - ${scale.acronym}`},
               ${serviceRequest.contactRequest.requestType}, ${serviceRequest.contactRequest.priority}, 'open',
-              ${copyrightContact.organization}, ${copyrightContact.email}, 
+              ${copyrightContact.organization}, ${copyrightContact.email},
               ${serviceRequest.contactRequest.intendedUse}, ${serviceRequest.contactRequest.projectDescription},
               ${serviceRequest.contactRequest.message}, ${Math.floor(Date.now() / 1000)},
               ${Math.floor(Date.now() / 1000)}, ${Math.floor(Date.now() / 1000)}
@@ -317,7 +317,7 @@ ${userInfo.firstName} ${userInfo.lastName}`,
 
     } catch (error) {
       console.error('Copyright service API error:', error);
-      
+
       if (error instanceof z.ZodError) {
         return NextResponse.json(
           { error: 'Invalid service request', details: error.errors },

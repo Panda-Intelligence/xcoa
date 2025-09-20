@@ -1,14 +1,12 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { PageHeader } from '@/components/page-header';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { 
-  BookOpen, 
+import {
+  BookOpen,
   Calculator,
   FileText,
   TrendingUp,
@@ -19,9 +17,8 @@ import {
   Users,
   Brain
 } from 'lucide-react';
-import Link from 'next/link';
 
-interface ScaleGuide {
+export interface ScaleGuide {
   id: string;
   name: string;
   acronym: string;
@@ -71,7 +68,7 @@ export default function InterpretationPage() {
           { href: "/dashboard/interpretation", label: "量表解读" }
         ]}
       />
-      
+
       <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
         <Tabs defaultValue="guides" className="w-full">
           <TabsList className="grid w-full grid-cols-3">
@@ -79,7 +76,7 @@ export default function InterpretationPage() {
             <TabsTrigger value="calculator">分数计算器</TabsTrigger>
             <TabsTrigger value="cases">临床案例</TabsTrigger>
           </TabsList>
-          
+
           <TabsContent value="guides" className="space-y-4">
             <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
               {/* 量表选择 */}
@@ -87,17 +84,16 @@ export default function InterpretationPage() {
                 <CardHeader>
                   <CardTitle className="text-base">选择量表</CardTitle>
                 </CardHeader>
-                
+
                 <CardContent className="space-y-2">
                   {popularScales.map((scale) => (
                     <button
                       key={scale.id}
                       onClick={() => handleScaleSelect(scale.id)}
-                      className={`w-full text-left p-3 rounded border transition-colors ${
-                        selectedScale === scale.id 
-                          ? 'bg-blue-50 border-blue-200' 
-                          : 'hover:bg-gray-50'
-                      }`}
+                      className={`w-full text-left p-3 rounded border transition-colors ${selectedScale === scale.id
+                        ? 'bg-blue-50 border-blue-200'
+                        : 'hover:bg-gray-50'
+                        }`}
                     >
                       <div className="font-medium text-sm">{scale.acronym}</div>
                       <div className="text-xs text-muted-foreground">{scale.name}</div>
@@ -141,7 +137,7 @@ export default function InterpretationPage() {
                           {interpretationData.interpretation.overview.purpose}
                         </CardDescription>
                       </CardHeader>
-                      
+
                       <CardContent>
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                           <div className="flex items-center space-x-2">
@@ -171,7 +167,7 @@ export default function InterpretationPage() {
                       <CardHeader>
                         <CardTitle>评分和解读</CardTitle>
                       </CardHeader>
-                      
+
                       <CardContent>
                         <div className="space-y-4">
                           <div>
@@ -180,7 +176,7 @@ export default function InterpretationPage() {
                               {interpretationData.interpretation.scoringGuide.scoringMethod}
                             </p>
                           </div>
-                          
+
                           {Object.keys(interpretationData.interpretation.scoringGuide.cutoffScores).length > 0 && (
                             <div>
                               <h4 className="font-medium mb-2">严重程度分级</h4>
@@ -204,7 +200,7 @@ export default function InterpretationPage() {
                       <CardHeader>
                         <CardTitle>实施指导</CardTitle>
                       </CardHeader>
-                      
+
                       <CardContent>
                         <Tabs defaultValue="administration" className="w-full">
                           <TabsList className="grid w-full grid-cols-4">
@@ -213,7 +209,7 @@ export default function InterpretationPage() {
                             <TabsTrigger value="cultural">文化考虑</TabsTrigger>
                             <TabsTrigger value="limitations">使用局限</TabsTrigger>
                           </TabsList>
-                          
+
                           <TabsContent value="administration">
                             <ul className="space-y-2 text-sm">
                               {interpretationData.interpretation.practicalConsiderations.administrationTips.map((tip: string, index: number) => (
@@ -224,7 +220,7 @@ export default function InterpretationPage() {
                               ))}
                             </ul>
                           </TabsContent>
-                          
+
                           <TabsContent value="challenges">
                             <ul className="space-y-2 text-sm">
                               {interpretationData.interpretation.practicalConsiderations.commonChallenges.map((challenge: string, index: number) => (
@@ -235,7 +231,7 @@ export default function InterpretationPage() {
                               ))}
                             </ul>
                           </TabsContent>
-                          
+
                           <TabsContent value="cultural">
                             <ul className="space-y-2 text-sm">
                               {interpretationData.interpretation.practicalConsiderations.culturalConsiderations.map((consideration: string, index: number) => (
@@ -246,7 +242,7 @@ export default function InterpretationPage() {
                               ))}
                             </ul>
                           </TabsContent>
-                          
+
                           <TabsContent value="limitations">
                             <ul className="space-y-2 text-sm">
                               {interpretationData.interpretation.practicalConsiderations.limitationsAndCautions.map((limitation: string, index: number) => (
@@ -272,7 +268,7 @@ export default function InterpretationPage() {
               </div>
             </div>
           </TabsContent>
-          
+
           <TabsContent value="calculator" className="space-y-4">
             <Card>
               <CardHeader>
@@ -284,7 +280,7 @@ export default function InterpretationPage() {
                   计算量表总分并获得个性化解读
                 </CardDescription>
               </CardHeader>
-              
+
               <CardContent>
                 <div className="text-center py-8 text-muted-foreground">
                   <Calculator className="w-12 h-12 mx-auto mb-4 opacity-50" />
@@ -294,7 +290,7 @@ export default function InterpretationPage() {
               </CardContent>
             </Card>
           </TabsContent>
-          
+
           <TabsContent value="cases" className="space-y-4">
             <Card>
               <CardHeader>
@@ -306,7 +302,7 @@ export default function InterpretationPage() {
                   真实的临床应用案例和解读示例
                 </CardDescription>
               </CardHeader>
-              
+
               <CardContent>
                 <div className="space-y-4">
                   {[
@@ -337,11 +333,10 @@ export default function InterpretationPage() {
                   ].map((caseExample, index) => (
                     <Card key={index} className="p-4">
                       <div className="flex items-start space-x-3">
-                        <div className={`w-2 h-2 rounded-full mt-2 ${
-                          caseExample.color === 'yellow' ? 'bg-yellow-400' :
+                        <div className={`w-2 h-2 rounded-full mt-2 ${caseExample.color === 'yellow' ? 'bg-yellow-400' :
                           caseExample.color === 'orange' ? 'bg-orange-400' :
-                          caseExample.color === 'blue' ? 'bg-blue-400' : 'bg-gray-400'
-                        }`}></div>
+                            caseExample.color === 'blue' ? 'bg-blue-400' : 'bg-gray-400'
+                          }`}></div>
                         <div className="flex-1">
                           <h4 className="font-medium mb-2">{caseExample.title}</h4>
                           <p className="text-sm text-muted-foreground mb-2">
@@ -367,14 +362,14 @@ export default function InterpretationPage() {
               </CardContent>
             </Card>
           </TabsContent>
-          
+
           <TabsContent value="calculator" className="space-y-4">
             <Card>
               <CardHeader>
                 <CardTitle>交互式分数计算器</CardTitle>
                 <CardDescription>开发中的功能预览</CardDescription>
               </CardHeader>
-              
+
               <CardContent>
                 <div className="text-center py-8 text-muted-foreground">
                   <Calculator className="w-12 h-12 mx-auto mb-4 opacity-50" />
@@ -394,7 +389,7 @@ export default function InterpretationPage() {
                 {interpretationData.scale.name} ({interpretationData.scale.acronym}) 详细解读
               </CardTitle>
             </CardHeader>
-            
+
             <CardContent>
               <Tabs defaultValue="overview" className="w-full">
                 <TabsList className="grid w-full grid-cols-4">
@@ -403,7 +398,7 @@ export default function InterpretationPage() {
                   <TabsTrigger value="clinical">临床应用</TabsTrigger>
                   <TabsTrigger value="examples">应用案例</TabsTrigger>
                 </TabsList>
-                
+
                 <TabsContent value="overview" className="space-y-3">
                   <div>
                     <h4 className="font-medium mb-1">量表目的</h4>
@@ -422,7 +417,7 @@ export default function InterpretationPage() {
                     </div>
                   </div>
                 </TabsContent>
-                
+
                 <TabsContent value="scoring" className="space-y-3">
                   <div>
                     <h4 className="font-medium mb-2">评分方法</h4>
@@ -430,7 +425,7 @@ export default function InterpretationPage() {
                       {interpretationData.interpretation.scoringGuide.scoringMethod}
                     </p>
                   </div>
-                  
+
                   {interpretationData.interpretation.scoringGuide.interpretationLevels?.length > 0 && (
                     <div>
                       <h4 className="font-medium mb-2">解读级别</h4>
@@ -445,7 +440,7 @@ export default function InterpretationPage() {
                     </div>
                   )}
                 </TabsContent>
-                
+
                 <TabsContent value="clinical" className="space-y-3">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
@@ -474,7 +469,7 @@ export default function InterpretationPage() {
                     </div>
                   </div>
                 </TabsContent>
-                
+
                 <TabsContent value="examples" className="space-y-3">
                   {interpretationData.interpretation.clinicalExamples?.length > 0 ? (
                     <div className="space-y-4">

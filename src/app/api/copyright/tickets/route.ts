@@ -1,7 +1,7 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { type NextRequest, NextResponse } from 'next/server';
 import { getDB } from '@/db';
 import { userTable, ecoaScaleTable, creditTransactionTable } from '@/db/schema';
-import { eq, desc, and, sql } from 'drizzle-orm';
+import { eq, sql } from 'drizzle-orm';
 import { getSessionFromCookie } from '@/utils/auth';
 import { getIP } from '@/utils/get-IP';
 import { withRateLimit } from '@/utils/with-rate-limit';
@@ -18,7 +18,7 @@ const ticketRequestSchema = z.object({
   expectedDuration: z.string().optional(),
   budgetRange: z.enum(['under_1k', '1k_5k', '5k_20k', '20k_50k', 'over_50k', 'to_be_discussed']).optional(),
   initialMessage: z.string().max(3000),
-  
+
   // 团队信息会从用户资料中获取
 });
 
@@ -47,7 +47,7 @@ function calculateCopyrightContactFee(teamType: string, requestType: string): nu
     government: 8,
     nonprofit: 5,
   };
-  
+
   const multipliers = {
     license_inquiry: 1.0,
     usage_request: 1.2,
@@ -55,10 +55,10 @@ function calculateCopyrightContactFee(teamType: string, requestType: string): nu
     support: 0.6,
     bulk_license: 2.0,
   };
-  
+
   const baseFee = baseFees[teamType as keyof typeof baseFees] || 10;
   const multiplier = multipliers[requestType as keyof typeof multipliers] || 1.0;
-  
+
   return Math.ceil(baseFee * multiplier);
 }
 
@@ -70,14 +70,14 @@ export async function POST(request: NextRequest) {
       const session = await getSessionFromCookie();
       const user = session?.user;
       const ip = getIP(request);
-      
+
       if (!user) {
         return NextResponse.json({ error: 'Authentication required' }, { status: 401 });
       }
-      
+
       const body = await request.json();
       const ticketData = ticketRequestSchema.parse(body);
-      
+
       // 获取用户完整信息
       const [fullUser] = await db
         .select({
@@ -115,7 +115,7 @@ export async function POST(request: NextRequest) {
       let copyrightContact = null;
       if (scale.psychometricProperties) {
         try {
-          const props = typeof scale.psychometricProperties === 'string' 
+          const props = typeof scale.psychometricProperties === 'string'
             ? JSON.parse(scale.psychometricProperties)
             : scale.psychometricProperties;
           copyrightContact = props.copyrightContact || null;
@@ -234,7 +234,7 @@ Platform: xcoa.pandacat.ai | Support: support@xcoa.pandacat.ai`
           initialMessage, lastContactAt, responseReceived, licenseGranted,
           createdAt, updatedAt
         ) VALUES (
-          ${ticketRecord.id}, ${ticketRecord.userId}, ${ticketRecord.scaleId}, 
+          ${ticketRecord.id}, ${ticketRecord.userId}, ${ticketRecord.scaleId},
           ${ticketRecord.ticketNumber}, ${ticketRecord.subject}, ${ticketRecord.requestType},
           ${ticketRecord.priority}, ${ticketRecord.status}, ${ticketRecord.copyrightOrganization},
           ${ticketRecord.copyrightEmail}, ${ticketRecord.copyrightPhone}, ${ticketRecord.copyrightWebsite},
@@ -249,7 +249,7 @@ Platform: xcoa.pandacat.ai | Support: support@xcoa.pandacat.ai`
       const initialMessageId = `msg_${createId()}`;
       await db.execute(sql`
         INSERT INTO copyright_ticket_message (
-          id, ticketId, messageType, sender, subject, content, isRead, isPublic, 
+          id, ticketId, messageType, sender, subject, content, isRead, isPublic,
           emailSent, createdAt
         ) VALUES (
           ${initialMessageId}, ${ticketId}, 'user_message', ${user.id},
@@ -261,7 +261,7 @@ Platform: xcoa.pandacat.ai | Support: support@xcoa.pandacat.ai`
       // 扣除用户积分
       await db
         .update(userTable)
-        .set({ 
+        .set({
           currentCredits: sql`${userTable.currentCredits} - ${contactFee}`
         })
         .where(eq(userTable.id, user.id));
@@ -310,7 +310,7 @@ Platform: xcoa.pandacat.ai | Support: support@xcoa.pandacat.ai`
 
     } catch (error) {
       console.error('Copyright ticket API error:', error);
-      
+
       if (error instanceof z.ZodError) {
         return NextResponse.json(
           { error: 'Invalid ticket parameters', details: error.errors },
@@ -336,7 +336,7 @@ export async function GET(request: NextRequest) {
     const db = getDB();
     const session = await getSessionFromCookie();
     const user = session?.user;
-    
+
     if (!user) {
       return NextResponse.json({ error: 'Authentication required' }, { status: 401 });
     }
@@ -354,7 +354,7 @@ export async function GET(request: NextRequest) {
 
     // 获取工单列表
     const tickets = await db.execute(sql`
-      SELECT 
+      SELECT
         ct.id, ct.ticketNumber, ct.subject, ct.requestType, ct.priority, ct.status,
         ct.copyrightOrganization, ct.intendedUse, ct.projectDescription,
         ct.lastContactAt, ct.responseReceived, ct.licenseGranted, ct.createdAt,
@@ -369,13 +369,13 @@ export async function GET(request: NextRequest) {
     // 获取每个工单的最新消息
     const ticketIds = tickets.results.map((t: any) => t.id);
     let latestMessages = [];
-    
+
     if (ticketIds.length > 0) {
       latestMessages = await db.execute(sql`
-        SELECT DISTINCT 
+        SELECT DISTINCT
           ticketId, content, messageType, createdAt,
           ROW_NUMBER() OVER (PARTITION BY ticketId ORDER BY createdAt DESC) as rn
-        FROM copyright_ticket_message 
+        FROM copyright_ticket_message
         WHERE ticketId IN (${sql.join(ticketIds.map(id => sql`${id}`), sql`, `)})
         AND isPublic = 1
       `);
@@ -385,7 +385,7 @@ export async function GET(request: NextRequest) {
       const latestMessage = latestMessages.results?.find(
         (msg: any) => msg.ticketId === ticket.id && msg.rn === 1
       );
-      
+
       return {
         ...ticket,
         latestMessage: latestMessage ? {

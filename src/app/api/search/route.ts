@@ -1,11 +1,10 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { type NextRequest, NextResponse } from 'next/server';
 import { getDB } from '@/db';
-import { 
-  ecoaScaleTable, 
-  ecoaCategoryTable, 
-  userSearchHistoryTable, 
+import {
+  ecoaScaleTable,
+  ecoaCategoryTable,
+  userSearchHistoryTable,
   scaleUsageTable,
-  userTable 
 } from '@/db/schema';
 import { and, or, like, desc, eq, sql } from 'drizzle-orm';
 import { getSessionFromCookie } from '@/utils/auth';
@@ -35,10 +34,10 @@ export async function POST(request: NextRequest) {
       const session = await getSessionFromCookie();
       const user = session?.user;
       const ip = getIP(request);
-      
+
       const body = await request.json();
       const { query, category, sortBy, page, limit, filters } = searchRequestSchema.parse(body);
-      
+
       // 构建基础查询条件
       const baseConditions = [
         eq(ecoaScaleTable.isPublic, 1),
@@ -47,7 +46,7 @@ export async function POST(request: NextRequest) {
       // 添加搜索条件
       if (query.trim()) {
         const searchTerms = query.toLowerCase().split(' ').filter(term => term.length > 0);
-        const searchConditions = searchTerms.map(term => 
+        const searchConditions = searchTerms.map(term =>
           or(
             like(sql`LOWER(${ecoaScaleTable.name})`, `%${term}%`),
             like(sql`LOWER(${ecoaScaleTable.nameEn})`, `%${term}%`),
@@ -58,7 +57,7 @@ export async function POST(request: NextRequest) {
             like(sql`LOWER(${ecoaScaleTable.domains})`, `%${term}%`)
           )
         );
-        
+
         if (searchConditions.length > 0) {
           baseConditions.push(and(...searchConditions));
         }
@@ -156,7 +155,7 @@ export async function POST(request: NextRequest) {
       const processedResults = results.map(result => {
         let matchScore = 0;
         const searchLower = query.toLowerCase();
-        
+
         // 精确匹配缩写词获得最高分
         if (result.acronym?.toLowerCase() === searchLower) {
           matchScore = 100;
@@ -248,7 +247,7 @@ export async function POST(request: NextRequest) {
 
     } catch (error) {
       console.error('Search API error:', error);
-      
+
       if (error instanceof z.ZodError) {
         return NextResponse.json(
           { error: 'Invalid request parameters', details: error.errors },

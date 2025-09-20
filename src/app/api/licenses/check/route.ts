@@ -1,7 +1,7 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { type NextRequest, NextResponse } from 'next/server';
 import { getDB } from '@/db';
 import { ecoaScaleTable, ecoaCategoryTable } from '@/db/schema';
-import { eq, sql, and, inArray } from 'drizzle-orm';
+import { eq, inArray } from 'drizzle-orm';
 import { z } from 'zod';
 
 const licenseCheckRequestSchema = z.object({
@@ -84,9 +84,9 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     const { scaleIds, intendedUse, organizationType, country } = licenseCheckRequestSchema.parse(body);
-    
+
     const db = getDB();
-    
+
     // 获取量表许可信息
     const scales = await db
       .select({
@@ -105,13 +105,13 @@ export async function POST(request: NextRequest) {
     const licenseResults = scales.map(scale => {
       let licenseType = 'contact_required';
       let copyrightContact = null;
-      
+
       if (scale.psychometricProperties) {
         try {
-          const props = typeof scale.psychometricProperties === 'string' 
+          const props = typeof scale.psychometricProperties === 'string'
             ? JSON.parse(scale.psychometricProperties)
             : scale.psychometricProperties;
-          
+
           licenseType = props.licenseType || 'contact_required';
           copyrightContact = props.copyrightContact || null;
         } catch (error) {
@@ -120,7 +120,7 @@ export async function POST(request: NextRequest) {
       }
 
       const licenseDetails = getLicenseTypeDetails(licenseType, intendedUse);
-      
+
       return {
         scale: {
           id: scale.id,
@@ -161,19 +161,19 @@ export async function POST(request: NextRequest) {
     };
 
     const recommendations = [];
-    
+
     if (summary.canUseDirectly > 0) {
       recommendations.push(`${summary.canUseDirectly} 个量表可以直接使用，无需额外许可`);
     }
-    
+
     if (summary.needsContact > 0) {
       recommendations.push(`${summary.needsContact} 个量表需要联系版权方获得使用许可`);
     }
-    
+
     if (intendedUse === 'research' || intendedUse === 'education') {
       recommendations.push('学术研究用途通常享有更优惠的许可条件');
     }
-    
+
     if (intendedUse === 'commercial') {
       recommendations.push('商业用途建议提前规划许可获取时间和预算');
     }
@@ -192,7 +192,7 @@ export async function POST(request: NextRequest) {
 
   } catch (error) {
     console.error('License check API error:', error);
-    
+
     if (error instanceof z.ZodError) {
       return NextResponse.json(
         { error: 'Invalid license check parameters', details: error.errors },

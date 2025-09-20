@@ -1,14 +1,13 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { type NextRequest, NextResponse } from 'next/server';
 import { getDB } from '@/db';
-import { userTable, teamTable } from '@/db/schema';
-import { eq, sql } from 'drizzle-orm';
+import { sql } from 'drizzle-orm';
 import { getSessionFromCookie } from '@/utils/auth';
 import { z } from 'zod';
 
 const teamTypeUpdateSchema = z.object({
   teamType: z.enum([
     'individual_researcher',
-    'academic_organization', 
+    'academic_organization',
     'university',
     'commercial_company',
     'pharmaceutical',
@@ -220,14 +219,14 @@ export async function PUT(request: NextRequest) {
     const db = getDB();
     const session = await getSessionFromCookie();
     const user = session?.user;
-    
+
     if (!user) {
       return NextResponse.json({ error: 'Authentication required' }, { status: 401 });
     }
-    
+
     const body = await request.json();
     const updateData = teamTypeUpdateSchema.parse(body);
-    
+
     // 更新用户团队类型信息 (通过 SQL 直接更新，因为表结构是新增的)
     await db.execute(sql`
       UPDATE user SET
@@ -274,7 +273,7 @@ function calculateCopyrightContactFee(teamType: string, requestType: string): nu
     government: 8,
     nonprofit: 5,
   };
-  
+
   return baseFees[teamType as keyof typeof baseFees] || 10;
 }
 
@@ -289,6 +288,6 @@ function calculateScaleInterpretationFee(teamType: string): number {
     government: 3,
     nonprofit: 2,
   };
-  
+
   return fees[teamType as keyof typeof fees] || 5;
 }

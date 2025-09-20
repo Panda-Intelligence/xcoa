@@ -1,12 +1,11 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { type NextRequest, NextResponse } from 'next/server';
 import { getDB } from '@/db';
-import { 
-  ecoaScaleTable, 
-  ecoaCategoryTable, 
+import {
+  ecoaScaleTable,
+  ecoaCategoryTable,
   ecoaItemTable,
   userFavoriteTable,
   scaleUsageTable,
-  userSearchHistoryTable
 } from '@/db/schema';
 import { eq, desc, count, sql, and } from 'drizzle-orm';
 import { getSessionFromCookie } from '@/utils/auth';
@@ -26,10 +25,10 @@ export async function GET(
     const session = await getSessionFromCookie();
     const user = session?.user;
     const ip = getIP(request);
-    
+
     const params = await context.params;
     const { scaleId } = scaleDetailParamsSchema.parse(params);
-    
+
     // 获取量表详细信息
     const [scale] = await db
       .select({
@@ -154,7 +153,7 @@ export async function GET(
       // 更新量表的使用计数
       await db
         .update(ecoaScaleTable)
-        .set({ 
+        .set({
           usageCount: sql`${ecoaScaleTable.usageCount} + 1`
         })
         .where(eq(ecoaScaleTable.id, scaleId));
@@ -165,12 +164,12 @@ export async function GET(
     // 解析 JSON 字段 (Drizzle 已经自动解析了)
     const parsedScale = {
       ...scale,
-      languages: Array.isArray(scale.languages) ? scale.languages : 
+      languages: Array.isArray(scale.languages) ? scale.languages :
         (scale.languages ? JSON.parse(scale.languages) : []),
-      domains: Array.isArray(scale.domains) ? scale.domains : 
+      domains: Array.isArray(scale.domains) ? scale.domains :
         (scale.domains ? JSON.parse(scale.domains) : []),
-      psychometricProperties: typeof scale.psychometricProperties === 'object' ? 
-        scale.psychometricProperties : 
+      psychometricProperties: typeof scale.psychometricProperties === 'object' ?
+        scale.psychometricProperties :
         (scale.psychometricProperties ? JSON.parse(scale.psychometricProperties) : null),
       references: Array.isArray(scale.references) ? scale.references :
         (scale.references ? JSON.parse(scale.references) : []),
@@ -206,7 +205,7 @@ export async function GET(
 
   } catch (error) {
     console.error('Scale detail API error:', error);
-    
+
     if (error instanceof z.ZodError) {
       return NextResponse.json(
         { error: 'Invalid scale ID' },

@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { type NextRequest, NextResponse } from 'next/server';
 import { getDB } from '@/db';
 import { ecoaScaleTable, ecoaCategoryTable, ecoaItemTable, scaleUsageTable } from '@/db/schema';
 import { eq } from 'drizzle-orm';
@@ -65,7 +65,7 @@ function generateScaleInterpretation(scale: any, items: any[]) {
 // 计算个性化分数解读
 function interpretScores(scale: any, scores: Record<string, number>, totalScore?: number, demographics?: any) {
   const scaleAcronym = scale.acronym;
-  let interpretation = {
+  const interpretation = {
     totalScore: totalScore || Object.values(scores).reduce((sum, score) => sum + score, 0),
     severity: 'unknown',
     percentile: null as number | null,
@@ -79,7 +79,7 @@ function interpretScores(scale: any, scores: Record<string, number>, totalScore?
   // PHQ-9 特定解读
   if (scaleAcronym === 'PHQ-9') {
     const total = interpretation.totalScore;
-    
+
     if (total <= 4) {
       interpretation.severity = 'minimal';
       interpretation.clinicalSignificance = 'normal_range';
@@ -136,7 +136,7 @@ function interpretScores(scale: any, scores: Record<string, number>, totalScore?
   // GAD-7 特定解读
   if (scaleAcronym === 'GAD-7') {
     const total = interpretation.totalScore;
-    
+
     if (total <= 4) {
       interpretation.severity = 'minimal';
       interpretation.clinicalSignificance = 'normal_range';
@@ -166,10 +166,10 @@ export async function GET(
       const session = await getSessionFromCookie();
       const user = session?.user;
       const ip = getIP(request);
-      
+
       const params = await context.params;
       const { scaleId } = interpretationParamsSchema.parse(params);
-      
+
       // 获取量表详细信息
       const [scale] = await db
         .select({
@@ -275,17 +275,17 @@ export async function POST(
       const db = getDB();
       const session = await getSessionFromCookie();
       const user = session?.user;
-      
+
       if (!user) {
         return NextResponse.json({ error: 'Authentication required for score interpretation' }, { status: 401 });
       }
-      
+
       const params = await context.params;
       const { scaleId } = interpretationParamsSchema.parse(params);
-      
+
       const body = await request.json();
       const scoreData = scoreInterpretationSchema.parse(body);
-      
+
       // 获取量表信息
       const [scale] = await db
         .select({
@@ -303,9 +303,9 @@ export async function POST(
 
       // 生成个性化解读
       const interpretation = interpretScores(
-        scale, 
-        scoreData.scores, 
-        scoreData.totalScore, 
+        scale,
+        scoreData.scores,
+        scoreData.totalScore,
         scoreData.demographicInfo
       );
 
@@ -503,7 +503,7 @@ function getClinicalExamples(acronym: string): any[] {
         followUp: '2周后重新评估，关注睡眠和压力管理',
       },
       {
-        caseTitle: '案例2: 中度抑郁监测',  
+        caseTitle: '案例2: 中度抑郁监测',
         scenario: '55岁男性，已在接受抗抑郁治疗3个月',
         score: 12,
         interpretation: '中度抑郁症状持续，可能需要调整治疗方案',

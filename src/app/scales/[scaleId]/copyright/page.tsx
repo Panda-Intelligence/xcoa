@@ -2,12 +2,12 @@
 
 import { useState, useEffect } from 'react';
 import { notFound } from 'next/navigation';
-import { 
-  Shield, 
-  ArrowLeft, 
-  Mail, 
-  Phone, 
-  Globe, 
+import {
+  Shield,
+  ArrowLeft,
+  Mail,
+  Phone,
+  Globe,
   Building,
   CheckCircle,
   AlertCircle,
@@ -18,7 +18,6 @@ import {
   DollarSign
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
@@ -68,21 +67,21 @@ export default function ScaleCopyrightPage({ params }: CopyrightPageProps) {
       const response = await fetch(`/api/scales/${params.scaleId}/copyright`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
-          ...contactForm, 
-          scaleId: params.scaleId 
+        body: JSON.stringify({
+          ...contactForm,
+          scaleId: params.scaleId
         }),
       });
-      
+
       const result = await response.json();
-      
+
       if (response.ok) {
         const emailTemplate = result.emailTemplate;
         const mailtoUrl = `mailto:${result.copyrightHolder.email}?subject=${encodeURIComponent(emailTemplate.subject)}&body=${encodeURIComponent(emailTemplate.body)}`;
-        
+
         window.open(mailtoUrl, '_blank');
         setContactDialogOpen(false);
-        
+
         alert('邮件模板已生成，请查看您的邮件客户端');
       } else {
         alert(`联系请求失败: ${result.error}`);
@@ -144,7 +143,7 @@ export default function ScaleCopyrightPage({ params }: CopyrightPageProps) {
                 <span className="text-sm font-medium">{scale.acronym} 版权信息</span>
               </div>
             </div>
-            
+
             <div className="flex space-x-2">
               <Link href={`/scales/${scale.id}`}>
                 <Button variant="outline" size="sm">
@@ -161,7 +160,7 @@ export default function ScaleCopyrightPage({ params }: CopyrightPageProps) {
           </div>
         </div>
       </div>
-      
+
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="space-y-6">
           {/* 量表基本信息 */}
@@ -187,7 +186,7 @@ export default function ScaleCopyrightPage({ params }: CopyrightPageProps) {
                 </div>
               </CardTitle>
             </CardHeader>
-            
+
             <CardContent>
               <div className="grid grid-cols-2 gap-4 mb-4">
                 <div className="flex items-center space-x-2">
@@ -200,12 +199,12 @@ export default function ScaleCopyrightPage({ params }: CopyrightPageProps) {
                     {actions.canUseDirectly ? '可直接使用' : '需要许可'}
                   </span>
                 </div>
-                
+
                 <div className="flex items-center space-x-2">
                   <DollarSign className="w-4 h-4 text-blue-600" />
                   <span className="text-sm">
-                    {copyright.license.typicalCost === 'FREE' ? '免费' : 
-                     copyright.license.typicalCost === 'PAID' ? '付费' : '咨询定价'}
+                    {copyright.license.typicalCost === 'FREE' ? '免费' :
+                      copyright.license.typicalCost === 'PAID' ? '付费' : '咨询定价'}
                   </span>
                 </div>
               </div>
@@ -243,7 +242,7 @@ export default function ScaleCopyrightPage({ params }: CopyrightPageProps) {
                   {copyright.contact.organization}
                 </CardDescription>
               </CardHeader>
-              
+
               <CardContent className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                   {copyright.contact.email && (
@@ -254,7 +253,7 @@ export default function ScaleCopyrightPage({ params }: CopyrightPageProps) {
                       </a>
                     </Button>
                   )}
-                  
+
                   {copyright.contact.phone && (
                     <Button variant="outline" asChild className="justify-start">
                       <a href={`tel:${copyright.contact.phone}`}>
@@ -263,7 +262,7 @@ export default function ScaleCopyrightPage({ params }: CopyrightPageProps) {
                       </a>
                     </Button>
                   )}
-                  
+
                   {copyright.contact.website && (
                     <Button variant="outline" asChild className="justify-start">
                       <a href={copyright.contact.website} target="_blank" rel="noopener noreferrer">
@@ -285,7 +284,7 @@ export default function ScaleCopyrightPage({ params }: CopyrightPageProps) {
                           通过 xCOA 平台发起专业的许可联系请求
                         </p>
                       </div>
-                      
+
                       <Dialog open={contactDialogOpen} onOpenChange={setContactDialogOpen}>
                         <DialogTrigger asChild>
                           <Button>
@@ -293,7 +292,7 @@ export default function ScaleCopyrightPage({ params }: CopyrightPageProps) {
                             发起联系
                           </Button>
                         </DialogTrigger>
-                        
+
                         <DialogContent className="max-w-2xl">
                           <DialogHeader>
                             <DialogTitle>联系版权方</DialogTitle>
@@ -301,12 +300,12 @@ export default function ScaleCopyrightPage({ params }: CopyrightPageProps) {
                               为 {scale.name} ({scale.acronym}) 申请使用许可
                             </DialogDescription>
                           </DialogHeader>
-                          
+
                           <div className="space-y-4">
                             <div className="grid grid-cols-2 gap-4">
                               <div>
                                 <Label>请求类型</Label>
-                                <Select value={contactForm.requestType} onValueChange={(value) => 
+                                <Select value={contactForm.requestType} onValueChange={(value) =>
                                   setContactForm(prev => ({ ...prev, requestType: value }))}>
                                   <SelectTrigger>
                                     <SelectValue />
@@ -320,10 +319,10 @@ export default function ScaleCopyrightPage({ params }: CopyrightPageProps) {
                                   </SelectContent>
                                 </Select>
                               </div>
-                              
+
                               <div>
                                 <Label>预期用途</Label>
-                                <Select value={contactForm.intendedUse} onValueChange={(value) => 
+                                <Select value={contactForm.intendedUse} onValueChange={(value) =>
                                   setContactForm(prev => ({ ...prev, intendedUse: value }))}>
                                   <SelectTrigger>
                                     <SelectValue />
@@ -338,21 +337,21 @@ export default function ScaleCopyrightPage({ params }: CopyrightPageProps) {
                                 </Select>
                               </div>
                             </div>
-                            
+
                             <div className="grid grid-cols-2 gap-4">
                               <div>
                                 <Label>联系人姓名 *</Label>
-                                <Input 
+                                <Input
                                   value={contactForm.contactName}
                                   onChange={(e) => setContactForm(prev => ({ ...prev, contactName: e.target.value }))}
                                   placeholder="您的姓名"
                                   required
                                 />
                               </div>
-                              
+
                               <div>
                                 <Label>联系邮箱 *</Label>
-                                <Input 
+                                <Input
                                   type="email"
                                   value={contactForm.contactEmail}
                                   onChange={(e) => setContactForm(prev => ({ ...prev, contactEmail: e.target.value }))}
@@ -361,37 +360,37 @@ export default function ScaleCopyrightPage({ params }: CopyrightPageProps) {
                                 />
                               </div>
                             </div>
-                            
+
                             <div className="grid grid-cols-2 gap-4">
                               <div>
                                 <Label>机构名称</Label>
-                                <Input 
+                                <Input
                                   value={contactForm.organizationName}
                                   onChange={(e) => setContactForm(prev => ({ ...prev, organizationName: e.target.value }))}
                                   placeholder="您的机构名称"
                                 />
                               </div>
-                              
+
                               <div>
                                 <Label>联系电话 (可选)</Label>
-                                <Input 
+                                <Input
                                   value={contactForm.contactPhone}
                                   onChange={(e) => setContactForm(prev => ({ ...prev, contactPhone: e.target.value }))}
                                   placeholder="+86 138 0000 0000"
                                 />
                               </div>
                             </div>
-                            
+
                             <div>
                               <Label>详细说明</Label>
-                              <Textarea 
+                              <Textarea
                                 value={contactForm.message}
                                 onChange={(e) => setContactForm(prev => ({ ...prev, message: e.target.value }))}
                                 placeholder="请详细说明您的使用需求、项目背景和其他相关信息..."
                                 className="min-h-[100px]"
                               />
                             </div>
-                            
+
                             <div className="bg-yellow-50 p-3 rounded border border-yellow-200">
                               <div className="flex items-center space-x-2 text-yellow-800">
                                 <Clock className="w-4 h-4" />
@@ -401,12 +400,12 @@ export default function ScaleCopyrightPage({ params }: CopyrightPageProps) {
                                 我们会自动为您生成专业的联系邮件，您可以直接发送给版权方
                               </p>
                             </div>
-                            
+
                             <div className="flex justify-end space-x-2">
                               <Button variant="outline" onClick={() => setContactDialogOpen(false)}>
                                 取消
                               </Button>
-                              <Button 
+                              <Button
                                 onClick={handleContactSubmit}
                                 disabled={!contactForm.contactName || !contactForm.contactEmail}
                               >
@@ -429,7 +428,7 @@ export default function ScaleCopyrightPage({ params }: CopyrightPageProps) {
             <CardHeader>
               <CardTitle>下一步行动</CardTitle>
             </CardHeader>
-            
+
             <CardContent>
               {actions.canUseDirectly ? (
                 <div className="space-y-3">
@@ -463,7 +462,7 @@ export default function ScaleCopyrightPage({ params }: CopyrightPageProps) {
                   <p className="text-sm text-muted-foreground">
                     请联系版权方获得使用许可，我们建议您详细说明使用目的和项目背景。
                   </p>
-                  
+
                   <div className="bg-blue-50 p-4 rounded-lg">
                     <h4 className="font-medium text-blue-900 mb-2">联系建议</h4>
                     <ul className="text-sm text-blue-800 space-y-1">
@@ -483,7 +482,7 @@ export default function ScaleCopyrightPage({ params }: CopyrightPageProps) {
             <CardHeader>
               <CardTitle>常见问题</CardTitle>
             </CardHeader>
-            
+
             <CardContent>
               <div className="space-y-4">
                 <div>
@@ -492,14 +491,14 @@ export default function ScaleCopyrightPage({ params }: CopyrightPageProps) {
                     A: 大多数量表对学术研究提供免费或优惠许可，具体需要联系版权方确认。
                   </p>
                 </div>
-                
+
                 <div>
                   <h4 className="font-medium mb-1">Q: 商业用途的许可费用大概是多少？</h4>
                   <p className="text-sm text-muted-foreground">
                     A: 费用因量表和使用范围而异，从数百到数万元不等，建议直接咨询版权方。
                   </p>
                 </div>
-                
+
                 <div>
                   <h4 className="font-medium mb-1">Q: 许可申请通常需要多长时间？</h4>
                   <p className="text-sm text-muted-foreground">

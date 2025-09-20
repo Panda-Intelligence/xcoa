@@ -1,12 +1,12 @@
 'use client';
 
 import { useState } from 'react';
-import { 
-  Shield, 
-  Mail, 
-  Phone, 
-  Globe, 
-  Building, 
+import {
+  Shield,
+  Mail,
+  Phone,
+  Globe,
+  Building,
   AlertCircle,
   CheckCircle,
   Clock,
@@ -16,7 +16,6 @@ import {
   Send
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
@@ -86,7 +85,7 @@ export function CopyrightCard({ scaleId, initialData }: CopyrightCardProps) {
     try {
       const response = await fetch(`/api/scales/${scaleId}/copyright`);
       const data = await response.json();
-      
+
       if (response.ok) {
         setCopyrightInfo(data);
       } else {
@@ -107,14 +106,14 @@ export function CopyrightCard({ scaleId, initialData }: CopyrightCardProps) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ...contactForm, scaleId }),
       });
-      
+
       const result = await response.json();
-      
+
       if (response.ok) {
         // 可以在这里显示成功消息或打开邮件客户端
         const emailTemplate = result.contactRequest.emailTemplate;
         const mailtoUrl = `mailto:${result.contactRequest.copyrightHolder.email}?subject=${encodeURIComponent(emailTemplate.subject)}&body=${encodeURIComponent(emailTemplate.body)}`;
-        
+
         window.open(mailtoUrl, '_blank');
         setContactDialogOpen(false);
       } else {
@@ -182,7 +181,7 @@ export function CopyrightCard({ scaleId, initialData }: CopyrightCardProps) {
           {copyrightInfo.scale.name} ({copyrightInfo.scale.acronym}) 的使用许可详情
         </CardDescription>
       </CardHeader>
-      
+
       <CardContent className="space-y-4">
         {/* 许可类型标识 */}
         <div className={`p-3 rounded-lg border ${getLicenseColorClass(copyright.license.color)}`}>
@@ -207,12 +206,12 @@ export function CopyrightCard({ scaleId, initialData }: CopyrightCardProps) {
               {actions.canUseDirectly ? '可直接使用' : '需要许可'}
             </span>
           </div>
-          
+
           <div className="flex items-center space-x-2">
             <DollarSign className="w-4 h-4 text-blue-600" />
             <span className="text-sm">
-              {copyright.license.typicalCost === 'FREE' ? '免费' : 
-               copyright.license.typicalCost === 'PAID' ? '付费' : '咨询定价'}
+              {copyright.license.typicalCost === 'FREE' ? '免费' :
+                copyright.license.typicalCost === 'PAID' ? '付费' : '咨询定价'}
             </span>
           </div>
         </div>
@@ -254,7 +253,7 @@ export function CopyrightCard({ scaleId, initialData }: CopyrightCardProps) {
               <div className="text-sm">
                 <span className="font-medium">{copyright.contact.organization}</span>
               </div>
-              
+
               <div className="flex flex-wrap gap-2">
                 {copyright.contact.email && (
                   <Button variant="outline" size="sm" asChild>
@@ -264,7 +263,7 @@ export function CopyrightCard({ scaleId, initialData }: CopyrightCardProps) {
                     </a>
                   </Button>
                 )}
-                
+
                 {copyright.contact.phone && (
                   <Button variant="outline" size="sm" asChild>
                     <a href={`tel:${copyright.contact.phone}`}>
@@ -273,7 +272,7 @@ export function CopyrightCard({ scaleId, initialData }: CopyrightCardProps) {
                     </a>
                   </Button>
                 )}
-                
+
                 {copyright.contact.website && (
                   <Button variant="outline" size="sm" asChild>
                     <a href={copyright.contact.website} target="_blank" rel="noopener noreferrer">
@@ -305,7 +304,7 @@ export function CopyrightCard({ scaleId, initialData }: CopyrightCardProps) {
                   联系版权方
                 </Button>
               </DialogTrigger>
-              
+
               <DialogContent className="max-w-2xl">
                 <DialogHeader>
                   <DialogTitle>联系版权方</DialogTitle>
@@ -313,12 +312,12 @@ export function CopyrightCard({ scaleId, initialData }: CopyrightCardProps) {
                     为 {copyrightInfo.scale.name} ({copyrightInfo.scale.acronym}) 申请使用许可
                   </DialogDescription>
                 </DialogHeader>
-                
+
                 <div className="space-y-4">
                   <div className="grid grid-cols-2 gap-4">
                     <div>
                       <Label>请求类型</Label>
-                      <Select value={contactForm.requestType} onValueChange={(value) => 
+                      <Select value={contactForm.requestType} onValueChange={(value) =>
                         setContactForm(prev => ({ ...prev, requestType: value }))}>
                         <SelectTrigger>
                           <SelectValue />
@@ -332,10 +331,10 @@ export function CopyrightCard({ scaleId, initialData }: CopyrightCardProps) {
                         </SelectContent>
                       </Select>
                     </div>
-                    
+
                     <div>
                       <Label>预期用途</Label>
-                      <Select value={contactForm.intendedUse} onValueChange={(value) => 
+                      <Select value={contactForm.intendedUse} onValueChange={(value) =>
                         setContactForm(prev => ({ ...prev, intendedUse: value }))}>
                         <SelectTrigger>
                           <SelectValue />
@@ -350,20 +349,20 @@ export function CopyrightCard({ scaleId, initialData }: CopyrightCardProps) {
                       </Select>
                     </div>
                   </div>
-                  
+
                   <div className="grid grid-cols-2 gap-4">
                     <div>
                       <Label>机构名称</Label>
-                      <Input 
+                      <Input
                         value={contactForm.organizationName}
                         onChange={(e) => setContactForm(prev => ({ ...prev, organizationName: e.target.value }))}
                         placeholder="您的机构名称"
                       />
                     </div>
-                    
+
                     <div>
                       <Label>机构类型</Label>
-                      <Select value={contactForm.organizationType} onValueChange={(value) => 
+                      <Select value={contactForm.organizationType} onValueChange={(value) =>
                         setContactForm(prev => ({ ...prev, organizationType: value }))}>
                         <SelectTrigger>
                           <SelectValue />
@@ -380,21 +379,21 @@ export function CopyrightCard({ scaleId, initialData }: CopyrightCardProps) {
                       </Select>
                     </div>
                   </div>
-                  
+
                   <div className="grid grid-cols-2 gap-4">
                     <div>
                       <Label>联系人姓名 *</Label>
-                      <Input 
+                      <Input
                         value={contactForm.contactName}
                         onChange={(e) => setContactForm(prev => ({ ...prev, contactName: e.target.value }))}
                         placeholder="您的姓名"
                         required
                       />
                     </div>
-                    
+
                     <div>
                       <Label>联系邮箱 *</Label>
-                      <Input 
+                      <Input
                         type="email"
                         value={contactForm.contactEmail}
                         onChange={(e) => setContactForm(prev => ({ ...prev, contactEmail: e.target.value }))}
@@ -403,31 +402,31 @@ export function CopyrightCard({ scaleId, initialData }: CopyrightCardProps) {
                       />
                     </div>
                   </div>
-                  
+
                   <div>
                     <Label>联系电话 (可选)</Label>
-                    <Input 
+                    <Input
                       value={contactForm.contactPhone}
                       onChange={(e) => setContactForm(prev => ({ ...prev, contactPhone: e.target.value }))}
                       placeholder="+86 138 0000 0000"
                     />
                   </div>
-                  
+
                   <div>
                     <Label>详细说明</Label>
-                    <Textarea 
+                    <Textarea
                       value={contactForm.message}
                       onChange={(e) => setContactForm(prev => ({ ...prev, message: e.target.value }))}
                       placeholder="请详细说明您的使用需求、项目背景和其他相关信息..."
                       className="min-h-[100px]"
                     />
                   </div>
-                  
+
                   <div className="flex justify-end space-x-2">
                     <Button variant="outline" onClick={() => setContactDialogOpen(false)}>
                       取消
                     </Button>
-                    <Button 
+                    <Button
                       onClick={handleContactSubmit}
                       disabled={!contactForm.contactName || !contactForm.contactEmail}
                     >
@@ -439,7 +438,7 @@ export function CopyrightCard({ scaleId, initialData }: CopyrightCardProps) {
               </DialogContent>
             </Dialog>
           )}
-          
+
           <Button variant="outline" className="w-full">
             <FileText className="w-4 h-4 mr-2" />
             查看完整许可条款
@@ -452,7 +451,7 @@ export function CopyrightCard({ scaleId, initialData }: CopyrightCardProps) {
           <p className="text-sm text-blue-800">
             {copyright.license.usageGuidelines || copyright.license.description}
           </p>
-          
+
           {actions.requiresContact && (
             <div className="mt-2 flex items-center text-sm text-blue-700">
               <Clock className="w-3 h-3 mr-1" />

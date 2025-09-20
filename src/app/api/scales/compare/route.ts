@@ -1,9 +1,8 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { type NextRequest, NextResponse } from 'next/server';
 import { getDB } from '@/db';
-import { 
-  ecoaScaleTable, 
-  ecoaCategoryTable, 
-  ecoaItemTable,
+import {
+  ecoaScaleTable,
+  ecoaCategoryTable,
   scaleUsageTable
 } from '@/db/schema';
 import { eq, inArray, and } from 'drizzle-orm';
@@ -76,10 +75,10 @@ export async function POST(request: NextRequest) {
       const session = await getSessionFromCookie();
       const user = session?.user;
       const ip = getIP(request);
-      
+
       const body = await request.json();
       const { scaleIds } = compareRequestSchema.parse(body);
-      
+
       // 获取所有要对比的量表
       const scales = await db
         .select({
@@ -142,9 +141,9 @@ export async function POST(request: NextRequest) {
           differences: {
             categories: [...new Set(parsedScales.map(s => s.categoryName))],
             itemsCounts: parsedScales.map(s => ({ name: s.acronym, count: s.itemsCount })),
-            administrationTimes: parsedScales.map(s => ({ 
-              name: s.acronym, 
-              time: s.administrationTime 
+            administrationTimes: parsedScales.map(s => ({
+              name: s.acronym,
+              time: s.administrationTime
             })),
             targetPopulations: [...new Set(parsedScales.map(s => s.targetPopulation))],
             validationStatuses: [...new Set(parsedScales.map(s => s.validationStatus))],
@@ -157,7 +156,7 @@ export async function POST(request: NextRequest) {
             parsedScales.reduce((sum, s) => sum + (s.itemsCount || 0), 0) / parsedScales.length
           ),
           avgAdministrationTime: Math.round(
-            parsedScales.reduce((sum, s) => sum + (s.administrationTime || 0), 0) / 
+            parsedScales.reduce((sum, s) => sum + (s.administrationTime || 0), 0) /
             parsedScales.filter(s => s.administrationTime).length || 0
           ),
           commonLanguages: parsedScales.reduce((common, scale) => {
@@ -172,7 +171,7 @@ export async function POST(request: NextRequest) {
           const scale1 = parsedScales[i];
           const scale2 = parsedScales[j];
           const similarityScore = calculateSimilarity(scale1, scale2);
-          
+
           comparison.analysis.similarities.push({
             scale1: { id: scale1.id, name: scale1.name, acronym: scale1.acronym },
             scale2: { id: scale2.id, name: scale2.name, acronym: scale2.acronym },
@@ -180,8 +179,8 @@ export async function POST(request: NextRequest) {
             commonFactors: [
               scale1.categoryId === scale2.categoryId ? '同类别' : null,
               Math.abs((scale1.itemsCount || 0) - (scale2.itemsCount || 0)) <= 5 ? '题项数相近' : null,
-              scale1.administrationTime && scale2.administrationTime && 
-              Math.abs(scale1.administrationTime - scale2.administrationTime) <= 5 ? '用时相近' : null,
+              scale1.administrationTime && scale2.administrationTime &&
+                Math.abs(scale1.administrationTime - scale2.administrationTime) <= 5 ? '用时相近' : null,
             ].filter(Boolean),
           });
         }
@@ -226,7 +225,7 @@ export async function POST(request: NextRequest) {
 
     } catch (error) {
       console.error('Scale comparison API error:', error);
-      
+
       if (error instanceof z.ZodError) {
         return NextResponse.json(
           { error: 'Invalid comparison parameters', details: error.errors },

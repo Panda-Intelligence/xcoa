@@ -1,11 +1,11 @@
 import { notFound } from 'next/navigation';
-import { Metadata } from 'next';
-import { 
-  Clock, 
-  Users, 
-  Star, 
-  Download, 
-  Eye, 
+import type { Metadata } from 'next';
+import {
+  Clock,
+  Users,
+  Star,
+  Download,
+  Eye,
   Heart,
   ArrowLeft,
   ExternalLink,
@@ -31,11 +31,11 @@ async function getScaleDetails(scaleId: string) {
     const response = await fetch(`${process.env.SITE_URL || 'http://localhost:3000'}/api/scales/${scaleId}`, {
       cache: 'no-store' // 确保获取最新数据
     });
-    
+
     if (!response.ok) {
       return null;
     }
-    
+
     return await response.json();
   } catch (error) {
     console.error('Error fetching scale details:', error);
@@ -46,16 +46,16 @@ async function getScaleDetails(scaleId: string) {
 // 生成页面元数据
 export async function generateMetadata({ params }: ScalePageProps): Promise<Metadata> {
   const data = await getScaleDetails(params.scaleId);
-  
+
   if (!data?.scale) {
     return {
       title: '量表未找到 - xCOA',
       description: '您查找的eCOA量表不存在或已被删除。'
     };
   }
-  
+
   const { scale } = data;
-  
+
   return {
     title: `${scale.name} (${scale.acronym}) - xCOA`,
     description: scale.description?.substring(0, 160) + '...' || scale.descriptionEn?.substring(0, 160) + '...',
@@ -73,16 +73,16 @@ export async function generateMetadata({ params }: ScalePageProps): Promise<Meta
 
 export default async function ScalePage({ params }: ScalePageProps) {
   const data = await getScaleDetails(params.scaleId);
-  
+
   if (!data?.scale) {
     notFound();
   }
-  
+
   const { scale, items, userInteraction, relatedScales, statistics, meta } = data;
-  
+
   // 解析心理测量学属性
   const psychometrics = scale.psychometricProperties || {};
-  
+
   // 获取验证状态显示
   const getValidationBadge = (status: string) => {
     switch (status) {
@@ -96,7 +96,7 @@ export default async function ScalePage({ params }: ScalePageProps) {
         return <Badge variant="outline">{status}</Badge>;
     }
   };
-  
+
   return (
     <div className="min-h-screen bg-background">
       {/* 头部导航 */}
@@ -116,7 +116,7 @@ export default async function ScalePage({ params }: ScalePageProps) {
                 <span className="text-sm font-medium">{scale.acronym}</span>
               </div>
             </div>
-            
+
             <div className="flex items-center space-x-2">
               <Button variant="outline" size="sm">
                 <Heart className="w-4 h-4 mr-2" />
@@ -132,7 +132,7 @@ export default async function ScalePage({ params }: ScalePageProps) {
           </div>
         </div>
       </div>
-      
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* 主要内容区域 */}
@@ -168,7 +168,7 @@ export default async function ScalePage({ params }: ScalePageProps) {
                   </div>
                 </div>
               </CardHeader>
-              
+
               <CardContent>
                 <Tabs defaultValue="overview" className="w-full">
                   <TabsList className="grid w-full grid-cols-4">
@@ -177,7 +177,7 @@ export default async function ScalePage({ params }: ScalePageProps) {
                     <TabsTrigger value="psychometrics">心理测量</TabsTrigger>
                     <TabsTrigger value="references">参考文献</TabsTrigger>
                   </TabsList>
-                  
+
                   <TabsContent value="overview" className="space-y-4">
                     <div>
                       <h4 className="font-semibold mb-2">量表描述</h4>
@@ -190,7 +190,7 @@ export default async function ScalePage({ params }: ScalePageProps) {
                         </p>
                       )}
                     </div>
-                    
+
                     <div className="grid grid-cols-2 gap-4">
                       <div>
                         <h4 className="font-semibold mb-2">适用人群</h4>
@@ -201,7 +201,7 @@ export default async function ScalePage({ params }: ScalePageProps) {
                         <p className="text-sm text-muted-foreground">{scale.ageRange}</p>
                       </div>
                     </div>
-                    
+
                     <div>
                       <h4 className="font-semibold mb-2">评估领域</h4>
                       <div className="flex flex-wrap gap-2">
@@ -210,14 +210,14 @@ export default async function ScalePage({ params }: ScalePageProps) {
                         ))}
                       </div>
                     </div>
-                    
+
                     <div>
                       <h4 className="font-semibold mb-2">评分方法</h4>
                       <p className="text-sm text-muted-foreground leading-relaxed">
                         {scale.scoringMethod}
                       </p>
                     </div>
-                    
+
                     {scale.copyrightInfo && (
                       <div>
                         <h4 className="font-semibold mb-2">版权信息</h4>
@@ -225,7 +225,7 @@ export default async function ScalePage({ params }: ScalePageProps) {
                       </div>
                     )}
                   </TabsContent>
-                  
+
                   <TabsContent value="items" className="space-y-4">
                     {meta.hasItems ? (
                       <div className="space-y-3">
@@ -266,7 +266,7 @@ export default async function ScalePage({ params }: ScalePageProps) {
                       </div>
                     )}
                   </TabsContent>
-                  
+
                   <TabsContent value="psychometrics" className="space-y-4">
                     {psychometrics && Object.keys(psychometrics).length > 0 ? (
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -279,7 +279,7 @@ export default async function ScalePage({ params }: ScalePageProps) {
                             <div className="space-y-2 text-sm">
                               {psychometrics.reliability.cronbachAlpha && (
                                 <div className="flex justify-between">
-                                  <span>Cronbach's α</span>
+                                  <span>Cronbach&apos;s α</span>
                                   <span className="font-medium">{psychometrics.reliability.cronbachAlpha}</span>
                                 </div>
                               )}
@@ -298,7 +298,7 @@ export default async function ScalePage({ params }: ScalePageProps) {
                             </div>
                           </Card>
                         )}
-                        
+
                         {psychometrics.validity && (
                           <Card className="p-4">
                             <h4 className="font-semibold mb-2 flex items-center">
@@ -327,7 +327,7 @@ export default async function ScalePage({ params }: ScalePageProps) {
                             </div>
                           </Card>
                         )}
-                        
+
                         {psychometrics.cutoffScores && (
                           <Card className="p-4 md:col-span-2">
                             <h4 className="font-semibold mb-2">切分值标准</h4>
@@ -349,7 +349,7 @@ export default async function ScalePage({ params }: ScalePageProps) {
                       </div>
                     )}
                   </TabsContent>
-                  
+
                   <TabsContent value="references" className="space-y-4">
                     {scale.references.length > 0 ? (
                       <div className="space-y-3">
@@ -370,7 +370,7 @@ export default async function ScalePage({ params }: ScalePageProps) {
               </CardContent>
             </Card>
           </div>
-          
+
           {/* 侧边栏 */}
           <div className="space-y-6">
             {/* 统计信息 */}
@@ -402,7 +402,7 @@ export default async function ScalePage({ params }: ScalePageProps) {
                 </div>
               </CardContent>
             </Card>
-            
+
             {/* 量表信息 */}
             <Card>
               <CardHeader>
@@ -437,7 +437,7 @@ export default async function ScalePage({ params }: ScalePageProps) {
                 </div>
               </CardContent>
             </Card>
-            
+
             {/* 相关量表 */}
             {relatedScales.length > 0 && (
               <Card>
@@ -450,8 +450,8 @@ export default async function ScalePage({ params }: ScalePageProps) {
                 <CardContent>
                   <div className="space-y-3">
                     {relatedScales.map((relatedScale: any) => (
-                      <Link 
-                        key={relatedScale.id} 
+                      <Link
+                        key={relatedScale.id}
                         href={`/scales/${relatedScale.id}`}
                         className="block"
                       >
