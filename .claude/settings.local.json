@@ -6,7 +6,8 @@
       "Bash(bun:*)",
       "Bash(timeout:*)",
       "Bash(curl:*)",
-      "Bash(wrangler vectorize create:*)"
+      "Bash(wrangler vectorize create:*)",
+      "Bash(wrangler whoami:*)"
     ],
     "deny": [],
     "ask": []

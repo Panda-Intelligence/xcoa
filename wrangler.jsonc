@@ -94,7 +94,7 @@
   "vectorize": [
     {
       "binding": "VECTORIZE_INDEX",
-      "index_name": "xcoa-ecoa-search"
+      "index_name": "xcoa-search"
     }
   ],
   /**
