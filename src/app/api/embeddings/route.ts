@@ -33,12 +33,12 @@ async function generateEmbedding(text: string): Promise<number[]> {
     const { getCloudflareContext } = await import('@opennextjs/cloudflare');
     const { env } = getCloudflareContext();
 
-    if (!env.AI) {
+    if (!(env as any).AI) {
       throw new Error('Workers AI not available');
     }
 
     // 使用 BGE 模型生成嵌入向量
-    const response = await env.AI.run('@cf/baai/bge-base-en-v1.5', {
+    const response = await (env as any).AI.run('@cf/baai/bge-base-en-v1.5', {
       text: [text]
     });
 

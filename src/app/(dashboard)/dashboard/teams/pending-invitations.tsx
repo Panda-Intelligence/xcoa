@@ -46,8 +46,9 @@ export function PendingInvitations() {
       try {
         const [result] = await getPendingInvitationsForCurrentUserAction();
 
-        if (result?.success && result.data) {
-          setPendingInvitations(result.data as PendingInvitation[]);
+        const typedResult = result as { success?: boolean, data?: unknown } | undefined;
+        if (typedResult?.success && typedResult.data) {
+          setPendingInvitations(typedResult.data as PendingInvitation[]);
         }
       } catch (err) {
         console.error("Failed to fetch pending invitations:", err);
@@ -65,7 +66,8 @@ export function PendingInvitations() {
     try {
       const [result] = await acceptInvitationAction({ token });
 
-      if (result?.success) {
+      const typedResult = result as { success?: boolean } | undefined;
+      if (typedResult?.success) {
         toast.success("You have successfully joined the team");
 
         // Remove from pending list

@@ -74,7 +74,8 @@ const SignUpPage = ({ redirectPath }: SignUpClientProps) => {
     },
     onSuccess: async (response) => {
       toast.dismiss()
-      if (!response?.data?.optionsJSON) {
+      const optionsData = response?.data as { optionsJSON?: unknown } | undefined
+      if (!optionsData?.optionsJSON) {
         toast.error("Failed to start passkey registration")
         setIsRegistering(false)
         return;
@@ -82,7 +83,8 @@ const SignUpPage = ({ redirectPath }: SignUpClientProps) => {
 
       try {
         const attResp = await startRegistration({
-          optionsJSON: response.data.optionsJSON,
+          // @ts-expect-error Type assertion for compatibility
+          optionsJSON: optionsData.optionsJSON,
           useAutoRegister: true,
         });
         await completePasskeyRegistration({ response: attResp });

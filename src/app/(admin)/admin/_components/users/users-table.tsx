@@ -22,8 +22,11 @@ export function UsersTable() {
   })
 
   useEffect(() => {
-    fetchUsers({ page: parseInt(page), pageSize: parseInt(pageSize), emailFilter })
+    fetchUsers({ page: Number.parseInt(page), pageSize: Number.parseInt(pageSize), emailFilter })
   }, [fetchUsers, page, pageSize, emailFilter])
+
+  // Type guard for data
+  const usersData = data as { users: User[], totalPages: number, totalCount: number } | undefined
 
   const handlePageChange = (newPage: number) => {
     setPage((newPage + 1).toString()) // Convert from 0-based to 1-based and store as string
@@ -61,19 +64,19 @@ export function UsersTable() {
             <div>Loading...</div>
           ) : error ? (
             <div>Error: Failed to fetch users</div>
-          ) : !data ? (
+          ) : !usersData?.users ? (
             <div>No users found</div>
           ) : (
             <div className="w-full min-w-0">
               <DataTable
                 columns={columns}
-                data={data.users}
-                pageCount={data.totalPages}
-                pageIndex={parseInt(page) - 1}
-                pageSize={parseInt(pageSize)}
+                data={usersData.users}
+                pageCount={usersData.totalPages}
+                pageIndex={Number.parseInt(page) - 1}
+                pageSize={Number.parseInt(pageSize)}
                 onPageChange={handlePageChange}
                 onPageSizeChange={handlePageSizeChange}
-                totalCount={data.totalCount}
+                totalCount={usersData.totalCount}
                 itemNameSingular="user"
                 itemNamePlural="users"
                 pageSizeOptions={PAGE_SIZE_OPTIONS}

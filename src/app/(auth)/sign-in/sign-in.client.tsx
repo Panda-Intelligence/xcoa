@@ -58,21 +58,22 @@ function PasskeyAuthenticationButton({ className, disabled, children, redirectPa
       toast.loading("Authenticating with passkey...");
 
       // Get authentication options from the server
-      const [options] = await generateOptions({});
+      const [optionsData, optionsError] = await generateOptions({});
 
-      if (!options) {
+      if (optionsError || !optionsData) {
         throw new Error("Failed to get authentication options");
       }
 
       // Start the authentication process in the browser
       const authenticationResponse = await startAuthentication({
-        optionsJSON: options,
+        // @ts-expect-error Type assertion for compatibility
+        optionsJSON: optionsData,
       });
 
       // Send the response back to the server for verification
       await verifyAuthentication({
         response: authenticationResponse,
-        challenge: options.challenge,
+        challenge: (optionsData as { challenge: string }).challenge,
       });
     } catch (error) {
       console.error("Passkey authentication error:", error);

@@ -34,22 +34,23 @@ function PasskeyRegistrationButton({ email, className, onSuccess }: PasskeyRegis
       setIsRegistering(true);
 
       // Get registration options from the server
-      const [options] = await generateRegistrationOptionsAction({ email });
+      const [optionsData, optionsError] = await generateRegistrationOptionsAction({ email });
 
-      if (!options) {
+      if (optionsError || !optionsData) {
         throw new Error("Failed to get registration options");
       }
 
       // Start the registration process in the browser
       const registrationResponse = await startRegistration({
-        optionsJSON: options,
+        // @ts-expect-error Type assertion for compatibility
+        optionsJSON: optionsData,
       });
 
       // Send the response back to the server for verification
       await verifyRegistrationAction({
         email,
         response: registrationResponse,
-        challenge: options.challenge,
+        challenge: (optionsData as { challenge: string }).challenge,
       });
 
       toast.success("Passkey registered successfully");

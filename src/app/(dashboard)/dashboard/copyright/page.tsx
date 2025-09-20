@@ -64,7 +64,7 @@ export default function CopyrightPage() {
       });
 
       const data = await response.json();
-      setSearchResults(data.results || []);
+      setSearchResults((data as { results?: unknown[] }).results || []);
     } catch (error) {
       console.error('Scale search failed:', error);
     }
@@ -97,8 +97,9 @@ export default function CopyrightPage() {
       });
 
       const data = await response.json();
-      setLicenseResults(data.results || []);
-      setSummary(data.summary || null);
+      const typedData = data as { results?: LicenseResult[], summary?: unknown };
+      setLicenseResults(typedData.results || []);
+      setSummary(typedData.summary || null);
     } catch (error) {
       console.error('License check failed:', error);
     } finally {
@@ -168,6 +169,7 @@ export default function CopyrightPage() {
                     <div className="space-y-1">
                       {searchResults.map((result) => (
                         <button
+                          type="button"
                           key={result.id}
                           onClick={() => addScale(result.id)}
                           className="w-full text-left p-2 rounded hover:bg-gray-50 text-sm"
@@ -193,6 +195,7 @@ export default function CopyrightPage() {
                         <Badge key={scaleId} variant="outline" className="pr-1">
                           {scaleId.replace('scale_', '').toUpperCase()}
                           <button
+                            type="button"
                             onClick={() => removeScale(scaleId)}
                             className="ml-1 text-muted-foreground hover:text-foreground"
                           >
@@ -207,8 +210,9 @@ export default function CopyrightPage() {
                 {/* 检查参数 */}
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="text-sm font-medium">预期用途</label>
+                    <label htmlFor="intended-use" className="text-sm font-medium">预期用途</label>
                     <select
+                      id="intended-use"
                       value={checkParams.intendedUse}
                       onChange={(e) => setCheckParams(prev => ({ ...prev, intendedUse: e.target.value }))}
                       className="w-full mt-1 px-3 py-2 border rounded-md text-sm"
@@ -222,8 +226,9 @@ export default function CopyrightPage() {
                   </div>
 
                   <div>
-                    <label className="text-sm font-medium">机构类型</label>
+                    <label htmlFor="organization-type" className="text-sm font-medium">机构类型</label>
                     <select
+                      id="organization-type"
                       value={checkParams.organizationType}
                       onChange={(e) => setCheckParams(prev => ({ ...prev, organizationType: e.target.value }))}
                       className="w-full mt-1 px-3 py-2 border rounded-md text-sm"

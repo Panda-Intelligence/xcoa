@@ -64,7 +64,13 @@ export const createRoleAction = createServerAction()
   .input(createRoleSchema)
   .handler(async ({ input }) => {
     try {
-      const result = await createTeamRole(input);
+      const result = await createTeamRole({
+        teamId: input.teamId,
+        name: input.name,
+        description: input.description,
+        permissions: input.permissions,
+        metadata: input.metadata,
+      });
       return { success: true, data: result };
     } catch (error) {
       console.error("Failed to create role:", error);
@@ -87,7 +93,11 @@ export const updateRoleAction = createServerAction()
   .input(updateRoleSchema)
   .handler(async ({ input }) => {
     try {
-      const result = await updateTeamRole(input);
+      const result = await updateTeamRole({
+        teamId: input.teamId,
+        roleId: input.roleId,
+        data: input.data,
+      });
       return { success: true, data: result };
     } catch (error) {
       console.error("Failed to update role:", error);
@@ -110,7 +120,10 @@ export const deleteRoleAction = createServerAction()
   .input(deleteRoleSchema)
   .handler(async ({ input }) => {
     try {
-      await deleteTeamRole(input);
+      await deleteTeamRole({
+        teamId: input.teamId,
+        roleId: input.roleId,
+      });
       return { success: true };
     } catch (error) {
       console.error("Failed to delete role:", error);

@@ -47,7 +47,12 @@ export const inviteUserAction = createServerAction()
     return withRateLimit(
       async () => {
         try {
-          const result = await inviteUserToTeam(input);
+          const result = await inviteUserToTeam({
+            teamId: input.teamId,
+            email: input.email,
+            roleId: input.roleId,
+            isSystemRole: input.isSystemRole,
+          });
           return { success: true, data: result };
         } catch (error) {
           console.error("Failed to invite user:", error);
@@ -96,7 +101,12 @@ export const updateMemberRoleAction = createServerAction()
   .input(updateMemberRoleSchema)
   .handler(async ({ input }) => {
     try {
-      await updateTeamMemberRole(input);
+      await updateTeamMemberRole({
+        teamId: input.teamId,
+        userId: input.userId,
+        roleId: input.roleId,
+        isSystemRole: input.isSystemRole,
+      });
       return { success: true };
     } catch (error) {
       console.error("Failed to update member role:", error);
@@ -119,7 +129,10 @@ export const removeTeamMemberAction = createServerAction()
   .input(removeMemberSchema)
   .handler(async ({ input }) => {
     try {
-      await removeTeamMember(input);
+      await removeTeamMember({
+        teamId: input.teamId,
+        userId: input.userId,
+      });
       return { success: true };
     } catch (error) {
       console.error("Failed to remove team member:", error);

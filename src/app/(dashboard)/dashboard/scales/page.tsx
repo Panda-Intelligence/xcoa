@@ -50,7 +50,7 @@ export default function ScalesPage() {
   useEffect(() => {
     fetch('/api/search/filters')
       .then(res => res.json())
-      .then(data => setCategories(data.categories || []))
+      .then(data => setCategories((data as { categories?: unknown[] }).categories || []))
       .catch(err => console.error('Failed to load categories:', err));
   }, []);
 
@@ -78,7 +78,7 @@ export default function ScalesPage() {
       });
 
       const data = await response.json();
-      setResults(data.results || []);
+      setResults((data as { results?: SearchResult[] }).results || []);
     } catch (error) {
       console.error('Search failed:', error);
     } finally {
@@ -374,7 +374,7 @@ export default function ScalesPage() {
               <p className="text-xs text-muted-foreground mb-3">
                 查看版权联系工单状态
               </p>
-              <Link href="/dashboard/copyright/tickets">
+              <Link href="/dashboard/copyright">
                 <Button size="sm" variant="outline" className="w-full">
                   我的工单
                 </Button>

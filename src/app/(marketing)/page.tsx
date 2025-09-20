@@ -1,23 +1,24 @@
-import type { Metadata } from "next";
+'use client';
 
 import { FAQ } from "@/components/landing/faq";
-import { SITE_NAME, SITE_DESCRIPTION } from "@/constants";
 import { FeaturesSection } from "@/components/landing/FeaturesSection";
 import { InsightsPreview } from "@/components/landing/InsightsPreview";
 import { PricingSection } from "@/components/landing/PricingSection";
 import { HeroSection } from "@/components/landing/HeroSection";
-
-export const metadata: Metadata = {
-  title: SITE_NAME,
-  description: SITE_DESCRIPTION,
-};
+import { useRouter } from "next/navigation";
 
 export default function Home() {
+  const router = useRouter();
+
+  const handleViewInsights = () => {
+    router.push('/dashboard/scales');
+  };
+
   return (
     <main>
       <HeroSection />
       <FeaturesSection />
-      <InsightsPreview />
+      <InsightsPreview onViewInsights={handleViewInsights} />
       <PricingSection />
       <FAQ />
     </main>

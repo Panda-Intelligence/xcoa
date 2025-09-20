@@ -27,13 +27,18 @@ const getTeamSchema = z.object({
 const createTeamSchema = z.object({
   name: z.string().min(1, "Name is required").max(100, "Name is too long"),
   description: z.string().max(1000, "Description is too long").optional(),
+  avatarUrl: z.string().url("Invalid avatar URL").max(600, "URL is too long").optional(),
 });
 
 export const createTeamAction = createServerAction()
   .input(createTeamSchema)
   .handler(async ({ input }) => {
     try {
-      const result = await createTeam(input);
+      const result = await createTeam({
+        name: input.name,
+        description: input.description,
+        avatarUrl: input.avatarUrl,
+      });
       return { success: true, data: result };
     } catch (error) {
       console.error("Failed to create team:", error);
@@ -56,7 +61,10 @@ export const updateTeamAction = createServerAction()
   .input(updateTeamSchema)
   .handler(async ({ input }) => {
     try {
-      const result = await updateTeam(input);
+      const result = await updateTeam({
+        teamId: input.teamId,
+        data: input.data,
+      });
       return { success: true, data: result };
     } catch (error) {
       console.error("Failed to update team:", error);

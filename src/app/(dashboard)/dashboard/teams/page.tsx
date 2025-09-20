@@ -41,8 +41,9 @@ export default async function TeamsIndexPage() {
   const [result, error] = await getUserTeamsAction();
 
   let teams: TeamItem[] = [];
-  if (result?.success && result.data) {
-    teams = result.data;
+  const typedResult = result as { success?: boolean, data?: TeamItem[] } | undefined;
+  if (typedResult?.success && typedResult.data) {
+    teams = typedResult.data;
   }
 
   if (error) {
