@@ -83,7 +83,6 @@ export default function ScaleCopyrightPage({ params }: CopyrightPageProps) {
         window.open(mailtoUrl, '_blank');
         setContactDialogOpen(false);
         
-        // 显示成功消息
         alert('邮件模板已生成，请查看您的邮件客户端');
       } else {
         alert(`联系请求失败: ${result.error}`);
@@ -146,12 +145,19 @@ export default function ScaleCopyrightPage({ params }: CopyrightPageProps) {
               </div>
             </div>
             
-            <Link href={`/scales/${scale.id}`}>
-              <Button variant="outline" size="sm">
-                <FileText className="w-4 h-4 mr-2" />
-                查看量表详情
-              </Button>
-            </Link>
+            <div className="flex space-x-2">
+              <Link href={`/scales/${scale.id}`}>
+                <Button variant="outline" size="sm">
+                  <FileText className="w-4 h-4 mr-2" />
+                  查看量表详情
+                </Button>
+              </Link>
+              <Link href={`/scales/${scale.id}/preview`}>
+                <Button variant="outline" size="sm">
+                  预览量表
+                </Button>
+              </Link>
+            </div>
           </div>
         </div>
       </div>
