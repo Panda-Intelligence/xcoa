@@ -1,9 +1,12 @@
+'use client';
+
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Search, Lock, Star, Download, ExternalLink } from "lucide-react";
+import { useLanguage } from '@/hooks/useLanguage';
 
 interface SearchResult {
   id: string;
@@ -15,22 +18,23 @@ interface SearchResult {
 }
 
 export function SearchResults() {
+  const { t } = useLanguage();
   const [query, setQuery] = useState("");
-  const [results, setResults] = useState<SearchResult[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [user, setUser] = useState<any>(null);
-  const [subscription, setSubscription] = useState("free");
+  const [results] = useState<SearchResult[]>([]);
+  const [isLoading] = useState(false);
+  const [user] = useState<null | object>(null);
+  const [subscription] = useState("free");
 
   useEffect(() => {
     checkUser();
   }, []);
 
   const checkUser = async () => {
-
+    // Placeholder for user check logic
   };
 
   const handleSearch = async () => {
-
+    // Placeholder for search logic
   };
 
   const getMatchColor = (score: number) => {
@@ -43,9 +47,9 @@ export function SearchResults() {
     <section className="py-20 bg-background">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center space-y-4 mb-12">
-          <h2 className="text-3xl font-bold text-foreground">AI 智能搜索</h2>
+          <h2 className="text-3xl font-bold text-foreground">{t('search.title')}</h2>
           <p className="text-lg text-muted-foreground">
-            使用自然语言描述您的需求，AI 将为您推荐最适合的量表
+            {t('search.description')}
           </p>
         </div>
 
@@ -54,7 +58,7 @@ export function SearchResults() {
           <div className="relative flex-1">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted-foreground" />
             <Input
-              placeholder="例如：评估癌症患者生活质量的量表..."
+              placeholder={t('search.placeholder')}
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               onKeyPress={(e) => e.key === "Enter" && handleSearch()}
@@ -62,7 +66,7 @@ export function SearchResults() {
             />
           </div>
           <Button onClick={handleSearch} disabled={isLoading || !user}>
-            {isLoading ? "搜索中..." : "搜索"}
+            {isLoading ? t('search.searching') : t('search.button')}
           </Button>
         </div>
 
@@ -72,7 +76,7 @@ export function SearchResults() {
             <div className="flex items-center space-x-2">
               <Lock className="h-4 w-4 text-yellow-600" />
               <span className="text-sm text-yellow-800">
-                免费版本限制：仅显示基础量表，升级至专业版获取完整 AI 推荐
+                {t('search.free_limitation')}
               </span>
             </div>
           </div>
@@ -82,9 +86,9 @@ export function SearchResults() {
         {results.length > 0 && (
           <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <h3 className="text-lg font-semibold">搜索结果</h3>
+              <h3 className="text-lg font-semibold">{t('search.results_title')}</h3>
               <span className="text-sm text-muted-foreground">
-                找到 {results.length} 个相关量表
+                {t('search.results_count').replace('{count}', results.length.toString())}
               </span>
             </div>
 
@@ -107,7 +111,7 @@ export function SearchResults() {
                       <div className="flex flex-col items-end space-y-2">
                         <Badge variant="secondary">{result.category}</Badge>
                         <div className={`text-sm font-medium ${getMatchColor(result.match_score)}`}>
-                          匹配度: {(result.match_score * 100).toFixed(0)}%
+                          {t('search.match_score').replace('{score}', (result.match_score * 100).toFixed(0))}
                         </div>
                       </div>
                     </div>
@@ -120,20 +124,20 @@ export function SearchResults() {
                           <span className="text-sm">4.5</span>
                         </div>
                         <span className="text-sm text-muted-foreground">
-                          已被 1,200+ 研究使用
+                          {t('search.used_by').replace('{count}', '1,200')}
                         </span>
                       </div>
                       <div className="flex space-x-2">
                         <Button variant="outline" size="sm">
                           <ExternalLink className="h-4 w-4 mr-2" />
-                          查看详情
+                          {t('search.view_details')}
                         </Button>
                         <Button
                           size="sm"
                           disabled={result.premium && subscription === "free"}
                         >
                           <Download className="h-4 w-4 mr-2" />
-                          {result.premium && subscription === "free" ? "需要升级" : "下载"}
+                          {result.premium && subscription === "free" ? t('search.need_upgrade') : t('search.download')}
                         </Button>
                       </div>
                     </div>
@@ -147,9 +151,9 @@ export function SearchResults() {
         {/* No User Prompt */}
         {!user && (
           <div className="text-center py-12 bg-secondary/20 rounded-lg">
-            <h3 className="text-lg font-semibold mb-2">开始使用 AI 搜索</h3>
+            <h3 className="text-lg font-semibold mb-2">{t('search.login_prompt.title')}</h3>
             <p className="text-muted-foreground mb-4">
-              登录后即可使用 AI 智能搜索功能
+              {t('search.login_prompt.description')}
             </p>
           </div>
         )}
@@ -157,9 +161,9 @@ export function SearchResults() {
         {/* Empty Results */}
         {user && results.length === 0 && query && !isLoading && (
           <div className="text-center py-12">
-            <h3 className="text-lg font-semibold mb-2">未找到相关结果</h3>
+            <h3 className="text-lg font-semibold mb-2">{t('search.no_results.title')}</h3>
             <p className="text-muted-foreground">
-              尝试使用不同的关键词或更具体的描述
+              {t('search.no_results.description')}
             </p>
           </div>
         )}

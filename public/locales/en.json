@@ -364,6 +364,237 @@
     "modify_footer": "Modify the footer in src/components/footer.tsx",
     "optionally_update_color_palette": "Optionally update the color palette in src/app/globals.css",
     "how_can_i_contribute": "How can I contribute?",
-    "contributions_welcome": "Contributions are welcome! Feel free to open issues, submit pull requests, or help improve the documentation on GitHub. The project follows standard open source contribution guidelines."
+    "contributions_welcome": "Contributions are welcome! Feel free to open issues, submit pull requests, or help improve the documentation on GitHub. The project follows standard open source contribution guidelines.",
+    "features_title": "Professional Features",
+    "features_description": "Comprehensive eCOA scale solutions for clinical research and medical practice",
+    "feature_ai_search_title": "AI Intelligent Search",
+    "feature_ai_search_description": "Intelligent search based on natural language processing to quickly find the most suitable scale tools",
+    "feature_rich_library_title": "Rich Scale Library",
+    "feature_rich_library_description": "Professional scale resources covering multiple medical fields including psychology, neurology, oncology, etc.",
+    "feature_data_analysis_title": "Data Analysis",
+    "feature_data_analysis_description": "Provides detailed scale statistical data and usage trend analysis reports",
+    "feature_collaboration_title": "Collaboration Platform",
+    "feature_collaboration_description": "Supports team collaboration, researchers can share and discuss scale usage experience",
+    "feature_security_title": "Data Security",
+    "feature_security_description": "Enterprise-level security protection to ensure privacy and security of patient data and research results",
+    "feature_deployment_title": "Quick Deployment",
+    "feature_deployment_description": "One-click deployment to clinical environment, seamless integration with existing systems",
+    "ai_demo_title": "AI Intelligent Search Demo",
+    "ai_demo_description": "Our AI system can understand your needs and intelligently recommend the most suitable scale tools. Whether by disease type, assessment goals, or patient population, it can quickly match.",
+    "user_input": "User Input:",
+    "ai_recommendation": "AI Recommendation:",
+    "search_time": "Search Results (0.2s)",
+    "cancer_quality_input": "Scales for assessing quality of life in cancer patients",
+    "ai_cancer_recommendation": "EORTC QLQ-C30, FACT-G, SF-36...",
+    "eortc_desc": "European Organisation for Research and Treatment of Cancer Quality of Life Questionnaire",
+    "fact_desc": "Functional Assessment of Cancer Therapy - General",
+    "sf36_desc": "36-Item Short Form Health Survey"
+  },
+  "sidebar": {
+    "dashboard": "Dashboard",
+    "ecoa_scales": "eCOA Scales",
+    "scale_search": "Scale Search",
+    "my_favorites": "My Favorites",
+    "search_history": "Search History",
+    "scale_comparison": "Scale Comparison",
+    "copyright_service": "Copyright Service",
+    "license_inquiry": "License Inquiry",
+    "contact_tickets": "Contact Tickets",
+    "scale_interpretation": "Scale Interpretation",
+    "interpretation_guide": "Interpretation Guide",
+    "score_calculator": "Score Calculator",
+    "clinical_cases": "Clinical Cases",
+    "team_management": "Team Management",
+    "team_overview": "Team Overview",
+    "member_management": "Member Management",
+    "team_settings": "Team Settings",
+    "credit_management": "Credit Management",
+    "credit_balance": "Credit Balance",
+    "usage_history": "Usage History",
+    "purchase_credits": "Purchase Credits",
+    "team_pricing": "Team Pricing",
+    "usage_analytics": "Usage Analytics",
+    "search_analytics": "Search Analytics",
+    "usage_reports": "Usage Reports",
+    "team_activity": "Team Activity",
+    "settings": "Settings",
+    "profile": "Profile",
+    "security_settings": "Security Settings",
+    "session_management": "Session Management",
+    "change_password": "Change Password",
+    "quick_search": "Quick Search",
+    "my_tickets": "My Tickets"
+  },
+  "pricing": {
+    "title": "Choose the Right Subscription Plan",
+    "description": "From individual research to enterprise deployment, we offer flexible pricing plans to meet different needs",
+    "monthly": "Monthly",
+    "yearly": "Yearly",
+    "save_20": "Save 20%",
+    "recommended": "Recommended",
+    "most_popular": "Most Popular",
+    "plans": {
+      "basic": {
+        "name": "Basic",
+        "price": "Free",
+        "description": "Perfect for individual researchers and small teams",
+        "button": "Get Started",
+        "features": [
+          "Access to basic scale library (100+)",
+          "Basic search functionality",
+          "50 searches per month",
+          "Community support",
+          "Basic data export"
+        ]
+      },
+      "professional": {
+        "name": "Professional",
+        "price": "$39",
+        "period": "/month",
+        "description": "Perfect for professional research teams",
+        "button": "Subscribe Now",
+        "features": [
+          "Access to complete scale library (500+)",
+          "AI intelligent search",
+          "Unlimited searches",
+          "Advanced data analysis",
+          "Team collaboration features",
+          "Priority technical support",
+          "Custom scale uploads",
+          "API integration support"
+        ]
+      },
+      "enterprise": {
+        "name": "Enterprise",
+        "price": "$129",
+        "period": "/month",
+        "description": "Perfect for large healthcare institutions",
+        "button": "Contact Sales",
+        "features": [
+          "All Professional features",
+          "Private deployment options",
+          "Enterprise-grade security",
+          "Dedicated account manager",
+          "Custom development",
+          "Training and consulting services",
+          "SLA guarantee",
+          "White-label solutions"
+        ]
+      }
+    },
+    "faq": {
+      "title": "Frequently Asked Questions",
+      "can_cancel": {
+        "question": "Can I cancel my subscription at any time?",
+        "answer": "Yes, you can cancel your subscription at any time. You'll continue to have access until the end of your current billing period."
+      },
+      "payment_methods": {
+        "question": "What payment methods are supported?",
+        "answer": "We support various payment methods including credit cards, PayPal, bank transfers, and more."
+      },
+      "enterprise_services": {
+        "question": "What custom services are included in the Enterprise plan?",
+        "answer": "Includes private deployment, custom development, dedicated training, and one-on-one services."
+      },
+      "data_security": {
+        "question": "How is data security ensured?",
+        "answer": "We use bank-level encryption technology and comply with GDPR and domestic data protection regulations."
+      }
+    }
+  },
+  "search": {
+    "title": "AI Intelligent Search",
+    "description": "Use natural language to describe your needs, AI will recommend the most suitable scales for you",
+    "placeholder": "e.g.: Scales for assessing quality of life in cancer patients...",
+    "search_placeholder": "Search scales or psychometric tools...",
+    "search_placeholder_small": "Search scales...",
+    "button": "Search",
+    "searching": "Searching...",
+    "results_title": "Search Results",
+    "results_count": "Found {count} relevant scales",
+    "results_stats": "About {count} results (in {time} seconds)",
+    "match_score": "Match: {score}%",
+    "used_by": "Used by {count}+ studies",
+    "view_details": "View Details",
+    "download": "Download",
+    "need_upgrade": "Need Upgrade",
+    "login_prompt": {
+      "title": "Start Using AI Search",
+      "description": "Login to use AI intelligent search functionality"
+    },
+    "no_results": {
+      "title": "No relevant results found",
+      "description": "Try using different keywords or more specific descriptions"
+    },
+    "free_limitation": "Free version limitation: Only basic scales shown, upgrade to Professional for complete AI recommendations",
+    "go_back": "Back",
+    "searches_remaining": "Remaining {count} searches",
+    "ecoa_search": "eCOA Search",
+    "search_ecoa": "Search ECOA",
+    "feeling_lucky": "I'm Feeling Lucky",
+    "quick_search": "Quick search",
+    "search_suggestions": "Search suggestions:",
+    "category": "Category",
+    "items": "Items",
+    "language": "Language",
+    "status": "Status",
+    "no_results_query": "No results found for your query - {query}.",
+    "suggestions_title": "Suggestions",
+    "suggestion_check_spelling": "Check if the input words are correct",
+    "suggestion_try_different": "Try other keywords",
+    "suggestion_try_common": "Try more common keywords",
+    "suggestion_reduce_keywords": "Reduce the number of keywords",
+    "no_results_suggestions": [
+      "Check if the input words are correct",
+      "Try other keywords",
+      "Try more common keywords",
+      "Reduce the number of keywords"
+    ],
+    "filter_criteria": "Filter criteria",
+    "filters": "Filters:",
+    "all_categories": "All Categories",
+    "sort_relevance": "Relevance",
+    "sort_name": "Name",
+    "sort_by_relevance": "Relevance",
+    "sort_by_name": "Name",
+    "sort_by_items": "Items",
+    "about_results": "About {count} results (in 0.{time} seconds)",
+    "quick_suggestions": {
+      "depression": "Depression",
+      "anxiety": "Anxiety",
+      "wellbeing": "Well-being",
+      "personality": "Personality"
+    }
+  },
+  "insights": {
+    "title": "Scale Insights Center",
+    "subtitle": "Professional Insights",
+    "description": "Gain deep understanding of various eCOA scales usage methods, scoring standards and clinical applications to enhance your professional practice",
+    "featured": "Featured",
+    "read_more": "Read More",
+    "view_more": "View More Insight Articles",
+    "back_to_list": "Back to Article List",
+    "back_to_home": "Back to Home",
+    "search_placeholder": "Search articles...",
+    "all_articles": "All Articles",
+    "featured_articles": "Featured Articles",
+    "category_articles": "{category} Related Articles",
+    "articles_count": "({count} articles)",
+    "no_articles": {
+      "title": "No related articles",
+      "description": "Please try adjusting search criteria or select other categories"
+    },
+    "reading_time": "{time} min read",
+    "views_count": "{count} views",
+    "minutes": "minutes",
+    "read_time": "{time} min",
+    "views": "{count} views",
+    "categories": {
+      "life_quality": "Quality of Life",
+      "mental_health": "Mental Health",
+      "oncology": "Oncology",
+      "pain_assessment": "Pain Assessment",
+      "cognitive_assessment": "Cognitive Assessment"
+    }
   }
 }

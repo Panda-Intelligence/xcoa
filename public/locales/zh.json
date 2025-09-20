@@ -364,6 +364,237 @@
     "modify_footer": "修改 src/components/footer.tsx 中的页脚",
     "optionally_update_color_palette": "可选择更新 src/app/globals.css 中的颜色调色板",
     "how_can_i_contribute": "如何贡献？",
-    "contributions_welcome": "欢迎贡献！随时在 GitHub 上开启问题、提交拉取请求或帮助改进文档。项目遵循标准的开源贡献指南。"
+    "contributions_welcome": "欢迎贡献！随时在 GitHub 上开启问题、提交拉取请求或帮助改进文档。项目遵循标准的开源贡献指南。",
+    "features_title": "专业功能特性",
+    "features_description": "为临床研究和医疗实践提供全方位的 eCOA 量表解决方案",
+    "feature_ai_search_title": "AI 智能检索",
+    "feature_ai_search_description": "基于自然语言处理的智能搜索，快速找到最适合的量表工具",
+    "feature_rich_library_title": "丰富量表库",
+    "feature_rich_library_description": "涵盖心理、神经、肿瘤等多个医学领域的专业量表资源",
+    "feature_data_analysis_title": "数据分析",
+    "feature_data_analysis_description": "提供详细的量表统计数据和使用趋势分析报告",
+    "feature_collaboration_title": "协作平台",
+    "feature_collaboration_description": "支持团队协作，研究人员可以共享和讨论量表使用经验",
+    "feature_security_title": "数据安全",
+    "feature_security_description": "企业级安全保障，确保患者数据和研究结果的隐私安全",
+    "feature_deployment_title": "快速部署",
+    "feature_deployment_description": "一键部署到临床环境，与现有系统无缝集成",
+    "ai_demo_title": "AI 智能检索演示",
+    "ai_demo_description": "我们的 AI 系统可以理解您的需求，智能推荐最适合的量表工具。无论是按疾病类型、评估目标还是患者群体，都能快速匹配。",
+    "user_input": "用户输入:",
+    "ai_recommendation": "AI 推荐:",
+    "search_time": "搜索结果 (0.2秒)",
+    "cancer_quality_input": "评估癌症患者生活质量的量表",
+    "ai_cancer_recommendation": "EORTC QLQ-C30, FACT-G, SF-36...",
+    "eortc_desc": "欧洲癌症研究治疗组织生活质量量表",
+    "fact_desc": "癌症治疗功能评估量表",
+    "sf36_desc": "简明健康状况调查表"
+  },
+  "sidebar": {
+    "dashboard": "仪表盘",
+    "ecoa_scales": "eCOA 量表",
+    "scale_search": "量表搜索",
+    "my_favorites": "我的收藏",
+    "search_history": "搜索历史",
+    "scale_comparison": "量表对比",
+    "copyright_service": "版权服务",
+    "license_inquiry": "许可查询",
+    "contact_tickets": "联系工单",
+    "scale_interpretation": "量表解读",
+    "interpretation_guide": "解读指南",
+    "score_calculator": "分数计算器",
+    "clinical_cases": "临床案例",
+    "team_management": "团队管理",
+    "team_overview": "团队概览",
+    "member_management": "成员管理",
+    "team_settings": "团队设置",
+    "credit_management": "积分管理",
+    "credit_balance": "积分余额",
+    "usage_history": "使用记录",
+    "purchase_credits": "购买积分",
+    "team_pricing": "团队定价",
+    "usage_analytics": "使用统计",
+    "search_analytics": "搜索分析",
+    "usage_reports": "使用报告",
+    "team_activity": "团队活动",
+    "settings": "设置",
+    "profile": "个人资料",
+    "security_settings": "安全设置",
+    "session_management": "会话管理",
+    "change_password": "修改密码",
+    "quick_search": "快速搜索",
+    "my_tickets": "我的工单"
+  },
+  "pricing": {
+    "title": "选择适合的订阅方案",
+    "description": "从个人研究到企业级部署，我们提供灵活的定价方案满足不同需求",
+    "monthly": "月付",
+    "yearly": "年付",
+    "save_20": "节省 20%",
+    "recommended": "推荐",
+    "most_popular": "最受欢迎",
+    "plans": {
+      "basic": {
+        "name": "基础版",
+        "price": "免费",
+        "description": "适合个人研究者和小团队",
+        "button": "免费开始",
+        "features": [
+          "访问基础量表库 (100+)",
+          "基础搜索功能",
+          "每月 50 次搜索",
+          "社区支持",
+          "基础数据导出"
+        ]
+      },
+      "professional": {
+        "name": "专业版",
+        "price": "¥299",
+        "period": "/月",
+        "description": "适合专业研究团队",
+        "button": "立即订阅",
+        "features": [
+          "访问完整量表库 (500+)",
+          "AI 智能检索",
+          "无限次搜索",
+          "高级数据分析",
+          "团队协作功能",
+          "优先技术支持",
+          "自定义量表上传",
+          "API 集成支持"
+        ]
+      },
+      "enterprise": {
+        "name": "企业版",
+        "price": "¥999",
+        "period": "/月",
+        "description": "适合大型医疗机构",
+        "button": "联系销售",
+        "features": [
+          "专业版所有功能",
+          "私有部署选项",
+          "企业级安全",
+          "专属客户经理",
+          "定制化开发",
+          "培训和咨询服务",
+          "SLA 保障",
+          "白标解决方案"
+        ]
+      }
+    },
+    "faq": {
+      "title": "常见问题",
+      "can_cancel": {
+        "question": "可以随时取消订阅吗？",
+        "answer": "是的，您可以随时取消订阅，取消后仍可使用至当前计费周期结束。"
+      },
+      "payment_methods": {
+        "question": "支持哪些支付方式？",
+        "answer": "支持支付宝、微信支付、银行卡等多种支付方式。"
+      },
+      "enterprise_services": {
+        "question": "企业版包含哪些定制服务？",
+        "answer": "包含私有部署、定制开发、专属培训等一对一服务。"
+      },
+      "data_security": {
+        "question": "数据安全如何保障？",
+        "answer": "采用银行级加密技术，符合 GDPR 和国内数据保护法规要求。"
+      }
+    }
+  },
+  "search": {
+    "title": "AI 智能搜索",
+    "description": "使用自然语言描述您的需求，AI 将为您推荐最适合的量表",
+    "placeholder": "例如：评估癌症患者生活质量的量表...",
+    "search_placeholder": "搜索量表或心理测量工具...",
+    "search_placeholder_small": "搜索量表...",
+    "button": "搜索",
+    "searching": "搜索中...",
+    "results_title": "搜索结果",
+    "results_count": "找到 {count} 个相关量表",
+    "results_stats": "约 {count} 条结果 (用时 {time} 秒)",
+    "match_score": "匹配度: {score}%",
+    "used_by": "已被 {count}+ 研究使用",
+    "view_details": "查看详情",
+    "download": "下载",
+    "need_upgrade": "需要升级",
+    "login_prompt": {
+      "title": "开始使用 AI 搜索",
+      "description": "登录后即可使用 AI 智能搜索功能"
+    },
+    "no_results": {
+      "title": "未找到相关结果",
+      "description": "尝试使用不同的关键词或更具体的描述"
+    },
+    "free_limitation": "免费版本限制：仅显示基础量表，升级至专业版获取完整 AI 推荐",
+    "go_back": "返回",
+    "searches_remaining": "剩余 {count} 次",
+    "ecoa_search": "eCOA 搜索",
+    "search_ecoa": "搜索 ECOA",
+    "feeling_lucky": "手气不错",
+    "quick_search": "快速搜索",
+    "search_suggestions": "搜索建议：",
+    "category": "类别",
+    "items": "题项",
+    "language": "语言",
+    "status": "状态",
+    "no_results_query": "找不到和您的查询 - {query} - 相符的内容或信息。",
+    "suggestions_title": "建议",
+    "suggestion_check_spelling": "请检查输入字词是否正确",
+    "suggestion_try_different": "请尝试其他关键词",
+    "suggestion_try_common": "请尝试较常用的关键词",
+    "suggestion_reduce_keywords": "请减少关键词数量",
+    "no_results_suggestions": [
+      "请检查输入字词是否正确",
+      "请尝试其他关键词",
+      "请尝试较常用的关键词",
+      "请减少关键词数量"
+    ],
+    "filter_criteria": "过滤条件",
+    "filters": "过滤条件:",
+    "all_categories": "所有类别",
+    "sort_relevance": "相关性",
+    "sort_name": "名称",
+    "sort_by_relevance": "相关性",
+    "sort_by_name": "名称",
+    "sort_by_items": "题项数",
+    "about_results": "约 {count} 条结果 (用时 0.{time} 秒)",
+    "quick_suggestions": {
+      "depression": "抑郁",
+      "anxiety": "焦虑",
+      "wellbeing": "幸福感",
+      "personality": "人格"
+    }
+  },
+  "insights": {
+    "title": "量表解读中心",
+    "subtitle": "专业解读",
+    "description": "深入了解各类 eCOA 量表的使用方法、评分标准和临床应用，提升您的专业实践水平",
+    "featured": "精选",
+    "read_more": "阅读全文",
+    "view_more": "查看更多解读文章",
+    "back_to_list": "返回文章列表",
+    "back_to_home": "返回首页",
+    "search_placeholder": "搜索文章...",
+    "all_articles": "所有文章",
+    "featured_articles": "精选文章",
+    "category_articles": "{category} 相关文章",
+    "articles_count": "({count} 篇)",
+    "no_articles": {
+      "title": "暂无相关文章",
+      "description": "请尝试调整搜索条件或选择其他分类"
+    },
+    "reading_time": "{time} 分钟阅读",
+    "views_count": "{count} 次阅读",
+    "minutes": "分钟",
+    "read_time": "{time} 分钟",
+    "views": "{count} 次阅读",
+    "categories": {
+      "life_quality": "生活质量",
+      "mental_health": "精神健康",
+      "oncology": "肿瘤学",
+      "pain_assessment": "疼痛评估",
+      "cognitive_assessment": "认知评估"
+    }
   }
 }

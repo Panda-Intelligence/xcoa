@@ -1,8 +1,11 @@
-import { useState, useEffect } from "react";
+'use client';
+
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Search, Loader2, ArrowLeft, X } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useLanguage } from '@/hooks/useLanguage';
 
 interface SearchResult {
   id: string;
@@ -16,12 +19,13 @@ interface SearchResult {
 }
 
 interface GoogleStyleSearchProps {
-  user: any;
+  user: object | null;
   accessToken: string;
   onBack: () => void;
 }
 
-export function GoogleStyleSearch({ user, accessToken, onBack }: GoogleStyleSearchProps) {
+export function GoogleStyleSearch({ onBack }: GoogleStyleSearchProps) {
+  const { t } = useLanguage();
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<SearchResult[]>([]);
   const [loading, setLoading] = useState(false);
@@ -45,16 +49,16 @@ export function GoogleStyleSearch({ user, accessToken, onBack }: GoogleStyleSear
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ 
+        body: JSON.stringify({
           query,
           category: filterCategory,
           sortBy,
           page: 1,
-          limit: 20 
+          limit: 20
         }),
       });
 
-      const data = await response.json();
+      const data = await response.json() as { error?: string; results: SearchResult[]; searches_remaining: number };
 
       if (!response.ok) {
         throw new Error(data.error || 'Search failed');
@@ -62,8 +66,8 @@ export function GoogleStyleSearch({ user, accessToken, onBack }: GoogleStyleSear
 
       setResults(data.results);
       setSearchesRemaining(data.searches_remaining);
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : 'Unknown error');
     } finally {
       setLoading(false);
     }
@@ -95,12 +99,12 @@ export function GoogleStyleSearch({ user, accessToken, onBack }: GoogleStyleSear
           <div className="flex items-center justify-between p-6">
             <Button variant="ghost" size="sm" onClick={onBack} className="text-gray-600 hover:bg-gray-100">
               <ArrowLeft className="h-4 w-4 mr-2" />
-              返回
+              {t('search.go_back')}
             </Button>
 
             {searchesRemaining !== null && searchesRemaining !== -1 && (
               <div className="text-sm text-gray-600 bg-gray-50 px-3 py-1 rounded-full">
-                剩余搜索: <span className="font-medium">{searchesRemaining}</span> 次
+                {t('search.searches_remaining').replace('{count}', searchesRemaining.toString())}
               </div>
             )}
           </div>
@@ -121,7 +125,7 @@ export function GoogleStyleSearch({ user, accessToken, onBack }: GoogleStyleSear
                   <div className="flex items-center bg-white border border-gray-200 rounded-full shadow-lg hover:shadow-xl transition-shadow duration-200 focus-within:shadow-xl">
                     <Search className="absolute left-4 h-5 w-5 text-gray-400" />
                     <Input
-                      placeholder="搜索 eCOA 量表..."
+                      placeholder={t('search.placeholder')}
                       value={query}
                       onChange={(e) => setQuery(e.target.value)}
                       className="pl-12 pr-12 h-14 text-base bg-transparent border-0 rounded-full focus:ring-0 focus:outline-none"
@@ -168,7 +172,7 @@ export function GoogleStyleSearch({ user, accessToken, onBack }: GoogleStyleSear
                 }}
                 disabled={loading || !query.trim()}
               >
-                eCOA 搜索
+                {t('search.ecoa_search')}
               </Button>
               <Button
                 variant="outline"
@@ -179,13 +183,13 @@ export function GoogleStyleSearch({ user, accessToken, onBack }: GoogleStyleSear
                 }}
                 disabled={loading}
               >
-                手气不错
+                {t('search.feeling_lucky')}
               </Button>
             </div>
 
             {/* Quick suggestions */}
             <div className="text-center">
-              <div className="text-sm text-gray-600 mb-3">快速搜索：</div>
+              <div className="text-sm text-gray-600 mb-3">{t('search.quick_search')}</div>
               <div className="flex flex-wrap justify-center gap-2">
                 {[
                   "MMSE-2",
@@ -197,6 +201,7 @@ export function GoogleStyleSearch({ user, accessToken, onBack }: GoogleStyleSear
                 ].map((suggestion) => (
                   <button
                     key={suggestion}
+                    type="button"
                     onClick={() => {
                       setQuery(suggestion);
                       handleSearch();
@@ -235,7 +240,7 @@ export function GoogleStyleSearch({ user, accessToken, onBack }: GoogleStyleSear
                       <div className="flex items-center bg-white border border-gray-200 rounded-full shadow-sm hover:shadow-md transition-shadow focus-within:shadow-md">
                         <Search className="absolute left-3 h-4 w-4 text-gray-400" />
                         <Input
-                          placeholder="搜索 eCOA 量表..."
+                          placeholder={t('search.placeholder')}
                           value={query}
                           onChange={(e) => setQuery(e.target.value)}
                           className="pl-10 pr-10 h-10 text-sm bg-transparent border-0 rounded-full focus:ring-0 focus:outline-none"
@@ -273,7 +278,7 @@ export function GoogleStyleSearch({ user, accessToken, onBack }: GoogleStyleSear
                 {/* Search remaining indicator */}
                 {searchesRemaining !== null && searchesRemaining !== -1 && (
                   <div className="text-xs text-gray-500">
-                    剩余 {searchesRemaining} 次
+                    {t('search.searches_remaining').replace('{count}', searchesRemaining.toString()).replace(': ', ' ')}
                   </div>
                 )}
               </div>
@@ -292,9 +297,9 @@ export function GoogleStyleSearch({ user, accessToken, onBack }: GoogleStyleSear
             {/* Google-style search stats */}
             <div className="text-sm text-gray-600 mb-6">
               {loading ? (
-                "搜索中..."
+                t('search.searching')
               ) : (
-                `约 ${filteredAndSortedResults.length} 条结果 (用时 0.${Math.floor(Math.random() * 50) + 10} 秒)`
+                t('search.results_stats').replace('{count}', filteredAndSortedResults.length.toString()).replace('{time}', `0.${Math.floor(Math.random() * 50) + 10}`)
               )}
             </div>
 
@@ -320,11 +325,11 @@ export function GoogleStyleSearch({ user, accessToken, onBack }: GoogleStyleSear
 
                     {/* Meta information in a cleaner format */}
                     <div className="text-xs text-gray-600 flex flex-wrap gap-4">
-                      <span>类别: {result.category}</span>
-                      <span>题项: {result.items_count}</span>
-                      <span>语言: {result.languages.join(', ')}</span>
-                      <span>状态: {result.validation_status}</span>
-                      <span>匹配度: {result.match_score}%</span>
+                      <span>{t('search.category')}: {result.category}</span>
+                      <span>{t('search.items')}: {result.items_count}</span>
+                      <span>{t('search.language')}: {result.languages.join(', ')}</span>
+                      <span>{t('search.status')}: {result.validation_status}</span>
+                      <span>{t('search.match_score')}: {result.match_score}%</span>
                     </div>
                   </div>
                 ))}
@@ -335,15 +340,15 @@ export function GoogleStyleSearch({ user, accessToken, onBack }: GoogleStyleSear
                   <Search className="h-16 w-16 mx-auto mb-4" />
                 </div>
                 <h3 className="text-lg text-gray-900 mb-2">
-                  找不到和您的查询 - <strong>{query}</strong> - 相符的内容或信息。
+                  {t('search.no_results_query').replace('{query}', query)}
                 </h3>
                 <div className="text-sm text-gray-600 space-y-1">
-                  <p>建议：</p>
+                  <p>{t('search.suggestions_title')}:</p>
                   <ul className="list-none space-y-1 text-left max-w-md mx-auto">
-                    <li>• 请检查输入字词是否正确</li>
-                    <li>• 请尝试其他关键词</li>
-                    <li>• 请尝试较常用的关键词</li>
-                    <li>• 请减少关键词数量</li>
+                    <li>• {t('search.suggestion_check_spelling')}</li>
+                    <li>• {t('search.suggestion_try_different')}</li>
+                    <li>• {t('search.suggestion_try_common')}</li>
+                    <li>• {t('search.suggestion_reduce_keywords')}</li>
                   </ul>
                 </div>
               </div>
@@ -353,13 +358,13 @@ export function GoogleStyleSearch({ user, accessToken, onBack }: GoogleStyleSear
             {results.length > 0 && (
               <div className="mt-8 pt-6 border-t border-gray-200">
                 <div className="flex items-center gap-4 text-sm">
-                  <span className="text-gray-600">过滤条件:</span>
+                  <span className="text-gray-600">{t('search.filter_criteria')}:</span>
                   <Select value={filterCategory} onValueChange={setFilterCategory}>
                     <SelectTrigger className="w-32 h-8 text-xs">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="all">所有类别</SelectItem>
+                      <SelectItem value="all">{t('search.all_categories')}</SelectItem>
                       {categories.map(category => (
                         <SelectItem key={category} value={category}>{category}</SelectItem>
                       ))}
@@ -371,8 +376,8 @@ export function GoogleStyleSearch({ user, accessToken, onBack }: GoogleStyleSear
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="relevance">相关性</SelectItem>
-                      <SelectItem value="name">名称</SelectItem>
+                      <SelectItem value="relevance">{t('search.sort_relevance')}</SelectItem>
+                      <SelectItem value="name">{t('search.sort_name')}</SelectItem>
                       <SelectItem value="items">题项数量</SelectItem>
                     </SelectContent>
                   </Select>

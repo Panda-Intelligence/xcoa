@@ -3,7 +3,7 @@
     "wrangler.json": "jsonc"
   },
   "i18n-ally.localesPaths": [
-    "src/locales"
+    "public/locales"
   ],
   "i18n-ally.keystyle": "nested"
 }

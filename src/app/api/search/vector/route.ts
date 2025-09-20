@@ -34,6 +34,11 @@ function cosineSimilarity(vecA: number[], vecB: number[]): number {
 // 使用 Workers AI 生成查询嵌入
 async function generateQueryEmbedding(query: string): Promise<number[]> {
   try {
+    // 在开发环境中，跳过 Workers AI 调用
+    if (process.env.NODE_ENV === 'development') {
+      throw new Error('Workers AI not available in development');
+    }
+
     const { env } = getCloudflareContext();
     
     if (!env.AI) {

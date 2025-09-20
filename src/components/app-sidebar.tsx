@@ -22,6 +22,7 @@ import { NavMain } from "@/components/nav-main"
 import { NavUser } from "@/components/nav-user"
 import { TeamSwitcher } from "@/components/team-switcher"
 import { LanguageSwitch } from "@/components/LanguageSwitch"
+import { useLanguage } from "@/hooks/useLanguage"
 import {
   Sidebar,
   SidebarContent,
@@ -59,6 +60,7 @@ type Data = {
 // TODO Add a theme switcher
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { session } = useSessionStore();
+  const { t } = useLanguage();
   const [formattedTeams, setFormattedTeams] = useState<Data['teams']>([]);
 
   // Map session teams to the format expected by TeamSwitcher
@@ -87,170 +89,166 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     teams: formattedTeams,
     navMain: [
       {
-        title: "Dashboard",
+        title: t('sidebar.dashboard'),
         url: "/dashboard",
         icon: SquareTerminal,
         isActive: true,
       },
       {
-        title: "eCOA 量表",
+        title: t('sidebar.ecoa_scales'),
         url: "/dashboard/scales" as Route,
         icon: Search,
         items: [
           {
-            title: "量表搜索",
-            url: "/dashboard/scales",
+            title: t('sidebar.scale_search'),
+            url: "/dashboard/scales" as Route,
           },
           {
-            title: "我的收藏",
-            url: "/dashboard/scales/favorites",
+            title: t('sidebar.my_favorites'),
+            url: "/dashboard/scales" as Route,
           },
           {
-            title: "搜索历史",
-            url: "/dashboard/scales/history",
+            title: t('sidebar.search_history'),
+            url: "/dashboard/scales" as Route,
           },
           {
-            title: "量表对比",
-            url: "/dashboard/scales/compare",
+            title: t('sidebar.scale_comparison'),
+            url: "/dashboard/scales" as Route,
           },
         ],
       },
       {
-        title: "版权服务",
+        title: t('sidebar.copyright_service'),
         url: "/dashboard/copyright" as Route,
         icon: Shield,
         items: [
           {
-            title: "许可查询",
-            url: "/dashboard/copyright",
+            title: t('sidebar.license_inquiry'),
+            url: "/dashboard/copyright" as Route,
           },
           {
-            title: "联系工单",
-            url: "/dashboard/copyright/tickets",
-          },
-          {
-            title: "批量检查",
-            url: "/dashboard/copyright/batch",
-          },
+            title: t('sidebar.contact_tickets'),
+            url: "/dashboard/copyright" as Route,
+          }
         ],
       },
       {
-        title: "量表解读",
+        title: t('sidebar.scale_interpretation'),
         url: "/dashboard/interpretation" as Route,
         icon: BookOpen,
         items: [
           {
-            title: "解读指南",
-            url: "/dashboard/interpretation",
+            title: t('sidebar.interpretation_guide'),
+            url: "/dashboard/interpretation" as Route,
           },
           {
-            title: "分数计算器",
-            url: "/dashboard/interpretation/calculator",
+            title: t('sidebar.score_calculator'),
+            url: "/dashboard/interpretation" as Route,
           },
           {
-            title: "临床案例",
-            url: "/dashboard/interpretation/cases",
+            title: t('sidebar.clinical_cases'),
+            url: "/dashboard/interpretation" as Route,
           },
         ],
       },
       {
-        title: "团队管理",
+        title: t('sidebar.team_management'),
         url: "/dashboard/teams" as Route,
         icon: Users,
         items: [
           {
-            title: "团队概览",
-            url: "/dashboard/teams",
+            title: t('sidebar.team_overview'),
+            url: "/dashboard/teams" as Route,
           },
           {
-            title: "成员管理",
-            url: "/dashboard/teams/members",
+            title: t('sidebar.member_management'),
+            url: "/dashboard/teams" as Route,
           },
           {
-            title: "团队设置",
-            url: "/dashboard/teams/settings",
+            title: t('sidebar.team_settings'),
+            url: "/dashboard/teams/create" as Route,
           },
         ],
       },
       {
-        title: "积分管理",
+        title: t('sidebar.credit_management'),
         url: "/dashboard/billing",
         icon: CreditCard,
         items: [
           {
-            title: "积分余额",
-            url: "/dashboard/billing",
+            title: t('sidebar.credit_balance'),
+            url: "/dashboard/billing" as Route,
           },
           {
-            title: "使用记录",
-            url: "/dashboard/billing/usage",
+            title: t('sidebar.usage_history'),
+            url: "/dashboard/billing" as Route,
           },
           {
-            title: "购买积分",
-            url: "/dashboard/billing/purchase",
+            title: t('sidebar.purchase_credits'),
+            url: "/dashboard/billing" as Route,
           },
           {
-            title: "团队定价",
-            url: "/dashboard/billing/pricing",
+            title: t('sidebar.team_pricing'),
+            url: "/dashboard/billing" as Route,
           },
         ],
       },
       {
-        title: "使用统计",
+        title: t('sidebar.usage_analytics'),
         url: "/dashboard/analytics" as Route,
         icon: BarChart3,
         items: [
           {
-            title: "搜索分析",
-            url: "/dashboard/analytics/search",
+            title: t('sidebar.search_analytics'),
+            url: "/dashboard/analytics" as Route,
           },
           {
-            title: "使用报告",
-            url: "/dashboard/analytics/usage",
+            title: t('sidebar.usage_reports'),
+            url: "/dashboard/analytics" as Route,
           },
           {
-            title: "团队活动",
-            url: "/dashboard/analytics/team",
+            title: t('sidebar.team_activity'),
+            url: "/dashboard/analytics" as Route,
           },
         ],
       },
       {
-        title: "设置",
+        title: t('sidebar.settings'),
         url: "/settings",
         icon: Settings2,
         items: [
           {
-            title: "个人资料",
-            url: "/settings",
+            title: t('sidebar.profile'),
+            url: "/settings" as Route,
           },
           {
-            title: "安全设置",
-            url: "/settings/security",
+            title: t('sidebar.security_settings'),
+            url: "/settings" as Route,
           },
           {
-            title: "会话管理",
-            url: "/settings/sessions",
+            title: t('sidebar.session_management'),
+            url: "/settings" as Route,
           },
           {
-            title: "修改密码",
-            url: "/forgot-password",
+            title: t('sidebar.change_password'),
+            url: "/forgot-password" as Route,
           },
         ],
       },
     ],
     projects: [
       {
-        title: "快速搜索",
+        title: t('sidebar.quick_search'),
         url: "/dashboard/scales",
         icon: Search,
       },
       {
-        title: "我的工单",
-        url: "/dashboard/copyright/tickets",
+        title: t('sidebar.my_tickets'),
+        url: "/dashboard/copyright" as Route,
         icon: MessageSquare,
       },
       {
-        title: "量表解读",
+        title: t('sidebar.scale_interpretation'),
         url: "/dashboard/interpretation",
         icon: FileText,
       },
