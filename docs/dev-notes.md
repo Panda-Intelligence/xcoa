@@ -4,16 +4,16 @@
 
 ```bash
 # 启动开发服务器
-bun run dev
+pnpm run dev
 
 # 应用数据库迁移
-bun run db:migrate:dev
+pnpm run db:migrate:dev
 
 # 生成 Cloudflare 类型
-bun run cf-typegen
+pnpm run cf-typegen
 
 # 预览邮件模板
-bun run email:dev
+pnpm run email:dev
 ```
 
 ## 📁 重要文件位置
@@ -64,14 +64,14 @@ curl "localhost:3000/api/search/filters"
 ### 数据库操作
 ```bash
 # 生成新迁移
-bun run db:generate migration-name
+pnpm run db:generate migration-name
 
 # 应用迁移到本地
-bun run db:migrate:dev
+pnpm run db:migrate:dev
 
 # 重置本地数据库
 rm -rf .wrangler/state/v3/d1
-bun run db:migrate:dev
+pnpm run db:migrate:dev
 ```
 
 ### Cloudflare 操作
@@ -80,13 +80,13 @@ bun run db:migrate:dev
 wrangler vectorize create xcoa-ecoa-search --dimensions=1536
 
 # 部署到 Cloudflare
-bun run deploy
+pnpm run deploy
 
 # 查看远程日志
 wrangler tail
 
 # 生成类型定义
-bun run cf-typegen
+pnpm run cf-typegen
 ```
 
 ## 📊 当前数据

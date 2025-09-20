@@ -285,13 +285,13 @@ curl "localhost:3000/api/search/filters"
 ### 开发环境配置
 ```bash
 # 启动开发服务器
-bun run dev
+pnpm run dev
 
 # 数据库迁移
-bun run db:migrate:dev
+pnpm run db:migrate:dev
 
 # 生成 Cloudflare 类型
-bun run cf-typegen
+pnpm run cf-typegen
 ```
 
 ### 生产环境要求

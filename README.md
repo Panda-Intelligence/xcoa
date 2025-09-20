@@ -127,16 +127,16 @@ Have a look at the [project plan](./cursor-docs/project-plan.md) to get an overv
 
 # Running it locally
 
-1. `bun install`
+1. `pnpm install`
 2.  Copy `.dev.vars.example` to `.dev.vars` and fill in the values.
 3.  Copy `.env.example` to `.env` and fill in the values.
-4. `bun db:migrate:dev` - Creates a local SQLite database and applies migrations
-5. `bun dev`
+4. `pnpm db:migrate:dev` - Creates a local SQLite database and applies migrations
+5. `pnpm dev`
 6.  Open http://localhost:3000
 
 ## Changes to wrangler.jsonc
 
-After making a change to wrangler.jsonc, you need to run `bun cf-typegen` to generate the new types.
+After making a change to wrangler.jsonc, you need to run `pnpm cf-typegen` to generate the new types.
 
 ## Things to change and customize before deploying to production
 1. Go to `src/constants.ts` and update it with your project details
@@ -169,7 +169,7 @@ After making a change to wrangler.jsonc, you need to run `bun cf-typegen` to gen
 
 ## Email templates
 If you want to preview and edit the email templates you can:
-1. `bun email:dev`
+1. `pnpm email:dev`
 2. Open http://localhost:3001
 3. Edit the email templates in the `src/react-email` folder
 4. For inspiration you can checkout https://react.email/templates
