@@ -2,7 +2,7 @@
 
 ## 🔍 API 概览
 
-xCOA 提供4个核心搜索 API，支持精确搜索、语义搜索、智能建议和动态筛选。
+xCOA 提供8个核心搜索和详情 API，支持精确搜索、语义搜索、向量搜索、混合搜索、高级筛选和量表详情展示。
 
 **Base URL:** `http://localhost:3000` (开发环境)
 
@@ -12,8 +12,12 @@ xCOA 提供4个核心搜索 API，支持精确搜索、语义搜索、智能建�
 |------|------|------|----------|
 | `/api/search` | POST | 基础搜索 | ~400ms |
 | `/api/search/semantic` | POST | 语义搜索 | ~450ms |
+| `/api/search/vector` | POST | 向量搜索 | ~600ms |
+| `/api/search/hybrid` | POST | 混合搜索 | ~500ms |
+| `/api/search/advanced` | POST | 高级筛选 | ~500ms |
 | `/api/search/suggestions` | GET | 搜索建议 | ~200ms |
 | `/api/search/filters` | GET | 筛选选项 | ~300ms |
+| `/api/scales/[scaleId]` | GET | 量表详情 | ~400ms |
 
 ## 1. 基础搜索 API
 

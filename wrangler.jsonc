@@ -94,7 +94,7 @@
   "vectorize": [
     {
       "binding": "VECTORIZE_INDEX",
-      "index_name": "xcoa-search"
+      "index_name": "cloudflare-rag-index"
     }
   ],
   /**

@@ -1,0 +1,168 @@
+import { NextRequest, NextResponse } from 'next/server';
+import { getDB } from '@/db';
+import { 
+  ecoaScaleTable, 
+  ecoaCategoryTable, 
+  ecoaItemTable,
+  scaleUsageTable
+} from '@/db/schema';
+import { eq } from 'drizzle-orm';
+import { getSessionFromCookie } from '@/utils/auth';
+import { getIP } from '@/utils/get-IP';
+import { z } from 'zod';
+
+const previewParamsSchema = z.object({
+  scaleId: z.string(),
+});
+
+export async function GET(
+  request: NextRequest,
+  context: { params: Promise<{ scaleId: string }> }
+) {
+  try {
+    const db = getDB();
+    const session = await getSessionFromCookie();
+    const user = session?.user;
+    const ip = getIP(request);
+    
+    const params = await context.params;
+    const { scaleId } = previewParamsSchema.parse(params);
+    
+    // 获取量表基本信息
+    const [scale] = await db
+      .select({
+        id: ecoaScaleTable.id,
+        name: ecoaScaleTable.name,
+        nameEn: ecoaScaleTable.nameEn,
+        acronym: ecoaScaleTable.acronym,
+        description: ecoaScaleTable.description,
+        descriptionEn: ecoaScaleTable.descriptionEn,
+        categoryName: ecoaCategoryTable.name,
+        itemsCount: ecoaScaleTable.itemsCount,
+        dimensionsCount: ecoaScaleTable.dimensionsCount,
+        languages: ecoaScaleTable.languages,
+        validationStatus: ecoaScaleTable.validationStatus,
+        administrationTime: ecoaScaleTable.administrationTime,
+        targetPopulation: ecoaScaleTable.targetPopulation,
+        ageRange: ecoaScaleTable.ageRange,
+        domains: ecoaScaleTable.domains,
+        scoringMethod: ecoaScaleTable.scoringMethod,
+        copyrightInfo: ecoaScaleTable.copyrightInfo,
+      })
+      .from(ecoaScaleTable)
+      .leftJoin(ecoaCategoryTable, eq(ecoaScaleTable.categoryId, ecoaCategoryTable.id))
+      .where(eq(ecoaScaleTable.id, scaleId));
+
+    if (!scale) {
+      return NextResponse.json(
+        { error: 'Scale not found' },
+        { status: 404 }
+      );
+    }
+
+    // 获取前5个题项作为预览
+    const previewItems = await db
+      .select({
+        itemNumber: ecoaItemTable.itemNumber,
+        question: ecoaItemTable.question,
+        questionEn: ecoaItemTable.questionEn,
+        dimension: ecoaItemTable.dimension,
+        responseType: ecoaItemTable.responseType,
+        responseOptions: ecoaItemTable.responseOptions,
+      })
+      .from(ecoaItemTable)
+      .where(eq(ecoaItemTable.scaleId, scaleId))
+      .orderBy(ecoaItemTable.sortOrder, ecoaItemTable.itemNumber)
+      .limit(5);
+
+    // 获取所有维度列表
+    const allItems = await db
+      .select({
+        dimension: ecoaItemTable.dimension,
+      })
+      .from(ecoaItemTable)
+      .where(eq(ecoaItemTable.scaleId, scaleId));
+
+    const dimensions = [...new Set(allItems.map(item => item.dimension).filter(Boolean))];
+
+    // 记录预览访问
+    try {
+      await db.insert(scaleUsageTable).values({
+        scaleId,
+        userId: user?.id,
+        actionType: 'preview',
+        ipAddress: ip,
+        userAgent: request.headers.get('user-agent') || '',
+      });
+    } catch (error) {
+      console.warn('Failed to record preview:', error);
+    }
+
+    // 解析 JSON 字段
+    const parsedScale = {
+      ...scale,
+      languages: Array.isArray(scale.languages) ? scale.languages : 
+        (scale.languages ? JSON.parse(scale.languages) : []),
+      domains: Array.isArray(scale.domains) ? scale.domains : 
+        (scale.domains ? JSON.parse(scale.domains) : []),
+    };
+
+    // 解析题项的 JSON 字段
+    const parsedItems = previewItems.map(item => ({
+      ...item,
+      responseOptions: Array.isArray(item.responseOptions) ? item.responseOptions :
+        (item.responseOptions ? JSON.parse(item.responseOptions) : []),
+    }));
+
+    // 生成预览样本数据
+    const sampleAnswers = parsedItems.map(item => {
+      const options = item.responseOptions;
+      if (options.length > 0) {
+        // 随机选择一个中等程度的答案作为示例
+        const middleIndex = Math.floor(options.length / 2);
+        return {
+          itemNumber: item.itemNumber,
+          question: item.question,
+          selectedOption: options[middleIndex],
+          optionIndex: middleIndex,
+        };
+      }
+      return null;
+    }).filter(Boolean);
+
+    return NextResponse.json({
+      scale: parsedScale,
+      preview: {
+        items: parsedItems,
+        dimensions,
+        totalItems: scale.itemsCount,
+        previewCount: parsedItems.length,
+        hasMoreItems: parsedItems.length < (scale.itemsCount || 0),
+        sampleAnswers,
+      },
+      previewInfo: {
+        isPartialPreview: parsedItems.length < (scale.itemsCount || 0),
+        previewRatio: scale.itemsCount ? Math.round((parsedItems.length / scale.itemsCount) * 100) : 0,
+        estimatedCompletionTime: scale.administrationTime,
+        recommendedEnvironment: '安静的环境，避免干扰',
+        instructions: '请仔细阅读每个题项，根据您最近两周的感受选择最符合的选项。',
+      },
+      viewedAt: new Date().toISOString(),
+    });
+
+  } catch (error) {
+    console.error('Scale preview API error:', error);
+    
+    if (error instanceof z.ZodError) {
+      return NextResponse.json(
+        { error: 'Invalid scale ID' },
+        { status: 400 }
+      );
+    }
+
+    return NextResponse.json(
+      { error: 'Failed to generate scale preview' },
+      { status: 500 }
+    );
+  }
+}
