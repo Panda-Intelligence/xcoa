@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getCloudflareContext } from '@opennextjs/cloudflare';
+// import { getCloudflareContext } from '@opennextjs/cloudflare';
 import { getDB } from '@/db';
 import { 
   ecoaScaleTable, 
@@ -33,12 +33,14 @@ function cosineSimilarity(vecA: number[], vecB: number[]): number {
 
 // 使用 Workers AI 生成查询嵌入
 async function generateQueryEmbedding(query: string): Promise<number[]> {
-  try {
-    // 在开发环境中，跳过 Workers AI 调用
-    if (process.env.NODE_ENV === 'development') {
-      throw new Error('Workers AI not available in development');
-    }
+  // 在开发环境中，直接抛出错误，不尝试调用 Cloudflare
+  if (process.env.NODE_ENV === 'development') {
+    throw new Error('Workers AI not available in development');
+  }
 
+  try {
+    // 在生产环境中才导入和使用 getCloudflareContext
+    const { getCloudflareContext } = await import('@opennextjs/cloudflare');
     const { env } = getCloudflareContext();
     
     if (!env.AI) {
