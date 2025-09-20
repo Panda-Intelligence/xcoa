@@ -5,20 +5,23 @@ import type { Route } from 'next'
 
 import {
   Building2,
-  Frame,
-  Map,
-  PieChart,
   Settings2,
-  ShoppingCart,
   SquareTerminal,
   CreditCard,
   Users,
+  Search,
+  FileText,
+  Shield,
+  MessageSquare,
+  BookOpen,
+  BarChart3,
 } from "lucide-react"
 
 import { NavMain } from "@/components/nav-main"
 import { NavProjects } from "@/components/nav-projects"
 import { NavUser } from "@/components/nav-user"
 import { TeamSwitcher } from "@/components/team-switcher"
+import { LanguageSwitch } from "@/components/LanguageSwitch"
 import {
   Sidebar,
   SidebarContent,
@@ -90,39 +93,146 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         isActive: true,
       },
       {
-        title: "Teams",
+        title: "eCOA 量表",
+        url: "/dashboard/scales" as Route,
+        icon: Search,
+        items: [
+          {
+            title: "量表搜索",
+            url: "/dashboard/scales",
+          },
+          {
+            title: "我的收藏",
+            url: "/dashboard/scales/favorites",
+          },
+          {
+            title: "搜索历史",
+            url: "/dashboard/scales/history",
+          },
+          {
+            title: "量表对比",
+            url: "/dashboard/scales/compare",
+          },
+        ],
+      },
+      {
+        title: "版权服务",
+        url: "/dashboard/copyright" as Route,
+        icon: Shield,
+        items: [
+          {
+            title: "许可查询",
+            url: "/dashboard/copyright",
+          },
+          {
+            title: "联系工单",
+            url: "/dashboard/copyright/tickets",
+          },
+          {
+            title: "批量检查",
+            url: "/dashboard/copyright/batch",
+          },
+        ],
+      },
+      {
+        title: "量表解读",
+        url: "/dashboard/interpretation" as Route,
+        icon: BookOpen,
+        items: [
+          {
+            title: "解读指南",
+            url: "/dashboard/interpretation",
+          },
+          {
+            title: "分数计算器",
+            url: "/dashboard/interpretation/calculator",
+          },
+          {
+            title: "临床案例",
+            url: "/dashboard/interpretation/cases",
+          },
+        ],
+      },
+      {
+        title: "团队管理",
         url: "/dashboard/teams" as Route,
         icon: Users,
+        items: [
+          {
+            title: "团队概览",
+            url: "/dashboard/teams",
+          },
+          {
+            title: "成员管理",
+            url: "/dashboard/teams/members",
+          },
+          {
+            title: "团队设置",
+            url: "/dashboard/teams/settings",
+          },
+        ],
       },
       {
-        title: "Marketplace",
-        url: "/dashboard/marketplace",
-        icon: ShoppingCart,
-      },
-      {
-        title: "Billing",
+        title: "积分管理",
         url: "/dashboard/billing",
         icon: CreditCard,
+        items: [
+          {
+            title: "积分余额",
+            url: "/dashboard/billing",
+          },
+          {
+            title: "使用记录",
+            url: "/dashboard/billing/usage",
+          },
+          {
+            title: "购买积分",
+            url: "/dashboard/billing/purchase",
+          },
+          {
+            title: "团队定价",
+            url: "/dashboard/billing/pricing",
+          },
+        ],
       },
       {
-        title: "Settings",
+        title: "使用统计",
+        url: "/dashboard/analytics" as Route,
+        icon: BarChart3,
+        items: [
+          {
+            title: "搜索分析",
+            url: "/dashboard/analytics/search",
+          },
+          {
+            title: "使用报告",
+            url: "/dashboard/analytics/usage",
+          },
+          {
+            title: "团队活动",
+            url: "/dashboard/analytics/team",
+          },
+        ],
+      },
+      {
+        title: "设置",
         url: "/settings",
         icon: Settings2,
         items: [
           {
-            title: "Profile",
+            title: "个人资料",
             url: "/settings",
           },
           {
-            title: "Security",
+            title: "安全设置",
             url: "/settings/security",
           },
           {
-            title: "Sessions",
+            title: "会话管理",
             url: "/settings/sessions",
           },
           {
-            title: "Change Password",
+            title: "修改密码",
             url: "/forgot-password",
           },
         ],
@@ -130,19 +240,19 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     ],
     projects: [
       {
-        title: "Design Engineering",
-        url: "#",
-        icon: Frame,
+        title: "快速搜索",
+        url: "/dashboard/scales",
+        icon: Search,
       },
       {
-        title: "Sales & Marketing",
-        url: "#",
-        icon: PieChart,
+        title: "我的工单",
+        url: "/dashboard/copyright/tickets",
+        icon: MessageSquare,
       },
       {
-        title: "Travel",
-        url: "#",
-        icon: Map,
+        title: "量表解读",
+        url: "/dashboard/interpretation",
+        icon: FileText,
       },
     ],
   }
@@ -160,7 +270,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <NavProjects projects={data.projects} />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser />
+        <div className="flex items-center justify-between px-2 py-1">
+          <NavUser />
+          <LanguageSwitch />
+        </div>
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>

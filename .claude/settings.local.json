@@ -9,7 +9,8 @@
       "Bash(wrangler vectorize create:*)",
       "Bash(wrangler whoami:*)",
       "Bash(time curl:*)",
-      "Bash(echo:*)"
+      "Bash(echo:*)",
+      "Bash(cat:*)"
     ],
     "deny": [],
     "ask": []
