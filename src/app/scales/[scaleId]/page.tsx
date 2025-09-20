@@ -24,7 +24,7 @@ import Link from 'next/link';
 import { useLanguage } from '@/hooks/useLanguage';
 
 interface ScalePageProps {
-  params: { scaleId: string };
+  params: Promise<{ scaleId: string }>;
 }
 
 interface ScaleData {
@@ -56,17 +56,28 @@ async function getScaleDetails(scaleId: string): Promise<ScaleData | null> {
 
 export default function ScalePage({ params }: ScalePageProps) {
   const { t } = useLanguage();
+  const [scaleId, setScaleId] = useState<string>('');
   const [data, setData] = useState<ScaleData | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    async function loadParams() {
+      const resolvedParams = await params;
+      setScaleId(resolvedParams.scaleId);
+    }
+    loadParams();
+  }, [params]);
+
+  useEffect(() => {
+    if (!scaleId) return;
+    
     async function fetchData() {
-      const result = await getScaleDetails(params.scaleId);
+      const result = await getScaleDetails(scaleId);
       setData(result);
       setLoading(false);
     }
     fetchData();
-  }, [params.scaleId]);
+  }, [scaleId]);
 
   if (loading) {
     return <div className="min-h-screen bg-background flex items-center justify-center">

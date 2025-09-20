@@ -28,10 +28,11 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import Link from 'next/link';
 
 interface CopyrightPageProps {
-  params: { scaleId: string };
+  params: Promise<{ scaleId: string }>;
 }
 
 export default function ScaleCopyrightPage({ params }: CopyrightPageProps) {
+  const [scaleId, setScaleId] = useState<string>('');
   const [copyrightInfo, setCopyrightInfo] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [contactDialogOpen, setContactDialogOpen] = useState(false);
@@ -46,7 +47,17 @@ export default function ScaleCopyrightPage({ params }: CopyrightPageProps) {
   });
 
   useEffect(() => {
-    fetch(`/api/scales/${params.scaleId}/copyright`)
+    async function loadParams() {
+      const resolvedParams = await params;
+      setScaleId(resolvedParams.scaleId);
+    }
+    loadParams();
+  }, [params]);
+
+  useEffect(() => {
+    if (!scaleId) return;
+    
+    fetch(`/api/scales/${scaleId}/copyright`)
       .then(res => res.json())
       .then(data => {
         if (data.error) {
@@ -60,16 +71,16 @@ export default function ScaleCopyrightPage({ params }: CopyrightPageProps) {
         notFound();
       })
       .finally(() => setLoading(false));
-  }, [params.scaleId]);
+  }, [scaleId]);
 
   const handleContactSubmit = async () => {
     try {
-      const response = await fetch(`/api/scales/${params.scaleId}/copyright`, {
+      const response = await fetch(`/api/scales/${scaleId}/copyright`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           ...contactForm,
-          scaleId: params.scaleId
+          scaleId: scaleId
         }),
       });
 

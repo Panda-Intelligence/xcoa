@@ -19,15 +19,26 @@ import { Separator } from '@/components/ui/separator';
 import Link from 'next/link';
 
 interface ScalePreviewPageProps {
-  params: { scaleId: string };
+  params: Promise<{ scaleId: string }>;
 }
 
 export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
+  const [scaleId, setScaleId] = useState<string>('');
   const [previewData, setPreviewData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch(`/api/scales/${params.scaleId}/preview`)
+    async function loadParams() {
+      const resolvedParams = await params;
+      setScaleId(resolvedParams.scaleId);
+    }
+    loadParams();
+  }, [params]);
+
+  useEffect(() => {
+    if (!scaleId) return;
+    
+    fetch(`/api/scales/${scaleId}/preview`)
       .then(res => res.json())
       .then(data => {
         if (data.error) {
@@ -41,7 +52,7 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
         notFound();
       })
       .finally(() => setLoading(false));
-  }, [params.scaleId]);
+  }, [scaleId]);
 
   if (loading) {
     return (
