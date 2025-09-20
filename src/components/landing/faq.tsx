@@ -103,7 +103,7 @@ const faqs = [
     question: "Can I preview the email templates?",
     answer: (
       <>
-        Yes! Run <code>pnpm email:dev</code> and open <a href="http://localhost:3001" target="_blank">http://localhost:3001</a> to preview and edit the email templates. They&apos;re built with React Email for a great developer experience.
+        Yes! Run <code>bun email:dev</code> and open <a href="http://localhost:3001" target="_blank">http://localhost:3001</a> to preview and edit the email templates. They&apos;re built with React Email for a great developer experience.
       </>
     ),
   },

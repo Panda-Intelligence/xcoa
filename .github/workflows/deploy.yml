@@ -25,7 +25,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 23
-          cache: 'pnpm'
+          cache: "bun"
 
       - name: Cache Next.js build
         uses: actions/cache@v4
@@ -38,7 +38,7 @@ jobs:
             ${{ runner.os }}-nextjs-${{ hashFiles('**/pnpm-lock.yaml') }}-
 
       - name: Install dependencies
-        run: pnpm install
+        run: bun install
 
       - name: Set D1 environment variables
         id: set-d1-vars
@@ -47,10 +47,10 @@ jobs:
           echo "D1_DATABASE_ID=$(node scripts/get-db-id.mjs)" >> $GITHUB_ENV
 
       - name: Migrate local D1 database
-        run: pnpm run db:migrate:dev
+        run: bun run db:migrate:dev
 
       - name: Deploy
-        run: pnpm run deploy
+        run: bun run deploy
         env:
           DATABASE_ID: ${{ env.D1_DATABASE_ID }}
           CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}

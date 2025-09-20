@@ -15,4 +15,4 @@ The database schema is in `src/db/schema.ts`.
 
 ## Migration Workflow
 
-Never generate SQL migration files. Instead after making changes to `./src/db/migrations` you should run `pnpm db:generate [MIGRATION_NAME]` to generate the migrations.
+Never generate SQL migration files. Instead after making changes to `./src/db/migrations` you should run `bun db:generate [MIGRATION_NAME]` to generate the migrations.

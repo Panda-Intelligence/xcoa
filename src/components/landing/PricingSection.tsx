@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Check, Star } from "lucide-react";
+import { Switch } from '@/components/ui/switch';
 
 const pricingPlans = [
   {
@@ -75,11 +76,7 @@ export function PricingSection() {
           {/* Billing Toggle */}
           <div className="flex items-center justify-center space-x-4 mt-8">
             <span className="text-sm text-muted-foreground">月付</span>
-            <div className="relative">
-              <input type="checkbox" className="sr-only" />
-              <div className="w-10 h-6 bg-secondary rounded-full shadow-inner"></div>
-              <div className="absolute w-4 h-4 bg-white rounded-full shadow -left-1 -top-1 transition"></div>
-            </div>
+            <Switch className="SwitchRoot" id="airplane-mode" />
             <span className="text-sm text-foreground">年付 (节省 20%)</span>
             <Badge variant="secondary" className="text-xs">推荐</Badge>
           </div>

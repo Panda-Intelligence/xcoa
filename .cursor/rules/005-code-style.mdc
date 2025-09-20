@@ -28,8 +28,8 @@ alwaysApply: true
 ## Package Management
 
 - Before adding any new packages, always check if we already have them in `package.json` to avoid duplicates.
-- Use `pnpm` for all package management operations.
+- Use `bun` for all package management operations.
 
 ## Type Definitions
 
-- When you have to add a global type, add it to `custom-env.d.ts` instead of `cloudflare-env.d.ts`, because otherwise it will be overridden by `pnpm run cf-typegen`.
+- When you have to add a global type, add it to `custom-env.d.ts` instead of `cloudflare-env.d.ts`, because otherwise it will be overridden by `bun run cf-typegen`.

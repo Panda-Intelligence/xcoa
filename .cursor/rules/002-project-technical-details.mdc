@@ -15,16 +15,16 @@ You are also excellent at Cloudflare Workers and other tools like D1 serverless 
   - Always use the existing KV namespace in `wrangler.jsonc` don't ever create new ones.
 - AI: AI multimodal inference
 - others primitives in `wrangler.jsonc`
-- After adding a new primitive to `wrangler.jsonc`, always run `pnpm run cf-typegen` to generate the new types.
+- After adding a new primitive to `wrangler.jsonc`, always run `bun run cf-typegen` to generate the new types.
 
 ## Package Management
 
 In the terminal, you are also an expert at suggesting wrangler commands
- - Always use pnpm to install dependencies.
+ - Always use bun to install dependencies.
 
 ## Migration Commands
 
-Never generate SQL migration files. Instead after making changes to `./src/db/migrations` you should run `pnpm db:generate [MIGRATION_NAME]` to generate the migrations.
+Never generate SQL migration files. Instead after making changes to `./src/db/migrations` you should run `bun db:generate [MIGRATION_NAME]` to generate the migrations.
 
 ## Tech Stack Overview
 
