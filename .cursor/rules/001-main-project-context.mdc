@@ -3,13 +3,13 @@ description:
 globs:
 alwaysApply: true
 ---
-# Cloudflare Workers Next.js SaaS Template
+# Cloudflare Workers Next.js SaaS Project for xCOA (eCOA)
 
-This is a comprehensive, production-ready Next.js SaaS template designed to run on Cloudflare Workers with OpenNext. It includes authentication, team management, billing, and other common SaaS features needed to launch a modern web application.
+This is a comprehensive, production-ready Next.js SaaS project designed to run on Cloudflare Workers with OpenNext. It includes authentication, team management, billing, and other common SaaS features needed to launch a modern web application.
 
-**Live Demo**: [nextjs-saas-template.agenticdev.agency](mdc:https:/nextjs-saas-template.agenticdev.agency/sign-up)
+**Live Demo**: [xcoa.pandacat.ai](mdc:https:/xcoa.pandacat.ai/sign-up)
 
-**GitHub Repository**: [cloudflare-workers-nextjs-saas-template](mdc:https:/github.com/LubomirGeorgiev/cloudflare-workers-nextjs-saas-template)
+**GitHub Repository**: [xcoa](mdc:https:/github.com/Panda-Intelligence/xcoa)
 
 ## Key Capabilities
 

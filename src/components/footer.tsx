@@ -3,9 +3,7 @@ import { SiX as XIcon, SiGithub as GithubIcon } from '@icons-pack/react-simple-i
 import ThemeSwitch from "@/components/theme-switch";
 import { GITHUB_REPO_URL, SITE_NAME } from "@/constants";
 import { Button } from "./ui/button";
-import AgenticDevStudioLogo from "./agenticdev-studio-logo";
 import { getGithubStars } from "@/utils/stats";
-import { Suspense } from "react";
 
 export function Footer() {
   return (
@@ -77,24 +75,8 @@ export function Footer() {
               </p>
 
               <div className="flex flex-col md:flex-row items-center gap-4 md:space-x-4">
-                {GITHUB_REPO_URL && (
-                  <Suspense fallback={<GithubButtonFallback />}>
-                    <GithubButton />
-                  </Suspense>
-                )}
-
                 <div className="flex items-center gap-4">
                   <ThemeSwitch />
-
-                  <a
-                    href="https://agenticdev.agency"
-                    target="_blank"
-                    className="flex items-center font-medium text-sm hover:text-foreground transition-colors"
-                  >
-                    <span className="whitespace-nowrap">Built by</span>
-                    <AgenticDevStudioLogo className="h-7 w-7 mx-1.5" />
-                    <span className="whitespace-nowrap">AgenticDev</span>
-                  </a>
                 </div>
               </div>
             </div>
@@ -102,27 +84,6 @@ export function Footer() {
         </div>
       </div>
     </footer>
-  );
-}
-
-// This component will be wrapped in Suspense
-async function GithubButton() {
-  const starsCount = await getGithubStars();
-
-  return (
-    <Button variant="outline" size="sm" className="w-full md:w-auto h-9" asChild>
-      <a
-        href={GITHUB_REPO_URL!}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="flex items-center justify-center space-x-2"
-      >
-        <GithubIcon className="h-4 w-4" />
-        <span className="whitespace-nowrap">
-          {starsCount ? `Fork on Github (${starsCount} Stars)` : "Fork on Github"}
-        </span>
-      </a>
-    </Button>
   );
 }
 
