@@ -40,13 +40,18 @@ export function GoogleStyleSearch({ user, accessToken, onBack }: GoogleStyleSear
     setHasSearched(true);
 
     try {
-      const response = await fetch(`https://1.supabase.co/functions/v1/make-server-9638053d/search`, {
+      const response = await fetch('/api/search', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${accessToken}`,
         },
-        body: JSON.stringify({ query }),
+        body: JSON.stringify({ 
+          query,
+          category: filterCategory,
+          sortBy,
+          page: 1,
+          limit: 20 
+        }),
       });
 
       const data = await response.json();

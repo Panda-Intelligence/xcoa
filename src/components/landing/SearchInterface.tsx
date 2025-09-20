@@ -37,20 +37,6 @@ export function SearchInterface({ user, accessToken }: SearchInterfaceProps) {
     setError("");
 
     try {
-      const response = await fetch(`https://${projectId}.supabase.co/functions/v1/make-server-9638053d/search`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${accessToken}`,
-        },
-        body: JSON.stringify({ query }),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || 'Search failed');
-      }
 
       setResults(data.results);
       setSearchesRemaining(data.searches_remaining);

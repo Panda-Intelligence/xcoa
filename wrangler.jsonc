@@ -86,5 +86,22 @@
       "binding": "NEXT_INC_CACHE_KV",
       "id": "ad452eff955648178cf9f2bb63510ce8"
     }
-  ]
+  ],
+  /**
+   * Vectorize (Vector Database)
+   * https://developers.cloudflare.com/vectorize/
+   */
+  "vectorize": [
+    {
+      "binding": "VECTORIZE_INDEX",
+      "index_name": "xcoa-ecoa-search"
+    }
+  ],
+  /**
+   * Workers AI
+   * https://developers.cloudflare.com/workers-ai/
+   */
+  "ai": {
+    "binding": "AI"
+  }
 }

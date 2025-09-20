@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(bun run:*)",
+      "Bash(bun add:*)",
+      "Bash(bun:*)",
+      "Bash(timeout:*)",
+      "Bash(curl:*)",
+      "Bash(wrangler vectorize create:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
