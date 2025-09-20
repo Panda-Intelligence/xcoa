@@ -1,9 +1,10 @@
+'use client';
+
 import { notFound } from 'next/navigation';
-import type { Metadata } from 'next';
+import { useState, useEffect } from 'react';
 import {
   Clock,
   Users,
-  Star,
   Download,
   Eye,
   Heart,
@@ -20,15 +21,25 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Separator } from '@/components/ui/separator';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import Link from 'next/link';
+import { useLanguage } from '@/hooks/useLanguage';
 
 interface ScalePageProps {
   params: { scaleId: string };
 }
 
-// 获取量表详情数据
-async function getScaleDetails(scaleId: string) {
+interface ScaleData {
+  scale: any;
+  items: any[];
+  userInteraction: any;
+  relatedScales: any[];
+  statistics: any;
+  meta: any;
+}
+
+// Client-side function to fetch scale details
+async function getScaleDetails(scaleId: string): Promise<ScaleData | null> {
   try {
-    const response = await fetch(`${process.env.SITE_URL || 'http://localhost:3000'}/api/scales/${scaleId}`, {
+    const response = await fetch(`/api/scales/${scaleId}`, {
       cache: 'no-store' // 确保获取最新数据
     });
 
@@ -43,36 +54,28 @@ async function getScaleDetails(scaleId: string) {
   }
 }
 
-// 生成页面元数据
-export async function generateMetadata({ params }: ScalePageProps): Promise<Metadata> {
-  const data = await getScaleDetails(params.scaleId);
+export default function ScalePage({ params }: ScalePageProps) {
+  const { t } = useLanguage();
+  const [data, setData] = useState<ScaleData | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  if (!data?.scale) {
-    return {
-      title: '量表未找到 - xCOA',
-      description: '您查找的eCOA量表不存在或已被删除。'
-    };
+  useEffect(() => {
+    async function fetchData() {
+      const result = await getScaleDetails(params.scaleId);
+      setData(result);
+      setLoading(false);
+    }
+    fetchData();
+  }, [params.scaleId]);
+
+  if (loading) {
+    return <div className="min-h-screen bg-background flex items-center justify-center">
+      <div className="text-center">
+        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-gray-900 mx-auto mb-4" />
+        <p>{t('common.loading', '加载中...')}</p>
+      </div>
+    </div>;
   }
-
-  const { scale } = data;
-
-  return {
-    title: `${scale.name} (${scale.acronym}) - xCOA`,
-    description: scale.description?.substring(0, 160) + '...' || scale.descriptionEn?.substring(0, 160) + '...',
-    keywords: [
-      scale.acronym,
-      scale.name,
-      scale.nameEn,
-      '量表',
-      'eCOA',
-      '评估工具',
-      ...JSON.parse(scale.domains || '[]')
-    ].filter(Boolean).join(', '),
-  };
-}
-
-export default async function ScalePage({ params }: ScalePageProps) {
-  const data = await getScaleDetails(params.scaleId);
 
   if (!data?.scale) {
     notFound();
@@ -87,11 +90,11 @@ export default async function ScalePage({ params }: ScalePageProps) {
   const getValidationBadge = (status: string) => {
     switch (status) {
       case 'validated':
-        return <Badge variant="default" className="bg-green-100 text-green-800"><CheckCircle className="w-3 h-3 mr-1" />已验证</Badge>;
+        return <Badge variant="default" className="bg-green-100 text-green-800"><CheckCircle className="w-3 h-3 mr-1" />{t('scale.validated')}</Badge>;
       case 'draft':
-        return <Badge variant="secondary"><AlertCircle className="w-3 h-3 mr-1" />草稿</Badge>;
+        return <Badge variant="secondary"><AlertCircle className="w-3 h-3 mr-1" />{t('scale.draft')}</Badge>;
       case 'published':
-        return <Badge variant="default"><CheckCircle className="w-3 h-3 mr-1" />已发布</Badge>;
+        return <Badge variant="default"><CheckCircle className="w-3 h-3 mr-1" />{t('scale.published')}</Badge>;
       default:
         return <Badge variant="outline">{status}</Badge>;
     }
@@ -107,12 +110,12 @@ export default async function ScalePage({ params }: ScalePageProps) {
               <Link href="/dashboard">
                 <Button variant="ghost" size="sm">
                   <ArrowLeft className="w-4 h-4 mr-2" />
-                  返回搜索
+                  {t('scale.back_to_search')}
                 </Button>
               </Link>
               <Separator orientation="vertical" className="h-6" />
               <div className="flex items-center space-x-2">
-                <span className="text-sm text-muted-foreground">量表详情</span>
+                <span className="text-sm text-muted-foreground">{t('scale.scale_details')}</span>
                 <span className="text-sm font-medium">{scale.acronym}</span>
               </div>
             </div>
@@ -120,12 +123,12 @@ export default async function ScalePage({ params }: ScalePageProps) {
             <div className="flex items-center space-x-2">
               <Button variant="outline" size="sm">
                 <Heart className="w-4 h-4 mr-2" />
-                {userInteraction.isFavorited ? '已收藏' : '收藏'}
+                {userInteraction.isFavorited ? t('scale.favorited') : t('scale.favorite')}
               </Button>
               {userInteraction.canDownload && (
                 <Button size="sm">
                   <Download className="w-4 h-4 mr-2" />
-                  下载量表
+                  {t('scale.download')}
                 </Button>
               )}
             </div>
@@ -158,11 +161,11 @@ export default async function ScalePage({ params }: ScalePageProps) {
                       </span>
                       <span className="flex items-center">
                         <Clock className="w-4 h-4 mr-1" />
-                        {scale.administrationTime} 分钟
+                        {scale.administrationTime} {t('scale.minutes')}
                       </span>
                       <span className="flex items-center">
                         <Users className="w-4 h-4 mr-1" />
-                        {scale.itemsCount} 题项
+                        {scale.itemsCount} {t('scale.items')}
                       </span>
                     </div>
                   </div>
@@ -172,15 +175,15 @@ export default async function ScalePage({ params }: ScalePageProps) {
               <CardContent>
                 <Tabs defaultValue="overview" className="w-full">
                   <TabsList className="grid w-full grid-cols-4">
-                    <TabsTrigger value="overview">概述</TabsTrigger>
-                    <TabsTrigger value="items">题项</TabsTrigger>
-                    <TabsTrigger value="psychometrics">心理测量</TabsTrigger>
-                    <TabsTrigger value="references">参考文献</TabsTrigger>
+                    <TabsTrigger value="overview">{t('scale.overview')}</TabsTrigger>
+                    <TabsTrigger value="items">{t('scale.items')}</TabsTrigger>
+                    <TabsTrigger value="psychometrics">{t('scale.psychometrics')}</TabsTrigger>
+                    <TabsTrigger value="references">{t('scale.references')}</TabsTrigger>
                   </TabsList>
 
                   <TabsContent value="overview" className="space-y-4">
                     <div>
-                      <h4 className="font-semibold mb-2">量表描述</h4>
+                      <h4 className="font-semibold mb-2">{t('scale.description')}</h4>
                       <p className="text-sm text-muted-foreground leading-relaxed">
                         {scale.description}
                       </p>
@@ -193,26 +196,26 @@ export default async function ScalePage({ params }: ScalePageProps) {
 
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <h4 className="font-semibold mb-2">适用人群</h4>
+                        <h4 className="font-semibold mb-2">{t('scale.target_population')}</h4>
                         <p className="text-sm text-muted-foreground">{scale.targetPopulation}</p>
                       </div>
                       <div>
-                        <h4 className="font-semibold mb-2">年龄范围</h4>
+                        <h4 className="font-semibold mb-2">{t('scale.age_range')}</h4>
                         <p className="text-sm text-muted-foreground">{scale.ageRange}</p>
                       </div>
                     </div>
 
                     <div>
-                      <h4 className="font-semibold mb-2">评估领域</h4>
+                      <h4 className="font-semibold mb-2">{t('scale.assessment_domains')}</h4>
                       <div className="flex flex-wrap gap-2">
                         {scale.domains.map((domain: string, index: number) => (
-                          <Badge key={index} variant="outline">{domain}</Badge>
+                          <Badge key={domain || index} variant="outline">{domain}</Badge>
                         ))}
                       </div>
                     </div>
 
                     <div>
-                      <h4 className="font-semibold mb-2">评分方法</h4>
+                      <h4 className="font-semibold mb-2">{t('scale.scoring_method')}</h4>
                       <p className="text-sm text-muted-foreground leading-relaxed">
                         {scale.scoringMethod}
                       </p>
@@ -220,7 +223,7 @@ export default async function ScalePage({ params }: ScalePageProps) {
 
                     {scale.copyrightInfo && (
                       <div>
-                        <h4 className="font-semibold mb-2">版权信息</h4>
+                        <h4 className="font-semibold mb-2">{t('scale.copyright_info')}</h4>
                         <p className="text-sm text-muted-foreground">{scale.copyrightInfo}</p>
                       </div>
                     )}
@@ -229,7 +232,8 @@ export default async function ScalePage({ params }: ScalePageProps) {
                   <TabsContent value="items" className="space-y-4">
                     {meta.hasItems ? (
                       <div className="space-y-3">
-                        {items.map((item: any, index: number) => (
+                        {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+                        {items.map((item: any) => (
                           <Card key={item.id} className="p-4">
                             <div className="flex items-start space-x-3">
                               <Badge variant="outline" className="mt-1">
@@ -244,7 +248,7 @@ export default async function ScalePage({ params }: ScalePageProps) {
                                 )}
                                 {item.responseOptions.length > 0 && (
                                   <div className="text-xs text-muted-foreground">
-                                    <span className="font-medium">选项：</span>
+                                    <span className="font-medium">{t('scale.options')}：</span>
                                     {item.responseOptions.join(' / ')}
                                   </div>
                                 )}
@@ -261,8 +265,8 @@ export default async function ScalePage({ params }: ScalePageProps) {
                     ) : (
                       <div className="text-center py-8 text-muted-foreground">
                         <BookOpen className="w-12 h-12 mx-auto mb-4 opacity-50" />
-                        <p>该量表的详细题项信息暂未收录</p>
-                        <p className="text-sm">您可以通过下载完整量表查看所有题项</p>
+                        <p>{t('scale.no_items_available')}</p>
+                        <p className="text-sm">{t('scale.download_for_full_items')}</p>
                       </div>
                     )}
                   </TabsContent>
@@ -274,7 +278,7 @@ export default async function ScalePage({ params }: ScalePageProps) {
                           <Card className="p-4">
                             <h4 className="font-semibold mb-2 flex items-center">
                               <BarChart3 className="w-4 h-4 mr-2" />
-                              信度指标
+                              {t('scale.reliability_indicators')}
                             </h4>
                             <div className="space-y-2 text-sm">
                               {psychometrics.reliability.cronbachAlpha && (
@@ -285,13 +289,13 @@ export default async function ScalePage({ params }: ScalePageProps) {
                               )}
                               {psychometrics.reliability.testRetest && (
                                 <div className="flex justify-between">
-                                  <span>重测信度</span>
+                                  <span>{t('scale.test_retest_reliability')}</span>
                                   <span className="font-medium">{psychometrics.reliability.testRetest}</span>
                                 </div>
                               )}
                               {psychometrics.reliability.interRater && (
                                 <div className="flex justify-between">
-                                  <span>评分者间信度</span>
+                                  <span>{t('scale.inter_rater_reliability')}</span>
                                   <span className="font-medium">{psychometrics.reliability.interRater}</span>
                                 </div>
                               )}
@@ -303,24 +307,24 @@ export default async function ScalePage({ params }: ScalePageProps) {
                           <Card className="p-4">
                             <h4 className="font-semibold mb-2 flex items-center">
                               <CheckCircle className="w-4 h-4 mr-2" />
-                              效度指标
+                              {t('scale.validity_indicators')}
                             </h4>
                             <div className="space-y-2 text-sm">
                               {psychometrics.validity.sensitivity && (
                                 <div className="flex justify-between">
-                                  <span>敏感性</span>
+                                  <span>{t('scale.sensitivity')}</span>
                                   <span className="font-medium">{psychometrics.validity.sensitivity}</span>
                                 </div>
                               )}
                               {psychometrics.validity.specificity && (
                                 <div className="flex justify-between">
-                                  <span>特异性</span>
+                                  <span>{t('scale.specificity')}</span>
                                   <span className="font-medium">{psychometrics.validity.specificity}</span>
                                 </div>
                               )}
                               {psychometrics.validity.constructValidity && (
                                 <div className="flex justify-between">
-                                  <span>结构效度</span>
+                                  <span>{t('scale.construct_validity')}</span>
                                   <span className="font-medium">{psychometrics.validity.constructValidity}</span>
                                 </div>
                               )}
@@ -330,12 +334,12 @@ export default async function ScalePage({ params }: ScalePageProps) {
 
                         {psychometrics.cutoffScores && (
                           <Card className="p-4 md:col-span-2">
-                            <h4 className="font-semibold mb-2">切分值标准</h4>
+                            <h4 className="font-semibold mb-2">{t('scale.cutoff_scores')}</h4>
                             <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm">
                               {Object.entries(psychometrics.cutoffScores).map(([level, score]) => (
                                 <div key={level} className="text-center p-2 bg-secondary rounded">
                                   <div className="font-medium">{level}</div>
-                                  <div className="text-muted-foreground">{score as string}分</div>
+                                  <div className="text-muted-foreground">{score as string}{t('scale.points')}</div>
                                 </div>
                               ))}
                             </div>
@@ -345,7 +349,7 @@ export default async function ScalePage({ params }: ScalePageProps) {
                     ) : (
                       <div className="text-center py-8 text-muted-foreground">
                         <BarChart3 className="w-12 h-12 mx-auto mb-4 opacity-50" />
-                        <p>该量表的心理测量学数据暂未收录</p>
+                        <p>{t('scale.no_psychometric_data')}</p>
                       </div>
                     )}
                   </TabsContent>
@@ -354,7 +358,7 @@ export default async function ScalePage({ params }: ScalePageProps) {
                     {scale.references.length > 0 ? (
                       <div className="space-y-3">
                         {scale.references.map((reference: string, index: number) => (
-                          <Card key={index} className="p-4">
+                          <Card key={reference.substring(0, 50) || index} className="p-4">
                             <p className="text-sm leading-relaxed">{reference}</p>
                           </Card>
                         ))}
@@ -362,7 +366,7 @@ export default async function ScalePage({ params }: ScalePageProps) {
                     ) : (
                       <div className="text-center py-8 text-muted-foreground">
                         <ExternalLink className="w-12 h-12 mx-auto mb-4 opacity-50" />
-                        <p>该量表的参考文献暂未收录</p>
+                        <p>{t('scale.no_references_available')}</p>
                       </div>
                     )}
                   </TabsContent>
@@ -376,27 +380,27 @@ export default async function ScalePage({ params }: ScalePageProps) {
             {/* 统计信息 */}
             <Card>
               <CardHeader>
-                <CardTitle className="text-lg">使用统计</CardTitle>
+                <CardTitle className="text-lg">{t('scale.usage_statistics')}</CardTitle>
               </CardHeader>
               <CardContent className="space-y-3">
                 <div className="flex items-center justify-between">
                   <span className="flex items-center text-sm">
                     <Eye className="w-4 h-4 mr-2 text-blue-500" />
-                    总浏览量
+                    {t('scale.total_views')}
                   </span>
                   <span className="font-semibold">{statistics.totalViews}</span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="flex items-center text-sm">
                     <Eye className="w-4 h-4 mr-2 text-green-500" />
-                    近30天浏览
+                    {t('scale.recent_views')}
                   </span>
                   <span className="font-semibold">{statistics.recentViews}</span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="flex items-center text-sm">
                     <Heart className="w-4 h-4 mr-2 text-red-500" />
-                    收藏次数
+                    {t('scale.favorite_count')}
                   </span>
                   <span className="font-semibold">{statistics.totalFavorites}</span>
                 </div>
@@ -406,31 +410,31 @@ export default async function ScalePage({ params }: ScalePageProps) {
             {/* 量表信息 */}
             <Card>
               <CardHeader>
-                <CardTitle className="text-lg">量表信息</CardTitle>
+                <CardTitle className="text-lg">{t('scale.scale_information')}</CardTitle>
               </CardHeader>
               <CardContent className="space-y-3">
                 <div className="flex justify-between text-sm">
-                  <span>题项数量</span>
+                  <span>{t('scale.items_count')}</span>
                   <span className="font-medium">{scale.itemsCount}</span>
                 </div>
                 <div className="flex justify-between text-sm">
-                  <span>维度数量</span>
+                  <span>{t('scale.dimensions_count')}</span>
                   <span className="font-medium">{scale.dimensionsCount}</span>
                 </div>
                 <div className="flex justify-between text-sm">
-                  <span>管理时间</span>
-                  <span className="font-medium">{scale.administrationTime} 分钟</span>
+                  <span>{t('scale.administration_time')}</span>
+                  <span className="font-medium">{scale.administrationTime} {t('scale.minutes')}</span>
                 </div>
                 <div className="flex justify-between text-sm">
-                  <span>验证状态</span>
+                  <span>{t('scale.validation_status')}</span>
                   <span>{getValidationBadge(scale.validationStatus)}</span>
                 </div>
                 <div>
-                  <span className="text-sm">支持语言</span>
+                  <span className="text-sm">{t('scale.supported_languages')}</span>
                   <div className="flex flex-wrap gap-1 mt-1">
                     {scale.languages.map((lang: string) => (
                       <Badge key={lang} variant="outline" className="text-xs">
-                        {lang === 'zh-CN' ? '中文' : lang === 'en-US' ? 'English' : lang}
+                        {lang === 'zh-CN' ? t('scale.chinese') : lang === 'en-US' ? 'English' : lang}
                       </Badge>
                     ))}
                   </div>
@@ -442,9 +446,9 @@ export default async function ScalePage({ params }: ScalePageProps) {
             {relatedScales.length > 0 && (
               <Card>
                 <CardHeader>
-                  <CardTitle className="text-lg">相关量表</CardTitle>
+                  <CardTitle className="text-lg">{t('scale.related_scales')}</CardTitle>
                   <CardDescription>
-                    同类别的其他评估工具
+                    {t('scale.related_scales_description')}
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -462,7 +466,7 @@ export default async function ScalePage({ params }: ScalePageProps) {
                                 {relatedScale.name}
                               </h5>
                               <p className="text-xs text-muted-foreground mb-2">
-                                {relatedScale.acronym} • {relatedScale.itemsCount} 题项
+                                {relatedScale.acronym} • {relatedScale.itemsCount} {t('scale.items')}
                               </p>
                               <p className="text-xs text-muted-foreground line-clamp-2">
                                 {relatedScale.description.substring(0, 80)}...
