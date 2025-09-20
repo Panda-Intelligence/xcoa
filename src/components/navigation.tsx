@@ -11,6 +11,7 @@ import { cn } from "@/lib/utils"
 import { useNavStore } from "@/state/nav"
 import { Skeleton } from "@/components/ui/skeleton"
 import { SITE_NAME } from "@/constants"
+import { useLanguage, LanguageToggle } from "@/hooks/useLanguage"
 
 type NavItem = {
   name: string;
@@ -20,6 +21,7 @@ type NavItem = {
 const ActionButtons = () => {
   const { session, isLoading } = useSessionStore()
   const { setIsOpen } = useNavStore()
+  const { t } = useLanguage()
 
   if (isLoading) {
     return <Skeleton className="h-10 w-[80px] bg-primary" />
@@ -31,7 +33,7 @@ const ActionButtons = () => {
 
   return (
     <Button asChild onClick={() => setIsOpen(false)}>
-      <Link href="/sign-in">Sign In</Link>
+      <Link href="/sign-in">{t("common.login")}</Link>
     </Button>
   )
 }
@@ -40,12 +42,13 @@ export function Navigation() {
   const { session, isLoading } = useSessionStore()
   const { isOpen, setIsOpen } = useNavStore()
   const pathname = usePathname()
+  const { t } = useLanguage()
 
   const navItems: NavItem[] = [
-    { name: "Home", href: "/" },
+    { name: t("navigation.home"), href: "/" },
     ...(session ? [
-      { name: "Settings", href: "/settings" },
-      { name: "Dashboard", href: "/dashboard" },
+      { name: t("common.settings"), href: "/settings" },
+      { name: t("common.dashboard"), href: "/dashboard" },
     ] as NavItem[] : []),
   ]
 
@@ -89,6 +92,7 @@ export function Navigation() {
                 ))
               )}
             </div>
+            <LanguageToggle />
             <ActionButtons />
           </div>
           <div className="md:hidden flex items-center">
@@ -96,7 +100,7 @@ export function Navigation() {
               <SheetTrigger asChild>
                 <Button variant="ghost" size="icon" className="p-6">
                   <Menu className="w-9 h-9" />
-                  <span className="sr-only">Open menu</span>
+                  <span className="sr-only">{t("actions.more")}</span>
                 </Button>
               </SheetTrigger>
               <SheetContent side="right" className="w-[240px] sm:w-[300px]">

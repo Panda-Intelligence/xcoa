@@ -12,6 +12,7 @@ import { EmailVerificationDialog } from "./email-verification-dialog"
 import { useTopLoader } from 'nextjs-toploader'
 import { usePathname, useRouter, useSearchParams, useParams } from "next/navigation"
 import { useEventListener, useDebounceCallback } from 'usehooks-ts';
+import { LanguageProvider } from "@/hooks/useLanguage"
 
 function RouterChecker() {
   const { start, done } = useTopLoader()
@@ -107,14 +108,16 @@ export function ThemeProvider({
   }, [doFetchSession])
 
   return (
-    <HeroUIProvider>
-      <Suspense>
-        <RouterChecker />
-      </Suspense>
-      <NextThemesProvider {...props} attribute="class">
-        {children}
-        <EmailVerificationDialog />
-      </NextThemesProvider>
-    </HeroUIProvider>
+    <LanguageProvider>
+      <HeroUIProvider>
+        <Suspense>
+          <RouterChecker />
+        </Suspense>
+        <NextThemesProvider {...props} attribute="class">
+          {children}
+          <EmailVerificationDialog />
+        </NextThemesProvider>
+      </HeroUIProvider>
+    </LanguageProvider>
   )
 }

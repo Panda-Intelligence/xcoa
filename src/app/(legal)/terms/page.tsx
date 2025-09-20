@@ -1,17 +1,16 @@
-import { Metadata } from "next";
+'use client'
+
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { CREDITS_EXPIRATION_YEARS } from "@/constants";
-
-export const metadata: Metadata = {
-  title: "Terms of Service",
-  description: "Read our terms of service and usage agreement",
-};
+import { useLanguage } from "@/hooks/useLanguage";
 
 export default function TermsPage() {
+  const { t } = useLanguage()
+
   return (
     <>
-      <h1 className="text-4xl font-bold text-foreground mb-8">Terms of Service</h1>
+      <h1 className="text-4xl font-bold text-foreground mb-8">{t("legal.terms_of_service")}</h1>
 
       <p className="text-muted-foreground mb-6">Last updated: {new Date().toLocaleDateString()}</p>
 
@@ -65,7 +64,7 @@ export default function TermsPage() {
 
       <div className="mt-12 text-center">
         <Button asChild>
-          <Link href="/">Return to Home</Link>
+          <Link href="/">{t("navigation.home")}</Link>
         </Button>
       </div>
     </>

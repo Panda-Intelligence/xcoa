@@ -1,16 +1,15 @@
-import { Metadata } from "next";
+'use client'
+
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-
-export const metadata: Metadata = {
-  title: "Privacy Policy",
-  description: "Learn how we collect, use, and protect your data",
-};
+import { useLanguage } from "@/hooks/useLanguage";
 
 export default function PrivacyPage() {
+  const { t } = useLanguage()
+
   return (
     <>
-      <h1 className="text-4xl font-bold text-foreground mb-8">Privacy Policy</h1>
+      <h1 className="text-4xl font-bold text-foreground mb-8">{t("legal.privacy_policy")}</h1>
 
       <p className="text-muted-foreground mb-6">Last updated: {new Date().toLocaleDateString()}</p>
 
@@ -54,7 +53,7 @@ export default function PrivacyPage() {
 
       <div className="mt-12 text-center">
         <Button asChild>
-          <Link href="/">Return to Home</Link>
+          <Link href="/">{t("navigation.home")}</Link>
         </Button>
       </div>
     </>

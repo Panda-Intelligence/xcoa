@@ -1,3 +1,5 @@
+'use client'
+
 import {
   Accordion,
   AccordionContent,
@@ -5,143 +7,146 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { GITHUB_REPO_URL } from "@/constants";
-
-const faqs = [
-  {
-    question: "Is this template really free?",
-    answer: (
-      <>
-        Yes, this template is completely free and <a href={GITHUB_REPO_URL} target="_blank">open source</a>! You can use it for both personal and commercial projects without any licensing fees. You can fork, copy, modify, and distribute it as you see fit without any restrictions and attribution.
-      </>
-    ),
-  },
-  {
-    question: "What features are included?",
-    answer: (
-      <>
-        The template includes a comprehensive set of features:
-        <ul className="list-disc pl-6 mt-2 space-y-1">
-          <li>Authentication with email/password and forgot password flow</li>
-          <li>Database integration with Drizzle ORM and Cloudflare D1</li>
-          <li>Email service powered by React Email and Resend</li>
-          <li>Modern UI components from Shadcn UI and Tailwind CSS</li>
-          <li>Form validations and error handling</li>
-          <li>Dark mode support</li>
-          <li>Responsive design</li>
-          <li>TypeScript throughout the codebase</li>
-          <li>Automated deployments with GitHub Actions</li>
-          <li>Captcha integration with Turnstile</li>
-          <li>SEO optimization with Next.js</li>
-          <li>And countless other features...</li>
-        </ul>
-      </>
-    ),
-  },
-  {
-    question: "What's the tech stack?",
-    answer: (
-      <>
-        <p>The template uses modern and reliable technologies:</p>
-        <ul className="list-disc pl-6 mt-2 space-y-1">
-          <li>Next.js 15 with App Router and React Server Components</li>
-          <li>TypeScript for type safety</li>
-          <li>Tailwind CSS and Shadcn UI for styling</li>
-          <li>DrizzleORM with Cloudflare D1 for database</li>
-          <li>Lucia Auth for authentication</li>
-          <li>Cloudflare Workers for serverless deployment</li>
-          <li>Cloudflare KV for session storage</li>
-          <li>React Email for beautiful email templates</li>
-        </ul>
-      </>
-    ),
-  },
-  {
-    question: "How do I deploy my application?",
-    answer: (
-      <>
-        <p>Deployment is automated with GitHub Actions. You&apos;ll need to:</p>
-        <ol className="list-decimal pl-6 mt-2 space-y-1">
-          <li>Create Cloudflare D1 and KV namespaces</li>
-          <li>Set up Resend for email service</li>
-          <li>Configure Turnstile for captcha</li>
-          <li>Add your Cloudflare API token to GitHub secrets</li>
-          <li>Push to the main branch</li>
-        </ol>
-        <p className="mt-2">The deployment process is fully documented in the <a href={`${GITHUB_REPO_URL}/blob/main/README.md`} target="_blank">GitHub repository</a>.</p>
-      </>
-    ),
-  },
-  {
-    question: "What do I need to get started?",
-    answer: (
-      <>
-        <p>You&apos;ll need a Cloudflare account (free tier is fine), Node.js installed locally, and basic knowledge of React and TypeScript. The template includes detailed documentation to guide you through the setup.</p>
-        <p>You can also check out the <a href={`${GITHUB_REPO_URL}/blob/main/README.md`} target="_blank">documentation</a> for more information.</p>
-      </>
-    ),
-  },
-  {
-    question: "What are the upcoming features?",
-    answer: (
-      <>
-        <p>We have an exciting roadmap ahead! Planned features include:</p>
-        <ul className="list-disc pl-6 mt-2 space-y-1">
-          <li>Multi-language support (i18n)</li>
-          <li>Billing and payment processing</li>
-          <li>Admin dashboard</li>
-          <li>Email verification on sign up</li>
-          <li>Notifications system</li>
-          <li>Webhooks support</li>
-          <li>Team collaboration features</li>
-          <li>Real-time updates</li>
-          <li>Analytics dashboard</li>
-        </ul>
-      </>
-    ),
-  },
-  {
-    question: "Can I preview the email templates?",
-    answer: (
-      <>
-        Yes! Run <code>bun email:dev</code> and open <a href="http://localhost:3001" target="_blank">http://localhost:3001</a> to preview and edit the email templates. They&apos;re built with React Email for a great developer experience.
-      </>
-    ),
-  },
-  {
-    question: "How do I customize the template?",
-    answer: (
-      <>
-        <p>Before deploying to production, you should:</p>
-        <ul className="list-disc pl-6 mt-2 space-y-1">
-          <li>Update project details in <code>src/constants.ts</code></li>
-          <li>Customize the documentation in <code>./cursor-docs</code></li>
-          <li>Modify the footer in <code>src/components/footer.tsx</code></li>
-          <li>Optionally update the color palette in <code>src/app/globals.css</code></li>
-        </ul>
-      </>
-    ),
-  },
-  {
-    question: "How can I contribute?",
-    answer: (
-      <>
-        Contributions are welcome! Feel free to open issues, submit pull requests, or help improve the documentation on <a href={GITHUB_REPO_URL} target="_blank">GitHub</a>. The project follows standard open source contribution guidelines.
-      </>
-    ),
-  },
-];
+import { useLanguage } from "@/hooks/useLanguage";
 
 export function FAQ() {
+  const { t } = useLanguage()
+
+  const faqs = [
+    {
+      question: t("landing.is_this_template_really_free"),
+      answer: (
+        <>
+          {t("landing.yes_this_template_is_completely_free")} <a href={GITHUB_REPO_URL} target="_blank" rel="noreferrer">open source</a>!
+        </>
+      ),
+    },
+    {
+      question: t("landing.what_features_are_included"),
+      answer: (
+        <>
+          {t("landing.template_includes_comprehensive_features")}
+          <ul className="list-disc pl-6 mt-2 space-y-1">
+            <li>{t("landing.authentication_with_email_password")}</li>
+            <li>{t("landing.database_integration_drizzle_d1")}</li>
+            <li>{t("landing.email_service_react_email_resend")}</li>
+            <li>{t("landing.modern_ui_components")}</li>
+            <li>{t("landing.form_validations_error_handling")}</li>
+            <li>{t("landing.dark_mode_support")}</li>
+            <li>{t("landing.responsive_design")}</li>
+            <li>{t("landing.typescript_throughout")}</li>
+            <li>{t("landing.automated_deployments")}</li>
+            <li>{t("landing.captcha_integration")}</li>
+            <li>{t("landing.seo_optimization")}</li>
+            <li>{t("landing.and_countless_other_features")}</li>
+          </ul>
+        </>
+      ),
+    },
+    {
+      question: t("landing.whats_the_tech_stack"),
+      answer: (
+        <>
+          <p>{t("landing.template_uses_modern_reliable_technologies")}</p>
+          <ul className="list-disc pl-6 mt-2 space-y-1">
+            <li>{t("landing.nextjs_15_app_router")}</li>
+            <li>{t("landing.typescript_for_type_safety")}</li>
+            <li>{t("landing.tailwind_shadcn_styling")}</li>
+            <li>{t("landing.drizzle_d1_database")}</li>
+            <li>{t("landing.lucia_auth_authentication")}</li>
+            <li>{t("landing.cloudflare_workers_deployment")}</li>
+            <li>{t("landing.cloudflare_kv_session")}</li>
+            <li>{t("landing.react_email_templates")}</li>
+          </ul>
+        </>
+      ),
+    },
+    {
+      question: t("landing.how_do_i_deploy_my_application"),
+      answer: (
+        <>
+          <p>{t("landing.deployment_is_automated")}</p>
+          <ol className="list-decimal pl-6 mt-2 space-y-1">
+            <li>{t("landing.create_cloudflare_d1_kv")}</li>
+            <li>{t("landing.setup_resend_email")}</li>
+            <li>{t("landing.configure_turnstile_captcha")}</li>
+            <li>{t("landing.add_cloudflare_token_secrets")}</li>
+            <li>{t("landing.push_to_main_branch")}</li>
+          </ol>
+          <p className="mt-2">{t("landing.deployment_process_documented")} <a href={`${GITHUB_REPO_URL}/blob/main/README.md`} target="_blank" rel="noreferrer">GitHub repository</a>.</p>
+        </>
+      ),
+    },
+    {
+      question: t("landing.what_do_i_need_to_get_started"),
+      answer: (
+        <>
+          <p>{t("landing.need_cloudflare_account")}</p>
+          <p className="mt-2">{t("landing.check_documentation")} <a href={`${GITHUB_REPO_URL}/blob/main/README.md`} target="_blank" rel="noreferrer">documentation</a>.</p>
+        </>
+      ),
+    },
+    {
+      question: t("landing.what_are_upcoming_features"),
+      answer: (
+        <>
+          <p>{t("landing.exciting_roadmap_ahead")}</p>
+          <ul className="list-disc pl-6 mt-2 space-y-1">
+            <li>{t("landing.multi_language_support")}</li>
+            <li>{t("landing.billing_payment_processing")}</li>
+            <li>{t("landing.admin_dashboard")}</li>
+            <li>{t("landing.email_verification_signup")}</li>
+            <li>{t("landing.notifications_system")}</li>
+            <li>{t("landing.webhooks_support")}</li>
+            <li>{t("landing.team_collaboration_features")}</li>
+            <li>{t("landing.real_time_updates")}</li>
+            <li>{t("landing.analytics_dashboard")}</li>
+          </ul>
+        </>
+      ),
+    },
+    {
+      question: t("landing.can_i_preview_email_templates"),
+      answer: (
+        <>
+          {t("landing.yes_run_email_dev")}
+        </>
+      ),
+    },
+    {
+      question: t("landing.how_do_i_customize_template"),
+      answer: (
+        <>
+          <p>{t("landing.before_deploying_production")}</p>
+          <ul className="list-disc pl-6 mt-2 space-y-1">
+            <li>{t("landing.update_project_details_constants")} <code>src/constants.ts</code></li>
+            <li>{t("landing.customize_documentation")} <code>./cursor-docs</code></li>
+            <li>{t("landing.modify_footer")} <code>src/components/footer.tsx</code></li>
+            <li>{t("landing.optionally_update_color_palette")} <code>src/app/globals.css</code></li>
+          </ul>
+        </>
+      ),
+    },
+    {
+      question: t("landing.how_can_i_contribute"),
+      answer: (
+        <>
+          {t("landing.contributions_welcome")} <a href={GITHUB_REPO_URL} target="_blank" rel="noreferrer">GitHub</a>.
+        </>
+      ),
+    },
+  ];
+
   return (
     <div className="py-24 sm:py-32">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className="mx-auto max-w-4xl divide-y divide-gray-900/10 dark:divide-gray-100/10">
           <h2 className="text-2xl font-bold leading-10 tracking-tight">
-            Frequently asked questions
+            {t("landing.frequently_asked_questions")}
           </h2>
           <Accordion type="single" collapsible className="w-full mt-10">
             {faqs.map((faq, index) => (
-              <AccordionItem key={index} value={`item-${index}`}>
+              <AccordionItem key={faq.question.slice(0, 50)} value={`item-${index}`}>
                 <AccordionTrigger className="text-left">
                   {faq.question}
                 </AccordionTrigger>
