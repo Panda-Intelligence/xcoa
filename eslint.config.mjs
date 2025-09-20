@@ -17,6 +17,19 @@ const eslintConfig = [
       "@typescript-eslint/no-unused-vars": "warn",
       "react-hooks/exhaustive-deps": "warn",
     }
+  },
+  {
+    files: [
+      "src/**/*.{js,jsx,ts,tsx}",
+    ]
+  },
+  {
+    ignores: [
+      "dist/", // Ignore the entire 'dist' directory
+      "node_modules/", // Ignore the entire 'node_modules' directory
+      "*.test.js", // Ignore all files ending with '.test.js'
+      "scripts/"
+    ],
   }
 ];
 
