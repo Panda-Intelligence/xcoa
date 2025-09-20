@@ -536,6 +536,168 @@ export const updatedUserRelations = relations(userTable, ({ many }) => ({
   favorites: many(userFavoriteTable),
 }));
 
+// Copyright Holders/Publishers
+export const copyrightHolderTable = sqliteTable("copyright_holder", {
+  ...commonColumns,
+  id: text().primaryKey().$defaultFn(() => `copyright_${createId()}`).notNull(),
+  name: text({ length: 255 }).notNull(),
+  nameEn: text({ length: 255 }),
+  organizationType: text({ length: 100 }), // publisher, research_institution, individual, foundation
+  website: text({ length: 500 }),
+  description: text({ length: 1000 }),
+  descriptionEn: text({ length: 1000 }),
+  
+  // Contact Information
+  contactEmail: text({ length: 255 }),
+  contactPhone: text({ length: 50 }),
+  contactMobile: text({ length: 50 }),
+  contactFax: text({ length: 50 }),
+  contactAddress: text({ length: 500 }),
+  
+  // Business Information
+  licenseTypes: text({ mode: 'json' }).$type<string[]>().default([]), // commercial, academic, research, free
+  licenseRequirements: text({ length: 1000 }),
+  pricingInfo: text({ length: 500 }),
+  
+  // Status
+  isActive: integer().default(1),
+  isVerified: integer().default(0),
+}, (table) => ([
+  index('copyright_holder_name_idx').on(table.name),
+  index('copyright_holder_org_type_idx').on(table.organizationType),
+  index('copyright_holder_active_idx').on(table.isActive),
+]));
+
+// License Types for Scales
+export const LICENSE_TYPE = {
+  PUBLIC_DOMAIN: 'public_domain',
+  OPEN_SOURCE: 'open_source', 
+  ACADEMIC_FREE: 'academic_free',
+  COMMERCIAL: 'commercial',
+  RESTRICTED: 'restricted',
+  CONTACT_REQUIRED: 'contact_required',
+} as const;
+
+export const licenseTypeTuple = Object.values(LICENSE_TYPE) as [string, ...string[]];
+
+// Contact Requests from Users
+export const copyrightContactRequestTable = sqliteTable("copyright_contact_request", {
+  ...commonColumns,
+  id: text().primaryKey().$defaultFn(() => `contact_${createId()}`).notNull(),
+  userId: text().notNull().references(() => userTable.id),
+  scaleId: text().notNull().references(() => ecoaScaleTable.id),
+  copyrightHolderId: text().notNull().references(() => copyrightHolderTable.id),
+  
+  // Request Information
+  requestType: text({ length: 50 }).notNull(), // license_inquiry, usage_request, support, other
+  intendedUse: text({ length: 500 }), // clinical, research, commercial, education
+  organizationName: text({ length: 255 }),
+  organizationType: text({ length: 100 }),
+  
+  // Contact Details
+  contactName: text({ length: 255 }).notNull(),
+  contactEmail: text({ length: 255 }).notNull(),
+  contactPhone: text({ length: 50 }),
+  message: text({ length: 2000 }),
+  
+  // Status Tracking
+  status: text({ length: 50 }).default('pending'), // pending, sent, responded, completed, failed
+  sentAt: integer({ mode: "timestamp" }),
+  responseReceived: integer({ mode: "timestamp" }),
+  adminNotes: text({ length: 1000 }),
+}, (table) => ([
+  index('copyright_contact_user_id_idx').on(table.userId),
+  index('copyright_contact_scale_id_idx').on(table.scaleId),
+  index('copyright_contact_holder_id_idx').on(table.copyrightHolderId),
+  index('copyright_contact_status_idx').on(table.status),
+  index('copyright_contact_created_at_idx').on(table.createdAt),
+]));
+
+// Update eCOA Scale table to include copyright information
+export const ecoaScaleUpdatedTable = sqliteTable("ecoa_scale", {
+  ...commonColumns,
+  id: text().primaryKey().$defaultFn(() => `scale_${createId()}`).notNull(),
+  name: text({ length: 255 }).notNull(),
+  nameEn: text({ length: 255 }),
+  acronym: text({ length: 50 }),
+  description: text({ length: 2000 }),
+  descriptionEn: text({ length: 2000 }),
+  categoryId: text().references(() => ecoaCategoryTable.id),
+  
+  // Copyright and Licensing
+  copyrightHolderId: text().references(() => copyrightHolderTable.id),
+  licenseType: text({ enum: licenseTypeTuple }).default(LICENSE_TYPE.CONTACT_REQUIRED),
+  copyrightYear: integer(),
+  copyrightInfo: text({ length: 1000 }),
+  licenseTerms: text({ length: 2000 }),
+  usageRestrictions: text({ length: 1000 }),
+  
+  // Scale Information
+  itemsCount: integer().default(0),
+  dimensionsCount: integer().default(0),
+  languages: text({ mode: 'json' }).$type<string[]>().default([]),
+  validationStatus: text({ length: 50 }).default('draft'),
+  scoringMethod: text({ length: 500 }),
+  administrationTime: integer(),
+  targetPopulation: text({ length: 500 }),
+  ageRange: text({ length: 100 }),
+  domains: text({ mode: 'json' }).$type<string[]>().default([]),
+  psychometricProperties: text({ mode: 'json' }).$type<Record<string, any>>(),
+  references: text({ mode: 'json' }).$type<string[]>().default([]),
+  
+  // Download and Access
+  downloadUrl: text({ length: 500 }),
+  isPublic: integer().default(1),
+  usageCount: integer().default(0),
+  favoriteCount: integer().default(0),
+  searchVector: text({ length: 1536 }),
+}, (table) => ([
+  index('ecoa_scale_copyright_holder_idx').on(table.copyrightHolderId),
+  index('ecoa_scale_license_type_idx').on(table.licenseType),
+  index('ecoa_scale_category_id_idx').on(table.categoryId),
+  index('ecoa_scale_validation_status_idx').on(table.validationStatus),
+  index('ecoa_scale_usage_count_idx').on(table.usageCount),
+  index('ecoa_scale_is_public_idx').on(table.isPublic),
+  index('ecoa_scale_acronym_idx').on(table.acronym),
+]));
+
+// Relations
+export const copyrightHolderRelations = relations(copyrightHolderTable, ({ many }) => ({
+  scales: many(ecoaScaleTable),
+  contactRequests: many(copyrightContactRequestTable),
+}));
+
+export const copyrightContactRequestRelations = relations(copyrightContactRequestTable, ({ one }) => ({
+  user: one(userTable, {
+    fields: [copyrightContactRequestTable.userId],
+    references: [userTable.id],
+  }),
+  scale: one(ecoaScaleTable, {
+    fields: [copyrightContactRequestTable.scaleId],
+    references: [ecoaScaleTable.id],
+  }),
+  copyrightHolder: one(copyrightHolderTable, {
+    fields: [copyrightContactRequestTable.copyrightHolderId],
+    references: [copyrightHolderTable.id],
+  }),
+}));
+
+// Updated scale relations to include copyright (temporarily disabled due to migration issues)
+// export const ecoaScaleUpdatedRelations = relations(ecoaScaleTable, ({ one, many }) => ({
+//   category: one(ecoaCategoryTable, {
+//     fields: [ecoaScaleTable.categoryId],
+//     references: [ecoaCategoryTable.id],
+//   }),
+//   copyrightHolder: one(copyrightHolderTable, {
+//     fields: [ecoaScaleTable.copyrightHolderId],
+//     references: [copyrightHolderTable.id],
+//   }),
+//   items: many(ecoaItemTable),
+//   favorites: many(userFavoriteTable),
+//   usageRecords: many(scaleUsageTable),
+//   contactRequests: many(copyrightContactRequestTable),
+// }));
+
 export type User = InferSelectModel<typeof userTable>;
 export type PassKeyCredential = InferSelectModel<typeof passKeyCredentialTable>;
 export type CreditTransaction = InferSelectModel<typeof creditTransactionTable>;
@@ -550,3 +712,5 @@ export type EcoaItem = InferSelectModel<typeof ecoaItemTable>;
 export type UserSearchHistory = InferSelectModel<typeof userSearchHistoryTable>;
 export type UserFavorite = InferSelectModel<typeof userFavoriteTable>;
 export type ScaleUsage = InferSelectModel<typeof scaleUsageTable>;
+export type CopyrightHolder = InferSelectModel<typeof copyrightHolderTable>;
+export type CopyrightContactRequest = InferSelectModel<typeof copyrightContactRequestTable>;

@@ -71,6 +71,13 @@
       "when": 1758338514172,
       "tag": "0009_ecoa-tables",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "6",
+      "when": 1758343703335,
+      "tag": "0010_copyright-management",
+      "breakpoints": true
     }
   ]
 }
