@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { SiX as XIcon, SiGithub as GithubIcon } from '@icons-pack/react-simple-icons'
 import ThemeSwitch from "@/components/theme-switch";
-import { GITHUB_REPO_URL, SITE_NAME } from "@/constants";
+import { SITE_NAME } from "@/constants";
 import { Button } from "./ui/button";
 
 export function Footer() {
@@ -83,22 +83,5 @@ export function Footer() {
         </div>
       </div>
     </footer>
-  );
-}
-
-// Fallback while loading stars count
-function GithubButtonFallback() {
-  return (
-    <Button variant="outline" size="sm" className="w-full md:w-auto h-9" asChild>
-      <a
-        href={GITHUB_REPO_URL!}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="flex items-center justify-center space-x-2"
-      >
-        <GithubIcon className="h-4 w-4" />
-        <span className="whitespace-nowrap">Fork on Github</span>
-      </a>
-    </Button>
   );
 }
