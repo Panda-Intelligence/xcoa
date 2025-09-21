@@ -17,7 +17,6 @@ const nextConfig = {
     'drizzle-kit',
     '@simplewebauthn/server',
     '@react-email/render',
-    '@stripe/stripe-js',
     'arctic',
     'ipaddr.js',
     'ua-parser-js',
@@ -28,6 +27,9 @@ const nextConfig = {
   typescript: {
     ignoreBuildErrors: process.env.SKIP_LINTER === 'true'
   },
+  // 完全禁用静态生成以避免 Context SSR 问题
+  generateStaticParams: false,
+  generateBuildId: () => 'build',
   // 针对 Cloudflare Workers 的构建优化 - 减少包大小
   webpack: (config, { isServer, dev }) => {
     // 开发环境保持默认
@@ -57,8 +59,6 @@ const nextConfig = {
         // 邮件模板
         '@react-email/render',
         '@react-email/components',
-        // 支付相关
-        'stripe',
         // 工具库
         'ipaddr.js',
         'ua-parser-js',
