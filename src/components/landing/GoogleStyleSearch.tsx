@@ -114,7 +114,7 @@ export function GoogleStyleSearch({ onBack }: GoogleStyleSearchProps) {
             {/* Logo */}
             <div className="mb-8 text-center">
               <h1 className="text-6xl md:text-7xl font-normal text-gray-800 mb-2 tracking-tight">
-                eCOA Pro
+                xCOA
               </h1>
             </div>
 

@@ -1,21 +1,65 @@
+'use client'
 import { Button } from "@/components/ui/button";
-import { Menu, X, User, LogOut } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import { useState } from "react";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import Link from "next/link"
+import { useSessionStore } from "@/state/session";
+import { useNavStore } from "@/state/nav";
+import { usePathname } from "next/navigation";
+import { LanguageToggle, useLanguage } from "@/hooks/useLanguage";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
+import { cn } from '@/lib/utils'
 
-interface NavigationProps {
-  user?: any;
-  onLogin: () => void;
-  onLogout: () => void;
-  onInsights?: () => void;
+type NavItem = {
+  name: string;
+  href: Route;
 }
 
-export function Navigation({ user, onLogin, onLogout, onInsights }: NavigationProps) {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+const ActionButtons = () => {
+  const { session, isLoading } = useSessionStore()
+  const { setIsOpen } = useNavStore()
+  const { t } = useLanguage()
 
-  const handleLogout = async () => {
-    onLogout();
-  };
+  if (isLoading) {
+    return <Skeleton className="h-10 w-[80px] bg-primary" />
+  }
+
+  if (session) {
+    return null;
+  }
+
+  return (
+    <Button asChild onClick={() => setIsOpen(false)}>
+      <Link href="/sign-in">{t("common.login")}</Link>
+    </Button>
+  )
+}
+
+export function Navigation() {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { session, isLoading } = useSessionStore()
+  const { isOpen, setIsOpen } = useNavStore()
+  const pathname = usePathname()
+  const { t } = useLanguage()
+
+  const navItems: NavItem[] = [
+    // { name: t("navigation.home"), href: "/" },
+    // ...(session ? [
+    //   { name: t("common.dashboard"), href: "/dashboard" },
+    // ] as NavItem[] : []),
+  ]
+
+  const isActiveLink = (itemHref: string) => {
+    if (itemHref === "/") {
+      return pathname === "/"
+    }
+    return pathname === itemHref || pathname.startsWith(`${itemHref}/`)
+  }
+  const onInsights = () => {
+    window.location.href = "/dashboard/scales/insights";
+
+  }
 
   return (
     <nav className="bg-white/80 backdrop-blur-md border-b border-border sticky top-0 z-50">
@@ -24,7 +68,7 @@ export function Navigation({ user, onLogin, onLogout, onInsights }: NavigationPr
           {/* Logo */}
           <div className="flex items-center">
             <div className="flex-shrink-0">
-              <h1 className="text-xl font-semibold text-primary">eCOA Pro</h1>
+              <h1 className="text-xl font-semibold text-primary">xCOA</h1>
             </div>
           </div>
 
@@ -32,53 +76,49 @@ export function Navigation({ user, onLogin, onLogout, onInsights }: NavigationPr
           <div className="hidden md:block">
             <div className="ml-10 flex items-baseline space-x-8">
               <a href="#features" className="text-foreground hover:text-primary transition-colors">
-                功能特性
+                {t("navigation.features")}
               </a>
               <button
                 onClick={onInsights}
                 className="text-foreground hover:text-primary transition-colors"
               >
-                量表解读
+                {t("navigation.scale_interpretation")}
               </button>
               <a href="#pricing" className="text-foreground hover:text-primary transition-colors">
-                订阅方案
+                {t("navigation.pricing")}
               </a>
               <a href="#about" className="text-foreground hover:text-primary transition-colors">
-                关于我们
+                {t("navigation.about_us")}
               </a>
               <a href="#contact" className="text-foreground hover:text-primary transition-colors">
-                联系我们
+                {t("navigation.contact_us")}
               </a>
             </div>
           </div>
 
           {/* CTA Buttons */}
-          <div className="hidden md:flex items-center space-x-4">
-            {user ? (
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="flex items-center space-x-2">
-                    <User className="h-4 w-4" />
-                    <span>{user.user_metadata?.name || user.email}</span>
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                  <DropdownMenuItem>个人资料</DropdownMenuItem>
-                  <DropdownMenuItem>订阅管理</DropdownMenuItem>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem onClick={handleLogout}>
-                    <LogOut className="mr-2 h-4 w-4" />
-                    退出登录
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            ) : (
+          <div className="flex items-baseline space-x-4">
+            {isLoading ? (
               <>
-                <Button variant="ghost" onClick={onLogin}>登录</Button>
-                <Button onClick={onLogin}>免费试用</Button>
+                <Skeleton className="h-8 w-16" />
               </>
+            ) : (
+              navItems.map((item) => (
+                <Link
+                  key={item.name}
+                  href={item.href}
+                  className={cn(
+                    "text-muted-foreground hover:text-foreground no-underline px-3 h-16 flex items-center text-sm font-medium transition-colors relative",
+                    isActiveLink(item.href) && "text-foreground after:absolute after:left-0 after:bottom-0 after:h-0.5 after:w-full after:bg-foreground"
+                  )}
+                >
+                  {item.name}
+                </Link>
+              ))
             )}
           </div>
+          <LanguageToggle />
+          <ActionButtons />
 
           {/* Mobile menu button */}
           <div className="md:hidden">
@@ -101,7 +141,7 @@ export function Navigation({ user, onLogin, onLogout, onInsights }: NavigationPr
                 className="block px-3 py-2 text-foreground hover:text-primary transition-colors"
                 onClick={() => setIsMenuOpen(false)}
               >
-                功能特性
+                {t("navigation.features")}
               </a>
               <button
                 onClick={() => {
@@ -110,43 +150,67 @@ export function Navigation({ user, onLogin, onLogout, onInsights }: NavigationPr
                 }}
                 className="block px-3 py-2 text-foreground hover:text-primary transition-colors text-left w-full"
               >
-                量表解读
+                {t("navigation.scale_interpretation")}
               </button>
               <a
                 href="#pricing"
                 className="block px-3 py-2 text-foreground hover:text-primary transition-colors"
                 onClick={() => setIsMenuOpen(false)}
               >
-                订阅方案
+                {t("navigation.pricing")}
               </a>
               <a
                 href="#about"
                 className="block px-3 py-2 text-foreground hover:text-primary transition-colors"
                 onClick={() => setIsMenuOpen(false)}
               >
-                关于我们
+                {t("navigation.about_us")}
               </a>
               <a
                 href="#contact"
                 className="block px-3 py-2 text-foreground hover:text-primary transition-colors"
                 onClick={() => setIsMenuOpen(false)}
               >
-                联系我们
+                {t("navigation.contact_us")}
               </a>
-              <div className="border-t border-border pt-3 mt-3">
-                {user ? (
-                  <div className="space-y-2">
-                    <div className="px-3 py-2 text-sm font-medium">{user.user_metadata?.name || user.email}</div>
-                    <Button variant="ghost" className="w-full mb-2">个人资料</Button>
-                    <Button variant="ghost" className="w-full mb-2" onClick={handleLogout}>退出登录</Button>
+              <Sheet open={isOpen} onOpenChange={setIsOpen}>
+                <SheetTrigger asChild>
+                  <Button variant="ghost" size="icon" className="p-6">
+                    <Menu className="w-9 h-9" />
+                    <span className="sr-only">{t("actions.more")}</span>
+                  </Button>
+                </SheetTrigger>
+                <SheetContent side="right" className="w-[240px] sm:w-[300px]">
+                  <div className="mt-6 flow-root">
+                    <div className="space-y-2">
+                      {isLoading ? (
+                        <>
+                          <Skeleton className="h-10 w-full" />
+                        </>
+                      ) : (
+                        <>
+                          {navItems.map((item) => (
+                            <Link
+                              key={item.name}
+                              href={item.href}
+                              className={cn(
+                                "block px-3 py-2 text-base font-medium text-muted-foreground hover:text-foreground hover:bg-muted/50 no-underline transition-colors relative",
+                                isActiveLink(item.href) && "text-foreground"
+                              )}
+                              onClick={() => setIsOpen(false)}
+                            >
+                              {item.name}
+                            </Link>
+                          ))}
+                          <div className="px-3 pt-4">
+                            <ActionButtons />
+                          </div>
+                        </>
+                      )}
+                    </div>
                   </div>
-                ) : (
-                  <>
-                    <Button variant="ghost" className="w-full mb-2" onClick={onLogin}>登录</Button>
-                    <Button className="w-full" onClick={onLogin}>免费试用</Button>
-                  </>
-                )}
-              </div>
+                </SheetContent>
+              </Sheet>
             </div>
           </div>
         )}

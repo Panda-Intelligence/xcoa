@@ -1,5 +1,5 @@
-import { Footer } from '@/components/footer';
-import { Navigation } from '@/components/navigation';
+import { Footer } from '@/components/landing/Footer';
+import { Navigation } from '@/components/landing/Navigation'
 
 export default async function NavFooterLayout({
   children,

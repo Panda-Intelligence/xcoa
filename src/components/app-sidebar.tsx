@@ -108,10 +108,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             url: "/dashboard/scales/favorites" as Route,
           },
           {
-            title: t('sidebar.search_history'),
-            url: "/dashboard/scales/history" as Route,
-          },
-          {
             title: t('sidebar.scale_comparison'),
             url: "/dashboard/scales/compare" as Route,
           },

@@ -50,7 +50,11 @@
     "analytics": "使用统计",
     "quick_search": "快速搜索",
     "my_tickets": "我的工单",
-    "scale_interpretation": "量表解读"
+    "scale_interpretation": "量表解读",
+    "features": "功能特性",
+    "pricing": "订阅方案",
+    "about_us": "关于我们",
+    "contact_us": "联系我们"
   },
   "scales": {
     "title": "eCOA 量表",
@@ -90,7 +94,7 @@
     "validated": "已验证",
     "search_type": "搜索类型",
     "basic_search": "基础搜索",
-    "semantic_search": "语义搜索", 
+    "semantic_search": "语义搜索",
     "hybrid_search": "混合搜索",
     "advanced_filter": "高级筛选",
     "relevance": "相关性",
@@ -139,7 +143,7 @@
     "contact_suggestions": "联系建议",
     "contact_tips_list": [
       "详细说明您的使用目的和项目背景",
-      "提供您的专业机构信息和联系方式", 
+      "提供您的专业机构信息和联系方式",
       "询问具体的许可要求和可能的费用",
       "了解许可的有效期和使用范围限制"
     ]
@@ -292,14 +296,28 @@
   "legal": {
     "privacy_policy": "隐私政策",
     "terms_of_service": "服务条款",
+    "cookie_policy": "Cookie 政策",
     "read_our_terms_of_service_and_usage_agreement": "阅读我们的服务条款和使用协议"
+  },
+  "footer": {
+    "product": "产品",
+    "scale_library": "量表库",
+    "ai_search": "AI 检索",
+    "data_analysis": "数据分析",
+    "resources": "资源",
+    "help_documentation": "帮助文档",
+    "research_cases": "研究案例",
+    "company": "公司",
+    "about_us": "关于我们",
+    "contact_us": "联系我们",
+    "all_rights_reserved": "版权所有"
   },
   "landing": {
     "ai_intelligent_search": "AI 智能检索",
     "professional_ecoa_scale_ai_search_platform": "专业的 eCOA 量表 AI 检索平台",
     "comprehensive_ecoa_scale_library_description": "提供全面的电子临床结果评估量表库，支持 AI 智能检索和个性化推荐。为临床研究和医疗实践提供专业的数字化解决方案。",
     "search_ecoa_scales": "搜索 eCOA 量表...",
-    "ecoa_search": "eCOA 搜索",
+    "ecoa_search": "搜索",
     "professional_scales": "专业量表",
     "disease_areas": "疾病领域",
     "ai_intelligent_recommendation": "AI 智能推荐",
@@ -529,8 +547,7 @@
     "free_limitation": "免费版本限制：仅显示基础量表，升级至专业版获取完整 AI 推荐",
     "go_back": "返回",
     "searches_remaining": "剩余 {count} 次",
-    "ecoa_search": "eCOA 搜索",
-    "search_ecoa": "搜索 ECOA",
+    "ecoa_search": "搜索",
     "feeling_lucky": "手气不错",
     "quick_search": "快速搜索",
     "search_suggestions": "搜索建议：",
