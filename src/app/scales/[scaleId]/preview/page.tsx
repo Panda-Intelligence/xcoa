@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { notFound } from 'next/navigation';
-import {
+import { 
   ArrowLeft,
   Eye,
   Play,
@@ -22,7 +22,9 @@ import {
   ChevronRight,
   Check,
   Pause,
-  Timer
+  Timer,
+  Target,
+  TrendingUp
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -53,7 +55,7 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
   const [scaleId, setScaleId] = useState<string>('');
   const [previewData, setPreviewData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
-
+  
   // 交互式预览状态
   const [viewMode, setViewMode] = useState<ViewMode>('preview');
   const [deviceMode, setDeviceMode] = useState<DeviceMode>('desktop');
@@ -63,6 +65,7 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
   const [showResults, setShowResults] = useState(false);
   const [startTime, setStartTime] = useState<Date | null>(null);
   const [isPaused, setIsPaused] = useState(false);
+  const [isTransitioning, setIsTransitioning] = useState(false);
 
   useEffect(() => {
     async function loadParams() {
@@ -74,7 +77,7 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
 
   useEffect(() => {
     if (!scaleId) return;
-
+    
     fetch(`/api/scales/${scaleId}/preview`)
       .then(res => res.json())
       .then(data => {
@@ -91,14 +94,35 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
       .finally(() => setLoading(false));
   }, [scaleId]);
 
+  // 自动进入下一题（选择答案后自动触发）
+  const autoAdvanceToNext = useCallback(() => {
+    const preview = previewData?.preview;
+    if (!preview?.items) return;
+    
+    if (currentItemIndex < preview.items.length - 1) {
+      setIsTransitioning(true);
+      // 延迟0.8秒后自动进入下一题，给用户确认选择的时间
+      setTimeout(() => {
+        setCurrentItemIndex(prev => prev + 1);
+        setIsTransitioning(false);
+      }, 800);
+    } else {
+      // 最后一题，延迟1.2秒后显示结果
+      setTimeout(() => {
+        setShowResults(true);
+      }, 1200);
+    }
+  }, [currentItemIndex, previewData?.preview?.items]);
+
   // 处理答案选择
   const handleAnswerSelect = useCallback((itemNumber: number, selectedOption: string) => {
     const timestamp = new Date();
+    
     setAnswers(prev => {
       const existing = prev.find(a => a.itemNumber === itemNumber);
       if (existing) {
-        return prev.map(a =>
-          a.itemNumber === itemNumber
+        return prev.map(a => 
+          a.itemNumber === itemNumber 
             ? { ...a, selectedOption, timestamp }
             : a
         );
@@ -106,33 +130,81 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
         return [...prev, { itemNumber, selectedOption, timestamp }];
       }
     });
-
+    
     if (!completedItems.includes(itemNumber)) {
       setCompletedItems(prev => [...prev, itemNumber]);
+      // 自动进入下一题
+      autoAdvanceToNext();
     }
-  }, [completedItems]);
+  }, [completedItems, autoAdvanceToNext]);
 
   // 开始交互模式
   const startInteractiveMode = () => {
+    console.log('开始交互模式...');
     setViewMode('interactive');
     setStartTime(new Date());
     setCurrentItemIndex(0);
     setAnswers([]);
     setCompletedItems([]);
     setShowResults(false);
+    
+    // 如果当前数据不是完整模式，重新获取完整数据
+    if (!previewData?.preview?.isFullMode) {
+      console.log('加载完整模式数据...');
+      setLoading(true);
+      fetch(`/api/scales/${scaleId}/preview?mode=full`)
+        .then(res => res.json())
+        .then(data => {
+          console.log('完整模式数据加载结果:', data);
+          if (data.error) {
+            console.error('Failed to load full scale data:', data.error);
+          } else {
+            setPreviewData(data);
+            console.log('设置了新的预览数据:', data.preview?.items?.length, '个题目');
+          }
+        })
+        .catch(err => {
+          console.error('Failed to load full scale:', err);
+        })
+        .finally(() => setLoading(false));
+    } else {
+      console.log('已经是完整模式，题目数量:', previewData.preview.items?.length);
+    }
   };
 
-  // 计算总分
+  // 计算总分和专业解读
   const calculateScore = useCallback(() => {
-    if (!previewData?.preview?.items) return 0;
-    return answers.reduce((total, answer) => {
+    if (!previewData?.preview?.items) return { total: 0, interpretation: '' };
+    
+    const total = answers.reduce((sum, answer) => {
       const item = previewData.preview.items.find((i: any) => i.itemNumber === answer.itemNumber);
       if (item?.responseOptions) {
         const optionIndex = item.responseOptions.indexOf(answer.selectedOption);
-        return total + (optionIndex >= 0 ? optionIndex : 0);
+        return sum + (optionIndex >= 0 ? optionIndex : 0);
       }
-      return total;
+      return sum;
     }, 0);
+
+    // 根据量表的切分值提供解读
+    const scoring = previewData.scoring;
+    let interpretation = '';
+    
+    if (scoring && previewData.scale.acronym === 'PHQ-9') {
+      if (total <= 4) interpretation = '最小抑郁症状';
+      else if (total <= 9) interpretation = '轻度抑郁症状';
+      else if (total <= 14) interpretation = '中度抑郁症状';
+      else if (total <= 19) interpretation = '中重度抑郁症状';
+      else interpretation = '重度抑郁症状';
+    } else if (scoring && previewData.scale.acronym === 'GAD-7') {
+      if (total <= 4) interpretation = '最小焦虑症状';
+      else if (total <= 9) interpretation = '轻度焦虑症状';
+      else if (total <= 14) interpretation = '中度焦虑症状';
+      else interpretation = '重度焦虑症状';
+    } else {
+      interpretation = `总分: ${total}分`;
+    }
+
+    return { total, interpretation };
   }, [answers, previewData]);
 
   // 获取耗时
@@ -153,7 +225,7 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
           gridCols: 'grid-cols-1',
           buttonSize: 'text-sm'
         };
-      case 'tablet':
+      case 'tablet': 
         return {
           container: 'max-w-2xl mx-auto',
           padding: 'px-4 py-6',
@@ -200,12 +272,23 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
     notFound();
   }
 
-  const { scale, preview, previewInfo } = previewData;
-  const currentItem = preview.items[currentItemIndex];
-  const progressPercentage = viewMode === 'interactive'
-    ? (completedItems.length / preview.items.length) * 100
+  const { scale, preview, previewInfo, scoring } = previewData;
+  const currentItem = preview?.items?.[currentItemIndex];
+  const progressPercentage = viewMode === 'interactive' 
+    ? (completedItems.length / (preview?.items?.length || 1)) * 100
     : 0;
   const deviceStyles = getDeviceStyles();
+  const scoreResult = calculateScore();
+
+  // 调试信息
+  console.log('Debug - Preview data:', {
+    scaleId,
+    viewMode,
+    currentItemIndex,
+    previewItemsLength: preview?.items?.length,
+    currentItem: currentItem ? 'exists' : 'undefined',
+    isFullMode: preview?.isFullMode
+  });
 
   return (
     <div className="min-h-screen bg-background">
@@ -224,9 +307,15 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
               <div className="flex items-center space-x-2">
                 <Eye className="w-4 h-4" />
                 <span className="text-sm font-medium">{scale.acronym} 预览</span>
+                {viewMode === 'interactive' && (
+                  <Badge variant="secondary" className="bg-green-100 text-green-800">
+                    <Play className="w-3 h-3 mr-1" />
+                    交互模式
+                  </Badge>
+                )}
               </div>
             </div>
-
+            
             <div className="flex items-center space-x-2">
               {/* 模式切换 - 桌面端显示 */}
               <div className="hidden lg:flex space-x-1 bg-gray-100 rounded-lg p-1">
@@ -247,7 +336,7 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
                   交互
                 </Button>
               </div>
-
+              
               {/* 设备模式切换 */}
               <div className="hidden md:flex space-x-1 bg-gray-100 rounded-lg p-1">
                 {(['desktop', 'tablet', 'mobile'] as DeviceMode[]).map((mode) => (
@@ -262,7 +351,7 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
                   </Button>
                 ))}
               </div>
-
+              
               <Link href={`/scales/${scale.id}`}>
                 <Button variant="outline" size="sm">
                   查看详情
@@ -272,7 +361,7 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
           </div>
         </div>
       </div>
-
+      
       <div className={`${deviceStyles.container} ${deviceStyles.padding}`}>
         {/* 移动端模式切换 */}
         <div className="md:hidden mb-4">
@@ -296,7 +385,7 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
               交互模式
             </Button>
           </div>
-
+          
           {/* 移动端设备模式切换 */}
           <div className="flex space-x-1 bg-gray-100 rounded-lg p-1 mt-2">
             {(['desktop', 'tablet', 'mobile'] as DeviceMode[]).map((mode) => (
@@ -338,6 +427,11 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
                   </div>
                 </div>
                 <Progress value={progressPercentage} className="h-2" />
+                {isTransitioning && (
+                  <div className="mt-2 text-xs text-blue-600 text-center">
+                    正在进入下一题...
+                  </div>
+                )}
               </CardContent>
             </Card>
           )}
@@ -359,7 +453,7 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
                 </Badge>
               </div>
             </CardHeader>
-
+            
             <CardContent>
               <div className={`grid ${deviceMode === 'mobile' ? 'grid-cols-1 gap-2' : deviceStyles.gridCols} gap-4`}>
                 <div className="flex items-center space-x-2">
@@ -385,121 +479,163 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
           </Card>
 
           {/* 交互式填写界面 */}
-          {viewMode === 'interactive' && currentItem && (
-            <Card className="bg-white border-2 border-blue-200">
-              <CardHeader>
-                <div className="flex items-center justify-between">
-                  <CardTitle className={deviceStyles.fontSize}>
-                    题项 {currentItem.itemNumber} / {preview.items.length}
-                  </CardTitle>
-                  <div className="flex items-center space-x-2">
-                    {!isPaused && startTime && (
+          {viewMode === 'interactive' && (
+            <>
+              {/* 调试信息卡片 */}
+              <Card className="bg-yellow-50 border-yellow-200">
+                <CardHeader>
+                  <CardTitle className="text-yellow-800">调试信息</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="text-sm space-y-1">
+                    <div>Scale ID: {scaleId}</div>
+                    <div>预览数据存在: {previewData ? '是' : '否'}</div>
+                    <div>预览模式: {preview?.isFullMode ? '完整模式' : '预览模式'}</div>
+                    <div>题项数量: {preview?.items?.length || 0}</div>
+                    <div>当前题目索引: {currentItemIndex}</div>
+                    <div>当前题目存在: {currentItem ? '是' : '否'}</div>
+                    {currentItem && <div>当前题目: {currentItem.question}</div>}
+                  </div>
+                </CardContent>
+              </Card>
+
+              {currentItem ? (
+                <Card className={`bg-white border-2 ${isTransitioning ? 'border-green-300 bg-green-50' : 'border-blue-200'} transition-all duration-500`}>
+                  <CardHeader>
+                    <div className="flex items-center justify-between">
+                      <CardTitle className={deviceStyles.fontSize}>
+                        题项 {currentItem.itemNumber} / {preview?.items?.length || 0}
+                      </CardTitle>
+                      <div className="flex items-center space-x-2">
+                        {currentItem.dimension && (
+                          <Badge variant="outline" className="text-xs">
+                            {currentItem.dimension}
+                          </Badge>
+                        )}
+                        <Badge variant={completedItems.includes(currentItem.itemNumber) ? 'default' : 'secondary'}>
+                          {completedItems.includes(currentItem.itemNumber) ? (
+                            <><Check className="w-3 h-3 mr-1" />已完成</>
+                          ) : '待完成'}
+                        </Badge>
+                      </div>
+                    </div>
+                  </CardHeader>
+                  
+                  <CardContent className={`space-y-4 ${deviceStyles.cardPadding}`}>
+                    <div>
+                      <p className={`font-medium ${deviceMode === 'mobile' ? 'text-base' : 'text-lg'} mb-3 leading-relaxed`}>
+                        {currentItem.question}
+                      </p>
+                      {currentItem.questionEn && (
+                        <p className={`${deviceStyles.fontSize} text-muted-foreground italic mb-4`}>
+                          {currentItem.questionEn}
+                        </p>
+                      )}
+                    </div>
+                    
+                    {currentItem.responseOptions && currentItem.responseOptions.length > 0 && (
+                      <RadioGroup
+                        value={answers.find(a => a.itemNumber === currentItem.itemNumber)?.selectedOption || ''}
+                        onValueChange={(value) => handleAnswerSelect(currentItem.itemNumber, value)}
+                        className="space-y-3"
+                      >
+                        {currentItem.responseOptions.map((option: string, optionIndex: number) => (
+                          <div key={`${currentItem.itemNumber}-${optionIndex}`} className={`flex items-center space-x-3 ${deviceStyles.cardPadding} rounded-lg hover:bg-blue-50 border border-transparent hover:border-blue-200 transition-all cursor-pointer`}>
+                            <RadioGroupItem value={option} id={`option-${currentItem.itemNumber}-${optionIndex}`} />
+                            <Label 
+                              htmlFor={`option-${currentItem.itemNumber}-${optionIndex}`} 
+                              className={`flex-1 cursor-pointer ${deviceStyles.fontSize} leading-relaxed py-2`}
+                            >
+                              {option}
+                            </Label>
+                          </div>
+                        ))}
+                      </RadioGroup>
+                    )}
+                    
+                    {/* 手动导航（备用选项） */}
+                    <div className={`flex items-center justify-between pt-4 border-t ${deviceMode === 'mobile' ? 'flex-col space-y-3' : ''}`}>
                       <Button
                         variant="outline"
-                        size="sm"
-                        onClick={() => setIsPaused(!isPaused)}
+                        size={deviceMode === 'mobile' ? 'sm' : 'sm'}
+                        onClick={() => setCurrentItemIndex(Math.max(0, currentItemIndex - 1))}
+                        disabled={currentItemIndex === 0}
+                        className={deviceMode === 'mobile' ? 'w-full' : ''}
                       >
-                        <Pause className="w-3 h-3" />
+                        <ChevronLeft className="w-4 h-4 mr-1" />
+                        上一题
                       </Button>
-                    )}
-                    <Badge variant={completedItems.includes(currentItem.itemNumber) ? 'default' : 'secondary'}>
-                      {completedItems.includes(currentItem.itemNumber) ? (
-                        <><Check className="w-3 h-3 mr-1" />已完成</>
-                      ) : '待完成'}
-                    </Badge>
-                  </div>
-                </div>
-                {currentItem.dimension && (
-                  <Badge variant="outline" className="w-fit">
-                    {currentItem.dimension}
-                  </Badge>
-                )}
-              </CardHeader>
-
-              <CardContent className={`space-y-4 ${deviceStyles.cardPadding}`}>
-                <div>
-                  <p className={`font-medium ${deviceMode === 'mobile' ? 'text-base' : 'text-lg'} mb-3`}>
-                    {currentItem.question}
-                  </p>
-                  {currentItem.questionEn && (
-                    <p className={`${deviceStyles.fontSize} text-muted-foreground italic mb-4`}>
-                      {currentItem.questionEn}
-                    </p>
-                  )}
-                </div>
-
-                {currentItem.responseOptions.length > 0 && (
-                  <RadioGroup
-                    value={answers.find(a => a.itemNumber === currentItem.itemNumber)?.selectedOption || ''}
-                    onValueChange={(value) => handleAnswerSelect(currentItem.itemNumber, value)}
-                    className="space-y-3"
-                  >
-                    {currentItem.responseOptions.map((option: string, optionIndex: number) => (
-                      <div key={optionIndex} className={`flex items-center space-x-3 ${deviceStyles.cardPadding} rounded hover:bg-gray-50 border border-transparent hover:border-gray-200 transition-all`}>
-                        <RadioGroupItem value={option} id={`option-${optionIndex}`} />
-                        <Label
-                          htmlFor={`option-${optionIndex}`}
-                          className={`flex-1 cursor-pointer ${deviceStyles.fontSize} leading-relaxed`}
+                      
+                      {deviceMode !== 'mobile' && (
+                        <span className={`${deviceStyles.fontSize} text-muted-foreground`}>
+                          {currentItemIndex + 1} / {preview?.items?.length || 0}
+                        </span>
+                      )}
+                      
+                      {currentItemIndex < (preview?.items?.length || 0) - 1 ? (
+                        <Button
+                          variant="outline"
+                          size={deviceMode === 'mobile' ? 'sm' : 'sm'}
+                          onClick={() => setCurrentItemIndex(currentItemIndex + 1)}
+                          disabled={!completedItems.includes(currentItem.itemNumber)}
+                          className={deviceMode === 'mobile' ? 'w-full' : ''}
                         >
-                          {option}
-                        </Label>
+                          跳过
+                          <ChevronRight className="w-4 h-4 ml-1" />
+                        </Button>
+                      ) : (
+                        <Button
+                          variant="outline"
+                          size={deviceMode === 'mobile' ? 'sm' : 'sm'}
+                          onClick={() => setShowResults(true)}
+                          disabled={completedItems.length === 0}
+                          className={deviceMode === 'mobile' ? 'w-full' : ''}
+                        >
+                          查看结果
+                          <Check className="w-4 h-4 ml-1" />
+                        </Button>
+                      )}
+                    </div>
+                    
+                    {deviceMode === 'mobile' && (
+                      <div className="text-center text-sm text-muted-foreground pt-2">
+                        {currentItemIndex + 1} / {preview?.items?.length || 0}
                       </div>
-                    ))}
-                  </RadioGroup>
-                )}
-
-                {/* 导航按钮 */}
-                <div className={`flex items-center justify-between pt-4 border-t ${deviceMode === 'mobile' ? 'flex-col space-y-3' : ''}`}>
-                  <Button
-                    variant="outline"
-                    size={deviceMode === 'mobile' ? 'default' : 'default'}
-                    onClick={() => setCurrentItemIndex(Math.max(0, currentItemIndex - 1))}
-                    disabled={currentItemIndex === 0}
-                    className={deviceMode === 'mobile' ? 'w-full' : ''}
-                  >
-                    <ChevronLeft className="w-4 h-4 mr-1" />
-                    上一题
-                  </Button>
-
-                  {deviceMode !== 'mobile' && (
-                    <span className={`${deviceStyles.fontSize} text-muted-foreground`}>
-                      {currentItemIndex + 1} / {preview.items.length}
-                    </span>
-                  )}
-
-                  {currentItemIndex < preview.items.length - 1 ? (
-                    <Button
-                      size={deviceMode === 'mobile' ? 'default' : 'default'}
-                      onClick={() => setCurrentItemIndex(currentItemIndex + 1)}
-                      disabled={!completedItems.includes(currentItem.itemNumber)}
-                      className={deviceMode === 'mobile' ? 'w-full' : ''}
+                    )}
+                  </CardContent>
+                </Card>
+              ) : (
+                // 如果没有当前题目，显示加载或错误信息
+                <Card className="bg-red-50 border-red-200">
+                  <CardContent className="p-4 text-center">
+                    <AlertCircle className="w-8 h-8 mx-auto mb-2 text-red-500" />
+                    <h3 className="font-medium text-red-800 mb-2">无法加载题目</h3>
+                    <p className="text-sm text-red-600 mb-4">
+                      题目数据加载失败或不存在。请检查网络连接或联系技术支持。
+                    </p>
+                    <div className="space-y-2 text-xs text-red-500">
+                      <div>预览数据: {previewData ? '存在' : '不存在'}</div>
+                      <div>题目数量: {preview?.items?.length || 0}</div>
+                      <div>当前索引: {currentItemIndex}</div>
+                    </div>
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      onClick={() => {
+                        setViewMode('preview');
+                        setCurrentItemIndex(0);
+                      }}
+                      className="mt-4"
                     >
-                      下一题
-                      <ChevronRight className="w-4 h-4 ml-1" />
+                      返回预览模式
                     </Button>
-                  ) : (
-                    <Button
-                      size={deviceMode === 'mobile' ? 'default' : 'default'}
-                      onClick={() => setShowResults(true)}
-                      disabled={completedItems.length < preview.items.length}
-                      className={`${deviceMode === 'mobile' ? 'w-full' : ''} bg-green-600 hover:bg-green-700`}
-                    >
-                      查看结果
-                      <Check className="w-4 h-4 ml-1" />
-                    </Button>
-                  )}
-                </div>
-
-                {deviceMode === 'mobile' && (
-                  <div className="text-center text-sm text-muted-foreground pt-2">
-                    {currentItemIndex + 1} / {preview.items.length}
-                  </div>
-                )}
-              </CardContent>
-            </Card>
+                  </CardContent>
+                </Card>
+              )}
+            </>
           )}
 
-          {/* 结果展示 */}
+          {/* 专业结果展示 */}
           {viewMode === 'interactive' && showResults && (
             <Card className="bg-green-50 border-green-200">
               <CardHeader>
@@ -507,28 +643,79 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
                   <Check className="w-5 h-5" />
                   <span>完成结果</span>
                 </CardTitle>
+                <CardDescription className="text-green-700">
+                  基于您的回答，以下是评估结果和专业建议
+                </CardDescription>
               </CardHeader>
-
+              
               <CardContent>
+                {/* 核心结果 */}
+                <div className="bg-white rounded-lg p-4 mb-4 border border-green-200">
+                  <div className="text-center mb-4">
+                    <div className="text-3xl font-bold text-green-600 mb-2">
+                      {scoreResult.total} 分
+                    </div>
+                    <div className="text-lg font-medium text-green-800">
+                      {scoreResult.interpretation}
+                    </div>
+                  </div>
+                  
+                  {scoring && (
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm">
+                      {Object.entries(scoring).map(([level, score]) => (
+                        <div key={level} className={`text-center p-2 rounded ${
+                          scoreResult.total >= (score as number) ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-600'
+                        }`}>
+                          <div className="font-medium">{level}</div>
+                          <div>{score}+</div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+                
+                {/* 详细统计 */}
                 <div className={`grid ${deviceMode === 'mobile' ? 'grid-cols-2 gap-3' : 'grid-cols-2 md:grid-cols-4 gap-4'} text-sm mb-4`}>
-                  <div>
-                    <span className="font-medium">完成题项:</span>
-                    <span className="ml-1">{completedItems.length} / {preview.items.length}</span>
+                  <div className="bg-white p-3 rounded border">
+                    <div className="flex items-center space-x-2 mb-1">
+                      <Target className="w-4 h-4 text-blue-600" />
+                      <span className="font-medium">完成题项</span>
+                    </div>
+                    <span className="text-lg font-bold">{completedItems.length} / {preview?.items?.length || 0}</span>
                   </div>
-                  <div>
-                    <span className="font-medium">预估总分:</span>
-                    <span className="ml-1">{calculateScore()}</span>
+                  <div className="bg-white p-3 rounded border">
+                    <div className="flex items-center space-x-2 mb-1">
+                      <TrendingUp className="w-4 h-4 text-green-600" />
+                      <span className="font-medium">完成率</span>
+                    </div>
+                    <span className="text-lg font-bold">{Math.round(progressPercentage)}%</span>
                   </div>
-                  <div>
-                    <span className="font-medium">完成率:</span>
-                    <span className="ml-1">{Math.round(progressPercentage)}%</span>
+                  <div className="bg-white p-3 rounded border">
+                    <div className="flex items-center space-x-2 mb-1">
+                      <Timer className="w-4 h-4 text-orange-600" />
+                      <span className="font-medium">用时</span>
+                    </div>
+                    <span className="text-lg font-bold">{getElapsedTime()} 分钟</span>
                   </div>
-                  <div>
-                    <span className="font-medium">用时:</span>
-                    <span className="ml-1">{getElapsedTime()} 分钟</span>
+                  <div className="bg-white p-3 rounded border">
+                    <div className="flex items-center space-x-2 mb-1">
+                      <Check className="w-4 h-4 text-purple-600" />
+                      <span className="font-medium">总分</span>
+                    </div>
+                    <span className="text-lg font-bold">{scoreResult.total}</span>
                   </div>
                 </div>
-
+                
+                {/* 专业建议 */}
+                {previewInfo?.scoringInfo && (
+                  <div className="bg-blue-50 p-4 rounded-lg mb-4">
+                    <h4 className="font-medium text-blue-900 mb-2">评分说明</h4>
+                    <p className="text-sm text-blue-800">
+                      {previewInfo.scoringInfo}
+                    </p>
+                  </div>
+                )}
+                
                 <div className={`${deviceMode === 'mobile' ? 'grid grid-cols-2 gap-2' : 'flex space-x-2'} pt-4 border-t`}>
                   <Button size="sm" className={deviceMode === 'mobile' ? 'justify-center' : ''}>
                     <Save className="w-4 h-4 mr-1" />
@@ -542,8 +729,8 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
                     <Share className="w-4 h-4 mr-1" />
                     分享结果
                   </Button>
-                  <Button
-                    variant="outline"
+                  <Button 
+                    variant="outline" 
                     size="sm"
                     onClick={() => {
                       setAnswers([]);
@@ -573,10 +760,10 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
                     <span>量表预览</span>
                   </CardTitle>
                   <CardDescription className="text-blue-700">
-                    这是该量表的部分题项预览，完整版本请查看详情页面
+                    这是该量表的部分题项预览，点击&ldquo;开始交互式体验&rdquo;进行完整量表填写
                   </CardDescription>
                 </CardHeader>
-
+                
                 <CardContent>
                   <div className={`grid ${deviceMode === 'mobile' ? 'grid-cols-2 gap-2' : 'grid-cols-2 md:grid-cols-4 gap-4'} text-sm`}>
                     <div>
@@ -596,12 +783,12 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
                       <span className="ml-1">{preview.dimensions.length} 个</span>
                     </div>
                   </div>
-
+                  
                   {/* 快速开始交互按钮 */}
                   <div className="mt-4 pt-4 border-t">
                     <Button onClick={startInteractiveMode} className="w-full">
                       <Play className="w-4 h-4 mr-2" />
-                      开始交互式体验
+                      开始交互式体验 ({preview.totalItems}题完整版)
                     </Button>
                   </div>
                 </CardContent>
@@ -637,10 +824,10 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
                       )}
                     </CardTitle>
                     <CardDescription>
-                      以下是该量表的前 {preview.previewCount} 个题项
+                      以下是该量表的前 {preview.previewCount} 个题项，完整体验请使用交互模式
                     </CardDescription>
                   </CardHeader>
-
+                  
                   <CardContent>
                     <div className="space-y-4">
                       {preview.items.map((item: any, index: number) => (
@@ -656,19 +843,19 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
                                   {item.questionEn}
                                 </p>
                               )}
-
+                              
                               {item.responseOptions.length > 0 && (
                                 <div className="text-sm">
                                   <span className="font-medium text-muted-foreground">回答选项: </span>
                                   <span className="text-muted-foreground">
-                                    {deviceMode === 'mobile' ?
+                                    {deviceMode === 'mobile' ? 
                                       item.responseOptions.slice(0, 2).join(' / ') + (item.responseOptions.length > 2 ? '...' : '') :
                                       item.responseOptions.join(' / ')
                                     }
                                   </span>
                                 </div>
                               )}
-
+                              
                               {item.dimension && (
                                 <Badge variant="secondary" className="text-xs mt-2">
                                   {item.dimension}
@@ -695,7 +882,7 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
                       以下是一些题项的示例回答，仅供参考
                     </CardDescription>
                   </CardHeader>
-
+                  
                   <CardContent>
                     <div className="space-y-3">
                       {preview.sampleAnswers.map((sample: any, index: number) => (
@@ -723,7 +910,7 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
                     <span>使用指导</span>
                   </CardTitle>
                 </CardHeader>
-
+                
                 <CardContent className="space-y-4">
                   <div>
                     <h4 className="font-medium mb-2">推荐环境</h4>
@@ -731,14 +918,14 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
                       {previewInfo.recommendedEnvironment}
                     </p>
                   </div>
-
+                  
                   <div>
-                    <h4 className="font-medium mb-2">实施说明</h4>
+                    <h4 className="font-medium mb-2">填写说明</h4>
                     <p className={`${deviceStyles.fontSize} text-muted-foreground`}>
                       {previewInfo.instructions}
                     </p>
                   </div>
-
+                  
                   <div>
                     <h4 className="font-medium mb-2">评估维度</h4>
                     <div className="flex flex-wrap gap-2">
@@ -759,7 +946,7 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
             <CardHeader>
               <CardTitle>下一步操作</CardTitle>
             </CardHeader>
-
+            
             <CardContent>
               <div className={`grid grid-cols-1 ${deviceMode === 'mobile' ? 'gap-2' : 'md:grid-cols-3 gap-4'}`}>
                 <Link href={`/scales/${scale.id}`}>
@@ -768,14 +955,14 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
                     查看完整详情
                   </Button>
                 </Link>
-
+                
                 <Link href={`/scales/${scale.id}/copyright`}>
                   <Button variant="outline" className="w-full justify-start">
                     <AlertCircle className="w-4 h-4 mr-2" />
                     检查版权许可
                   </Button>
                 </Link>
-
+                
                 <Link href={`/scales/${scale.id}/interpretation`}>
                   <Button variant="outline" className="w-full justify-start">
                     <Info className="w-4 h-4 mr-2" />
@@ -796,7 +983,7 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
                 </div>
                 <p className={`${deviceStyles.fontSize} text-orange-700 mt-1`}>
                   这只是部分题项预览 ({preview.previewCount} / {preview.totalItems})。
-                  要查看完整量表内容，请访问详情页面或联系版权方获得使用许可。
+                  要体验完整量表填写流程，请点击&ldquo;开始交互式体验&rdquo;。
                 </p>
               </CardContent>
             </Card>

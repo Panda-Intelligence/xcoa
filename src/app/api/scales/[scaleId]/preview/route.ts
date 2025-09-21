@@ -9,6 +9,7 @@ import {
 import { eq } from 'drizzle-orm';
 import { getSessionFromCookie } from '@/utils/auth';
 import { getIP } from '@/utils/get-IP';
+import { safeJSONParseArray, safeJSONParseObject } from '@/utils/json-parser';
 import { z } from 'zod';
 
 const previewParamsSchema = z.object({
@@ -27,6 +28,11 @@ export async function GET(
     
     const params = await context.params;
     const { scaleId } = previewParamsSchema.parse(params);
+    
+    // 检查是否为完整模式（通过URL参数控制）
+    const url = new URL(request.url);
+    const mode = url.searchParams.get('mode') || 'preview'; // preview 或 full
+    const isFullMode = mode === 'full';
     
     // 获取量表基本信息
     const [scale] = await db
@@ -48,6 +54,7 @@ export async function GET(
         domains: ecoaScaleTable.domains,
         scoringMethod: ecoaScaleTable.scoringMethod,
         copyrightInfo: ecoaScaleTable.copyrightInfo,
+        psychometricProperties: ecoaScaleTable.psychometricProperties,
       })
       .from(ecoaScaleTable)
       .leftJoin(ecoaCategoryTable, eq(ecoaScaleTable.categoryId, ecoaCategoryTable.id))
@@ -60,20 +67,27 @@ export async function GET(
       );
     }
 
-    // 获取前5个题项作为预览
-    const previewItems = await db
+    // 根据模式获取题项数据
+    const itemsQuery = db
       .select({
+        id: ecoaItemTable.id,
         itemNumber: ecoaItemTable.itemNumber,
         question: ecoaItemTable.question,
         questionEn: ecoaItemTable.questionEn,
         dimension: ecoaItemTable.dimension,
         responseType: ecoaItemTable.responseType,
         responseOptions: ecoaItemTable.responseOptions,
+        scoringInfo: ecoaItemTable.scoringInfo,
+        isRequired: ecoaItemTable.isRequired,
       })
       .from(ecoaItemTable)
       .where(eq(ecoaItemTable.scaleId, scaleId))
-      .orderBy(ecoaItemTable.sortOrder, ecoaItemTable.itemNumber)
-      .limit(5);
+      .orderBy(ecoaItemTable.sortOrder, ecoaItemTable.itemNumber);
+    
+    // 如果是预览模式，只返回前5个题项
+    const items = isFullMode ? 
+      await itemsQuery : 
+      await itemsQuery.limit(5);
 
     // 获取所有维度列表
     const allItems = await db
@@ -90,7 +104,7 @@ export async function GET(
       await db.insert(scaleUsageTable).values({
         scaleId,
         userId: user?.id,
-        actionType: 'preview',
+        actionType: isFullMode ? 'interactive_preview' : 'preview',
         ipAddress: ip,
         userAgent: request.headers.get('user-agent') || '',
       });
@@ -98,24 +112,22 @@ export async function GET(
       console.warn('Failed to record preview:', error);
     }
 
-    // 解析 JSON 字段
+    // 解析 JSON 字段（安全解析）
     const parsedScale = {
       ...scale,
-      languages: Array.isArray(scale.languages) ? scale.languages : 
-        (scale.languages ? JSON.parse(scale.languages) : []),
-      domains: Array.isArray(scale.domains) ? scale.domains : 
-        (scale.domains ? JSON.parse(scale.domains) : []),
+      languages: safeJSONParseArray(scale.languages),
+      domains: safeJSONParseArray(scale.domains),
+      psychometricProperties: safeJSONParseObject(scale.psychometricProperties),
     };
 
     // 解析题项的 JSON 字段
-    const parsedItems = previewItems.map(item => ({
+    const parsedItems = items.map(item => ({
       ...item,
-      responseOptions: Array.isArray(item.responseOptions) ? item.responseOptions :
-        (item.responseOptions ? JSON.parse(item.responseOptions) : []),
+      responseOptions: safeJSONParseArray(item.responseOptions),
     }));
 
-    // 生成预览样本数据
-    const sampleAnswers = parsedItems.map(item => {
+    // 生成预览样本数据（仅在预览模式）
+    const sampleAnswers = !isFullMode ? parsedItems.map(item => {
       const options = item.responseOptions;
       if (options.length > 0) {
         // 随机选择一个中等程度的答案作为示例
@@ -128,7 +140,7 @@ export async function GET(
         };
       }
       return null;
-    }).filter(Boolean);
+    }).filter(Boolean) : [];
 
     return NextResponse.json({
       scale: parsedScale,
@@ -137,16 +149,19 @@ export async function GET(
         dimensions,
         totalItems: scale.itemsCount,
         previewCount: parsedItems.length,
-        hasMoreItems: parsedItems.length < (scale.itemsCount || 0),
+        hasMoreItems: !isFullMode && parsedItems.length < (scale.itemsCount || 0),
         sampleAnswers,
+        isFullMode,
       },
       previewInfo: {
-        isPartialPreview: parsedItems.length < (scale.itemsCount || 0),
+        isPartialPreview: !isFullMode && parsedItems.length < (scale.itemsCount || 0),
         previewRatio: scale.itemsCount ? Math.round((parsedItems.length / scale.itemsCount) * 100) : 0,
         estimatedCompletionTime: scale.administrationTime,
-        recommendedEnvironment: '安静的环境，避免干扰',
-        instructions: '请仔细阅读每个题项，根据您最近两周的感受选择最符合的选项。',
+        recommendedEnvironment: '安静的环境，避免干扰，确保不被打断',
+        instructions: '请仔细阅读每个题项，根据您最近两周的感受选择最符合的选项。如有疑问，选择最接近的选项。',
+        scoringInfo: parsedScale.scoringMethod,
       },
+      scoring: parsedScale.psychometricProperties?.cutoffScores || null,
       viewedAt: new Date().toISOString(),
     });
 
