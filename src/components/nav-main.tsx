@@ -23,17 +23,21 @@ import type { Route } from "next"
 import type { NavMainItem } from "./app-sidebar"
 
 type Props = {
+  collapsible?: boolean
+  title: string
   items: NavMainItem[]
 }
 
 export function NavMain({
+  collapsible,
+  title,
   items,
 }: Props) {
   const { setOpenMobile } = useSidebar()
 
   return (
     <SidebarGroup>
-      <SidebarGroupLabel>Platform</SidebarGroupLabel>
+      <SidebarGroupLabel>{title}</SidebarGroupLabel>
       <SidebarMenu>
         {items.map((item) => {
           // If there are no child items, render a direct link
@@ -53,6 +57,37 @@ export function NavMain({
             )
           }
 
+          if (!collapsible) {
+            return (<SidebarMenuItem key={item.title}>
+              <SidebarMenuButton tooltip={item.title}>
+                {item.icon && <item.icon />}
+                <span>{item.title}</span>
+              </SidebarMenuButton>
+              <SidebarMenuSub>
+                {item.items?.map((subItem) => (
+                  <SidebarMenuSubItem key={subItem.title}>
+                    <SidebarMenuSubButton asChild>
+                      {subItem.url.startsWith('/') ? (
+                        <Link
+                          href={subItem.url as Route}
+                          onClick={() => setOpenMobile(false)}
+                        >
+                          <span>{subItem.title}</span>
+                        </Link>
+                      ) : (
+                        <a
+                          href={subItem.url}
+                          onClick={() => setOpenMobile(false)}
+                        >
+                          <span>{subItem.title}</span>
+                        </a>
+                      )}
+                    </SidebarMenuSubButton>
+                  </SidebarMenuSubItem>
+                ))}
+              </SidebarMenuSub>
+            </SidebarMenuItem>)
+          }
           // Otherwise render the collapsible menu
           return (
             <Collapsible

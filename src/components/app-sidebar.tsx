@@ -54,7 +54,7 @@ type Data = {
     plan: string
   }[]
   navMain: NavMainItem[]
-  projects: NavItem[]
+  system: NavMainItem[]
 }
 
 // TODO Add a theme switcher
@@ -83,8 +83,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
   const data: Data = {
     user: {
-      name: session?.user?.firstName || "User",
-      email: session?.user?.email || "user@example.com",
+      name: session?.user?.firstName || "",
+      email: session?.user?.email || '',
     },
     teams: formattedTeams,
     navMain: [
@@ -105,15 +105,15 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           },
           {
             title: t('sidebar.my_favorites'),
-            url: "/dashboard/scales" as Route,
+            url: "/dashboard/scales/favorites" as Route,
           },
           {
             title: t('sidebar.search_history'),
-            url: "/dashboard/scales" as Route,
+            url: "/dashboard/scales/history" as Route,
           },
           {
             title: t('sidebar.scale_comparison'),
-            url: "/dashboard/scales" as Route,
+            url: "/dashboard/scales/compare" as Route,
           },
         ],
       },
@@ -128,7 +128,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           },
           {
             title: t('sidebar.contact_tickets'),
-            url: "/dashboard/copyright" as Route,
+            url: "/dashboard/copyright/tickets" as Route,
           }
         ],
       },
@@ -143,14 +143,17 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           },
           {
             title: t('sidebar.score_calculator'),
-            url: "/dashboard/interpretation" as Route,
+            url: "/dashboard/interpretation/calculator" as Route,
           },
           {
             title: t('sidebar.clinical_cases'),
-            url: "/dashboard/interpretation" as Route,
+            url: "/dashboard/interpretation/cases" as Route,
           },
         ],
       },
+
+    ],
+    system: [
       {
         title: t('sidebar.team_management'),
         url: "/dashboard/teams" as Route,
@@ -162,34 +165,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           },
           {
             title: t('sidebar.member_management'),
-            url: "/dashboard/teams" as Route,
+            url: "/dashboard/teams/members" as Route,
           },
           {
             title: t('sidebar.team_settings'),
-            url: "/dashboard/teams/create" as Route,
-          },
-        ],
-      },
-      {
-        title: t('sidebar.credit_management'),
-        url: "/dashboard/billing",
-        icon: CreditCard,
-        items: [
-          {
-            title: t('sidebar.credit_balance'),
-            url: "/dashboard/billing" as Route,
-          },
-          {
-            title: t('sidebar.usage_history'),
-            url: "/dashboard/billing" as Route,
-          },
-          {
-            title: t('sidebar.purchase_credits'),
-            url: "/dashboard/billing" as Route,
-          },
-          {
-            title: t('sidebar.team_pricing'),
-            url: "/dashboard/billing" as Route,
+            url: "/dashboard/teams/settings" as Route,
           },
         ],
       },
@@ -200,58 +180,18 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         items: [
           {
             title: t('sidebar.search_analytics'),
-            url: "/dashboard/analytics" as Route,
+            url: "/dashboard/analytics/search" as Route,
           },
           {
             title: t('sidebar.usage_reports'),
-            url: "/dashboard/analytics" as Route,
+            url: "/dashboard/analytics/usage" as Route,
           },
           {
             title: t('sidebar.team_activity'),
-            url: "/dashboard/analytics" as Route,
+            url: "/dashboard/analytics/team" as Route,
           },
         ],
-      },
-      {
-        title: t('sidebar.settings'),
-        url: "/settings",
-        icon: Settings2,
-        items: [
-          {
-            title: t('sidebar.profile'),
-            url: "/settings" as Route,
-          },
-          {
-            title: t('sidebar.security_settings'),
-            url: "/settings" as Route,
-          },
-          {
-            title: t('sidebar.session_management'),
-            url: "/settings" as Route,
-          },
-          {
-            title: t('sidebar.change_password'),
-            url: "/forgot-password" as Route,
-          },
-        ],
-      },
-    ],
-    projects: [
-      {
-        title: t('sidebar.quick_search'),
-        url: "/dashboard/scales",
-        icon: Search,
-      },
-      {
-        title: t('sidebar.my_tickets'),
-        url: "/dashboard/copyright" as Route,
-        icon: MessageSquare,
-      },
-      {
-        title: t('sidebar.scale_interpretation'),
-        url: "/dashboard/interpretation",
-        icon: FileText,
-      },
+      }
     ],
   }
 
@@ -264,8 +204,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       )}
 
       <SidebarContent>
-        <NavMain items={data.navMain} />
-        {/* <NavProjects projects={data.projects} /> */}
+        <NavMain title="Platform" items={data.navMain} />
+        <NavMain title="System" collapsible={true} items={data.system} />
       </SidebarContent>
       <SidebarFooter>
         <div className="flex items-center justify-between px-2 py-1">
