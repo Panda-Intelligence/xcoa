@@ -412,7 +412,7 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
               <CardContent className={deviceStyles.cardPadding}>
                 <div className="flex items-center justify-between mb-2">
                   <span className={`${deviceStyles.fontSize} font-medium text-blue-800`}>
-                    进度: {completedItems.length} / {preview.items.length}
+                    进度: {completedItems.length} / {preview?.items?.length || 0}
                   </span>
                   <div className="flex items-center space-x-2">
                     {startTime && (
@@ -421,6 +421,10 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
                         <span className="text-xs">{getElapsedTime()}分钟</span>
                       </div>
                     )}
+                    <div className="flex items-center space-x-1 text-green-600">
+                      <Check className="w-3 h-3" />
+                      <span className="text-xs font-bold">当前: {scoreResult.total}分</span>
+                    </div>
                     <span className={`${deviceStyles.fontSize} text-blue-600`}>
                       {Math.round(progressPercentage)}% 完成
                     </span>
@@ -430,6 +434,12 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
                 {isTransitioning && (
                   <div className="mt-2 text-xs text-blue-600 text-center">
                     正在进入下一题...
+                  </div>
+                )}
+                {/* 实时分数解读 */}
+                {completedItems.length > 0 && (
+                  <div className="mt-2 text-xs text-center text-green-700 font-medium">
+                    {scoreResult.interpretation}
                   </div>
                 )}
               </CardContent>
@@ -546,7 +556,12 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
                               htmlFor={`option-${currentItem.itemNumber}-${optionIndex}`} 
                               className={`flex-1 cursor-pointer ${deviceStyles.fontSize} leading-relaxed py-2`}
                             >
-                              {option}
+                              <div className="flex items-center justify-between">
+                                <span>{option}</span>
+                                <Badge variant="outline" className="text-xs">
+                                  {optionIndex}分
+                                </Badge>
+                              </div>
                             </Label>
                           </div>
                         ))}

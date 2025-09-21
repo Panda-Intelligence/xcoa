@@ -24,7 +24,7 @@ export async function GET(
     const db = getDB();
     const session = await getSessionFromCookie();
     const user = session?.user;
-    const ip = getIP(request);
+    const ip = await getIP(); // getIP是异步函数
     
     const params = await context.params;
     const { scaleId } = previewParamsSchema.parse(params);
@@ -103,10 +103,11 @@ export async function GET(
     try {
       await db.insert(scaleUsageTable).values({
         scaleId,
-        userId: user?.id,
+        userId: user?.id || null,
         actionType: isFullMode ? 'interactive_preview' : 'preview',
-        ipAddress: ip,
-        userAgent: request.headers.get('user-agent') || '',
+        ipAddress: typeof ip === 'string' ? ip : null,
+        userAgent: request.headers.get('user-agent') || null,
+        referrer: request.headers.get('referer') || null,
       });
     } catch (error) {
       console.warn('Failed to record preview:', error);
