@@ -117,25 +117,48 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
   // 处理答案选择
   const handleAnswerSelect = useCallback((itemNumber: number, selectedOption: string) => {
     const timestamp = new Date();
+    console.log('=== 答题调试信息 ===');
+    console.log('题目编号:', itemNumber);
+    console.log('选择答案:', selectedOption);
+    console.log('选择答案类型:', typeof selectedOption);
+    console.log('选择答案长度:', selectedOption?.length);
+    
+    if (!selectedOption) {
+      console.error('选择的答案为空或undefined!');
+      return;
+    }
     
     setAnswers(prev => {
+      console.log('当前答案数组:', prev);
       const existing = prev.find(a => a.itemNumber === itemNumber);
+      let newAnswers: Answer[];
       if (existing) {
-        return prev.map(a => 
+        newAnswers = prev.map(a => 
           a.itemNumber === itemNumber 
             ? { ...a, selectedOption, timestamp }
             : a
         );
+        console.log('更新现有答案');
       } else {
-        return [...prev, { itemNumber, selectedOption, timestamp }];
+        newAnswers = [...prev, { itemNumber, selectedOption, timestamp }];
+        console.log('添加新答案');
       }
+      console.log('新答案数组:', newAnswers);
+      return newAnswers;
     });
     
     if (!completedItems.includes(itemNumber)) {
-      setCompletedItems(prev => [...prev, itemNumber]);
+      setCompletedItems(prev => {
+        const newCompleted = [...prev, itemNumber];
+        console.log('更新已完成题目:', newCompleted);
+        return newCompleted;
+      });
       // 自动进入下一题
       autoAdvanceToNext();
+    } else {
+      console.log('题目已经完成过');
     }
+    console.log('=== 答题调试结束 ===');
   }, [completedItems, autoAdvanceToNext]);
 
   // 开始交互模式
@@ -174,28 +197,52 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
 
   // 计算总分和专业解读
   const calculateScore = useCallback(() => {
-    if (!previewData?.preview?.items) return { total: 0, interpretation: '' };
+    console.log('=== 计分调试信息 ===');
+    console.log('answers数组:', answers);
+    console.log('preview items数量:', previewData?.preview?.items?.length);
+    console.log('答案数量:', answers.length);
     
-    const total = answers.reduce((sum, answer) => {
+    if (!previewData?.preview?.items) {
+      console.log('没有预览数据或题目数据');
+      return { total: 0, interpretation: '无数据' };
+    }
+    
+    if (answers.length === 0) {
+      console.log('没有任何答案');
+      return { total: 0, interpretation: '尚未开始答题' };
+    }
+    
+    const total = answers.reduce((sum, answer, index) => {
+      console.log(`处理答案${index + 1}:`, answer);
       const item = previewData.preview.items.find((i: any) => i.itemNumber === answer.itemNumber);
+      console.log('找到对应题目:', item ? '是' : '否');
+      
       if (item?.responseOptions) {
+        console.log('题目选项:', item.responseOptions);
+        console.log('用户选择:', answer.selectedOption);
         const optionIndex = item.responseOptions.indexOf(answer.selectedOption);
-        return sum + (optionIndex >= 0 ? optionIndex : 0);
+        console.log('选项索引:', optionIndex);
+        const score = optionIndex >= 0 ? optionIndex : 0;
+        console.log('本题得分:', score);
+        return sum + score;
       }
+      console.log('题目没有选项或匹配失败');
       return sum;
     }, 0);
+    
+    console.log('最终总分:', total);
 
     // 根据量表的切分值提供解读
     const scoring = previewData.scoring;
     let interpretation = '';
     
-    if (scoring && previewData.scale.acronym === 'PHQ-9') {
+    if (previewData.scale.acronym === 'PHQ-9') {
       if (total <= 4) interpretation = '最小抑郁症状';
       else if (total <= 9) interpretation = '轻度抑郁症状';
       else if (total <= 14) interpretation = '中度抑郁症状';
       else if (total <= 19) interpretation = '中重度抑郁症状';
       else interpretation = '重度抑郁症状';
-    } else if (scoring && previewData.scale.acronym === 'GAD-7') {
+    } else if (previewData.scale.acronym === 'GAD-7') {
       if (total <= 4) interpretation = '最小焦虑症状';
       else if (total <= 9) interpretation = '轻度焦虑症状';
       else if (total <= 14) interpretation = '中度焦虑症状';
@@ -204,6 +251,8 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
       interpretation = `总分: ${total}分`;
     }
 
+    console.log('最终解读:', interpretation);
+    console.log('=== 计分调试结束 ===');
     return { total, interpretation };
   }, [answers, previewData]);
 
@@ -544,28 +593,43 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
                     </div>
                     
                     {currentItem.responseOptions && currentItem.responseOptions.length > 0 && (
-                      <RadioGroup
-                        value={answers.find(a => a.itemNumber === currentItem.itemNumber)?.selectedOption || ''}
-                        onValueChange={(value) => handleAnswerSelect(currentItem.itemNumber, value)}
-                        className="space-y-3"
-                      >
-                        {currentItem.responseOptions.map((option: string, optionIndex: number) => (
-                          <div key={`${currentItem.itemNumber}-${optionIndex}`} className={`flex items-center space-x-3 ${deviceStyles.cardPadding} rounded-lg hover:bg-blue-50 border border-transparent hover:border-blue-200 transition-all cursor-pointer`}>
-                            <RadioGroupItem value={option} id={`option-${currentItem.itemNumber}-${optionIndex}`} />
-                            <Label 
-                              htmlFor={`option-${currentItem.itemNumber}-${optionIndex}`} 
-                              className={`flex-1 cursor-pointer ${deviceStyles.fontSize} leading-relaxed py-2`}
-                            >
-                              <div className="flex items-center justify-between">
-                                <span>{option}</span>
-                                <Badge variant="outline" className="text-xs">
-                                  {optionIndex}分
-                                </Badge>
-                              </div>
-                            </Label>
-                          </div>
-                        ))}
-                      </RadioGroup>
+                      <>
+                        <div className="text-xs text-gray-500 mb-2">
+                          调试: 当前题目{currentItem.itemNumber}, 选项数量: {currentItem.responseOptions.length}
+                        </div>
+                        <RadioGroup
+                          value={answers.find(a => a.itemNumber === currentItem.itemNumber)?.selectedOption || ''}
+                          onValueChange={(value) => {
+                            console.log('RadioGroup onValueChange 触发:', value);
+                            handleAnswerSelect(currentItem.itemNumber, value);
+                          }}
+                          className="space-y-3"
+                        >
+                          {currentItem.responseOptions.map((option: string, optionIndex: number) => (
+                            <div key={`${currentItem.itemNumber}-${optionIndex}`} className={`flex items-center space-x-3 ${deviceStyles.cardPadding} rounded-lg hover:bg-blue-50 border border-transparent hover:border-blue-200 transition-all cursor-pointer`}>
+                              <RadioGroupItem 
+                                value={option} 
+                                id={`option-${currentItem.itemNumber}-${optionIndex}`}
+                              />
+                              <Label 
+                                htmlFor={`option-${currentItem.itemNumber}-${optionIndex}`} 
+                                className={`flex-1 cursor-pointer ${deviceStyles.fontSize} leading-relaxed py-2`}
+                                onClick={() => {
+                                  console.log('Label点击，选项值:', option);
+                                  handleAnswerSelect(currentItem.itemNumber, option);
+                                }}
+                              >
+                                <div className="flex items-center justify-between">
+                                  <span>{option}</span>
+                                  <Badge variant="outline" className="text-xs">
+                                    {optionIndex}分
+                                  </Badge>
+                                </div>
+                              </Label>
+                            </div>
+                          ))}
+                        </RadioGroup>
+                      </>
                     )}
                     
                     {/* 手动导航（备用选项） */}

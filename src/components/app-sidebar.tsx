@@ -21,8 +21,7 @@ import { NavMain } from "@/components/nav-main"
 // import { NavProjects } from "@/components/nav-projects"
 import { NavUser } from "@/components/nav-user"
 import { TeamSwitcher } from "@/components/team-switcher"
-import { LanguageSwitch } from "@/components/LanguageSwitch"
-import { useLanguage } from "@/hooks/useLanguage"
+import { LanguageToggle, useLanguage } from "@/hooks/useLanguage"
 import {
   Sidebar,
   SidebarContent,
@@ -138,10 +137,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             url: "/dashboard/interpretation" as Route,
           },
           {
-            title: t('sidebar.score_calculator'),
-            url: "/dashboard/interpretation/calculator" as Route,
-          },
-          {
             title: t('sidebar.clinical_cases'),
             url: "/dashboard/interpretation/cases" as Route,
           },
@@ -206,7 +201,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       <SidebarFooter>
         <div className="flex items-center justify-between px-2 py-1">
           <NavUser />
-          <LanguageSwitch />
+          <LanguageToggle />
         </div>
       </SidebarFooter>
       <SidebarRail />

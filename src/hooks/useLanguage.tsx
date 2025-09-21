@@ -40,21 +40,28 @@ function getNestedValue(obj: any, path: string): string | undefined {
 }
 
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
-  const [language, setLanguageState] = useState<Language>('zh');
+  const [language, setLanguageState] = useState<Language>('en'); // 默认英文
   const [translationsLoaded, setTranslationsLoaded] = useState(false);
 
   // 初始化语言设置
   useEffect(() => {
     const savedLanguage = localStorage.getItem('xcoa-language') as Language;
+    console.log('Saved language from localStorage:', savedLanguage);
+    
     if (savedLanguage && ['zh', 'en'].includes(savedLanguage)) {
+      console.log('Using saved language:', savedLanguage);
       setLanguageState(savedLanguage);
     } else {
-      // 检测浏览器语言
+      // 默认使用英文，只有明确检测到中文浏览器时才使用中文
       const browserLang = navigator.language;
+      console.log('Browser language detected:', browserLang);
+      
       if (browserLang.startsWith('zh')) {
+        console.log('Chinese browser detected, setting to zh');
         setLanguageState('zh');
       } else {
-        setLanguageState('en');
+        console.log('Non-Chinese browser, setting default to en');
+        setLanguageState('en'); // 明确设置为英文
       }
     }
   }, []);
@@ -67,6 +74,7 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
   }, [language]);
 
   const setLanguage = (lang: Language) => {
+    console.log('Setting language to:', lang);
     setLanguageState(lang);
     localStorage.setItem('xcoa-language', lang);
 
@@ -118,6 +126,7 @@ export function LanguageToggle() {
 
   return (
     <button
+      type="button"
       onClick={() => setLanguage(language === 'zh' ? 'en' : 'zh')}
       className="flex items-center space-x-1 px-2 py-1 text-sm rounded hover:bg-gray-100 transition-colors"
       title={language === 'zh' ? 'Switch to English' : '切换到中文'}

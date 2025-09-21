@@ -1,6 +1,6 @@
 import type { Route } from "next"
 
-export const SITE_NAME = "xCOA"
+export const SITE_NAME = "xCOA Pro"
 export const COMPANY_NAME = "Panda Inetlligence Software LTD"
 export const SITE_DESCRIPTION = "专业的 eCOA 量表版权授权平台 - AI 智能搜索，一站式版权许可服务，为临床研究和医疗实践提供合规的量表使用解决方案。"
 export const SITE_URL = process.env.NODE_ENV === "development" ? "http://localhost:3000" : "https://xcoa.pandacat.ai"

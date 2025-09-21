@@ -14,9 +14,6 @@ export function Footer() {
           {/* Company Info */}
           <div className="space-y-4">
             <h3 className="text-lg font-semibold text-foreground">{SITE_NAME}</h3>
-            <p className="text-sm text-muted-foreground">
-              {SITE_DESCRIPTION}
-            </p>
             <div className="space-y-2">
               <div className="flex items-center space-x-2 text-sm text-muted-foreground">
                 <Mail className="h-4 w-4" />
