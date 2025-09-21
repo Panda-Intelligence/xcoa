@@ -1,6 +1,6 @@
-import { sqliteTable, integer, text, index } from "drizzle-orm/sqlite-core";
+import { sqliteTable, integer, text, real, index } from "drizzle-orm/sqlite-core";
 import { relations, sql } from "drizzle-orm";
-import { type InferSelectModel } from "drizzle-orm";
+import type { InferSelectModel } from "drizzle-orm";
 
 import { createId } from '@paralleldrive/cuid2'
 
@@ -546,19 +546,19 @@ export const copyrightHolderTable = sqliteTable("copyright_holder", {
   website: text({ length: 500 }),
   description: text({ length: 1000 }),
   descriptionEn: text({ length: 1000 }),
-  
+
   // Contact Information
   contactEmail: text({ length: 255 }),
   contactPhone: text({ length: 50 }),
   contactMobile: text({ length: 50 }),
   contactFax: text({ length: 50 }),
   contactAddress: text({ length: 500 }),
-  
+
   // Business Information
   licenseTypes: text({ mode: 'json' }).$type<string[]>().default([]), // commercial, academic, research, free
   licenseRequirements: text({ length: 1000 }),
   pricingInfo: text({ length: 500 }),
-  
+
   // Status
   isActive: integer().default(1),
   isVerified: integer().default(0),
@@ -571,7 +571,7 @@ export const copyrightHolderTable = sqliteTable("copyright_holder", {
 // License Types for Scales
 export const LICENSE_TYPE = {
   PUBLIC_DOMAIN: 'public_domain',
-  OPEN_SOURCE: 'open_source', 
+  OPEN_SOURCE: 'open_source',
   ACADEMIC_FREE: 'academic_free',
   COMMERCIAL: 'commercial',
   RESTRICTED: 'restricted',
@@ -587,19 +587,19 @@ export const copyrightContactRequestTable = sqliteTable("copyright_contact_reque
   userId: text().notNull().references(() => userTable.id),
   scaleId: text().notNull().references(() => ecoaScaleTable.id),
   copyrightHolderId: text().notNull().references(() => copyrightHolderTable.id),
-  
+
   // Request Information
   requestType: text({ length: 50 }).notNull(), // license_inquiry, usage_request, support, other
   intendedUse: text({ length: 500 }), // clinical, research, commercial, education
   organizationName: text({ length: 255 }),
   organizationType: text({ length: 100 }),
-  
+
   // Contact Details
   contactName: text({ length: 255 }).notNull(),
   contactEmail: text({ length: 255 }).notNull(),
   contactPhone: text({ length: 50 }),
   message: text({ length: 2000 }),
-  
+
   // Status Tracking
   status: text({ length: 50 }).default('pending'), // pending, sent, responded, completed, failed
   sentAt: integer({ mode: "timestamp" }),
@@ -623,7 +623,7 @@ export const ecoaScaleUpdatedTable = sqliteTable("ecoa_scale", {
   description: text({ length: 2000 }),
   descriptionEn: text({ length: 2000 }),
   categoryId: text().references(() => ecoaCategoryTable.id),
-  
+
   // Copyright and Licensing
   copyrightHolderId: text().references(() => copyrightHolderTable.id),
   licenseType: text({ enum: licenseTypeTuple }).default(LICENSE_TYPE.CONTACT_REQUIRED),
@@ -631,7 +631,7 @@ export const ecoaScaleUpdatedTable = sqliteTable("ecoa_scale", {
   copyrightInfo: text({ length: 1000 }),
   licenseTerms: text({ length: 2000 }),
   usageRestrictions: text({ length: 1000 }),
-  
+
   // Scale Information
   itemsCount: integer().default(0),
   dimensionsCount: integer().default(0),
@@ -644,7 +644,7 @@ export const ecoaScaleUpdatedTable = sqliteTable("ecoa_scale", {
   domains: text({ mode: 'json' }).$type<string[]>().default([]),
   psychometricProperties: text({ mode: 'json' }).$type<Record<string, any>>(),
   references: text({ mode: 'json' }).$type<string[]>().default([]),
-  
+
   // Download and Access
   downloadUrl: text({ length: 500 }),
   isPublic: integer().default(1),
@@ -714,3 +714,149 @@ export type UserFavorite = InferSelectModel<typeof userFavoriteTable>;
 export type ScaleUsage = InferSelectModel<typeof scaleUsageTable>;
 export type CopyrightHolder = InferSelectModel<typeof copyrightHolderTable>;
 export type CopyrightContactRequest = InferSelectModel<typeof copyrightContactRequestTable>;
+
+// 新增量表内容增强表结构
+
+// 量表常模数据表
+export const scaleNormsTable = sqliteTable("scale_norms", {
+  ...commonColumns,
+  id: text().primaryKey().$defaultFn(() => `norm_${createId()}`).notNull(),
+  scaleId: text().notNull().references(() => ecoaScaleTable.id),
+  populationType: text({ length: 100 }).notNull(), // general, clinical, elderly, pediatric
+  sampleSize: integer(),
+  meanScore: real(),
+  stdDeviation: real(),
+  minScore: real(),
+  maxScore: real(),
+  percentiles: text({ mode: 'json' }).$type<Record<string, number>>(), // {p25: x, p50: x, p75: x, p90: x, p95: x}
+  ageRange: text({ length: 50 }),
+  gender: text({ length: 20 }), // male, female, mixed
+  educationLevel: text({ length: 100 }),
+  culturalBackground: text({ length: 100 }),
+  studyReference: text({ length: 500 }),
+}, (table) => ([
+  index('scale_norms_scale_id_idx').on(table.scaleId),
+  index('scale_norms_population_idx').on(table.populationType),
+]));
+
+// 量表解读指导表
+export const scaleInterpretationsTable = sqliteTable("scale_interpretations", {
+  ...commonColumns,
+  id: text().primaryKey().$defaultFn(() => `interp_${createId()}`).notNull(),
+  scaleId: text().notNull().references(() => ecoaScaleTable.id),
+  scoreRangeMin: integer(),
+  scoreRangeMax: integer(),
+  severityLevel: text({ length: 50 }), // minimal, mild, moderate, severe
+  interpretationZh: text({ length: 1000 }),
+  interpretationEn: text({ length: 1000 }),
+  clinicalSignificance: text({ length: 1000 }),
+  recommendations: text({ length: 1000 }),
+  followUpGuidance: text({ length: 1000 }),
+}, (table) => ([
+  index('interpretations_scale_id_idx').on(table.scaleId),
+  index('interpretations_score_range_idx').on(table.scoreRangeMin, table.scoreRangeMax),
+]));
+
+// 临床案例表
+export const clinicalCasesTable = sqliteTable("clinical_cases", {
+  ...commonColumns,
+  id: text().primaryKey().$defaultFn(() => `case_${createId()}`).notNull(),
+  scaleId: text().notNull().references(() => ecoaScaleTable.id),
+  caseTitle: text({ length: 255 }).notNull(),
+  patientBackground: text({ length: 1000 }),
+  scaleScores: text({ mode: 'json' }).$type<Record<string, number>>(), // {total: x, domain1: x}
+  interpretation: text({ length: 2000 }),
+  clinicalDecision: text({ length: 1000 }),
+  outcome: text({ length: 1000 }),
+  learningPoints: text({ length: 1000 }),
+  difficultyLevel: text({ length: 20 }), // beginner, intermediate, advanced
+  specialty: text({ length: 100 }), // psychiatry, oncology, neurology
+  author: text({ length: 255 }),
+  reviewStatus: text({ length: 20 }).default('draft'), // draft, reviewed, published
+}, (table) => ([
+  index('clinical_cases_scale_id_idx').on(table.scaleId),
+  index('clinical_cases_specialty_idx').on(table.specialty),
+  index('clinical_cases_difficulty_idx').on(table.difficultyLevel),
+]));
+
+// 量表使用指南表
+export const scaleGuidelinesTable = sqliteTable("scale_guidelines", {
+  ...commonColumns,
+  id: text().primaryKey().$defaultFn(() => `guide_${createId()}`).notNull(),
+  scaleId: text().notNull().references(() => ecoaScaleTable.id),
+  guidelineType: text({ length: 50 }), // administration, scoring, interpretation
+  title: text({ length: 255 }).notNull(),
+  content: text({ length: 5000 }),
+  targetAudience: text({ length: 100 }), // clinician, researcher, student
+  evidenceLevel: text({ length: 5 }), // A, B, C
+  lastUpdated: integer({ mode: 'timestamp' }),
+  version: text({ length: 20 }),
+}, (table) => ([
+  index('guidelines_scale_id_idx').on(table.scaleId),
+  index('guidelines_type_idx').on(table.guidelineType),
+]));
+
+// 量表比较表
+export const scaleComparisonsTable = sqliteTable("scale_comparisons", {
+  ...commonColumns,
+  id: text().primaryKey().$defaultFn(() => `comp_${createId()}`).notNull(),
+  scale1Id: text().notNull().references(() => ecoaScaleTable.id),
+  scale2Id: text().notNull().references(() => ecoaScaleTable.id),
+  comparisonAspects: text({ mode: 'json' }).$type<Record<string, any>>(),
+  similarities: text({ length: 2000 }),
+  differences: text({ length: 2000 }),
+  usageRecommendations: text({ length: 1000 }),
+}, (table) => ([
+  index('comparisons_scales_idx').on(table.scale1Id, table.scale2Id),
+]));
+
+// 版权许可详细信息表
+export const copyrightLicensesTable = sqliteTable("copyright_licenses", {
+  ...commonColumns,
+  id: text().primaryKey().$defaultFn(() => `license_${createId()}`).notNull(),
+  scaleId: text().notNull().references(() => ecoaScaleTable.id),
+  licenseType: text({ length: 50 }), // public_domain, academic_free, commercial_paid
+  copyrightHolder: text({ length: 255 }),
+  contactEmail: text({ length: 255 }),
+  contactPhone: text({ length: 50 }),
+  website: text({ length: 500 }),
+  licenseTerms: text({ length: 2000 }),
+  commercialCost: text({ length: 255 }),
+  academicCost: text({ length: 255 }),
+  usageRestrictions: text({ length: 1000 }),
+  applicationProcess: text({ length: 1000 }),
+  responseTime: text({ length: 100 }),
+}, (table) => ([
+  index('copyright_licenses_scale_id_idx').on(table.scaleId),
+  index('copyright_licenses_type_idx').on(table.licenseType),
+]));
+
+// 新增关系定义
+export const scaleNormsRelations = relations(scaleNormsTable, ({ one }) => ({
+  scale: one(ecoaScaleTable, {
+    fields: [scaleNormsTable.scaleId],
+    references: [ecoaScaleTable.id],
+  }),
+}));
+
+export const scaleInterpretationsRelations = relations(scaleInterpretationsTable, ({ one }) => ({
+  scale: one(ecoaScaleTable, {
+    fields: [scaleInterpretationsTable.scaleId],
+    references: [ecoaScaleTable.id],
+  }),
+}));
+
+export const clinicalCasesRelations = relations(clinicalCasesTable, ({ one }) => ({
+  scale: one(ecoaScaleTable, {
+    fields: [clinicalCasesTable.scaleId],
+    references: [ecoaScaleTable.id],
+  }),
+}));
+
+// 新增类型导出
+export type ScaleNorms = InferSelectModel<typeof scaleNormsTable>;
+export type ScaleInterpretations = InferSelectModel<typeof scaleInterpretationsTable>;
+export type ClinicalCases = InferSelectModel<typeof clinicalCasesTable>;
+export type ScaleGuidelines = InferSelectModel<typeof scaleGuidelinesTable>;
+export type ScaleComparisons = InferSelectModel<typeof scaleComparisonsTable>;
+export type CopyrightLicenses = InferSelectModel<typeof copyrightLicensesTable>;

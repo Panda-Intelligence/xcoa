@@ -1,5 +1,6 @@
 'use client'
 
+import { useState, useEffect } from 'react';
 import { PageHeader } from "@/components/page-header"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -18,8 +19,40 @@ import {
 import Link from "next/link"
 import { useLanguage } from "@/hooks/useLanguage"
 
+interface DashboardStats {
+  totalScales: number;
+  freeScales: number;
+  apiEndpoints: number;
+  avgResponseTime: string;
+}
+
+interface TopScale {
+  id: string;
+  name: string;
+  acronym: string;
+  usageCount: number;
+  license: string;
+}
+
 export default function Page() {
-  const { t } = useLanguage()
+  const { t } = useLanguage();
+  const [stats, setStats] = useState<DashboardStats>({ totalScales: 0, freeScales: 0, apiEndpoints: 8, avgResponseTime: '~450ms' });
+  const [topScales, setTopScales] = useState<TopScale[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    // 获取dashboard统计数据
+    fetch('/api/dashboard/stats')
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          setStats(data.stats);
+          setTopScales(data.topScales);
+        }
+      })
+      .catch(err => console.error('Failed to load dashboard stats:', err))
+      .finally(() => setLoading(false));
+  }, []);
 
   return (
     <>
@@ -121,7 +154,7 @@ export default function Page() {
               <BarChart3 className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">15</div>
+              <div className="text-2xl font-bold">{loading ? '...' : stats.totalScales}</div>
               <p className="text-xs text-muted-foreground">
                 {t("dashboard.total_scales_desc")}
               </p>
@@ -134,7 +167,7 @@ export default function Page() {
               <TrendingUp className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">2</div>
+              <div className="text-2xl font-bold">{loading ? '...' : stats.freeScales}</div>
               <p className="text-xs text-muted-foreground">
                 {t("dashboard.free_scales_desc")}
               </p>
@@ -147,7 +180,7 @@ export default function Page() {
               <Users className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">&lt;500ms</div>
+              <div className="text-2xl font-bold">{stats.avgResponseTime}</div>
               <p className="text-xs text-muted-foreground">
                 {t("dashboard.response_time_desc")}
               </p>
@@ -163,28 +196,41 @@ export default function Page() {
               <CardDescription>{t("scales.hot_scales_description")}</CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="space-y-3">
-                {[
-                  { acronym: 'PHQ-9', name: '患者健康问卷-9', usage: 125, license: '📧' },
-                  { acronym: 'GAD-7', name: '广泛性焦虑障碍-7', usage: 89, license: '📧' },
-                  { acronym: 'HAM-D', name: '汉密尔顿抑郁量表', usage: 76, license: '🆓' },
-                  { acronym: 'MoCA', name: '蒙特利尔认知评估', usage: 54, license: '🎓' },
-                  { acronym: 'BDI-II', name: '贝克抑郁量表-II', usage: 43, license: '💼' },
-                ].map((scale) => (
-                  <div key={scale.acronym} className="flex items-center justify-between p-2 rounded hover:bg-gray-50">
-                    <div className="flex items-center space-x-3">
-                      <span className="text-lg">{scale.license}</span>
-                      <div>
-                        <div className="font-medium text-sm">{scale.acronym}</div>
-                        <div className="text-xs text-muted-foreground">{scale.name}</div>
+              {loading ? (
+                <div className="space-y-3">
+                  {Array.from({ length: 5 }).map((_, index) => (
+                    <div key={index} className="flex items-center justify-between p-2 rounded animate-pulse">
+                      <div className="flex items-center space-x-3">
+                        <div className="w-6 h-6 bg-gray-200 rounded"></div>
+                        <div>
+                          <div className="w-16 h-4 bg-gray-200 rounded mb-1"></div>
+                          <div className="w-24 h-3 bg-gray-200 rounded"></div>
+                        </div>
                       </div>
+                      <div className="w-8 h-4 bg-gray-200 rounded"></div>
                     </div>
-                    <div className="text-xs text-muted-foreground">
-                      {scale.usage} {t("scales.times_used")}
-                    </div>
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  {topScales.map((scale) => (
+                    <Link key={scale.id} href={`/scales/${scale.id}`}>
+                      <div className="flex items-center justify-between p-2 rounded hover:bg-gray-50 cursor-pointer transition-colors">
+                        <div className="flex items-center space-x-3">
+                          <span className="text-lg">{scale.license}</span>
+                          <div>
+                            <div className="font-medium text-sm">{scale.acronym}</div>
+                            <div className="text-xs text-muted-foreground">{scale.name}</div>
+                          </div>
+                        </div>
+                        <div className="text-xs text-muted-foreground">
+                          {scale.usageCount} {t("scales.times_used")}
+                        </div>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              )}
             </CardContent>
           </Card>
 
