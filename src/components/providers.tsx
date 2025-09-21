@@ -2,13 +2,11 @@
 
 import * as React from "react"
 import { ThemeProvider as NextThemesProvider } from "next-themes"
-import { HeroUIProvider } from "@heroui/react"
 import type { SessionValidationResult } from "@/types"
 import { useSessionStore } from "@/state/session"
 import { Suspense, useEffect, useRef, RefObject, useCallback } from "react"
 import { useConfigStore } from "@/state/config"
 import type { getConfig } from "@/flags"
-import { EmailVerificationDialog } from "./email-verification-dialog"
 import { useTopLoader } from 'nextjs-toploader'
 import { usePathname, useRouter, useSearchParams, useParams } from "next/navigation"
 import { useEventListener, useDebounceCallback } from 'usehooks-ts';
@@ -26,25 +24,21 @@ function RouterChecker() {
     const _push = router.push.bind(router);
     const _refresh = router.refresh.bind(router);
 
-    // Monkey patch: https://github.com/vercel/next.js/discussions/42016#discussioncomment-9027313
     router.push = (href, options) => {
       start();
       _push(href, options);
     };
 
-    // Monkey patch: https://github.com/vercel/next.js/discussions/42016#discussioncomment-9027313
     router.refresh = () => {
       start();
       fetchSession?.();
       _refresh();
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   useEffect(() => {
     done();
     fetchSession?.();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname, searchParams, params]);
 
   return null;
@@ -63,7 +57,7 @@ export function ThemeProvider({
 
   const doFetchSession = useCallback(async () => {
     try {
-      refetchSession() // Set loading state before fetch
+      refetchSession()
       const response = await fetch('/api/get-session')
       const sessionWithConfig = await response.json() as {
         session: SessionValidationResult
@@ -85,12 +79,10 @@ export function ThemeProvider({
 
   const fetchSession = useDebounceCallback(doFetchSession, 30)
 
-  // Initial fetch on mount
   useEffect(() => {
     fetchSession()
   }, [fetchSession])
 
-  // Handle refetches
   useEventListener('visibilitychange', () => {
     if (document.visibilityState === 'visible') {
       fetchSession()
@@ -99,25 +91,20 @@ export function ThemeProvider({
 
   useEventListener('focus', () => {
     fetchSession()
-    // @ts-expect-error window is not defined in the server
   }, windowRef)
 
-  // Add fetchSession to the session store
   useEffect(() => {
     useSessionStore.setState({ fetchSession: doFetchSession })
   }, [doFetchSession])
 
   return (
     <LanguageProvider>
-      <HeroUIProvider>
-        <Suspense>
-          <RouterChecker />
-        </Suspense>
-        <NextThemesProvider {...props} attribute="class">
-          {children}
-          <EmailVerificationDialog />
-        </NextThemesProvider>
-      </HeroUIProvider>
+      <Suspense>
+        <RouterChecker />
+      </Suspense>
+      <NextThemesProvider {...props} attribute="class">
+        {children}
+      </NextThemesProvider>
     </LanguageProvider>
   )
 }

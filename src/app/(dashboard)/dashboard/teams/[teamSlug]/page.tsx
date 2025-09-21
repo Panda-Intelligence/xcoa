@@ -9,7 +9,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { getSessionFromCookie } from "@/utils/auth";
 import { InviteMemberModal } from "@/components/teams/invite-member-modal";
-import { Alert } from "@heroui/react";
+
 import { getTeamMembers } from "@/server/team-members";
 import {
   Table,
@@ -22,6 +22,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { formatDate } from "@/utils/format-date";
 import { RemoveMemberButton } from "@/components/teams/remove-member-button";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
 interface TeamPageProps {
   params: Promise<{
@@ -88,9 +89,11 @@ export default async function TeamDashboardPage({ params }: TeamPageProps) {
           <Alert
             color="danger"
             title="Access Denied"
-            description={`You don't have permission to access team "${team.name}". Please contact the team owner to request access.`}
             className="mb-6"
           />
+          <AlertDescription>
+            You don&apos;t have permission to access team &quot;{team.name}&quot;. Please contact the team owner to request access.
+          </AlertDescription>
           <Button asChild className="mt-4">
             <Link href="/dashboard/teams">
               Return to Teams

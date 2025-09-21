@@ -10,7 +10,9 @@
       "Bash(wrangler whoami:*)",
       "Bash(time curl:*)",
       "Bash(echo:*)",
-      "Bash(cat:*)"
+      "Bash(cat:*)",
+      "Bash(xargs sed:*)",
+      "Bash(xargs rm:*)"
     ],
     "deny": [],
     "ask": []
