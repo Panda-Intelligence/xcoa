@@ -34,10 +34,27 @@ interface SearchResult {
   usageCount: number;
 }
 
+interface HotScale {
+  id: string;
+  name: string;
+  nameEn: string;
+  acronym: string;
+  categoryName: string;
+  itemsCount: number;
+  administrationTime: number;
+  targetPopulation: string;
+  validationStatus: string;
+  usageCount: number;
+  favoriteCount: number;
+  icon: string;
+}
+
 export default function ScalesPage() {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<SearchResult[]>([]);
+  const [hotScales, setHotScales] = useState<HotScale[]>([]);
   const [loading, setLoading] = useState(false);
+  const [loadingHotScales, setLoadingHotScales] = useState(true);
   const [searchType, setSearchType] = useState('hybrid');
   const [filters, setFilters] = useState({
     category: 'all',
@@ -52,6 +69,19 @@ export default function ScalesPage() {
       .then(res => res.json())
       .then(data => setCategories((data as { categories?: unknown[] }).categories || []))
       .catch(err => console.error('Failed to load categories:', err));
+  }, []);
+
+  // 获取热门量表数据
+  useEffect(() => {
+    fetch('/api/scales/hot')
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          setHotScales(data.scales || []);
+        }
+      })
+      .catch(err => console.error('Failed to load hot scales:', err))
+      .finally(() => setLoadingHotScales(false));
   }, []);
 
   const handleSearch = async () => {
@@ -210,9 +240,6 @@ export default function ScalesPage() {
                           <h3 className="font-semibold text-lg">{result.name}</h3>
                           <Badge variant="outline">{result.acronym}</Badge>
                           <span className="text-lg">{getLicenseIcon(result.acronym)}</span>
-                          <Badge variant={result.validation_status === 'validated' ? 'default' : 'secondary'}>
-                            {result.validation_status === 'validated' ? '已验证' : result.validation_status}
-                          </Badge>
                         </div>
 
                         {result.nameEn && (
@@ -302,35 +329,65 @@ export default function ScalesPage() {
             </CardHeader>
 
             <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {[
-                  { acronym: 'PHQ-9', name: '患者健康问卷-9', category: '抑郁症评估', icon: '📧' },
-                  { acronym: 'GAD-7', name: '广泛性焦虑障碍-7', category: '焦虑症评估', icon: '📧' },
-                  { acronym: 'HAM-D', name: '汉密尔顿抑郁量表', category: '抑郁症评估', icon: '🆓' },
-                  { acronym: 'MoCA', name: '蒙特利尔认知评估', category: '认知功能评估', icon: '🎓' },
-                  { acronym: 'BDI-II', name: '贝克抑郁量表-II', category: '抑郁症评估', icon: '💼' },
-                  { acronym: 'EORTC QLQ-C30', name: 'EORTC生活质量问卷', category: '生活质量评估', icon: '🎓' },
-                ].map((scale) => (
-                  <Card key={scale.acronym} className="hover:shadow-md transition-shadow cursor-pointer">
-                    <CardContent className="p-4">
-                      <div className="flex items-center justify-between mb-2">
-                        <Badge variant="outline">{scale.acronym}</Badge>
-                        <span className="text-lg">{scale.icon}</span>
-                      </div>
-                      <h4 className="font-medium mb-1">{scale.name}</h4>
-                      <p className="text-xs text-muted-foreground">{scale.category}</p>
-                      <div className="flex gap-1 mt-3">
-                        <Button size="sm" variant="outline" className="flex-1">
-                          详情
-                        </Button>
-                        <Button size="sm" variant="outline">
-                          <Shield className="w-3 h-3" />
-                        </Button>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
+              {loadingHotScales ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {Array.from({ length: 6 }).map((_, index) => (
+                    <Card key={index} className="animate-pulse">
+                      <CardContent className="p-4">
+                        <div className="h-4 bg-gray-200 rounded mb-2"></div>
+                        <div className="h-3 bg-gray-200 rounded mb-1"></div>
+                        <div className="h-2 bg-gray-200 rounded"></div>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {hotScales.map((scale) => (
+                    <Card key={scale.id} className="hover:shadow-md transition-shadow cursor-pointer">
+                      <CardContent className="p-4">
+                        <div className="flex items-center justify-between mb-2">
+                          <Badge variant="outline">{scale.acronym}</Badge>
+                          <span className="text-lg">{scale.icon}</span>
+                        </div>
+                        <h4 className="font-medium mb-1 text-sm leading-tight">{scale.name}</h4>
+                        <p className="text-xs text-muted-foreground mb-2">{scale.categoryName}</p>
+                        <div className="text-xs text-muted-foreground mb-3 space-y-1">
+                          <div className="flex items-center space-x-1">
+                            <BookOpen className="w-3 h-3" />
+                            <span>{scale.itemsCount}题</span>
+                          </div>
+                          <div className="flex items-center space-x-1">
+                            <Clock className="w-3 h-3" />
+                            <span>{scale.administrationTime}分钟</span>
+                          </div>
+                          <div className="flex items-center space-x-1">
+                            <Users className="w-3 h-3" />
+                            <span>使用{scale.usageCount}次</span>
+                          </div>
+                        </div>
+                        <div className="flex gap-1">
+                          <Link href={`/scales/${scale.id}`}>
+                            <Button size="sm" variant="outline" className="flex-1 text-xs">
+                              详情
+                            </Button>
+                          </Link>
+                          <Link href={`/scales/${scale.id}/preview`}>
+                            <Button size="sm" variant="outline" className="px-2">
+                              <Eye className="w-3 h-3" />
+                            </Button>
+                          </Link>
+                          <Link href={`/scales/${scale.id}/copyright`}>
+                            <Button size="sm" variant="outline" className="px-2">
+                              <Shield className="w-3 h-3" />
+                            </Button>
+                          </Link>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              )}
             </CardContent>
           </Card>
         )}
