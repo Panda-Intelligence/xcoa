@@ -133,7 +133,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     system: [
       {
         title: t('sidebar.billing'),
-        url: "/dashboard/billing" as Route,
+        url: "/billing" as Route,
         icon: CreditCard,
       },
       {

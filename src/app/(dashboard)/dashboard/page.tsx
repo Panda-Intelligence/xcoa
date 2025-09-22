@@ -315,7 +315,7 @@ export default function Page() {
                 </Button>
               </Link>
 
-              <Link href="/dashboard/billing">
+              <Link href="/billing">
                 <Button variant="outline" className="w-full justify-start">
                   <CreditCard className="w-4 h-4 mr-2" />
                   {t("dashboard.credit_management")}
