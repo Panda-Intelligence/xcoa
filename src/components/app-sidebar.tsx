@@ -107,21 +107,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             url: "/dashboard/scales/favorites" as Route,
           },
           {
-            title: t('sidebar.scale_comparison'),
-            url: "/dashboard/scales/compare" as Route,
-          },
-        ],
-      },
-      {
-        title: t('sidebar.copyright_service'),
-        url: "/dashboard/copyright" as Route,
-        icon: Shield,
-        items: [
-          {
-            title: t('sidebar.license_inquiry'),
-            url: "/dashboard/copyright" as Route,
-          },
-          {
             title: t('sidebar.contact_tickets'),
             url: "/dashboard/copyright/tickets" as Route,
           }
@@ -149,40 +134,17 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         title: t('sidebar.team_management'),
         url: "/dashboard/teams" as Route,
         icon: Users,
-        items: [
-          {
-            title: t('sidebar.team_overview'),
-            url: "/dashboard/teams" as Route,
-          },
-          {
-            title: t('sidebar.member_management'),
-            url: "/dashboard/teams/members" as Route,
-          },
-          {
-            title: t('sidebar.team_settings'),
-            url: "/dashboard/teams/settings" as Route,
-          },
-        ],
       },
       {
-        title: t('sidebar.usage_analytics'),
-        url: "/dashboard/analytics" as Route,
-        icon: BarChart3,
-        items: [
-          {
-            title: t('sidebar.search_analytics'),
-            url: "/dashboard/analytics/search" as Route,
-          },
-          {
-            title: t('sidebar.usage_reports'),
-            url: "/dashboard/analytics/usage" as Route,
-          },
-          {
-            title: t('sidebar.team_activity'),
-            url: "/dashboard/analytics/team" as Route,
-          },
-        ],
-      }
+        title: t('sidebar.billing'),
+        url: "/dashboard/billing" as Route,
+        icon: CreditCard,
+      },
+      {
+        title: t('sidebar.settings'),
+        url: "/settings" as Route,
+        icon: Settings2,
+      },
     ],
   }
 

@@ -671,18 +671,18 @@
   "sidebar": {
     "dashboard": "仪表盘",
     "ecoa_scales": "eCOA 量表",
-    "scale_search": "量表搜索",
-    "my_favorites": "我的收藏",
+    "scale_search": "搜索",
+    "my_favorites": "收藏",
     "search_history": "搜索历史",
     "scale_comparison": "量表对比",
     "copyright_service": "版权服务",
     "license_inquiry": "许可查询",
-    "contact_tickets": "联系工单",
+    "contact_tickets": "版权工单",
     "scale_interpretation": "量表解读",
     "interpretation_guide": "解读指南",
     "score_calculator": "分数计算器",
     "clinical_cases": "临床案例",
-    "team_management": "团队管理",
+    "team_management": "团队",
     "team_overview": "团队概览",
     "member_management": "成员管理",
     "team_settings": "团队设置",
@@ -701,7 +701,8 @@
     "session_management": "会话管理",
     "change_password": "修改密码",
     "quick_search": "快速搜索",
-    "my_tickets": "我的工单"
+    "my_tickets": "我的工单",
+    "billing": "积分"
   },
   "pricing": {
     "title": "选择适合的订阅方案",

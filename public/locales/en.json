@@ -683,7 +683,7 @@
     "interpretation_guide": "Interpretation Guide",
     "score_calculator": "Score Calculator",
     "clinical_cases": "Clinical Cases",
-    "team_management": "Team Management",
+    "team_management": "Team",
     "team_overview": "Team Overview",
     "member_management": "Member Management",
     "team_settings": "Team Settings",
@@ -702,7 +702,8 @@
     "session_management": "Session Management",
     "change_password": "Change Password",
     "quick_search": "Quick Search",
-    "my_tickets": "My Tickets"
+    "my_tickets": "My Tickets",
+    "billing": "Billing"
   },
   "pricing": {
     "title": "Choose the Right Subscription Plan",

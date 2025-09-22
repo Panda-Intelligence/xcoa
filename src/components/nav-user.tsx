@@ -109,28 +109,16 @@ export function NavUser() {
                 </div>
               </div>
             </DropdownMenuLabel>
-            <div className="px-2">
-              <ThemeSwitch className="w-full my-3">
-                Change theme
-              </ThemeSwitch>
-            </div>
             <DropdownMenuGroup>
               <DropdownMenuItem className="cursor-pointer" onClick={() => {
                 setOpenMobile(false)
                 router.push('/settings')
               }}>
-                <BadgeCheck />
+                <BadgeCheck className="size-4" />
                 Account
               </DropdownMenuItem>
-              <DropdownMenuItem className="cursor-pointer" onClick={() => {
-                setOpenMobile(false)
-                router.push('/dashboard/billing')
-              }}>
-                <CreditCard />
-                Billing
-              </DropdownMenuItem>
               <DropdownMenuItem className="cursor-pointer">
-                <Bell />
+                <Bell className="size-4" />
                 Notifications
               </DropdownMenuItem>
             </DropdownMenuGroup>
@@ -144,7 +132,7 @@ export function NavUser() {
               }}
               className="cursor-pointer"
             >
-              <LogOut />
+              <LogOut className="size-4" />
               Log out
             </DropdownMenuItem>
           </DropdownMenuContent>
