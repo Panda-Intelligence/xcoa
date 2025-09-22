@@ -118,7 +118,7 @@ export default function ScaleFavoritesPage() {
   }
 
   return (
-    <>
+    <div className="flex flex-col h-screen">
       <PageHeader
         items={[
           { href: "/dashboard", label: t("common.dashboard") },
@@ -127,26 +127,27 @@ export default function ScaleFavoritesPage() {
         ]}
       />
 
-      <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
-        {/* 页面标题和统计 */}
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl font-bold flex items-center space-x-2">
-              <Heart className="w-6 h-6 text-red-500" />
-              <span>我的量表收藏</span>
-            </h1>
-            <p className="text-muted-foreground">
-              已收藏 {favorites.length} 个量表，快速访问您常用的评估工具
-            </p>
-          </div>
+      <div className="flex-1 overflow-auto">
+        <div className="flex flex-col gap-4 p-4">
+          {/* 页面标题和统计 */}
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-2xl font-bold flex items-center space-x-2">
+                <Heart className="w-6 h-6 text-red-500" />
+                <span>我的量表收藏</span>
+              </h1>
+              <p className="text-muted-foreground">
+                已收藏 {favorites.length} 个量表，快速访问您常用的评估工具
+              </p>
+            </div>
 
-          <Link href="/dashboard/scales">
-            <Button>
-              <Plus className="w-4 h-4 mr-2" />
-              添加量表
-            </Button>
-          </Link>
-        </div>
+            <Link href="/dashboard/scales">
+              <Button>
+                <Plus className="w-4 h-4 mr-2" />
+                添加量表
+              </Button>
+            </Link>
+          </div>
 
         {/* 搜索和筛选 */}
         <div className="flex flex-col items-center sm:flex-row gap-4">
@@ -340,7 +341,8 @@ export default function ScaleFavoritesPage() {
             </CardContent>
           </Card>
         )}
+        </div>
       </div>
-    </>
+    </div>
   );
 }

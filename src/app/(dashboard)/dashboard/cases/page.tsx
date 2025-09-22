@@ -317,7 +317,7 @@ export default function ClinicalCasesPage() {
   }
 
   return (
-    <>
+    <div className="flex flex-col h-screen">
       <PageHeader
         items={[
           { href: "/dashboard", label: t("common.dashboard") },
@@ -326,19 +326,20 @@ export default function ClinicalCasesPage() {
         ]}
       />
       
-      <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
-        {/* 页面标题和统计 */}
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl font-bold flex items-center space-x-2">
-              <Beaker className="w-6 h-6 text-blue-600" />
-              <span>临床试验案例库</span>
-            </h1>
-            <p className="text-muted-foreground">
-              探索量表在真实临床试验中的应用，学习最佳实践和研究设计
-            </p>
+      <div className="flex-1 overflow-auto">
+        <div className="flex flex-col gap-4 p-4">
+          {/* 页面标题和统计 */}
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-2xl font-bold flex items-center space-x-2">
+                <Beaker className="w-6 h-6 text-blue-600" />
+                <span>临床试验案例库</span>
+              </h1>
+              <p className="text-muted-foreground">
+                探索量表在真实临床试验中的应用，学习最佳实践和研究设计
+              </p>
+            </div>
           </div>
-        </div>
 
         {/* 统计面板 */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -578,7 +579,8 @@ export default function ClinicalCasesPage() {
             </CardContent>
           </Card>
         </div>
+        </div>
       </div>
-    </>
+    </div>
   );
 }

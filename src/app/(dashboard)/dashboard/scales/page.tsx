@@ -138,7 +138,7 @@ export default function ScalesPage() {
   };
 
   return (
-    <>
+    <div className="flex flex-col h-screen">
       <PageHeader
         items={[
           { href: "/dashboard", label: t("common.dashboard") },
@@ -146,18 +146,19 @@ export default function ScalesPage() {
         ]}
       />
 
-      <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
-        {/* 搜索区域 */}
-        <div>
-          <CardHeader>
-            <CardTitle className="flex items-center space-x-2">
-              <Search className="w-5 h-5" />
-              <span>{t("scales_page.search_title")}</span>
-            </CardTitle>
-            <CardDescription>
-              {t("scales_page.search_description")}
-            </CardDescription>
-          </CardHeader>
+      <div className="flex-1 overflow-auto">
+        <div className="flex flex-col gap-4 p-4">
+          {/* 搜索区域 */}
+          <div>
+            <CardHeader>
+              <CardTitle className="flex items-center space-x-2">
+                <Search className="w-5 h-5" />
+                <span>{t("scales_page.search_title")}</span>
+              </CardTitle>
+              <CardDescription>
+                {t("scales_page.search_description")}
+              </CardDescription>
+            </CardHeader>
 
           <CardContent className="space-y-4">
             {/* 搜索输入 */}
@@ -380,7 +381,8 @@ export default function ScalesPage() {
             </CardContent>
           </div>
         )}
+        </div>
       </div>
-    </>
+    </div>
   );
 }

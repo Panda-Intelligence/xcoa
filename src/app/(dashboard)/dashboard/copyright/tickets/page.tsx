@@ -161,7 +161,7 @@ export default function CopyrightTicketsPage() {
   }
 
   return (
-    <>
+    <div className="flex flex-col h-screen">
       <PageHeader
         items={[
           { href: "/dashboard", label: t("common.dashboard") },
@@ -170,7 +170,8 @@ export default function CopyrightTicketsPage() {
         ]}
       />
 
-      <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
+      <div className="flex-1 overflow-auto">
+        <div className="flex flex-col gap-4 p-4">
         {/* 页面标题和统计 */}
         <div className="flex items-center justify-between">
           <div>
@@ -451,7 +452,8 @@ export default function CopyrightTicketsPage() {
             </CardContent>
           </Card>
         </div>
+        </div>
       </div>
-    </>
+    </div>
   );
 }
