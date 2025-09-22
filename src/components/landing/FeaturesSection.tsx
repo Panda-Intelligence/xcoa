@@ -79,7 +79,7 @@ export function FeaturesSection() {
         </div>
 
         {/* AI Search Demo Section */}
-        <div className="mt-20 bg-secondary/30 rounded-2xl p-8 lg:p-12">
+        <div className="mt-20 rounded-2xl p-8 lg:p-12">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
             <div className="space-y-6">
               <div className="space-y-4">

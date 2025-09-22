@@ -1,6 +1,6 @@
 'use client'
 import { Separator } from "@/components/ui/separator";
-import { COMPANY_NAME, SITE_NAME, SITE_DESCRIPTION } from "@/constants";
+import { COMPANY_NAME, SITE_NAME } from "@/constants";
 import { Mail, MapPin } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
 
@@ -8,7 +8,7 @@ export function Footer() {
   const { t } = useLanguage();
 
   return (
-    <footer className="bg-secondary/30 border-t border-border">
+    <footer className="border-t border-border">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Company Info */}

@@ -150,7 +150,7 @@ export function SearchResults() {
 
         {/* No User Prompt */}
         {!user && (
-          <div className="text-center py-12 bg-secondary/20 rounded-lg">
+          <div className="text-center py-12 rounded-lg">
             <h3 className="text-lg font-semibold mb-2">{t('search.login_prompt.title')}</h3>
             <p className="text-muted-foreground mb-4">
               {t('search.login_prompt.description')}
