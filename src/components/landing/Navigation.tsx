@@ -68,7 +68,7 @@ export function Navigation() {
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <div className="flex items-center">
-            <div className="flex-shrink-0">
+            <div className="shrink-0">
               <h1 className="text-xl font-semibold text-primary">xCOA</h1>
             </div>
           </div>

@@ -1,103 +1,208 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
 
-:root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
+@custom-variant dark (&:is(.dark *));
+
+@theme {
+  --background-image-gradient-radial: radial-gradient(var(--tw-gradient-stops));
+  --background-image-gradient-conic: conic-gradient(
+    from 180deg at 50% 50%,
+    var(--tw-gradient-stops)
+  );
+
+  --radius-lg: var(--radius);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-sm: calc(var(--radius) - 4px);
+
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+
+  --color-card: hsl(var(--card));
+  --color-card-foreground: hsl(var(--card-foreground));
+
+  --color-popover: hsl(var(--popover));
+  --color-popover-foreground: hsl(var(--popover-foreground));
+
+  --color-primary: hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+
+  --color-secondary: hsl(var(--secondary));
+  --color-secondary-foreground: hsl(var(--secondary-foreground));
+
+  --color-muted: hsl(var(--muted));
+  --color-muted-foreground: hsl(var(--muted-foreground));
+
+  --color-accent: hsl(var(--accent));
+  --color-accent-foreground: hsl(var(--accent-foreground));
+
+  --color-destructive: hsl(var(--destructive));
+  --color-destructive-foreground: hsl(var(--destructive-foreground));
+
+  --color-border: hsl(var(--border));
+  --color-input: hsl(var(--input));
+  --color-ring: hsl(var(--ring));
+
+  --color-chart-1: hsl(var(--chart-1));
+  --color-chart-2: hsl(var(--chart-2));
+  --color-chart-3: hsl(var(--chart-3));
+  --color-chart-4: hsl(var(--chart-4));
+  --color-chart-5: hsl(var(--chart-5));
+
+  --color-sidebar: hsl(var(--sidebar-background));
+  --color-sidebar-foreground: hsl(var(--sidebar-foreground));
+  --color-sidebar-primary: hsl(var(--sidebar-primary));
+  --color-sidebar-primary-foreground: hsl(var(--sidebar-primary-foreground));
+  --color-sidebar-accent: hsl(var(--sidebar-accent));
+  --color-sidebar-accent-foreground: hsl(var(--sidebar-accent-foreground));
+  --color-sidebar-border: hsl(var(--sidebar-border));
+  --color-sidebar-ring: hsl(var(--sidebar-ring));
+
+  --animate-accordion-down: accordion-down 0.2s ease-out;
+  --animate-accordion-up: accordion-up 0.2s ease-out;
+
+  @keyframes accordion-down {
+    from {
+      height: 0;
+    }
+    to {
+      height: var(--radix-accordion-content-height);
+    }
+  }
+  @keyframes accordion-up {
+    from {
+      height: var(--radix-accordion-content-height);
+    }
+    to {
+      height: 0;
+    }
+  }
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
+/*
+  The default border color has changed to `currentcolor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentcolor);
   }
+}
+
+@utility text-balance {
+  text-wrap: balance;
+}
+
+@utility bg-theme-primary {
+  /* Custom Light Theme Utility Classes */
+  background-color: var(--theme-color);
+}
+
+@utility bg-theme-secondary {
+  background-color: var(--secondary-color);
+}
+
+@utility text-theme-primary {
+  color: var(--theme-color);
+}
+
+@utility text-theme-secondary {
+  color: var(--secondary-color);
+}
+
+@utility text-theme-text {
+  color: var(--text-color);
+}
+
+@utility text-theme-title {
+  color: var(--title-color);
+}
+
+@utility border-theme-primary {
+  border-color: var(--theme-color);
+}
+
+@utility border-theme-secondary {
+  border-color: var(--secondary-color);
+}
+
+@utility bg-accent-pink {
+  /* Accent Colors */
+  background-color: var(--pink-color);
+}
+
+@utility bg-accent-violet {
+  background-color: var(--violet-color);
+}
+
+@utility bg-accent-crimson {
+  background-color: var(--crimson-color);
+}
+
+@utility bg-accent-orange {
+  background-color: var(--orange-color);
+}
+
+@utility text-accent-pink {
+  color: var(--pink-color);
+}
+
+@utility text-accent-violet {
+  color: var(--violet-color);
+}
+
+@utility text-accent-crimson {
+  color: var(--crimson-color);
+}
+
+@utility text-accent-orange {
+  color: var(--orange-color);
+}
+
+@utility gradient-theme-primary {
+  /* xCOA专用渐变背景 */
+  background: linear-gradient(
+    135deg,
+    var(--theme-color) 0%,
+    var(--secondary-color) 100%
+  );
+}
+
+@utility gradient-theme-accent {
+  background: linear-gradient(
+    135deg,
+    var(--pink-color) 0%,
+    var(--violet-color) 100%
+  );
+}
+
+@utility gradient-theme-warm {
+  background: linear-gradient(
+    135deg,
+    var(--theme-color) 0%,
+    var(--orange-color) 100%
+  );
 }
 
 @layer utilities {
-  .text-balance {
-    text-wrap: balance;
+  :root {
+    --foreground-rgb: 0, 0, 0;
+    --background-start-rgb: 214, 219, 220;
+    --background-end-rgb: 255, 255, 255;
   }
-  
-  /* Custom Light Theme Utility Classes */
-  .bg-theme-primary {
-    background-color: var(--theme-color);
-  }
-  
-  .bg-theme-secondary {
-    background-color: var(--secondary-color);
-  }
-  
-  .text-theme-primary {
-    color: var(--theme-color);
-  }
-  
-  .text-theme-secondary {
-    color: var(--secondary-color);
-  }
-  
-  .text-theme-text {
-    color: var(--text-color);
-  }
-  
-  .text-theme-title {
-    color: var(--title-color);
-  }
-  
-  .border-theme-primary {
-    border-color: var(--theme-color);
-  }
-  
-  .border-theme-secondary {
-    border-color: var(--secondary-color);
-  }
-  
-  /* Accent Colors */
-  .bg-accent-pink {
-    background-color: var(--pink-color);
-  }
-  
-  .bg-accent-violet {
-    background-color: var(--violet-color);
-  }
-  
-  .bg-accent-crimson {
-    background-color: var(--crimson-color);
-  }
-  
-  .bg-accent-orange {
-    background-color: var(--orange-color);
-  }
-  
-  .text-accent-pink {
-    color: var(--pink-color);
-  }
-  
-  .text-accent-violet {
-    color: var(--violet-color);
-  }
-  
-  .text-accent-crimson {
-    color: var(--crimson-color);
-  }
-  
-  .text-accent-orange {
-    color: var(--orange-color);
-  }
-  
-  /* xCOA专用渐变背景 */
-  .gradient-theme-primary {
-    background: linear-gradient(135deg, var(--theme-color) 0%, var(--secondary-color) 100%);
-  }
-  
-  .gradient-theme-accent {
-    background: linear-gradient(135deg, var(--pink-color) 0%, var(--violet-color) 100%);
-  }
-  
-  .gradient-theme-warm {
-    background: linear-gradient(135deg, var(--theme-color) 0%, var(--orange-color) 100%);
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --foreground-rgb: 255, 255, 255;
+      --background-start-rgb: 0, 0, 0;
+      --background-end-rgb: 0, 0, 0;
+    }
   }
 }
 
@@ -126,7 +231,7 @@
     --secondary-foreground: 210 7% 7%;
     --muted: 240 4.8% 95.9%;
     --muted-foreground: 0 0% 44%; /* 使用text-color */
-    --accent: 300 100% 50%; /* 使用violet-color */
+    --accent: 240 100% 50%;
     --accent-foreground: 0 0% 98%;
     --destructive: 348 100% 55%; /* 使用crimson-color */
     --destructive-foreground: 0 0% 100%;

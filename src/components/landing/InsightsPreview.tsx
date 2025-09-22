@@ -87,7 +87,7 @@ export function InsightsPreview({ onViewInsights }: InsightsPreviewProps) {
   const featuredArticles = getArticleData();
 
   return (
-    <section id="insights" className="py-20 bg-gradient-to-br from-secondary/10 to-background">
+    <section id="insights" className="py-20 bg-linear-to-br from-secondary/10 to-background">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center mb-12">

@@ -114,7 +114,7 @@ export function TransactionHistory() {
                       {transaction.type !== "USAGE" && transaction.expirationDate && (
                         <Badge
                           variant="secondary"
-                          className={`mt-1 ml-3 font-normal text-[0.75rem] leading-[1rem] ${isTransactionExpired(transaction)
+                          className={`mt-1 ml-3 font-normal text-[0.75rem] leading-4 ${isTransactionExpired(transaction)
                             ? "bg-orange-500 hover:bg-orange-600 text-white"
                             : "bg-muted"
                             }`}
@@ -170,7 +170,7 @@ export function TransactionHistory() {
               {transaction.type !== "USAGE" && transaction.expirationDate && (
                 <Badge
                   variant="secondary"
-                  className={`self-start font-normal text-[0.75rem] leading-[1rem] ${isTransactionExpired(transaction)
+                  className={`self-start font-normal text-[0.75rem] leading-4 ${isTransactionExpired(transaction)
                     ? "bg-orange-500 hover:bg-orange-600 text-white"
                     : "bg-muted"
                     }`}

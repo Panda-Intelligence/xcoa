@@ -24,8 +24,8 @@ export function Footer() {
                   <MapPin className="h-4 w-4" />
                   <span className="ml-2">Unit 13, Freeland Park</span>
                 </div>
-                <div className="flex !ml-6">Wareham Road, Poole</div>
-                <div className="flex !ml-6">UK, BH16 6FH</div>
+                <div className="flex ml-6!">Wareham Road, Poole</div>
+                <div className="flex ml-6!">UK, BH16 6FH</div>
               </div>
             </div>
           </div>

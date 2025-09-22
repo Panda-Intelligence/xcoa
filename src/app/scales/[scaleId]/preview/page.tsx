@@ -416,7 +416,7 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
         <div className="md:hidden mb-4">
           <div className="grid grid-cols-2 gap-2">
             <Button
-              variant={viewMode === 'preview' ? 'default' : 'outline'}
+              variant={viewMode === 'preview' ? 'default' : 'outline-solid'}
               size="sm"
               onClick={() => setViewMode('preview')}
               className="justify-start"
@@ -425,7 +425,7 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
               {t("scale_preview.preview_mode")}
             </Button>
             <Button
-              variant={viewMode === 'interactive' ? 'default' : 'outline'}
+              variant={viewMode === 'interactive' ? 'default' : 'outline-solid'}
               size="sm"
               onClick={startInteractiveMode}
               className="justify-start"

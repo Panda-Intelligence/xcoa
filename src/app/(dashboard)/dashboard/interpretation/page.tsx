@@ -214,7 +214,7 @@ export default function InterpretationPage() {
                             <ul className="space-y-2 text-sm">
                               {interpretationData.interpretation.practicalConsiderations.administrationTips.map((tip: string, index: number) => (
                                 <li key={index} className="flex items-start">
-                                  <CheckCircle className="w-4 h-4 text-green-600 mr-2 mt-0.5 flex-shrink-0" />
+                                  <CheckCircle className="w-4 h-4 text-green-600 mr-2 mt-0.5 shrink-0" />
                                   {tip}
                                 </li>
                               ))}
@@ -225,7 +225,7 @@ export default function InterpretationPage() {
                             <ul className="space-y-2 text-sm">
                               {interpretationData.interpretation.practicalConsiderations.commonChallenges.map((challenge: string, index: number) => (
                                 <li key={index} className="flex items-start">
-                                  <AlertTriangle className="w-4 h-4 text-orange-600 mr-2 mt-0.5 flex-shrink-0" />
+                                  <AlertTriangle className="w-4 h-4 text-orange-600 mr-2 mt-0.5 shrink-0" />
                                   {challenge}
                                 </li>
                               ))}
@@ -236,7 +236,7 @@ export default function InterpretationPage() {
                             <ul className="space-y-2 text-sm">
                               {interpretationData.interpretation.practicalConsiderations.culturalConsiderations.map((consideration: string, index: number) => (
                                 <li key={index} className="flex items-start">
-                                  <Info className="w-4 h-4 text-blue-600 mr-2 mt-0.5 flex-shrink-0" />
+                                  <Info className="w-4 h-4 text-blue-600 mr-2 mt-0.5 shrink-0" />
                                   {consideration}
                                 </li>
                               ))}
@@ -247,7 +247,7 @@ export default function InterpretationPage() {
                             <ul className="space-y-2 text-sm">
                               {interpretationData.interpretation.practicalConsiderations.limitationsAndCautions.map((limitation: string, index: number) => (
                                 <li key={index} className="flex items-start">
-                                  <AlertTriangle className="w-4 h-4 text-red-600 mr-2 mt-0.5 flex-shrink-0" />
+                                  <AlertTriangle className="w-4 h-4 text-red-600 mr-2 mt-0.5 shrink-0" />
                                   {limitation}
                                 </li>
                               ))}

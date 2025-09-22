@@ -128,7 +128,7 @@ export function GoogleStyleSearch({ onBack }: GoogleStyleSearchProps) {
                       placeholder={t('search.placeholder')}
                       value={query}
                       onChange={(e) => setQuery(e.target.value)}
-                      className="pl-12 pr-12 h-14 text-base bg-transparent border-0 rounded-full focus:ring-0 focus:outline-none"
+                      className="pl-12 pr-12 h-14 text-base bg-transparent border-0 rounded-full focus:ring-0 focus:outline-hidden"
                       disabled={loading}
                     />
                     {query && (
@@ -237,13 +237,13 @@ export function GoogleStyleSearch({ onBack }: GoogleStyleSearchProps) {
                 <div className="flex-1 max-w-2xl">
                   <form onSubmit={handleSearch}>
                     <div className="relative">
-                      <div className="flex items-center bg-white border border-gray-200 rounded-full shadow-sm hover:shadow-md transition-shadow focus-within:shadow-md">
+                      <div className="flex items-center bg-white border border-gray-200 rounded-full shadow-xs hover:shadow-md transition-shadow focus-within:shadow-md">
                         <Search className="absolute left-3 h-4 w-4 text-gray-400" />
                         <Input
                           placeholder={t('search.placeholder')}
                           value={query}
                           onChange={(e) => setQuery(e.target.value)}
-                          className="pl-10 pr-10 h-10 text-sm bg-transparent border-0 rounded-full focus:ring-0 focus:outline-none"
+                          className="pl-10 pr-10 h-10 text-sm bg-transparent border-0 rounded-full focus:ring-0 focus:outline-hidden"
                           disabled={loading}
                         />
                         {query && (

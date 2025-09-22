@@ -140,7 +140,7 @@ export function PricingSection() {
               <CardContent className="space-y-6">
                 <Button
                   className={`w-full ${plan.popular ? 'bg-primary hover:bg-primary/90' : ''}`}
-                  variant={plan.popular ? "default" : "outline"}
+                  variant={plan.popular ? "default" : "outline-solid"}
                 >
                   {t(`pricing.plans.${plan.id}.button`)}
                 </Button>
@@ -148,7 +148,7 @@ export function PricingSection() {
                 <div className="space-y-3">
                   {getArrayTranslation(plan.id).map((feature, featureIndex) => (
                     <div key={`${plan.id}-feature-${featureIndex}`} className="flex items-start space-x-3">
-                      <Check className="h-4 w-4 text-primary mt-0.5 flex-shrink-0" />
+                      <Check className="h-4 w-4 text-primary mt-0.5 shrink-0" />
                       <span className="text-sm text-foreground">{feature}</span>
                     </div>
                   ))}

@@ -72,7 +72,7 @@
 </Button>
 
 // 强调卡片
-<Card className="border-theme-primary bg-gradient-to-br from-yellow-50 to-white">
+<Card className="border-theme-primary bg-linear-to-br from-yellow-50 to-white">
   {/* 内容 */}
 </Card>
 

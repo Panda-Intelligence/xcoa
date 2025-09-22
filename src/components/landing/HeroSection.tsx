@@ -12,7 +12,7 @@ export function HeroSection() {
 
   }
   return (
-    <section className="py-20 bg-gradient-to-br from-background to-secondary/20">
+    <section className="py-20 bg-linear-to-br from-background to-secondary/20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Simplified single column layout focusing on search */}
         <div className="max-w-4xl mx-auto text-center space-y-8">
@@ -38,7 +38,7 @@ export function HeroSection() {
                 <Search className="ml-4 h-5 w-5 text-gray-400" />
                 <Input
                   placeholder={t("landing.search_ecoa_scales")}
-                  className="flex-1 px-4 py-3 text-base bg-transparent border-0 focus:ring-0 focus:outline-none"
+                  className="flex-1 px-4 py-3 text-base bg-transparent border-0 focus:ring-0 focus:outline-hidden"
                   readOnly
                 />
                 <Button

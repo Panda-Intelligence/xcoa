@@ -92,7 +92,7 @@ export function FeaturesSection() {
               </div>
 
               <div className="space-y-3">
-                <div className="bg-white rounded-lg p-4 border border-border shadow-sm">
+                <div className="bg-white rounded-lg p-4 border border-border shadow-xs">
                   <div className="flex items-start space-x-3">
                     <div className="w-2 h-2 bg-blue-500 rounded-full mt-2" />
                     <div>
@@ -128,7 +128,7 @@ export function FeaturesSection() {
                       { name: "FACT-G", desc: t('landing.fact_desc'), match: "92%" },
                       { name: "SF-36", desc: t('landing.sf36_desc'), match: "88%" }
                     ].map((item) => (
-                      <div key={item.name} className="flex items-center justify-between p-3 bg-secondary/30 rounded-lg">
+                      <div key={item.name} className="flex items-center justify-between border p-3 rounded-lg">
                         <div>
                           <p className="font-medium text-sm">{item.name}</p>
                           <p className="text-xs text-muted-foreground">{item.desc}</p>

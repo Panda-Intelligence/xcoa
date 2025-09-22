@@ -66,7 +66,7 @@ export default function Page() {
       />
       <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
         {/* 欢迎区域 */}
-        <Card className="bg-gradient-to-r from-blue-50 to-purple-50 border-blue-200">
+        <Card className="bg-linear-to-r from-blue-50 to-purple-50 border-blue-200">
           <CardHeader>
             <CardTitle className="text-xl">{t("site.welcome_title")} 🎉</CardTitle>
             <CardDescription className="text-lg">

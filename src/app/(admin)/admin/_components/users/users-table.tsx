@@ -48,7 +48,7 @@ export function UsersTable() {
 
   return (
     <div className="p-6 w-full min-w-0 flex flex-col overflow-hidden">
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between flex-shrink-0">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between shrink-0">
         <h1 className="text-3xl font-bold">Users</h1>
         <Input
           placeholder="Filter emails..."
