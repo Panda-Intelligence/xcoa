@@ -298,7 +298,7 @@ export default function ScalesPage() {
                             版权
                           </Button>
                         </Link>
-                        <FavoriteButton 
+                        <FavoriteButton
                           scaleId={result.id}
                           size="sm"
                         />
@@ -361,7 +361,7 @@ export default function ScalesPage() {
                           {/* <span className="text-lg">{scale.icon}</span> */}
                         </div>
 
-                        <Badge className="text-xs text-muted-foreground mb-2">{scale.categoryName}</Badge>
+                        <Badge variant="outline" className="text-xs text-muted-foreground mb-2">{scale.categoryName}</Badge>
                         <div className="text-xs text-muted-foreground mb-3 space-y-1">
                           <div className="flex items-center space-x-1">
                             <BookOpen className="w-3 h-3" />
@@ -387,7 +387,7 @@ export default function ScalesPage() {
                               <Eye className="w-3 h-3" />
                             </Button>
                           </Link>
-                          <FavoriteButton 
+                          <FavoriteButton
                             scaleId={scale.id}
                             variant="icon"
                             size="sm"

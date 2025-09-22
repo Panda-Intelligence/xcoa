@@ -10,11 +10,7 @@ import {
   CreditCard,
   Users,
   Search,
-  FileText,
-  Shield,
-  MessageSquare,
   BookOpen,
-  BarChart3,
 } from "lucide-react"
 
 import { NavMain } from "@/components/nav-main"
@@ -127,14 +123,13 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           },
         ],
       },
-
-    ],
-    system: [
       {
         title: t('sidebar.team_management'),
         url: "/dashboard/teams" as Route,
         icon: Users,
       },
+    ],
+    system: [
       {
         title: t('sidebar.billing'),
         url: "/dashboard/billing" as Route,

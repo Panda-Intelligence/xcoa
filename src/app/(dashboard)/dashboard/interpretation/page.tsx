@@ -73,7 +73,6 @@ export default function InterpretationPage() {
         <Tabs defaultValue="guides" className="w-full">
           <TabsList className="grid w-full grid-cols-3">
             <TabsTrigger value="guides">解读指南</TabsTrigger>
-            <TabsTrigger value="calculator">分数计算器</TabsTrigger>
             <TabsTrigger value="cases">临床案例</TabsTrigger>
           </TabsList>
 
@@ -267,28 +266,6 @@ export default function InterpretationPage() {
                 )}
               </div>
             </div>
-          </TabsContent>
-
-          <TabsContent value="calculator" className="space-y-4">
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center space-x-2">
-                  <Calculator className="w-5 h-5" />
-                  <span>分数计算器</span>
-                </CardTitle>
-                <CardDescription>
-                  计算量表总分并获得个性化解读
-                </CardDescription>
-              </CardHeader>
-
-              <CardContent>
-                <div className="text-center py-8 text-muted-foreground">
-                  <Calculator className="w-12 h-12 mx-auto mb-4 opacity-50" />
-                  <p>分数计算器功能开发中</p>
-                  <p className="text-sm">即将支持交互式分数计算和实时解读</p>
-                </div>
-              </CardContent>
-            </Card>
           </TabsContent>
 
           <TabsContent value="cases" className="space-y-4">

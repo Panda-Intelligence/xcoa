@@ -229,7 +229,7 @@ export default function ScaleFavoritesPage() {
                     <div className="flex-1">
                       <div className="flex items-center space-x-2 mb-2">
                         <Badge variant="outline">{favorite.acronym}</Badge>
-                        <Badge variant="secondary" className="text-xs">
+                        <Badge variant="outline" className="text-xs">
                           {favorite.categoryName}
                         </Badge>
                       </div>
