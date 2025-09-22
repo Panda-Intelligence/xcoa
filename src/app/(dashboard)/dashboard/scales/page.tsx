@@ -177,20 +177,6 @@ export default function ScalesPage() {
 
             {/* 搜索选项 */}
             <div className="flex flex-wrap gap-4">
-              <div className="flex items-center space-x-2">
-                <span className="text-sm font-medium">{t("scales_page.search_type")}:</span>
-                <Select value={searchType} onValueChange={setSearchType}>
-                  <SelectTrigger className="w-32">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="search">{t("scales_page.basic_search")}</SelectItem>
-                    <SelectItem value="semantic">{t("scales_page.semantic_search")}</SelectItem>
-                    <SelectItem value="hybrid">{t("scales_page.hybrid_search")}</SelectItem>
-                    <SelectItem value="advanced">{t("scales_page.advanced_filter")}</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
 
               <div className="flex items-center space-x-2">
                 <span className="text-sm font-medium">{t("scales_page.category")}:</span>
@@ -274,10 +260,10 @@ export default function ScalesPage() {
                             <Users className="w-3 h-3 mr-1" />
                             {result.category}
                           </span>
-                          <span className="flex items-center">
+                          {/* <span className="flex items-center">
                             <Eye className="w-3 h-3 mr-1" />
                             {result.usageCount} 次使用
-                          </span>
+                          </span> */}
                         </div>
                       </div>
 
