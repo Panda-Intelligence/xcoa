@@ -23,6 +23,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import Link from 'next/link';
 import { useLanguage } from '@/hooks/useLanguage';
 import { FavoriteButton } from '@/components/favorites/FavoriteButton';
+import { ClinicalCasesTab } from '@/components/ClinicalCasesTab';
 
 interface ScalePageProps {
   params: Promise<{ scaleId: string }>;
@@ -135,7 +136,6 @@ export default function ScalePage({ params }: ScalePageProps) {
             <div className="flex items-center space-x-2">
               <FavoriteButton 
                 scaleId={scale.id}
-                initialFavorited={userInteraction.isFavorited}
                 size="sm"
                 showCount={true}
               />
@@ -188,10 +188,11 @@ export default function ScalePage({ params }: ScalePageProps) {
 
               <CardContent>
                 <Tabs defaultValue="overview" className="w-full">
-                  <TabsList className="grid w-full grid-cols-4">
+                  <TabsList className="grid w-full grid-cols-5">
                     <TabsTrigger value="overview">{t('scale.overview')}</TabsTrigger>
                     <TabsTrigger value="items">{t('scale.items')}</TabsTrigger>
                     <TabsTrigger value="psychometrics">{t('scale.psychometrics')}</TabsTrigger>
+                    <TabsTrigger value="cases">临床案例</TabsTrigger>
                     <TabsTrigger value="references">{t('scale.references')}</TabsTrigger>
                   </TabsList>
 
@@ -366,6 +367,10 @@ export default function ScalePage({ params }: ScalePageProps) {
                         <p>{t('scale.no_psychometric_data')}</p>
                       </div>
                     )}
+                  </TabsContent>
+
+                  <TabsContent value="cases" className="space-y-4">
+                    <ClinicalCasesTab scaleId={scale.id} scaleAcronym={scale.acronym} />
                   </TabsContent>
 
                   <TabsContent value="references" className="space-y-4">

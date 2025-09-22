@@ -119,7 +119,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           },
           {
             title: t('sidebar.clinical_cases'),
-            url: "/dashboard/interpretation/cases" as Route,
+            url: "/dashboard/cases" as Route,
           },
         ],
       },
