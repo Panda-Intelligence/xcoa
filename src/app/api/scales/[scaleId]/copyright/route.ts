@@ -33,7 +33,7 @@ function getLicenseInfo(licenseType: string) {
       usageGuidelines: '可用于临床、研究和教育目的，建议保留原始版权声明。'
     },
     academic_free: {
-      type: 'academic_free', 
+      type: 'academic_free',
       title: '学术免费',
       description: '学术和研究用途免费，商业用途需要许可',
       canUseDirectly: false,
@@ -76,7 +76,7 @@ export async function GET(
     const db = getDB();
     const params = await context.params;
     const { scaleId } = copyrightParamsSchema.parse(params);
-    
+
     const [scale] = await db
       .select({
         id: ecoaScaleTable.id,
@@ -98,13 +98,13 @@ export async function GET(
     // 解析版权信息
     let copyrightContact = null;
     let licenseType = 'contact_required';
-    
+
     if (scale.psychometricProperties) {
       try {
-        const props = typeof scale.psychometricProperties === 'string' 
+        const props = typeof scale.psychometricProperties === 'string'
           ? JSON.parse(scale.psychometricProperties)
           : scale.psychometricProperties;
-        
+
         licenseType = props.licenseType || 'contact_required';
         copyrightContact = props.copyrightContact || null;
       } catch (error) {
@@ -149,9 +149,9 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     const contactRequest = contactRequestSchema.parse(body);
-    
+
     const db = getDB();
-    
+
     const [scale] = await db
       .select({
         id: ecoaScaleTable.id,
@@ -170,7 +170,7 @@ export async function POST(request: NextRequest) {
     let copyrightContact = null;
     if (scale.psychometricProperties) {
       try {
-        const props = typeof scale.psychometricProperties === 'string' 
+        const props = typeof scale.psychometricProperties === 'string'
           ? JSON.parse(scale.psychometricProperties)
           : scale.psychometricProperties;
         copyrightContact = props.copyrightContact || null;
@@ -208,7 +208,7 @@ Contact Information:
 
 ${contactRequest.message ? `Message:\n${contactRequest.message}\n` : ''}
 
-This inquiry was submitted through the xCOA platform (xcoa.pandacat.ai).
+This inquiry was submitted through the xCOA platform (xcoa.pro).
 
 Thank you for your consideration.
 

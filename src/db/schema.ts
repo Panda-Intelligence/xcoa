@@ -209,15 +209,40 @@ export const teamTable = sqliteTable("team", {
   slug: text({ length: 255 }).notNull().unique(),
   description: text({ length: 1000 }),
   avatarUrl: text({ length: 600 }),
+  
   // Settings could be stored as JSON
   settings: text({ length: 10000 }),
-  // Optional billing-related fields
+  
+  // Billing-related fields
   billingEmail: text({ length: 255 }),
   planId: text({ length: 100 }),
   planExpiresAt: integer({ mode: "timestamp" }),
   creditBalance: integer().default(0).notNull(),
+  
+  // Invoice and legal information
+  legalName: text({ length: 255 }), // 法定名称
+  address: text({ length: 1000 }), // 完整地址
+  city: text({ length: 100 }),
+  state: text({ length: 100 }),
+  postalCode: text({ length: 20 }),
+  country: text({ length: 100 }),
+  vatNumber: text({ length: 50 }), // VAT号码
+  taxId: text({ length: 50 }), // 税务ID
+  registrationNumber: text({ length: 100 }), // 企业注册号
+  
+  // Contact information
+  billingContact: text({ length: 255 }), // 财务联系人
+  billingPhone: text({ length: 50 }), // 财务电话
+  
+  // Invoice preferences
+  invoicePrefix: text({ length: 10 }).default('INV'), // 发票号前缀
+  nextInvoiceNumber: integer().default(1), // 下一个发票号
+  defaultCurrency: text({ length: 10 }).default('USD'), // 默认货币
+  taxRate: real().default(0.1), // 默认税率
 }, (table) => ([
   index('team_slug_idx').on(table.slug),
+  index('team_country_idx').on(table.country),
+  index('team_vat_idx').on(table.vatNumber),
 ]));
 
 // Team membership table
@@ -936,3 +961,66 @@ export const userCollectionsRelations = relations(userCollectionsTable, ({ one, 
 export type UserScaleFavorite = InferSelectModel<typeof userScaleFavoritesTable>;
 export type UserCollection = InferSelectModel<typeof userCollectionsTable>;
 export type ScaleFavoriteStats = InferSelectModel<typeof scaleFavoriteStatsTable>;
+
+// Invoice table for billing management
+export const invoiceTable = sqliteTable("invoice", {
+  ...commonColumns,
+  id: text().primaryKey().$defaultFn(() => `inv_${createId()}`).notNull(),
+  teamId: text().notNull().references(() => teamTable.id),
+  invoiceNumber: text({ length: 50 }).notNull().unique(),
+  
+  // Invoice details
+  issueDate: integer({ mode: "timestamp" }).notNull(),
+  dueDate: integer({ mode: "timestamp" }).notNull(),
+  status: text({ length: 20 }).default('draft').notNull(), // draft, sent, paid, overdue, cancelled
+  
+  // Amounts
+  subtotal: real().notNull(),
+  taxAmount: real().default(0),
+  totalAmount: real().notNull(),
+  currency: text({ length: 10 }).default('USD').notNull(),
+  
+  // Customer information (snapshot at time of invoice creation)
+  customerName: text({ length: 255 }).notNull(),
+  customerEmail: text({ length: 255 }).notNull(),
+  customerOrganization: text({ length: 255 }),
+  customerAddress: text({ length: 1000 }),
+  customerVatNumber: text({ length: 50 }),
+  customerCountry: text({ length: 100 }),
+  
+  // Payment information
+  paymentMethod: text({ length: 50 }),
+  paidAt: integer({ mode: "timestamp" }),
+  paymentReference: text({ length: 255 }),
+  
+  // Invoice content
+  description: text({ length: 1000 }),
+  items: text({ mode: 'json' }).$type<Array<{
+    id: string;
+    description: string;
+    quantity: number;
+    unitPrice: number;
+    totalPrice: number;
+    serviceType: string;
+  }>>(),
+  
+  // Notes and metadata
+  notes: text({ length: 2000 }),
+  internalNotes: text({ length: 2000 }),
+}, (table) => ([
+  index('invoice_team_id_idx').on(table.teamId),
+  index('invoice_number_idx').on(table.invoiceNumber),
+  index('invoice_status_idx').on(table.status),
+  index('invoice_issue_date_idx').on(table.issueDate),
+]));
+
+// Invoice relations
+export const invoiceRelations = relations(invoiceTable, ({ one }) => ({
+  team: one(teamTable, {
+    fields: [invoiceTable.teamId],
+    references: [teamTable.id],
+  }),
+}));
+
+// Invoice type
+export type Invoice = InferSelectModel<typeof invoiceTable>;

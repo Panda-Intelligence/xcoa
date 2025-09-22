@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getDB } from '@/db';
-import { 
-  ecoaScaleTable, 
-  ecoaCategoryTable, 
+import {
+  ecoaScaleTable,
+  ecoaCategoryTable,
   ecoaItemTable,
   scaleUsageTable,
   creditTransactionTable
@@ -28,9 +28,9 @@ const downloadRequestSchema = z.object({
 // 检查用户是否有下载权限
 async function checkDownloadPermission(userId: string, scaleId: string): Promise<boolean> {
   if (!userId) return false;
-  
+
   const db = getDB();
-  
+
   // 检查用户是否有足够的积分或权限
   // 这里简化处理，实际应用中可能需要更复杂的权限检查
   const [recentDownload] = await db
@@ -77,7 +77,7 @@ function generateDownloadContent(scale: any, items: any[], format: string, optio
           exportOptions: options,
         }, null, 2)
       };
-      
+
     case 'txt':
       const txtContent = [
         `量表名称: ${scale.name}`,
@@ -93,24 +93,24 @@ function generateDownloadContent(scale: any, items: any[], format: string, optio
         scale.description || 'N/A',
         '',
         options.includeItems && items.length > 0 ? '题项内容:' : '',
-        ...items.map((item, index) => 
+        ...items.map((item, index) =>
           `${index + 1}. ${item.question}\n   选项: ${item.responseOptions.join(' / ')}`
         ),
         '',
         options.includePsychometrics && scale.psychometricProperties ? '心理测量学属性:' : '',
-        options.includePsychometrics && scale.psychometricProperties ? 
+        options.includePsychometrics && scale.psychometricProperties ?
           JSON.stringify(scale.psychometricProperties, null, 2) : '',
         '',
         `导出时间: ${new Date().toLocaleString('zh-CN')}`,
-        `导出来源: xCOA (xcoa.pandacat.ai)`,
+        `导出来源: xCOA (xcoa.pro)`,
       ].filter(line => line !== '').join('\n');
-      
+
       return {
         contentType: 'text/plain; charset=utf-8',
         filename: `${scale.acronym || scale.id}_${new Date().toISOString().split('T')[0]}.txt`,
         content: txtContent
       };
-      
+
     case 'excel':
       // 这里可以集成 xlsx 库生成 Excel 文件
       // 暂时返回 CSV 格式作为替代
@@ -119,17 +119,17 @@ function generateDownloadContent(scale: any, items: any[], format: string, optio
         `${scale.id},"${scale.name}","${scale.nameEn}","${scale.acronym}","${scale.categoryName}",${scale.itemsCount},${scale.administrationTime},"${scale.targetPopulation}","${scale.validationStatus}"`,
         '',
         '题项编号,题项内容,英文题项,维度,回答选项',
-        ...items.map(item => 
+        ...items.map(item =>
           `${item.itemNumber},"${item.question}","${item.questionEn || ''}","${item.dimension || ''}","${item.responseOptions.join(' / ')}"`
         )
       ].join('\n');
-      
+
       return {
         contentType: 'text/csv; charset=utf-8',
         filename: `${scale.acronym || scale.id}_${new Date().toISOString().split('T')[0]}.csv`,
         content: csvContent
       };
-      
+
     case 'pdf':
     default:
       // PDF 生成需要专门的库，这里返回 HTML 格式作为替代
@@ -157,7 +157,7 @@ function generateDownloadContent(scale: any, items: any[], format: string, optio
             <p><strong>缩写:</strong> ${scale.acronym || 'N/A'}</p>
             <p><strong>分类:</strong> ${scale.categoryName || 'N/A'}</p>
           </div>
-          
+
           <div class="info-grid">
             <div class="info-item">
               <strong>题项数量:</strong> ${scale.itemsCount || 'N/A'}
@@ -172,13 +172,13 @@ function generateDownloadContent(scale: any, items: any[], format: string, optio
               <strong>验证状态:</strong> ${scale.validationStatus || 'N/A'}
             </div>
           </div>
-          
+
           <div>
             <h3>量表描述</h3>
             <p>${scale.description || 'N/A'}</p>
             ${scale.descriptionEn ? `<p><em>${scale.descriptionEn}</em></p>` : ''}
           </div>
-          
+
           ${options.includeItems && items.length > 0 ? `
           <div class="items-section">
             <h3>题项内容</h3>
@@ -192,16 +192,16 @@ function generateDownloadContent(scale: any, items: any[], format: string, optio
             `).join('')}
           </div>
           ` : ''}
-          
+
           <div class="footer">
             <p>导出时间: ${new Date().toLocaleString('zh-CN')}</p>
-            <p>导出来源: xCOA (xcoa.pandacat.ai)</p>
+            <p>导出来源: xCOA (xcoa.pro)</p>
             ${scale.copyrightInfo ? `<p>版权信息: ${scale.copyrightInfo}</p>` : ''}
           </div>
         </body>
         </html>
       `;
-      
+
       return {
         contentType: 'text/html; charset=utf-8',
         filename: `${scale.acronym || scale.id}_${new Date().toISOString().split('T')[0]}.html`,
@@ -220,13 +220,13 @@ export async function POST(
       const session = await getSessionFromCookie();
       const user = session?.user;
       const ip = getIP(request);
-      
+
       const params = await context.params;
       const { scaleId } = downloadParamsSchema.parse(params);
-      
+
       const body = await request.json();
       const downloadOptions = downloadRequestSchema.parse(body);
-      
+
       // 检查下载权限
       if (user && !(await checkDownloadPermission(user.id, scaleId))) {
         return NextResponse.json(
@@ -234,7 +234,7 @@ export async function POST(
           { status: 403 }
         );
       }
-      
+
       // 获取量表详细信息
       const [scale] = await db
         .select({
@@ -311,9 +311,9 @@ export async function POST(
 
       // 生成下载内容
       const downloadResult = generateDownloadContent(
-        parsedScale, 
-        parsedItems, 
-        downloadOptions.format, 
+        parsedScale,
+        parsedItems,
+        downloadOptions.format,
         downloadOptions
       );
 
@@ -344,7 +344,7 @@ export async function POST(
 
     } catch (error) {
       console.error('Scale download API error:', error);
-      
+
       if (error instanceof z.ZodError) {
         return NextResponse.json(
           { error: 'Invalid download parameters', details: error.errors },

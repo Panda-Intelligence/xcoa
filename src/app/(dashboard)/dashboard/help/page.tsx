@@ -181,13 +181,13 @@ export default function HelpPage() {
 
   // 筛选FAQ
   const filteredFAQ = FAQ_DATA.filter(item => {
-    const matchesSearch = !searchQuery || 
+    const matchesSearch = !searchQuery ||
       item.question.toLowerCase().includes(searchQuery.toLowerCase()) ||
       item.answer.toLowerCase().includes(searchQuery.toLowerCase()) ||
       item.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()));
-    
+
     const matchesCategory = selectedCategory === 'all' || item.category === selectedCategory;
-    
+
     return matchesSearch && matchesCategory;
   });
 
@@ -210,7 +210,7 @@ export default function HelpPage() {
           { href: "/help", label: "帮助中心" }
         ]}
       />
-      
+
       <div className="flex-1 overflow-auto">
         <div className="flex flex-col gap-4 p-4">
           {/* 页面标题 */}
@@ -295,14 +295,14 @@ export default function HelpPage() {
                           </div>
                         </div>
                       </CardHeader>
-                      
+
                       {expandedItems.has(item.id) && (
                         <CardContent>
                           <div className="space-y-3">
                             <p className="text-muted-foreground leading-relaxed">
                               {item.answer}
                             </p>
-                            
+
                             <div className="flex flex-wrap gap-1">
                               {item.tags.map((tag, index) => (
                                 <Badge key={index} variant="secondary" className="text-xs">
@@ -479,15 +479,15 @@ export default function HelpPage() {
                     <div className="space-y-3">
                       <div>
                         <span className="font-medium text-sm">客服邮箱:</span>
-                        <p className="text-blue-600">support@xcoa.pandacat.ai</p>
+                        <p className="text-blue-600">support@xcoa.pro</p>
                       </div>
                       <div>
                         <span className="font-medium text-sm">商务合作:</span>
-                        <p className="text-blue-600">business@xcoa.pandacat.ai</p>
+                        <p className="text-blue-600">business@xcoa.pro</p>
                       </div>
                       <div>
                         <span className="font-medium text-sm">技术支持:</span>
-                        <p className="text-blue-600">tech@xcoa.pandacat.ai</p>
+                        <p className="text-blue-600">tech@xcoa.pro</p>
                       </div>
                       <Button className="w-full">
                         <Mail className="w-4 h-4 mr-2" />

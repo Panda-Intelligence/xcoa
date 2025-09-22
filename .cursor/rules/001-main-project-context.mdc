@@ -7,7 +7,7 @@ alwaysApply: true
 
 This is a comprehensive, production-ready Next.js SaaS project designed to run on Cloudflare Workers with OpenNext. It includes authentication, team management, billing, and other common SaaS features needed to launch a modern web application.
 
-**Live Demo**: [xcoa.pandacat.ai](mdc:https:/xcoa.pandacat.ai/sign-up)
+**Live Demo**: [xcoa.pro](mdc:https:/xcoa.pro/sign-up)
 
 **GitHub Repository**: [xcoa](mdc:https:/github.com/Panda-Intelligence/xcoa)
 
