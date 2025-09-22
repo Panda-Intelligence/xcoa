@@ -126,7 +126,7 @@ export default async function TeamDashboardPage({ params }: TeamPageProps) {
         ]}
       />
       <div className="container mx-auto px-5 pb-12">
-        <div className="flex justify-between items-start mb-8">
+        <div className="flex justify-between items-center mb-8">
           <div className="flex items-center gap-4">
             <div className="space-y-2">
               <h1 className="text-4xl font-bold mt-4">{team.name}</h1>
