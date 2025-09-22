@@ -702,7 +702,8 @@
     "change_password": "Change Password",
     "quick_search": "Quick Search",
     "my_tickets": "My Tickets",
-    "billing": "Billing"
+    "billing": "Billing",
+    "help": "Help"
   },
   "pricing": {
     "title": "Choose the Right Subscription Plan",

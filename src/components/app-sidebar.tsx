@@ -11,6 +11,7 @@ import {
   Users,
   Search,
   BookOpen,
+  HelpCircle,
 } from "lucide-react"
 
 import { NavMain } from "@/components/nav-main"
@@ -139,6 +140,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         title: t('sidebar.settings'),
         url: "/settings" as Route,
         icon: Settings2,
+      },
+      {
+        title: t('sidebar.help'),
+        url: "/dashboard/help" as Route,
+        icon: HelpCircle,
       },
     ],
   }

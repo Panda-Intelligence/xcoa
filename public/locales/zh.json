@@ -701,7 +701,8 @@
     "change_password": "修改密码",
     "quick_search": "快速搜索",
     "my_tickets": "我的工单",
-    "billing": "积分"
+    "billing": "积分",
+    "help": "帮助"
   },
   "pricing": {
     "title": "选择适合的订阅方案",

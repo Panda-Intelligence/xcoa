@@ -4,6 +4,7 @@ import { SettingsForm } from "./settings-form";
 import { Suspense } from "react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import { PageHeader } from "@/components/page-header";
 
 function SettingsFormSkeleton() {
   return (
@@ -51,6 +52,14 @@ export default async function SettingsPage() {
 
   return (
     <Suspense fallback={<SettingsFormSkeleton />}>
+      <PageHeader
+        items={[
+          {
+            href: "/dashboard/teams",
+            label: "Teams"
+          }
+        ]}
+      />
       <SettingsForm />
     </Suspense>
   );
