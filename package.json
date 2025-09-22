@@ -18,7 +18,8 @@
     "d1:cache:clean": "wrangler d1 execute $(node scripts/get-db-name.mjs) --command \"DELETE FROM tags; DELETE FROM revalidations\" --remote",
     "email:dev": "email dev -d src/react-email -p 3001",
     "list:kv": "wrangler kv key list --namespace-id=$(node scripts/get-kv-id.mjs) --remote | jq '[.[].name]' > kv.log",
-    "delete:kv": "wrangler kv bulk delete kv.log --namespace-id=$(node scripts/get-kv-id.mjs) --remote"
+    "delete:kv": "wrangler kv bulk delete kv.log --namespace-id=$(node scripts/get-kv-id.mjs) --remote",
+    "crawl": "ts-node scripts/crawlee/index.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
@@ -88,12 +89,15 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "better-sqlite3": "^12.2.0",
+    "crawlee": "^3.15.0",
     "drizzle-kit": "^0.30.6",
     "eslint": "^9",
     "eslint-config-next": "15.3.5",
+    "playwright": "^1.55.0",
     "postcss": "^8",
     "react-email": "3.0.6",
     "tailwindcss": "^4.1.13",
+    "ts-node": "^10.9.2",
     "typescript": "^5",
     "wrangler": "^4.28.0"
   },
