@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { notFound } from 'next/navigation';
-import { 
+import {
   ArrowLeft,
   Eye,
   Play,
@@ -13,7 +13,7 @@ import {
   Info,
   Smartphone,
   Monitor,
-  Tablet,
+  TabletSmartphone,
   Save,
   Download,
   Share,
@@ -21,7 +21,6 @@ import {
   ChevronLeft,
   ChevronRight,
   Check,
-  Pause,
   Timer,
   Target,
   TrendingUp
@@ -35,6 +34,7 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
 import { useLanguage } from '@/hooks/useLanguage';
 import Link from 'next/link';
+import { MobileFrame, PadFrame, DesktopFrame, LaptopFrame } from '@/components/device/Frames';
 
 interface ScalePreviewPageProps {
   params: Promise<{ scaleId: string }>;
@@ -55,7 +55,7 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
   const [scaleId, setScaleId] = useState<string>('');
   const [previewData, setPreviewData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
-  
+
   // 交互式预览状态
   const [viewMode, setViewMode] = useState<ViewMode>('preview');
   const [deviceMode, setDeviceMode] = useState<DeviceMode>('desktop');
@@ -64,7 +64,7 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
   const [completedItems, setCompletedItems] = useState<number[]>([]);
   const [showResults, setShowResults] = useState(false);
   const [startTime, setStartTime] = useState<Date | null>(null);
-  const [isPaused, setIsPaused] = useState(false);
+
   const [isTransitioning, setIsTransitioning] = useState(false);
 
   useEffect(() => {
@@ -77,7 +77,7 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
 
   useEffect(() => {
     if (!scaleId) return;
-    
+
     fetch(`/api/scales/${scaleId}/preview`)
       .then(res => res.json())
       .then(data => {
@@ -98,7 +98,7 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
   const autoAdvanceToNext = useCallback(() => {
     const preview = previewData?.preview;
     if (!preview?.items) return;
-    
+
     if (currentItemIndex < preview.items.length - 1) {
       setIsTransitioning(true);
       // 延迟0.8秒后自动进入下一题，给用户确认选择的时间
@@ -117,24 +117,19 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
   // 处理答案选择
   const handleAnswerSelect = useCallback((itemNumber: number, selectedOption: string) => {
     const timestamp = new Date();
-    console.log('=== 答题调试信息 ===');
-    console.log('题目编号:', itemNumber);
-    console.log('选择答案:', selectedOption);
-    console.log('选择答案类型:', typeof selectedOption);
-    console.log('选择答案长度:', selectedOption?.length);
-    
+
     if (!selectedOption) {
       console.error('选择的答案为空或undefined!');
       return;
     }
-    
+
     setAnswers(prev => {
       console.log('当前答案数组:', prev);
       const existing = prev.find(a => a.itemNumber === itemNumber);
       let newAnswers: Answer[];
       if (existing) {
-        newAnswers = prev.map(a => 
-          a.itemNumber === itemNumber 
+        newAnswers = prev.map(a =>
+          a.itemNumber === itemNumber
             ? { ...a, selectedOption, timestamp }
             : a
         );
@@ -146,7 +141,7 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
       console.log('新答案数组:', newAnswers);
       return newAnswers;
     });
-    
+
     if (!completedItems.includes(itemNumber)) {
       setCompletedItems(prev => {
         const newCompleted = [...prev, itemNumber];
@@ -170,7 +165,7 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
     setAnswers([]);
     setCompletedItems([]);
     setShowResults(false);
-    
+
     // 如果当前数据不是完整模式，重新获取完整数据
     if (!previewData?.preview?.isFullMode) {
       console.log('加载完整模式数据...');
@@ -197,45 +192,38 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
 
   // 计算总分和专业解读
   const calculateScore = useCallback(() => {
-    console.log('=== 计分调试信息 ===');
-    console.log('answers数组:', answers);
-    console.log('preview items数量:', previewData?.preview?.items?.length);
-    console.log('答案数量:', answers.length);
-    
+
     if (!previewData?.preview?.items) {
       console.log('没有预览数据或题目数据');
       return { total: 0, interpretation: '无数据' };
     }
-    
+
     if (answers.length === 0) {
       console.log('没有任何答案');
       return { total: 0, interpretation: '尚未开始答题' };
     }
-    
+
     const total = answers.reduce((sum, answer, index) => {
       console.log(`处理答案${index + 1}:`, answer);
       const item = previewData.preview.items.find((i: any) => i.itemNumber === answer.itemNumber);
       console.log('找到对应题目:', item ? '是' : '否');
-      
+
       if (item?.responseOptions) {
-        console.log('题目选项:', item.responseOptions);
-        console.log('用户选择:', answer.selectedOption);
+
         const optionIndex = item.responseOptions.indexOf(answer.selectedOption);
-        console.log('选项索引:', optionIndex);
         const score = optionIndex >= 0 ? optionIndex : 0;
-        console.log('本题得分:', score);
         return sum + score;
       }
       console.log('题目没有选项或匹配失败');
       return sum;
     }, 0);
-    
+
     console.log('最终总分:', total);
 
     // 根据量表的切分值提供解读
     const scoring = previewData.scoring;
     let interpretation = '';
-    
+
     if (previewData.scale.acronym === 'PHQ-9') {
       if (total <= 4) interpretation = '最小抑郁症状';
       else if (total <= 9) interpretation = '轻度抑郁症状';
@@ -274,7 +262,7 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
           gridCols: 'grid-cols-1',
           buttonSize: 'text-sm'
         };
-      case 'tablet': 
+      case 'tablet':
         return {
           container: 'max-w-2xl mx-auto',
           padding: 'px-4 py-6',
@@ -298,7 +286,7 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
   const getDeviceIcon = (mode: DeviceMode) => {
     switch (mode) {
       case 'mobile': return <Smartphone className="w-4 h-4" />;
-      case 'tablet': return <Tablet className="w-4 h-4" />;
+      case 'tablet': return <TabletSmartphone className="w-4 h-4" />;
       default: return <Monitor className="w-4 h-4" />;
     }
   };
@@ -323,7 +311,7 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
 
   const { scale, preview, previewInfo, scoring } = previewData;
   const currentItem = preview?.items?.[currentItemIndex];
-  const progressPercentage = viewMode === 'interactive' 
+  const progressPercentage = viewMode === 'interactive'
     ? (completedItems.length / (preview?.items?.length || 1)) * 100
     : 0;
   const deviceStyles = getDeviceStyles();
@@ -338,6 +326,9 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
     currentItem: currentItem ? 'exists' : 'undefined',
     isFullMode: preview?.isFullMode
   });
+
+  const DeviceFrame = deviceMode === 'desktop' ? DesktopFrame
+    : (deviceMode === 'mobile' ? MobileFrame : PadFrame)
 
   return (
     <div className="min-h-screen bg-background">
@@ -364,7 +355,7 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
                 )}
               </div>
             </div>
-            
+
             <div className="flex items-center space-x-2">
               {/* 模式切换 - 桌面端显示 */}
               <div className="hidden lg:flex space-x-1 bg-gray-100 rounded-lg p-1">
@@ -385,7 +376,7 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
                   {t("scale_preview.interactive_mode")}
                 </Button>
               </div>
-              
+
               {/* 设备模式切换 */}
               <div className="hidden md:flex space-x-1 bg-gray-100 rounded-lg p-1">
                 {(['desktop', 'tablet', 'mobile'] as DeviceMode[]).map((mode) => (
@@ -400,7 +391,7 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
                   </Button>
                 ))}
               </div>
-              
+
               <Link href={`/scales/${scale.id}`}>
                 <Button variant="outline" size="sm">
                   {t("scale_preview.view_details")}
@@ -410,7 +401,7 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
           </div>
         </div>
       </div>
-      
+
       <div className={`${deviceStyles.container} ${deviceStyles.padding}`}>
         {/* 移动端模式切换 */}
         <div className="md:hidden mb-4">
@@ -434,7 +425,7 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
               {t("scale_preview.interactive_mode")}
             </Button>
           </div>
-          
+
           {/* 移动端设备模式切换 */}
           <div className="flex space-x-1 bg-gray-100 rounded-lg p-1 mt-2">
             {(['desktop', 'tablet', 'mobile'] as DeviceMode[]).map((mode) => (
@@ -512,7 +503,7 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
                 </Badge>
               </div>
             </CardHeader>
-            
+
             <CardContent>
               <div className={`grid ${deviceMode === 'mobile' ? 'grid-cols-1 gap-2' : deviceStyles.gridCols} gap-4`}>
                 <div className="flex items-center space-x-2">
@@ -559,130 +550,132 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
               </Card>
 
               {currentItem ? (
-                <Card className={`bg-white border-2 ${isTransitioning ? 'border-green-300 bg-green-50' : 'border-blue-200'} transition-all duration-500`}>
-                  <CardHeader>
-                    <div className="flex items-center justify-between">
-                      <CardTitle className={deviceStyles.fontSize}>
-                        {t("scale_preview.question_number")} {currentItem.itemNumber} / {preview?.items?.length || 0}
-                      </CardTitle>
-                      <div className="flex items-center space-x-2">
-                        {currentItem.dimension && (
-                          <Badge variant="outline" className="text-xs">
-                            {currentItem.dimension}
+                <DeviceFrame>
+                  <Card className={`bg-white border-2 ${isTransitioning ? 'border-green-300 bg-green-50' : 'border-blue-200'} transition-all duration-500`}>
+                    <CardHeader>
+                      <div className="flex items-center justify-between">
+                        <CardTitle className={deviceStyles.fontSize}>
+                          {t("scale_preview.question_number")} {currentItem.itemNumber} / {preview?.items?.length || 0}
+                        </CardTitle>
+                        <div className="flex items-center space-x-2">
+                          {currentItem.dimension && (
+                            <Badge variant="outline" className="text-xs">
+                              {currentItem.dimension}
+                            </Badge>
+                          )}
+                          <Badge variant={completedItems.includes(currentItem.itemNumber) ? 'default' : 'secondary'}>
+                            {completedItems.includes(currentItem.itemNumber) ? (
+                              <><Check className="w-3 h-3 mr-1" />{t("scale_preview.completed_status")}</>
+                            ) : t("scale_preview.pending_status")}
                           </Badge>
-                        )}
-                        <Badge variant={completedItems.includes(currentItem.itemNumber) ? 'default' : 'secondary'}>
-                          {completedItems.includes(currentItem.itemNumber) ? (
-                            <><Check className="w-3 h-3 mr-1" />{t("scale_preview.completed_status")}</>
-                          ) : t("scale_preview.pending_status")}
-                        </Badge>
-                      </div>
-                    </div>
-                  </CardHeader>
-                  
-                  <CardContent className={`space-y-4 ${deviceStyles.cardPadding}`}>
-                    <div>
-                      <p className={`font-medium ${deviceMode === 'mobile' ? 'text-base' : 'text-lg'} mb-3 leading-relaxed`}>
-                        {currentItem.question}
-                      </p>
-                      {currentItem.questionEn && (
-                        <p className={`${deviceStyles.fontSize} text-muted-foreground italic mb-4`}>
-                          {currentItem.questionEn}
-                        </p>
-                      )}
-                    </div>
-                    
-                    {currentItem.responseOptions && currentItem.responseOptions.length > 0 && (
-                      <>
-                        <div className="text-xs text-gray-500 mb-2">
-                          调试: 当前题目{currentItem.itemNumber}, 选项数量: {currentItem.responseOptions.length}
                         </div>
-                        <RadioGroup
-                          value={answers.find(a => a.itemNumber === currentItem.itemNumber)?.selectedOption || ''}
-                          onValueChange={(value) => {
-                            console.log('RadioGroup onValueChange 触发:', value);
-                            handleAnswerSelect(currentItem.itemNumber, value);
-                          }}
-                          className="space-y-3"
-                        >
-                          {currentItem.responseOptions.map((option: string, optionIndex: number) => (
-                            <div key={`${currentItem.itemNumber}-${optionIndex}`} className={`flex items-center space-x-3 ${deviceStyles.cardPadding} rounded-lg hover:bg-blue-50 border border-transparent hover:border-blue-200 transition-all cursor-pointer`}>
-                              <RadioGroupItem 
-                                value={option} 
-                                id={`option-${currentItem.itemNumber}-${optionIndex}`}
-                              />
-                              <Label 
-                                htmlFor={`option-${currentItem.itemNumber}-${optionIndex}`} 
-                                className={`flex-1 cursor-pointer ${deviceStyles.fontSize} leading-relaxed py-2`}
-                                onClick={() => {
-                                  console.log('Label点击，选项值:', option);
-                                  handleAnswerSelect(currentItem.itemNumber, option);
-                                }}
-                              >
-                                <div className="flex items-center justify-between">
-                                  <span>{option}</span>
-                                  <Badge variant="outline" className="text-xs">
-                                    {optionIndex}分
-                                  </Badge>
-                                </div>
-                              </Label>
-                            </div>
-                          ))}
-                        </RadioGroup>
-                      </>
-                    )}
-                    
-                    {/* 手动导航（备用选项） */}
-                    <div className={`flex items-center justify-between pt-4 border-t ${deviceMode === 'mobile' ? 'flex-col space-y-3' : ''}`}>
-                      <Button
-                        variant="outline"
-                        size={deviceMode === 'mobile' ? 'sm' : 'sm'}
-                        onClick={() => setCurrentItemIndex(Math.max(0, currentItemIndex - 1))}
-                        disabled={currentItemIndex === 0}
-                        className={deviceMode === 'mobile' ? 'w-full' : ''}
-                      >
-                        <ChevronLeft className="w-4 h-4 mr-1" />
-                        {t("scale_preview.previous_question")}
-                      </Button>
-                      
-                      {deviceMode !== 'mobile' && (
-                        <span className={`${deviceStyles.fontSize} text-muted-foreground`}>
-                          {currentItemIndex + 1} / {preview?.items?.length || 0}
-                        </span>
-                      )}
-                      
-                      {currentItemIndex < (preview?.items?.length || 0) - 1 ? (
-                        <Button
-                          variant="outline"
-                          size={deviceMode === 'mobile' ? 'sm' : 'sm'}
-                          onClick={() => setCurrentItemIndex(currentItemIndex + 1)}
-                          disabled={!completedItems.includes(currentItem.itemNumber)}
-                          className={deviceMode === 'mobile' ? 'w-full' : ''}
-                        >
-                          {t("scale_preview.skip")}
-                          <ChevronRight className="w-4 h-4 ml-1" />
-                        </Button>
-                      ) : (
-                        <Button
-                          variant="outline"
-                          size={deviceMode === 'mobile' ? 'sm' : 'sm'}
-                          onClick={() => setShowResults(true)}
-                          disabled={completedItems.length === 0}
-                          className={deviceMode === 'mobile' ? 'w-full' : ''}
-                        >
-                          {t("scale_preview.view_results")}
-                          <Check className="w-4 h-4 ml-1" />
-                        </Button>
-                      )}
-                    </div>
-                    
-                    {deviceMode === 'mobile' && (
-                      <div className="text-center text-sm text-muted-foreground pt-2">
-                        {currentItemIndex + 1} / {preview?.items?.length || 0}
                       </div>
-                    )}
-                  </CardContent>
-                </Card>
+                    </CardHeader>
+
+                    <CardContent className={`space-y-4 ${deviceStyles.cardPadding}`}>
+                      <div>
+                        <p className={`font-medium ${deviceMode === 'mobile' ? 'text-base' : 'text-lg'} mb-3 leading-relaxed`}>
+                          {currentItem.question}
+                        </p>
+                        {currentItem.questionEn && (
+                          <p className={`${deviceStyles.fontSize} text-muted-foreground italic mb-4`}>
+                            {currentItem.questionEn}
+                          </p>
+                        )}
+                      </div>
+
+                      {currentItem.responseOptions && currentItem.responseOptions.length > 0 && (
+                        <>
+                          <div className="text-xs text-gray-500 mb-2">
+                            调试: 当前题目{currentItem.itemNumber}, 选项数量: {currentItem.responseOptions.length}
+                          </div>
+                          <RadioGroup
+                            value={answers.find(a => a.itemNumber === currentItem.itemNumber)?.selectedOption || ''}
+                            onValueChange={(value) => {
+                              console.log('RadioGroup onValueChange 触发:', value);
+                              handleAnswerSelect(currentItem.itemNumber, value);
+                            }}
+                            className="space-y-3"
+                          >
+                            {currentItem.responseOptions.map((option: string, optionIndex: number) => (
+                              <div key={`${currentItem.itemNumber}-${optionIndex}`} className={`flex items-center space-x-3 ${deviceStyles.cardPadding} rounded-lg hover:bg-blue-50 border border-transparent hover:border-blue-200 transition-all cursor-pointer`}>
+                                <RadioGroupItem
+                                  value={option}
+                                  id={`option-${currentItem.itemNumber}-${optionIndex}`}
+                                />
+                                <Label
+                                  htmlFor={`option-${currentItem.itemNumber}-${optionIndex}`}
+                                  className={`flex-1 cursor-pointer ${deviceStyles.fontSize} leading-relaxed py-2`}
+                                  onClick={() => {
+                                    console.log('Label点击，选项值:', option);
+                                    handleAnswerSelect(currentItem.itemNumber, option);
+                                  }}
+                                >
+                                  <div className="flex items-center justify-between">
+                                    <span>{option}</span>
+                                    <Badge variant="outline" className="text-xs">
+                                      {optionIndex}分
+                                    </Badge>
+                                  </div>
+                                </Label>
+                              </div>
+                            ))}
+                          </RadioGroup>
+                        </>
+                      )}
+
+                      {/* 手动导航（备用选项） */}
+                      <div className={`flex items-center justify-between pt-4 border-t ${deviceMode === 'mobile' ? 'flex-col space-y-3' : ''}`}>
+                        <Button
+                          variant="outline"
+                          size={deviceMode === 'mobile' ? 'sm' : 'sm'}
+                          onClick={() => setCurrentItemIndex(Math.max(0, currentItemIndex - 1))}
+                          disabled={currentItemIndex === 0}
+                          className={deviceMode === 'mobile' ? 'w-full' : ''}
+                        >
+                          <ChevronLeft className="w-4 h-4 mr-1" />
+                          {t("scale_preview.previous_question")}
+                        </Button>
+
+                        {deviceMode !== 'mobile' && (
+                          <span className={`${deviceStyles.fontSize} text-muted-foreground`}>
+                            {currentItemIndex + 1} / {preview?.items?.length || 0}
+                          </span>
+                        )}
+
+                        {currentItemIndex < (preview?.items?.length || 0) - 1 ? (
+                          <Button
+                            variant="outline"
+                            size={deviceMode === 'mobile' ? 'sm' : 'sm'}
+                            onClick={() => setCurrentItemIndex(currentItemIndex + 1)}
+                            disabled={!completedItems.includes(currentItem.itemNumber)}
+                            className={deviceMode === 'mobile' ? 'w-full' : ''}
+                          >
+                            {t("scale_preview.skip")}
+                            <ChevronRight className="w-4 h-4 ml-1" />
+                          </Button>
+                        ) : (
+                          <Button
+                            variant="outline"
+                            size={deviceMode === 'mobile' ? 'sm' : 'sm'}
+                            onClick={() => setShowResults(true)}
+                            disabled={completedItems.length === 0}
+                            className={deviceMode === 'mobile' ? 'w-full' : ''}
+                          >
+                            {t("scale_preview.view_results")}
+                            <Check className="w-4 h-4 ml-1" />
+                          </Button>
+                        )}
+                      </div>
+
+                      {deviceMode === 'mobile' && (
+                        <div className="text-center text-sm text-muted-foreground pt-2">
+                          {currentItemIndex + 1} / {preview?.items?.length || 0}
+                        </div>
+                      )}
+                    </CardContent>
+                  </Card>
+                </DeviceFrame>
               ) : (
                 // 如果没有当前题目，显示加载或错误信息
                 <Card className="bg-red-50 border-red-200">
@@ -697,9 +690,9 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
                       <div>题目数量: {preview?.items?.length || 0}</div>
                       <div>当前索引: {currentItemIndex}</div>
                     </div>
-                    <Button 
-                      variant="outline" 
-                      size="sm" 
+                    <Button
+                      variant="outline"
+                      size="sm"
                       onClick={() => {
                         setViewMode('preview');
                         setCurrentItemIndex(0);
@@ -726,7 +719,7 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
                   {t("scale_preview.results_description")}
                 </CardDescription>
               </CardHeader>
-              
+
               <CardContent>
                 {/* 核心结果 */}
                 <div className="bg-white rounded-lg p-4 mb-4 border border-green-200">
@@ -738,13 +731,12 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
                       {scoreResult.interpretation}
                     </div>
                   </div>
-                  
+
                   {scoring && (
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm">
                       {Object.entries(scoring).map(([level, score]) => (
-                        <div key={level} className={`text-center p-2 rounded ${
-                          scoreResult.total >= (score as number) ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-600'
-                        }`}>
+                        <div key={level} className={`text-center p-2 rounded ${scoreResult.total >= (score as number) ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-600'
+                          }`}>
                           <div className="font-medium">{level}</div>
                           <div>{score}+</div>
                         </div>
@@ -752,7 +744,7 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
                     </div>
                   )}
                 </div>
-                
+
                 {/* 详细统计 */}
                 <div className={`grid ${deviceMode === 'mobile' ? 'grid-cols-2 gap-3' : 'grid-cols-2 md:grid-cols-4 gap-4'} text-sm mb-4`}>
                   <div className="bg-white p-3 rounded border">
@@ -784,7 +776,7 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
                     <span className="text-lg font-bold">{scoreResult.total}</span>
                   </div>
                 </div>
-                
+
                 {/* 专业建议 */}
                 {previewInfo?.scoringInfo && (
                   <div className="bg-blue-50 p-4 rounded-lg mb-4">
@@ -794,7 +786,7 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
                     </p>
                   </div>
                 )}
-                
+
                 <div className={`${deviceMode === 'mobile' ? 'grid grid-cols-2 gap-2' : 'flex space-x-2'} pt-4 border-t`}>
                   <Button size="sm" className={deviceMode === 'mobile' ? 'justify-center' : ''}>
                     <Save className="w-4 h-4 mr-1" />
@@ -808,8 +800,8 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
                     <Share className="w-4 h-4 mr-1" />
                     {t("scale_preview.share_results")}
                   </Button>
-                  <Button 
-                    variant="outline" 
+                  <Button
+                    variant="outline"
                     size="sm"
                     onClick={() => {
                       setAnswers([]);
@@ -842,7 +834,7 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
                     这是该量表的部分题项预览，点击&ldquo;开始交互式体验&rdquo;进行完整量表填写
                   </CardDescription>
                 </CardHeader>
-                
+
                 <CardContent>
                   <div className={`grid ${deviceMode === 'mobile' ? 'grid-cols-2 gap-2' : 'grid-cols-2 md:grid-cols-4 gap-4'} text-sm`}>
                     <div>
@@ -862,7 +854,7 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
                       <span className="ml-1">{preview.dimensions.length} 个</span>
                     </div>
                   </div>
-                  
+
                   {/* 快速开始交互按钮 */}
                   <div className="mt-4 pt-4 border-t">
                     <Button onClick={startInteractiveMode} className="w-full">
@@ -906,7 +898,7 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
                       以下是该量表的前 {preview.previewCount} 个题项，完整体验请使用交互模式
                     </CardDescription>
                   </CardHeader>
-                  
+
                   <CardContent>
                     <div className="space-y-4">
                       {preview.items.map((item: any, index: number) => (
@@ -922,19 +914,19 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
                                   {item.questionEn}
                                 </p>
                               )}
-                              
+
                               {item.responseOptions.length > 0 && (
                                 <div className="text-sm">
                                   <span className="font-medium text-muted-foreground">回答选项: </span>
                                   <span className="text-muted-foreground">
-                                    {deviceMode === 'mobile' ? 
+                                    {deviceMode === 'mobile' ?
                                       item.responseOptions.slice(0, 2).join(' / ') + (item.responseOptions.length > 2 ? '...' : '') :
                                       item.responseOptions.join(' / ')
                                     }
                                   </span>
                                 </div>
                               )}
-                              
+
                               {item.dimension && (
                                 <Badge variant="secondary" className="text-xs mt-2">
                                   {item.dimension}
@@ -961,7 +953,7 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
                       以下是一些题项的示例回答，仅供参考
                     </CardDescription>
                   </CardHeader>
-                  
+
                   <CardContent>
                     <div className="space-y-3">
                       {preview.sampleAnswers.map((sample: any, index: number) => (
@@ -989,7 +981,7 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
                     <span>使用指导</span>
                   </CardTitle>
                 </CardHeader>
-                
+
                 <CardContent className="space-y-4">
                   <div>
                     <h4 className="font-medium mb-2">推荐环境</h4>
@@ -997,14 +989,14 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
                       {previewInfo.recommendedEnvironment}
                     </p>
                   </div>
-                  
+
                   <div>
                     <h4 className="font-medium mb-2">填写说明</h4>
                     <p className={`${deviceStyles.fontSize} text-muted-foreground`}>
                       {previewInfo.instructions}
                     </p>
                   </div>
-                  
+
                   <div>
                     <h4 className="font-medium mb-2">评估维度</h4>
                     <div className="flex flex-wrap gap-2">
@@ -1025,7 +1017,7 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
             <CardHeader>
               <CardTitle>下一步操作</CardTitle>
             </CardHeader>
-            
+
             <CardContent>
               <div className={`grid grid-cols-1 ${deviceMode === 'mobile' ? 'gap-2' : 'md:grid-cols-3 gap-4'}`}>
                 <Link href={`/scales/${scale.id}`}>
@@ -1034,14 +1026,14 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
                     查看完整详情
                   </Button>
                 </Link>
-                
+
                 <Link href={`/scales/${scale.id}/copyright`}>
                   <Button variant="outline" className="w-full justify-start">
                     <AlertCircle className="w-4 h-4 mr-2" />
                     检查版权许可
                   </Button>
                 </Link>
-                
+
                 <Link href={`/scales/${scale.id}/interpretation`}>
                   <Button variant="outline" className="w-full justify-start">
                     <Info className="w-4 h-4 mr-2" />
