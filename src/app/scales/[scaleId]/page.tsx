@@ -72,7 +72,7 @@ export default function ScalePage({ params }: ScalePageProps) {
 
   useEffect(() => {
     if (!scaleId) return;
-    
+
     async function fetchData() {
       const result = await getScaleDetails(scaleId);
       setData(result);
@@ -134,7 +134,7 @@ export default function ScalePage({ params }: ScalePageProps) {
             </div>
 
             <div className="flex items-center space-x-2">
-              <FavoriteButton 
+              <FavoriteButton
                 scaleId={scale.id}
                 size="sm"
                 showCount={true}

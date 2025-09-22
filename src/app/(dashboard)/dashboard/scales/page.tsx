@@ -228,69 +228,63 @@ export default function ScalesPage() {
             <CardContent>
               <div className="space-y-4">
                 {results.map((result) => (
-                  <Card key={result.id} className="p-4 hover:shadow-md transition-shadow">
-                    <div className="flex items-start justify-between">
-                      <div className="flex-1">
-                        <div className="flex items-center space-x-3 mb-2">
-                          <h3 className="font-semibold text-lg">{result.name}</h3>
-                          <Badge variant="outline">{result.acronym}</Badge>
-                          <span className="text-lg">{getLicenseIcon(result.acronym)}</span>
-                        </div>
+                  <Link key={result.id} href={`/scales/${result.id}`} className="block">
+                    <Card className="p-4 hover:shadow-md transition-shadow cursor-pointer group">
+                      <div className="flex items-start justify-between">
+                        <div className="flex-1">
+                          <div className="flex items-center space-x-3 mb-2">
+                            <h3 className="font-semibold text-lg group-hover:text-blue-600 transition-colors">{result.name}</h3>
+                            <Badge variant="outline">{result.acronym}</Badge>
+                            <span className="text-lg">{getLicenseIcon(result.acronym)}</span>
+                          </div>
 
-                        {result.nameEn && (
-                          <p className="text-sm text-muted-foreground italic mb-2">
-                            {result.nameEn}
+                          {result.nameEn && (
+                            <p className="text-sm text-muted-foreground italic mb-2">
+                              {result.nameEn}
+                            </p>
+                          )}
+
+                          <p className="text-sm text-muted-foreground mb-3 line-clamp-2">
+                            {result.description}
                           </p>
-                        )}
 
-                        <p className="text-sm text-muted-foreground mb-3 line-clamp-2">
-                          {result.description}
-                        </p>
+                          <div className="flex items-center space-x-4 text-xs text-muted-foreground">
+                            <span className="flex items-center">
+                              <BookOpen className="w-3 h-3 mr-1" />
+                              {result.items_count} 题项
+                            </span>
+                            <span className="flex items-center">
+                              <Clock className="w-3 h-3 mr-1" />
+                              {result.administration_time} 分钟
+                            </span>
+                            <span className="flex items-center">
+                              <Users className="w-3 h-3 mr-1" />
+                              {result.category}
+                            </span>
+                          </div>
+                        </div>
 
-                        <div className="flex items-center space-x-4 text-xs text-muted-foreground">
-                          <span className="flex items-center">
-                            <BookOpen className="w-3 h-3 mr-1" />
-                            {result.items_count} 题项
-                          </span>
-                          <span className="flex items-center">
-                            <Clock className="w-3 h-3 mr-1" />
-                            {result.administration_time} 分钟
-                          </span>
-                          <span className="flex items-center">
-                            <Users className="w-3 h-3 mr-1" />
-                            {result.category}
-                          </span>
-                          {/* <span className="flex items-center">
-                            <Eye className="w-3 h-3 mr-1" />
-                            {result.usageCount} 次使用
-                          </span> */}
+                        {/* 右侧快速操作区域 - 阻止卡片点击事件 */}
+                        <div className="flex items-center space-x-2 ml-4" onClick={(e) => e.stopPropagation()}>
+                          <Link href={`/scales/${result.id}/preview`}>
+                            <Button size="sm" variant="outline" className="px-2">
+                              <Eye className="w-3 h-3" />
+                            </Button>
+                          </Link>
+                          <FavoriteButton
+                            scaleId={result.id}
+                            variant="icon"
+                            size="sm"
+                          />
+                          <Link href={`/scales/${result.id}/copyright`}>
+                            <Button size="sm" variant="outline" className="px-2">
+                              <Shield className="w-3 h-3" />
+                            </Button>
+                          </Link>
                         </div>
                       </div>
-
-                      <div className="flex flex-col space-y-2 ml-4">
-                        <Link href={`/scales/${result.id}`}>
-                          <Button size="sm" variant="default">
-                            查看详情
-                          </Button>
-                        </Link>
-                        <Link href={`/scales/${result.id}/preview`}>
-                          <Button size="sm" variant="outline">
-                            预览
-                          </Button>
-                        </Link>
-                        <Link href={`/scales/${result.id}/copyright`}>
-                          <Button size="sm" variant="outline">
-                            <Shield className="w-3 h-3 mr-1" />
-                            版权
-                          </Button>
-                        </Link>
-                        <FavoriteButton
-                          scaleId={result.id}
-                          size="sm"
-                        />
-                      </div>
-                    </div>
-                  </Card>
+                    </Card>
+                  </Link>
                 ))}
               </div>
             </CardContent>
@@ -339,53 +333,47 @@ export default function ScalesPage() {
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                   {hotScales.map((scale) => (
-                    <Card key={scale.id} className="hover:shadow-md transition-shadow cursor-pointer">
-                      <CardContent className="p-4">
-                        <div className="flex items-center justify-between mb-2">
-                          <h4 className="font-medium mb-1 text-sm leading-tight">{scale.name}</h4>
-                          <Badge variant="outline">{scale.acronym}</Badge>
-                          {/* <span className="text-lg">{scale.icon}</span> */}
-                        </div>
+                    <Link key={scale.id} href={`/scales/${scale.id}`} className="block">
+                      <Card className="hover:shadow-md transition-shadow cursor-pointer group">
+                        <CardContent className="p-4">
+                          <div className="flex items-center justify-between mb-2">
+                            <h4 className="font-medium text-sm leading-tight group-hover:text-blue-600 transition-colors">{scale.name}</h4>
+                            <Badge variant="outline">{scale.acronym}</Badge>
+                          </div>
 
-                        <Badge variant="outline" className="text-xs text-muted-foreground mb-2">{scale.categoryName}</Badge>
-                        <div className="text-xs text-muted-foreground mb-3 space-y-1">
-                          <div className="flex items-center space-x-1">
-                            <BookOpen className="w-3 h-3" />
-                            <span>{scale.itemsCount}题</span>
+                          <Badge variant="outline" className="text-xs text-muted-foreground mb-2">{scale.categoryName}</Badge>
+                          <div className="text-xs text-muted-foreground mb-3 space-y-1">
+                            <div className="flex items-center space-x-1">
+                              <BookOpen className="w-3 h-3" />
+                              <span>{scale.itemsCount}题</span>
+                            </div>
+                            <div className="flex items-center space-x-1">
+                              <Clock className="w-3 h-3" />
+                              <span>{scale.administrationTime}分钟</span>
+                            </div>
                           </div>
-                          <div className="flex items-center space-x-1">
-                            <Clock className="w-3 h-3" />
-                            <span>{scale.administrationTime}分钟</span>
+                          
+                          {/* 快速操作区 - 阻止卡片点击事件 */}
+                          <div className="flex gap-1" onClick={(e) => e.stopPropagation()}>
+                            <Link href={`/scales/${scale.id}/preview`}>
+                              <Button size="sm" variant="outline" className="px-2">
+                                <Eye className="w-3 h-3" />
+                              </Button>
+                            </Link>
+                            <FavoriteButton
+                              scaleId={scale.id}
+                              variant="icon"
+                              size="sm"
+                            />
+                            <Link href={`/scales/${scale.id}/copyright`}>
+                              <Button size="sm" variant="outline" className="px-2">
+                                <Shield className="w-3 h-3" />
+                              </Button>
+                            </Link>
                           </div>
-                          {/* <div className="flex items-center space-x-1">
-                            <Users className="w-3 h-3" />
-                            <span>使用{scale.usageCount}次</span>
-                          </div> */}
-                        </div>
-                        <div className="flex gap-1">
-                          <Link href={`/scales/${scale.id}`}>
-                            <Button size="sm" variant="outline" className="flex-1 text-xs">
-                              详情
-                            </Button>
-                          </Link>
-                          <Link href={`/scales/${scale.id}/preview`}>
-                            <Button size="sm" variant="outline" className="px-2">
-                              <Eye className="w-3 h-3" />
-                            </Button>
-                          </Link>
-                          <FavoriteButton
-                            scaleId={scale.id}
-                            variant="icon"
-                            size="sm"
-                          />
-                          <Link href={`/scales/${scale.id}/copyright`}>
-                            <Button size="sm" variant="outline" className="px-2">
-                              <Shield className="w-3 h-3" />
-                            </Button>
-                          </Link>
-                        </div>
-                      </CardContent>
-                    </Card>
+                        </CardContent>
+                      </Card>
+                    </Link>
                   ))}
                 </div>
               )}
