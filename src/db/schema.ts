@@ -860,3 +860,79 @@ export type ClinicalCases = InferSelectModel<typeof clinicalCasesTable>;
 export type ScaleGuidelines = InferSelectModel<typeof scaleGuidelinesTable>;
 export type ScaleComparisons = InferSelectModel<typeof scaleComparisonsTable>;
 export type CopyrightLicenses = InferSelectModel<typeof copyrightLicensesTable>;
+
+// 收藏系统表结构
+export const userScaleFavoritesTable = sqliteTable("user_scale_favorites", {
+  ...commonColumns,
+  id: text().primaryKey().$defaultFn(() => `fav_${createId()}`).notNull(),
+  userId: text().notNull().references(() => userTable.id),
+  scaleId: text().notNull().references(() => ecoaScaleTable.id),
+  collectionId: text().references(() => userCollectionsTable.id),
+  personalNotes: text({ length: 1000 }),
+  tags: text({ mode: 'json' }).$type<string[]>().default([]),
+  priority: integer().default(0), // 0-5
+  isPinned: integer().default(0),
+}, (table) => ([
+  index('favorites_user_id_idx').on(table.userId),
+  index('favorites_scale_id_idx').on(table.scaleId),
+  index('favorites_collection_idx').on(table.collectionId),
+  index('favorites_pinned_idx').on(table.isPinned),
+]));
+
+export const userCollectionsTable = sqliteTable("user_collections", {
+  ...commonColumns,
+  id: text().primaryKey().$defaultFn(() => `coll_${createId()}`).notNull(),
+  userId: text().notNull().references(() => userTable.id),
+  name: text({ length: 255 }).notNull(),
+  description: text({ length: 1000 }),
+  color: text({ length: 50 }).default('blue'),
+  icon: text({ length: 50 }).default('folder'),
+  isPublic: integer().default(0),
+  isDefault: integer().default(0),
+  sortOrder: integer().default(0),
+}, (table) => ([
+  index('collections_user_id_idx').on(table.userId),
+  index('collections_sort_order_idx').on(table.sortOrder),
+  index('collections_public_idx').on(table.isPublic),
+]));
+
+export const scaleFavoriteStatsTable = sqliteTable("scale_favorite_stats", {
+  scaleId: text().primaryKey().references(() => ecoaScaleTable.id),
+  totalFavorites: integer().default(0),
+  recentFavorites: integer().default(0),
+  monthlyFavorites: integer().default(0),
+  trendingScore: real().default(0.0),
+  lastUpdated: integer({ mode: "timestamp" }).notNull().$defaultFn(() => new Date()),
+}, (table) => ([
+  index('favorite_stats_trending_idx').on(table.trendingScore),
+  index('favorite_stats_total_idx').on(table.totalFavorites),
+]));
+
+// 收藏系统关系定义
+export const userScaleFavoritesRelations = relations(userScaleFavoritesTable, ({ one }) => ({
+  user: one(userTable, {
+    fields: [userScaleFavoritesTable.userId],
+    references: [userTable.id],
+  }),
+  scale: one(ecoaScaleTable, {
+    fields: [userScaleFavoritesTable.scaleId],
+    references: [ecoaScaleTable.id],
+  }),
+  collection: one(userCollectionsTable, {
+    fields: [userScaleFavoritesTable.collectionId],
+    references: [userCollectionsTable.id],
+  }),
+}));
+
+export const userCollectionsRelations = relations(userCollectionsTable, ({ one, many }) => ({
+  user: one(userTable, {
+    fields: [userCollectionsTable.userId],
+    references: [userTable.id],
+  }),
+  favorites: many(userScaleFavoritesTable),
+}));
+
+// 新增收藏系统类型
+export type UserScaleFavorite = InferSelectModel<typeof userScaleFavoritesTable>;
+export type UserCollection = InferSelectModel<typeof userCollectionsTable>;
+export type ScaleFavoriteStats = InferSelectModel<typeof scaleFavoriteStatsTable>;

@@ -22,6 +22,7 @@ import { Separator } from '@/components/ui/separator';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import Link from 'next/link';
 import { useLanguage } from '@/hooks/useLanguage';
+import { FavoriteButton } from '@/components/favorites/FavoriteButton';
 
 interface ScalePageProps {
   params: Promise<{ scaleId: string }>;
@@ -132,10 +133,12 @@ export default function ScalePage({ params }: ScalePageProps) {
             </div>
 
             <div className="flex items-center space-x-2">
-              <Button variant="outline" size="sm">
-                <Heart className="w-4 h-4 mr-2" />
-                {userInteraction.isFavorited ? t('scale.favorited') : t('scale.favorite')}
-              </Button>
+              <FavoriteButton 
+                scaleId={scale.id}
+                initialFavorited={userInteraction.isFavorited}
+                size="sm"
+                showCount={true}
+              />
               {userInteraction.canDownload && (
                 <Button size="sm">
                   <Download className="w-4 h-4 mr-2" />

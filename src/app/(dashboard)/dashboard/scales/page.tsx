@@ -10,7 +10,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import {
   Search,
   MessageSquare,
-  Heart,
   Eye,
   Clock,
   Users,
@@ -19,6 +18,7 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import { useLanguage } from '@/hooks/useLanguage';
+import { FavoriteButton } from '@/components/favorites/FavoriteButton';
 
 interface SearchResult {
   id: string;
@@ -141,7 +141,7 @@ export default function ScalesPage() {
 
       <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
         {/* 搜索区域 */}
-        <Card>
+        <div>
           <CardHeader>
             <CardTitle className="flex items-center space-x-2">
               <Search className="w-5 h-5" />
@@ -220,7 +220,7 @@ export default function ScalesPage() {
               </div>
             </div>
           </CardContent>
-        </Card>
+        </div>
 
         {/* 搜索结果 */}
         {results.length > 0 && (
@@ -291,10 +291,10 @@ export default function ScalesPage() {
                             版权
                           </Button>
                         </Link>
-                        <Button size="sm" variant="outline">
-                          <Heart className="w-3 h-3 mr-1" />
-                          收藏
-                        </Button>
+                        <FavoriteButton 
+                          scaleId={result.id}
+                          size="sm"
+                        />
                       </div>
                     </div>
                   </Card>
@@ -322,7 +322,7 @@ export default function ScalesPage() {
 
         {/* 默认显示热门量表 */}
         {!query && results.length === 0 && (
-          <Card>
+          <div>
             <CardHeader>
               <CardTitle>热门量表</CardTitle>
               <CardDescription>
@@ -349,11 +349,12 @@ export default function ScalesPage() {
                     <Card key={scale.id} className="hover:shadow-md transition-shadow cursor-pointer">
                       <CardContent className="p-4">
                         <div className="flex items-center justify-between mb-2">
+                          <h4 className="font-medium mb-1 text-sm leading-tight">{scale.name}</h4>
                           <Badge variant="outline">{scale.acronym}</Badge>
-                          <span className="text-lg">{scale.icon}</span>
+                          {/* <span className="text-lg">{scale.icon}</span> */}
                         </div>
-                        <h4 className="font-medium mb-1 text-sm leading-tight">{scale.name}</h4>
-                        <p className="text-xs text-muted-foreground mb-2">{scale.categoryName}</p>
+
+                        <Badge className="text-xs text-muted-foreground mb-2">{scale.categoryName}</Badge>
                         <div className="text-xs text-muted-foreground mb-3 space-y-1">
                           <div className="flex items-center space-x-1">
                             <BookOpen className="w-3 h-3" />
@@ -363,10 +364,10 @@ export default function ScalesPage() {
                             <Clock className="w-3 h-3" />
                             <span>{scale.administrationTime}分钟</span>
                           </div>
-                          <div className="flex items-center space-x-1">
+                          {/* <div className="flex items-center space-x-1">
                             <Users className="w-3 h-3" />
                             <span>使用{scale.usageCount}次</span>
-                          </div>
+                          </div> */}
                         </div>
                         <div className="flex gap-1">
                           <Link href={`/scales/${scale.id}`}>
@@ -379,6 +380,11 @@ export default function ScalesPage() {
                               <Eye className="w-3 h-3" />
                             </Button>
                           </Link>
+                          <FavoriteButton 
+                            scaleId={scale.id}
+                            variant="icon"
+                            size="sm"
+                          />
                           <Link href={`/scales/${scale.id}/copyright`}>
                             <Button size="sm" variant="outline" className="px-2">
                               <Shield className="w-3 h-3" />
@@ -391,56 +397,8 @@ export default function ScalesPage() {
                 </div>
               )}
             </CardContent>
-          </Card>
+          </div>
         )}
-
-        {/* 快速操作 */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <Card>
-            <CardContent className="p-4 text-center">
-              <Shield className="w-8 h-8 mx-auto mb-2 text-blue-600" />
-              <h4 className="font-medium mb-1">版权许可查询</h4>
-              <p className="text-xs text-muted-foreground mb-3">
-                检查量表使用许可要求
-              </p>
-              <Link href="/dashboard/copyright">
-                <Button size="sm" variant="outline" className="w-full">
-                  立即查询
-                </Button>
-              </Link>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardContent className="p-4 text-center">
-              <BookOpen className="w-8 h-8 mx-auto mb-2 text-green-600" />
-              <h4 className="font-medium mb-1">量表解读指南</h4>
-              <p className="text-xs text-muted-foreground mb-3">
-                专业的量表使用和解读指导
-              </p>
-              <Link href="/dashboard/interpretation">
-                <Button size="sm" variant="outline" className="w-full">
-                  查看指南
-                </Button>
-              </Link>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardContent className="p-4 text-center">
-              <MessageSquare className="w-8 h-8 mx-auto mb-2 text-purple-600" />
-              <h4 className="font-medium mb-1">联系工单</h4>
-              <p className="text-xs text-muted-foreground mb-3">
-                查看版权联系工单状态
-              </p>
-              <Link href="/dashboard/copyright">
-                <Button size="sm" variant="outline" className="w-full">
-                  我的工单
-                </Button>
-              </Link>
-            </CardContent>
-          </Card>
-        </div>
       </div>
     </>
   );

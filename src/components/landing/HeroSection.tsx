@@ -4,12 +4,13 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Search, Sparkles } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
+import { useRouter } from "next/navigation";
 
 export function HeroSection() {
   const { t } = useLanguage()
-
+  const router = useRouter()
   const onStartSearch = () => {
-
+    router.push('/dashboard/scales')
   }
   return (
     <section className="py-20 bg-linear-to-br from-background to-secondary/20">
