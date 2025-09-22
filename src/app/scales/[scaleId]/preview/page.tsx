@@ -355,11 +355,11 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
               <Separator orientation="vertical" className="h-6" />
               <div className="flex items-center space-x-2">
                 <Eye className="w-4 h-4" />
-                <span className="text-sm font-medium">{scale.acronym} 预览</span>
+                <span className="text-sm font-medium">{scale.acronym} {t("scale_preview.title")}</span>
                 {viewMode === 'interactive' && (
                   <Badge variant="secondary" className="bg-green-100 text-green-800">
                     <Play className="w-3 h-3 mr-1" />
-                    交互模式
+                    {t("scale_preview.interactive_mode_badge")}
                   </Badge>
                 )}
               </div>
@@ -374,7 +374,7 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
                   onClick={() => setViewMode('preview')}
                 >
                   <Eye className="w-4 h-4 mr-1" />
-                  预览
+                  {t("scale_preview.preview_mode")}
                 </Button>
                 <Button
                   variant={viewMode === 'interactive' ? 'default' : 'ghost'}
@@ -382,7 +382,7 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
                   onClick={startInteractiveMode}
                 >
                   <Play className="w-4 h-4 mr-1" />
-                  交互
+                  {t("scale_preview.interactive_mode")}
                 </Button>
               </div>
               
@@ -394,7 +394,7 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
                     variant={deviceMode === mode ? 'default' : 'ghost'}
                     size="sm"
                     onClick={() => setDeviceMode(mode)}
-                    title={mode === 'desktop' ? '桌面模式' : mode === 'tablet' ? '平板模式' : '手机模式'}
+                    title={mode === 'desktop' ? t("scale_preview.desktop_mode") : mode === 'tablet' ? t("scale_preview.tablet_mode") : t("scale_preview.mobile_mode")}
                   >
                     {getDeviceIcon(mode)}
                   </Button>
@@ -403,7 +403,7 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
               
               <Link href={`/scales/${scale.id}`}>
                 <Button variant="outline" size="sm">
-                  查看详情
+                  {t("scale_preview.view_details")}
                 </Button>
               </Link>
             </div>
@@ -422,7 +422,7 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
               className="justify-start"
             >
               <Eye className="w-4 h-4 mr-2" />
-              预览模式
+              {t("scale_preview.preview_mode")}
             </Button>
             <Button
               variant={viewMode === 'interactive' ? 'default' : 'outline'}
@@ -431,7 +431,7 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
               className="justify-start"
             >
               <Play className="w-4 h-4 mr-2" />
-              交互模式
+              {t("scale_preview.interactive_mode")}
             </Button>
           </div>
           
@@ -447,7 +447,7 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
               >
                 {getDeviceIcon(mode)}
                 <span className="ml-1 text-xs">
-                  {mode === 'desktop' ? '桌面' : mode === 'tablet' ? '平板' : '手机'}
+                  {mode === 'desktop' ? t("scale_preview.desktop") : mode === 'tablet' ? t("scale_preview.tablet") : t("scale_preview.mobile")}
                 </span>
               </Button>
             ))}
@@ -461,28 +461,28 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
               <CardContent className={deviceStyles.cardPadding}>
                 <div className="flex items-center justify-between mb-2">
                   <span className={`${deviceStyles.fontSize} font-medium text-blue-800`}>
-                    进度: {completedItems.length} / {preview?.items?.length || 0}
+                    {t("scale_preview.progress")}: {completedItems.length} / {preview?.items?.length || 0}
                   </span>
                   <div className="flex items-center space-x-2">
                     {startTime && (
                       <div className="flex items-center space-x-1 text-blue-600">
                         <Timer className="w-3 h-3" />
-                        <span className="text-xs">{getElapsedTime()}分钟</span>
+                        <span className="text-xs">{getElapsedTime()}{t("scale_preview.minutes")}</span>
                       </div>
                     )}
                     <div className="flex items-center space-x-1 text-green-600">
                       <Check className="w-3 h-3" />
-                      <span className="text-xs font-bold">当前: {scoreResult.total}分</span>
+                      <span className="text-xs font-bold">{t("scale_preview.current_score")}: {scoreResult.total}{t("scale_preview.points")}</span>
                     </div>
                     <span className={`${deviceStyles.fontSize} text-blue-600`}>
-                      {Math.round(progressPercentage)}% 完成
+                      {Math.round(progressPercentage)}% {t("scale_preview.completed")}
                     </span>
                   </div>
                 </div>
                 <Progress value={progressPercentage} className="h-2" />
                 {isTransitioning && (
                   <div className="mt-2 text-xs text-blue-600 text-center">
-                    正在进入下一题...
+                    {t("scale_preview.loading_question")}
                   </div>
                 )}
                 {/* 实时分数解读 */}
@@ -518,13 +518,13 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
                 <div className="flex items-center space-x-2">
                   <BookOpen className="w-4 h-4 text-blue-600" />
                   <span className={deviceStyles.fontSize}>
-                    {scale.itemsCount} 个题项
+                    {scale.itemsCount} {t("common.items", "个题项")}
                   </span>
                 </div>
                 <div className="flex items-center space-x-2">
                   <Clock className="w-4 h-4 text-green-600" />
                   <span className={deviceStyles.fontSize}>
-                    约 {scale.administrationTime} 分钟
+                    {t("common.about", "约")} {scale.administrationTime} {t("scale_preview.minutes")}
                   </span>
                 </div>
                 <div className="flex items-center space-x-2">
@@ -563,7 +563,7 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
                   <CardHeader>
                     <div className="flex items-center justify-between">
                       <CardTitle className={deviceStyles.fontSize}>
-                        题项 {currentItem.itemNumber} / {preview?.items?.length || 0}
+                        {t("scale_preview.question_number")} {currentItem.itemNumber} / {preview?.items?.length || 0}
                       </CardTitle>
                       <div className="flex items-center space-x-2">
                         {currentItem.dimension && (
@@ -573,8 +573,8 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
                         )}
                         <Badge variant={completedItems.includes(currentItem.itemNumber) ? 'default' : 'secondary'}>
                           {completedItems.includes(currentItem.itemNumber) ? (
-                            <><Check className="w-3 h-3 mr-1" />已完成</>
-                          ) : '待完成'}
+                            <><Check className="w-3 h-3 mr-1" />{t("scale_preview.completed_status")}</>
+                          ) : t("scale_preview.pending_status")}
                         </Badge>
                       </div>
                     </div>
@@ -642,7 +642,7 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
                         className={deviceMode === 'mobile' ? 'w-full' : ''}
                       >
                         <ChevronLeft className="w-4 h-4 mr-1" />
-                        上一题
+                        {t("scale_preview.previous_question")}
                       </Button>
                       
                       {deviceMode !== 'mobile' && (
@@ -659,7 +659,7 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
                           disabled={!completedItems.includes(currentItem.itemNumber)}
                           className={deviceMode === 'mobile' ? 'w-full' : ''}
                         >
-                          跳过
+                          {t("scale_preview.skip")}
                           <ChevronRight className="w-4 h-4 ml-1" />
                         </Button>
                       ) : (
@@ -670,7 +670,7 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
                           disabled={completedItems.length === 0}
                           className={deviceMode === 'mobile' ? 'w-full' : ''}
                         >
-                          查看结果
+                          {t("scale_preview.view_results")}
                           <Check className="w-4 h-4 ml-1" />
                         </Button>
                       )}
@@ -720,10 +720,10 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
               <CardHeader>
                 <CardTitle className="text-green-800 flex items-center space-x-2">
                   <Check className="w-5 h-5" />
-                  <span>完成结果</span>
+                  <span>{t("scale_preview.completion_results")}</span>
                 </CardTitle>
                 <CardDescription className="text-green-700">
-                  基于您的回答，以下是评估结果和专业建议
+                  {t("scale_preview.results_description")}
                 </CardDescription>
               </CardHeader>
               
@@ -758,28 +758,28 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
                   <div className="bg-white p-3 rounded border">
                     <div className="flex items-center space-x-2 mb-1">
                       <Target className="w-4 h-4 text-blue-600" />
-                      <span className="font-medium">完成题项</span>
+                      <span className="font-medium">{t("scale_preview.completed_items")}</span>
                     </div>
                     <span className="text-lg font-bold">{completedItems.length} / {preview?.items?.length || 0}</span>
                   </div>
                   <div className="bg-white p-3 rounded border">
                     <div className="flex items-center space-x-2 mb-1">
                       <TrendingUp className="w-4 h-4 text-green-600" />
-                      <span className="font-medium">完成率</span>
+                      <span className="font-medium">{t("scale_preview.completion_rate")}</span>
                     </div>
                     <span className="text-lg font-bold">{Math.round(progressPercentage)}%</span>
                   </div>
                   <div className="bg-white p-3 rounded border">
                     <div className="flex items-center space-x-2 mb-1">
                       <Timer className="w-4 h-4 text-orange-600" />
-                      <span className="font-medium">用时</span>
+                      <span className="font-medium">{t("scale_preview.time_used")}</span>
                     </div>
-                    <span className="text-lg font-bold">{getElapsedTime()} 分钟</span>
+                    <span className="text-lg font-bold">{getElapsedTime()} {t("scale_preview.minutes")}</span>
                   </div>
                   <div className="bg-white p-3 rounded border">
                     <div className="flex items-center space-x-2 mb-1">
                       <Check className="w-4 h-4 text-purple-600" />
-                      <span className="font-medium">总分</span>
+                      <span className="font-medium">{t("scale_preview.total_score")}</span>
                     </div>
                     <span className="text-lg font-bold">{scoreResult.total}</span>
                   </div>
@@ -798,15 +798,15 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
                 <div className={`${deviceMode === 'mobile' ? 'grid grid-cols-2 gap-2' : 'flex space-x-2'} pt-4 border-t`}>
                   <Button size="sm" className={deviceMode === 'mobile' ? 'justify-center' : ''}>
                     <Save className="w-4 h-4 mr-1" />
-                    保存结果
+                    {t("scale_preview.save_results")}
                   </Button>
                   <Button variant="outline" size="sm" className={deviceMode === 'mobile' ? 'justify-center' : ''}>
                     <Download className="w-4 h-4 mr-1" />
-                    导出报告
+                    {t("scale_preview.export_report")}
                   </Button>
                   <Button variant="outline" size="sm" className={deviceMode === 'mobile' ? 'justify-center' : ''}>
                     <Share className="w-4 h-4 mr-1" />
-                    分享结果
+                    {t("scale_preview.share_results")}
                   </Button>
                   <Button 
                     variant="outline" 
@@ -821,7 +821,7 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
                     className={deviceMode === 'mobile' ? 'justify-center col-span-2' : ''}
                   >
                     <RotateCcw className="w-4 h-4 mr-1" />
-                    重新开始
+                    {t("scale_preview.restart")}
                   </Button>
                 </div>
               </CardContent>
@@ -836,7 +836,7 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
                 <CardHeader>
                   <CardTitle className="flex items-center space-x-2 text-blue-800">
                     <Eye className="w-5 h-5" />
-                    <span>量表预览</span>
+                    <span>{t("scale_preview.scale_preview_title")}</span>
                   </CardTitle>
                   <CardDescription className="text-blue-700">
                     这是该量表的部分题项预览，点击&ldquo;开始交互式体验&rdquo;进行完整量表填写
@@ -846,19 +846,19 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
                 <CardContent>
                   <div className={`grid ${deviceMode === 'mobile' ? 'grid-cols-2 gap-2' : 'grid-cols-2 md:grid-cols-4 gap-4'} text-sm`}>
                     <div>
-                      <span className="font-medium">预览题项:</span>
+                      <span className="font-medium">{t("scale_preview.preview_items")}:</span>
                       <span className="ml-1">{preview.previewCount} / {preview.totalItems}</span>
                     </div>
                     <div>
-                      <span className="font-medium">预览比例:</span>
+                      <span className="font-medium">{t("scale_preview.preview_ratio")}:</span>
                       <span className="ml-1">{previewInfo.previewRatio}%</span>
                     </div>
                     <div>
-                      <span className="font-medium">评估时间:</span>
+                      <span className="font-medium">{t("scale_preview.assessment_time")}:</span>
                       <span className="ml-1">{previewInfo.estimatedCompletionTime} 分钟</span>
                     </div>
                     <div>
-                      <span className="font-medium">维度数量:</span>
+                      <span className="font-medium">{t("scale_preview.dimensions_count")}:</span>
                       <span className="ml-1">{preview.dimensions.length} 个</span>
                     </div>
                   </div>
@@ -867,7 +867,7 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
                   <div className="mt-4 pt-4 border-t">
                     <Button onClick={startInteractiveMode} className="w-full">
                       <Play className="w-4 h-4 mr-2" />
-                      开始交互式体验 ({preview.totalItems}题完整版)
+                      {t("scale_preview.start_interactive_full").replace("{count}", preview.totalItems.toString())}
                     </Button>
                   </div>
                 </CardContent>

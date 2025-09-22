@@ -25,6 +25,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { useLanguage } from '@/hooks/useLanguage';
 import Link from 'next/link';
 
 interface CopyrightPageProps {
@@ -32,6 +33,7 @@ interface CopyrightPageProps {
 }
 
 export default function ScaleCopyrightPage({ params }: CopyrightPageProps) {
+  const { t } = useLanguage();
   const [scaleId, setScaleId] = useState<string>('');
   const [copyrightInfo, setCopyrightInfo] = useState<any>(null);
   const [loading, setLoading] = useState(true);
@@ -145,13 +147,13 @@ export default function ScaleCopyrightPage({ params }: CopyrightPageProps) {
               <Link href="/dashboard/scales">
                 <Button variant="ghost" size="sm">
                   <ArrowLeft className="w-4 h-4 mr-2" />
-                  返回搜索
+                  {t("scale_copyright.back_to_details")}
                 </Button>
               </Link>
               <Separator orientation="vertical" className="h-6" />
               <div className="flex items-center space-x-2">
                 <Shield className="w-4 h-4" />
-                <span className="text-sm font-medium">{scale.acronym} 版权信息</span>
+                <span className="text-sm font-medium">{scale.acronym} {t("scale_copyright.title")}</span>
               </div>
             </div>
 
@@ -164,7 +166,7 @@ export default function ScaleCopyrightPage({ params }: CopyrightPageProps) {
               </Link>
               <Link href={`/scales/${scale.id}/preview`}>
                 <Button variant="outline" size="sm">
-                  预览量表
+                  {t("scale_copyright.preview_scale")}
                 </Button>
               </Link>
             </div>
@@ -207,21 +209,21 @@ export default function ScaleCopyrightPage({ params }: CopyrightPageProps) {
                     <AlertCircle className="w-4 h-4 text-orange-600" />
                   )}
                   <span className="text-sm">
-                    {actions.canUseDirectly ? '可直接使用' : '需要许可'}
+                    {actions.canUseDirectly ? t("scale_copyright.can_use_directly") : t("scale_copyright.requires_permission")}
                   </span>
                 </div>
 
                 <div className="flex items-center space-x-2">
                   <DollarSign className="w-4 h-4 text-blue-600" />
                   <span className="text-sm">
-                    {copyright.license.typicalCost === 'FREE' ? '免费' :
-                      copyright.license.typicalCost === 'PAID' ? '付费' : '咨询定价'}
+                    {copyright.license.typicalCost === 'FREE' ? t("scale_copyright.free") :
+                      copyright.license.typicalCost === 'PAID' ? t("scale_copyright.paid") : t("scale_copyright.consult_pricing")}
                   </span>
                 </div>
               </div>
 
               <div className="bg-blue-50 p-4 rounded-lg">
-                <h4 className="font-medium mb-2 text-blue-900">使用指导</h4>
+                <h4 className="font-medium mb-2 text-blue-900">{t("scale_copyright.usage_guidelines")}</h4>
                 <p className="text-sm text-blue-800">
                   {copyright.license.usageGuidelines}
                 </p>

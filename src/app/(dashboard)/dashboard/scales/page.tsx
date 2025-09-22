@@ -18,6 +18,7 @@ import {
   Shield,
 } from 'lucide-react';
 import Link from 'next/link';
+import { useLanguage } from '@/hooks/useLanguage';
 
 interface SearchResult {
   id: string;
@@ -50,6 +51,7 @@ interface HotScale {
 }
 
 export default function ScalesPage() {
+  const { t } = useLanguage();
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<SearchResult[]>([]);
   const [hotScales, setHotScales] = useState<HotScale[]>([]);
@@ -132,8 +134,8 @@ export default function ScalesPage() {
     <>
       <PageHeader
         items={[
-          { href: "/dashboard", label: "Dashboard" },
-          { href: "/dashboard/scales", label: "eCOA 量表" }
+          { href: "/dashboard", label: t("common.dashboard") },
+          { href: "/dashboard/scales", label: t("scales_page.title") }
         ]}
       />
 
@@ -143,10 +145,10 @@ export default function ScalesPage() {
           <CardHeader>
             <CardTitle className="flex items-center space-x-2">
               <Search className="w-5 h-5" />
-              <span>量表搜索</span>
+              <span>{t("scales_page.search_title")}</span>
             </CardTitle>
             <CardDescription>
-              搜索 15+ 专业 eCOA 量表，获取版权许可信息
+              {t("scales_page.search_description")}
             </CardDescription>
           </CardHeader>
 
@@ -155,43 +157,43 @@ export default function ScalesPage() {
             <div className="flex space-x-2">
               <div className="flex-1">
                 <Input
-                  placeholder="搜索量表名称、缩写或描述..."
+                  placeholder={t("scales_page.search_placeholder")}
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
                   onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
                 />
               </div>
               <Button onClick={handleSearch} disabled={loading}>
-                {loading ? '搜索中...' : '搜索'}
+                {loading ? t("scales_page.searching") : t("scales_page.search")}
               </Button>
             </div>
 
             {/* 搜索选项 */}
             <div className="flex flex-wrap gap-4">
               <div className="flex items-center space-x-2">
-                <span className="text-sm font-medium">搜索类型:</span>
+                <span className="text-sm font-medium">{t("scales_page.search_type")}:</span>
                 <Select value={searchType} onValueChange={setSearchType}>
                   <SelectTrigger className="w-32">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="search">基础搜索</SelectItem>
-                    <SelectItem value="semantic">语义搜索</SelectItem>
-                    <SelectItem value="hybrid">混合搜索</SelectItem>
-                    <SelectItem value="advanced">高级筛选</SelectItem>
+                    <SelectItem value="search">{t("scales_page.basic_search")}</SelectItem>
+                    <SelectItem value="semantic">{t("scales_page.semantic_search")}</SelectItem>
+                    <SelectItem value="hybrid">{t("scales_page.hybrid_search")}</SelectItem>
+                    <SelectItem value="advanced">{t("scales_page.advanced_filter")}</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
 
               <div className="flex items-center space-x-2">
-                <span className="text-sm font-medium">分类:</span>
+                <span className="text-sm font-medium">{t("scales_page.category")}:</span>
                 <Select value={filters.category} onValueChange={(value) =>
                   setFilters(prev => ({ ...prev, category: value }))}>
                   <SelectTrigger className="w-40">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="all">所有分类</SelectItem>
+                    <SelectItem value="all">{t("scales_page.all_categories")}</SelectItem>
                     {categories.map(cat => (
                       <SelectItem key={cat.id} value={cat.id}>
                         {cat.name} ({cat.scaleCount})
@@ -202,17 +204,17 @@ export default function ScalesPage() {
               </div>
 
               <div className="flex items-center space-x-2">
-                <span className="text-sm font-medium">排序:</span>
+                <span className="text-sm font-medium">{t("scales_page.sort_by")}:</span>
                 <Select value={filters.sortBy} onValueChange={(value) =>
                   setFilters(prev => ({ ...prev, sortBy: value }))}>
                   <SelectTrigger className="w-32">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="relevance">相关性</SelectItem>
-                    <SelectItem value="name">名称</SelectItem>
-                    <SelectItem value="usage">使用频率</SelectItem>
-                    <SelectItem value="recent">最新</SelectItem>
+                    <SelectItem value="relevance">{t("scales_page.relevance")}</SelectItem>
+                    <SelectItem value="name">{t("scales_page.name")}</SelectItem>
+                    <SelectItem value="usage">{t("scales_page.usage_frequency")}</SelectItem>
+                    <SelectItem value="recent">{t("scales_page.recent")}</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -224,9 +226,9 @@ export default function ScalesPage() {
         {results.length > 0 && (
           <Card>
             <CardHeader>
-              <CardTitle>搜索结果</CardTitle>
+              <CardTitle>{t("scales_page.search_results")}</CardTitle>
               <CardDescription>
-                找到 {results.length} 个匹配的量表
+                {t("scales_page.found_matches", `找到 ${results.length} 个匹配的量表`).replace("{count}", results.length.toString())}
               </CardDescription>
             </CardHeader>
 

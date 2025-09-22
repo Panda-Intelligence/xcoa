@@ -10,6 +10,7 @@ import { LanguageToggle, useLanguage } from "@/hooks/useLanguage";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import { cn } from '@/lib/utils'
+import ThemeSwitch from "../theme-switch";
 
 type NavItem = {
   name: string;
@@ -96,30 +97,11 @@ export function Navigation() {
             </div>
           </div>
 
-          {/* CTA Buttons */}
-          <div className="flex items-baseline space-x-4">
-            {isLoading ? (
-              <>
-                <Skeleton className="h-8 w-16" />
-              </>
-            ) : (
-              navItems.map((item) => (
-                <Link
-                  key={item.name}
-                  href={item.href}
-                  className={cn(
-                    "text-muted-foreground hover:text-foreground no-underline px-3 h-16 flex items-center text-sm font-medium transition-colors relative",
-                    isActiveLink(item.href) && "text-foreground after:absolute after:left-0 after:bottom-0 after:h-0.5 after:w-full after:bg-foreground"
-                  )}
-                >
-                  {item.name}
-                </Link>
-              ))
-            )}
+          <div className="flex flex-row gap-4">
+            <LanguageToggle />
+            <ThemeSwitch />
+            <ActionButtons />
           </div>
-          <LanguageToggle />
-          <ActionButtons />
-
           {/* Mobile menu button */}
           <div className="md:hidden">
             <Button

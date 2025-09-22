@@ -65,7 +65,7 @@ export default function BaseLayout({
         />
         <ThemeProvider
           attribute="class"
-          defaultTheme="dark"
+          defaultTheme="light"
           enableSystem
         >
           <TooltipProvider
