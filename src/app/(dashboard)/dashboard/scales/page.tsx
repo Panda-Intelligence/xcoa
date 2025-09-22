@@ -18,6 +18,7 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import { useLanguage } from '@/hooks/useLanguage';
+import { useFavoritesStore } from '@/state/favorites';
 import { FavoriteButton } from '@/components/favorites/FavoriteButton';
 
 interface SearchResult {
@@ -52,6 +53,7 @@ interface HotScale {
 
 export default function ScalesPage() {
   const { t } = useLanguage();
+  const { fetchUserFavorites } = useFavoritesStore();
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<SearchResult[]>([]);
   const [hotScales, setHotScales] = useState<HotScale[]>([]);
@@ -85,6 +87,11 @@ export default function ScalesPage() {
       .catch(err => console.error('Failed to load hot scales:', err))
       .finally(() => setLoadingHotScales(false));
   }, []);
+
+  // 批量获取用户收藏状态
+  useEffect(() => {
+    fetchUserFavorites();
+  }, [fetchUserFavorites]);
 
   const handleSearch = async () => {
     if (!query.trim()) return;

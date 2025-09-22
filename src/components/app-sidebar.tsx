@@ -95,7 +95,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       },
       {
         title: t('sidebar.ecoa_scales'),
-        url: "/dashboard/scales" as Route,
+        url: "/dashboard/scales#" as Route,
         icon: Search,
         items: [
           {
@@ -114,7 +114,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       },
       {
         title: t('sidebar.scale_interpretation'),
-        url: "/dashboard/interpretation" as Route,
+        url: "/dashboard/interpretation#" as Route,
         icon: BookOpen,
         items: [
           {

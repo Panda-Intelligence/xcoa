@@ -143,13 +143,13 @@ export default function ScaleFavoritesPage() {
           <Link href="/dashboard/scales">
             <Button>
               <Plus className="w-4 h-4 mr-2" />
-              添加更多收藏
+              添加量表
             </Button>
           </Link>
         </div>
 
         {/* 搜索和筛选 */}
-        <div className="flex flex-col sm:flex-row gap-4">
+        <div className="flex flex-col items-center sm:flex-row gap-4">
           <div className="flex-1 relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
             <Input
@@ -219,8 +219,8 @@ export default function ScaleFavoritesPage() {
           </Card>
         ) : (
           <div className={`grid gap-4 ${viewMode === 'grid'
-              ? 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3'
-              : 'grid-cols-1'
+            ? 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3'
+            : 'grid-cols-1'
             }`}>
             {filteredFavorites.map((favorite) => (
               <Card key={favorite.id} className="group hover:shadow-md transition-shadow">

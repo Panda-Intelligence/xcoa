@@ -1,6 +1,7 @@
 "use client"
 
 import { ChevronRight } from "lucide-react"
+import { usePathname } from "next/navigation"
 
 import {
   Collapsible,
@@ -33,7 +34,22 @@ export function NavMain({
   title,
   items,
 }: Props) {
-  const { setOpenMobile } = useSidebar()
+  const { setOpenMobile } = useSidebar();
+  const pathname = usePathname();
+
+  // 检查路径是否匹配
+  const isActive = (url: string) => {
+    // 精确匹配
+    if (pathname === url) return true;
+
+    return false;
+  };
+
+  // 检查是否有子项处于活动状态
+  const hasActiveChild = (item: NavMainItem) => {
+    if (!item.items?.length) return false;
+    return item.items.some(subItem => isActive(subItem.url));
+  };
 
   return (
     <SidebarGroup>
@@ -42,9 +58,11 @@ export function NavMain({
         {items.map((item) => {
           // If there are no child items, render a direct link
           if (!item.items?.length) {
+            const itemIsActive = isActive(item.url);
+
             return (
               <SidebarMenuItem key={item.title}>
-                <SidebarMenuButton asChild tooltip={item.title}>
+                <SidebarMenuButton asChild tooltip={item.title} isActive={itemIsActive}>
                   <Link
                     href={item.url as Route}
                     onClick={() => setOpenMobile(false)}
@@ -58,47 +76,56 @@ export function NavMain({
           }
 
           if (!collapsible) {
+            const itemIsActive = isActive(item.url);
+
             return (<SidebarMenuItem key={item.title}>
-              <SidebarMenuButton tooltip={item.title}>
+              <SidebarMenuButton tooltip={item.title} isActive={itemIsActive}>
                 {item.icon && <item.icon />}
                 <span>{item.title}</span>
               </SidebarMenuButton>
               <SidebarMenuSub>
-                {item.items?.map((subItem) => (
-                  <SidebarMenuSubItem key={subItem.title}>
-                    <SidebarMenuSubButton asChild>
-                      {subItem.url.startsWith('/') ? (
-                        <Link
-                          href={subItem.url as Route}
-                          onClick={() => setOpenMobile(false)}
-                        >
-                          <span>{subItem.title}</span>
-                        </Link>
-                      ) : (
-                        <a
-                          href={subItem.url}
-                          onClick={() => setOpenMobile(false)}
-                        >
-                          <span>{subItem.title}</span>
-                        </a>
-                      )}
-                    </SidebarMenuSubButton>
-                  </SidebarMenuSubItem>
-                ))}
+                {item.items?.map((subItem) => {
+                  const subItemIsActive = isActive(subItem.url);
+
+                  return (
+                    <SidebarMenuSubItem key={subItem.title}>
+                      <SidebarMenuSubButton asChild isActive={subItemIsActive}>
+                        {subItem.url.startsWith('/') ? (
+                          <Link
+                            href={subItem.url as Route}
+                            onClick={() => setOpenMobile(false)}
+                          >
+                            <span>{subItem.title}</span>
+                          </Link>
+                        ) : (
+                          <a
+                            href={subItem.url}
+                            onClick={() => setOpenMobile(false)}
+                          >
+                            <span>{subItem.title}</span>
+                          </a>
+                        )}
+                      </SidebarMenuSubButton>
+                    </SidebarMenuSubItem>
+                  )
+                })}
               </SidebarMenuSub>
             </SidebarMenuItem>)
           }
           // Otherwise render the collapsible menu
+          const hasActiveSubItem = hasActiveChild(item);
+          const itemIsActive = isActive(item.url);
+
           return (
             <Collapsible
               key={item.title}
               asChild
-              defaultOpen={item.isActive}
+              defaultOpen={hasActiveSubItem}
               className="group/collapsible"
             >
               <SidebarMenuItem>
                 <CollapsibleTrigger asChild>
-                  <SidebarMenuButton tooltip={item.title}>
+                  <SidebarMenuButton tooltip={item.title} isActive={itemIsActive}>
                     {item.icon && <item.icon />}
                     <span>{item.title}</span>
                     <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
@@ -106,27 +133,31 @@ export function NavMain({
                 </CollapsibleTrigger>
                 <CollapsibleContent>
                   <SidebarMenuSub>
-                    {item.items?.map((subItem) => (
-                      <SidebarMenuSubItem key={subItem.title}>
-                        <SidebarMenuSubButton asChild>
-                          {subItem.url.startsWith('/') ? (
-                            <Link
-                              href={subItem.url as Route}
-                              onClick={() => setOpenMobile(false)}
-                            >
-                              <span>{subItem.title}</span>
-                            </Link>
-                          ) : (
-                            <a
-                              href={subItem.url}
-                              onClick={() => setOpenMobile(false)}
-                            >
-                              <span>{subItem.title}</span>
-                            </a>
-                          )}
-                        </SidebarMenuSubButton>
-                      </SidebarMenuSubItem>
-                    ))}
+                    {item.items?.map((subItem) => {
+                      const subItemIsActive = isActive(subItem.url);
+
+                      return (
+                        <SidebarMenuSubItem key={subItem.title}>
+                          <SidebarMenuSubButton asChild isActive={subItemIsActive}>
+                            {subItem.url.startsWith('/') ? (
+                              <Link
+                                href={subItem.url as Route}
+                                onClick={() => setOpenMobile(false)}
+                              >
+                                <span>{subItem.title}</span>
+                              </Link>
+                            ) : (
+                              <a
+                                href={subItem.url}
+                                onClick={() => setOpenMobile(false)}
+                              >
+                                <span>{subItem.title}</span>
+                              </a>
+                            )}
+                          </SidebarMenuSubButton>
+                        </SidebarMenuSubItem>
+                      )
+                    })}
                   </SidebarMenuSub>
                 </CollapsibleContent>
               </SidebarMenuItem>

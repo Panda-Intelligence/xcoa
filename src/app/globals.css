@@ -231,8 +231,8 @@
     --secondary-foreground: 210 7% 7%;
     --muted: 240 4.8% 95.9%;
     --muted-foreground: 0 0% 44%; /* 使用text-color */
-    --accent: 240 100% 50%;
-    --accent-foreground: 0 0% 98%;
+    --accent: 214 100% 97%; /* 与blue-50一致的浅蓝色 */
+    --accent-foreground: 214 100% 20%; /* 深蓝色文字，在浅蓝背景上清晰可读 */
     --destructive: 348 100% 55%; /* 使用crimson-color */
     --destructive-foreground: 0 0% 100%;
     --border: 240 5.9% 90%;

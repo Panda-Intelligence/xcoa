@@ -1,15 +1,15 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Heart } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useSessionStore } from '@/state/session';
+import { useFavoritesStore } from '@/state/favorites';
 import { useLanguage } from '@/hooks/useLanguage';
 import { cn } from '@/lib/utils';
 
 interface FavoriteButtonProps {
   scaleId: string;
-  initialFavorited?: boolean;
   size?: 'sm' | 'md' | 'lg';
   showCount?: boolean;
   variant?: 'button' | 'icon';
@@ -18,7 +18,6 @@ interface FavoriteButtonProps {
 
 export function FavoriteButton({ 
   scaleId, 
-  initialFavorited = false,
   size = 'md',
   showCount = false,
   variant = 'button',
@@ -26,33 +25,20 @@ export function FavoriteButton({
 }: FavoriteButtonProps) {
   const { t } = useLanguage();
   const { session } = useSessionStore();
-  const [isFavorited, setIsFavorited] = useState(initialFavorited);
-  const [favoriteCount, setFavoriteCount] = useState(0);
+  const { 
+    isFavorited, 
+    toggleFavorite, 
+    getFavoritesCount, 
+    isLoading: storeLoading 
+  } = useFavoritesStore();
+  
   const [loading, setLoading] = useState(false);
 
-  // 检查收藏状态
-  useEffect(() => {
-    if (session?.user) {
-      checkFavoriteStatus();
-    }
-  }, [scaleId, session?.user]);
+  const isFav = isFavorited(scaleId);
+  const favoritesCount = showCount ? getFavoritesCount() : 0;
 
-  const checkFavoriteStatus = async () => {
-    try {
-      const response = await fetch(`/api/scales/${scaleId}/favorite`);
-      const data = await response.json();
-      
-      if (response.ok) {
-        setIsFavorited(data.isFavorited);
-      }
-    } catch (error) {
-      console.error('检查收藏状态失败:', error);
-    }
-  };
-
-  const toggleFavorite = async () => {
+  const handleToggle = async () => {
     if (!session?.user) {
-      // 未登录，引导登录
       alert('请先登录后再收藏量表');
       return;
     }
@@ -60,31 +46,10 @@ export function FavoriteButton({
     setLoading(true);
     
     try {
-      const response = await fetch(`/api/scales/${scaleId}/favorite`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({})
-      });
-      
-      const data = await response.json();
-      
-      if (response.ok) {
-        setIsFavorited(data.action === 'added');
-        
-        // 更新收藏数量
-        if (showCount) {
-          setFavoriteCount(prev => 
-            data.action === 'added' ? prev + 1 : Math.max(0, prev - 1)
-          );
-        }
-      } else {
-        alert(data.error || '操作失败');
-      }
+      await toggleFavorite(scaleId);
     } catch (error) {
       console.error('收藏操作失败:', error);
-      alert('网络错误，请稍后重试');
+      alert('操作失败，请稍后重试');
     } finally {
       setLoading(false);
     }
@@ -117,22 +82,22 @@ export function FavoriteButton({
       <Button
         variant="ghost"
         size="icon"
-        onClick={toggleFavorite}
-        disabled={loading}
+        onClick={handleToggle}
+        disabled={loading || storeLoading}
         className={cn(
           'transition-colors',
-          isFavorited 
+          isFav 
             ? 'text-red-500 hover:text-red-600' 
             : 'text-gray-400 hover:text-red-500',
           className
         )}
-        title={isFavorited ? t('scales.unfavorite', '取消收藏') : t('scales.favorite', '收藏')}
+        title={isFav ? t('scales.unfavorite', '取消收藏') : t('scales.favorite', '收藏')}
       >
         <Heart 
           className={cn(
             getIconSize(),
-            isFavorited ? 'fill-current' : '',
-            loading ? 'animate-pulse' : ''
+            isFav ? 'fill-current' : '',
+            (loading || storeLoading) ? 'animate-pulse' : ''
           )} 
         />
       </Button>
@@ -141,14 +106,14 @@ export function FavoriteButton({
 
   return (
     <Button
-      variant={isFavorited ? "default" : "outline"}
+      variant={isFav ? "default" : "outline"}
       size={size}
-      onClick={toggleFavorite}
-      disabled={loading}
+      onClick={handleToggle}
+      disabled={loading || storeLoading}
       className={cn(
         getSizeClasses(),
         'transition-all',
-        isFavorited 
+        isFav 
           ? 'bg-red-500 hover:bg-red-600 text-white border-red-500' 
           : 'hover:bg-red-50 hover:border-red-300 hover:text-red-600',
         className
@@ -158,18 +123,18 @@ export function FavoriteButton({
         className={cn(
           getIconSize(),
           'mr-2',
-          isFavorited ? 'fill-current' : '',
-          loading ? 'animate-pulse' : ''
+          isFav ? 'fill-current' : '',
+          (loading || storeLoading) ? 'animate-pulse' : ''
         )} 
       />
-      {loading ? (
+      {(loading || storeLoading) ? (
         t('common.loading', '处理中...')
       ) : (
         <>
-          {isFavorited ? t('scales.favorited', '已收藏') : t('scales.favorite', '收藏')}
-          {showCount && favoriteCount > 0 && (
+          {isFav ? t('scales.favorited', '已收藏') : t('scales.favorite', '收藏')}
+          {showCount && favoritesCount > 0 && (
             <span className="ml-1 text-xs opacity-75">
-              ({favoriteCount})
+              ({favoritesCount})
             </span>
           )}
         </>
