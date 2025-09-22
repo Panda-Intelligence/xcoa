@@ -1,0 +1,1 @@
+- Use `pnpm` as package manager for current project!

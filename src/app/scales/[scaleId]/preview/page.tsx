@@ -35,6 +35,7 @@ import { Label } from '@/components/ui/label';
 import { useLanguage } from '@/hooks/useLanguage';
 import Link from 'next/link';
 import { MobileFrame, PadFrame, DesktopFrame, LaptopFrame } from '@/components/device/Frames';
+import { QuestionRenderer } from '@/components/scale-preview/QuestionRenderer';
 
 interface ScalePreviewPageProps {
   params: Promise<{ scaleId: string }>;
@@ -45,7 +46,11 @@ type ViewMode = 'preview' | 'interactive';
 
 interface Answer {
   itemNumber: number;
-  selectedOption: string;
+  selectedOption?: string; // 单选题答案
+  selectedOptions?: string[]; // 多选题答案
+  textValue?: string; // 开放性题目答案
+  dateValue?: string; // 日期题目答案
+  drawingValue?: string; // 画图题目答案 (base64)
   score?: number;
   timestamp: Date;
 }
@@ -115,10 +120,10 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
   }, [currentItemIndex, previewData?.preview?.items]);
 
   // 处理答案选择
-  const handleAnswerSelect = useCallback((itemNumber: number, selectedOption: string) => {
+  const handleAnswerSelect = useCallback((itemNumber: number, value: any, answerType: 'single' | 'multiple' | 'text' | 'date' | 'drawing' = 'single') => {
     const timestamp = new Date();
 
-    if (!selectedOption) {
+    if (!value || (Array.isArray(value) && value.length === 0)) {
       console.error('选择的答案为空或undefined!');
       return;
     }
@@ -127,15 +132,24 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
       console.log('当前答案数组:', prev);
       const existing = prev.find(a => a.itemNumber === itemNumber);
       let newAnswers: Answer[];
+      
+      const newAnswer: Answer = {
+        itemNumber,
+        timestamp,
+        ...(answerType === 'single' && { selectedOption: value }),
+        ...(answerType === 'multiple' && { selectedOptions: value }),
+        ...(answerType === 'text' && { textValue: value }),
+        ...(answerType === 'date' && { dateValue: value }),
+        ...(answerType === 'drawing' && { drawingValue: value }),
+      };
+
       if (existing) {
         newAnswers = prev.map(a =>
-          a.itemNumber === itemNumber
-            ? { ...a, selectedOption, timestamp }
-            : a
+          a.itemNumber === itemNumber ? newAnswer : a
         );
         console.log('更新现有答案');
       } else {
-        newAnswers = [...prev, { itemNumber, selectedOption, timestamp }];
+        newAnswers = [...prev, newAnswer];
         console.log('添加新答案');
       }
       console.log('新答案数组:', newAnswers);
@@ -208,10 +222,28 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
       const item = previewData.preview.items.find((i: any) => i.itemNumber === answer.itemNumber);
       console.log('找到对应题目:', item ? '是' : '否');
 
-      if (item?.responseOptions) {
-
-        const optionIndex = item.responseOptions.indexOf(answer.selectedOption);
-        const score = optionIndex >= 0 ? optionIndex : 0;
+      if (item?.responseOptions && item.responseOptions.length > 0) {
+        let score = 0;
+        
+        // 单选题计分
+        if (answer.selectedOption) {
+          const optionIndex = item.responseOptions.indexOf(answer.selectedOption);
+          score = optionIndex >= 0 ? optionIndex : 0;
+        }
+        
+        // 多选题计分
+        if (answer.selectedOptions) {
+          score = answer.selectedOptions.reduce((total, option) => {
+            const optionIndex = item.responseOptions.indexOf(option);
+            return total + (optionIndex >= 0 ? optionIndex : 0);
+          }, 0);
+        }
+        
+        // 文本题、日期题、画图题暂时不计分，或可以根据需要设置默认分数
+        if (answer.textValue || answer.dateValue || answer.drawingValue) {
+          score = 1; // 完成即得1分
+        }
+        
         return sum + score;
       }
       console.log('题目没有选项或匹配失败');
@@ -584,45 +616,44 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
                         )}
                       </div>
 
-                      {currentItem.responseOptions && currentItem.responseOptions.length > 0 && (
-                        <>
-                          <div className="text-xs text-gray-500 mb-2">
-                            调试: 当前题目{currentItem.itemNumber}, 选项数量: {currentItem.responseOptions.length}
-                          </div>
-                          <RadioGroup
-                            value={answers.find(a => a.itemNumber === currentItem.itemNumber)?.selectedOption || ''}
-                            onValueChange={(value) => {
-                              console.log('RadioGroup onValueChange 触发:', value);
-                              handleAnswerSelect(currentItem.itemNumber, value);
-                            }}
-                            className="space-y-3"
-                          >
-                            {currentItem.responseOptions.map((option: string, optionIndex: number) => (
-                              <div key={`${currentItem.itemNumber}-${optionIndex}`} className={`flex items-center space-x-3 ${deviceStyles.cardPadding} rounded-lg hover:bg-blue-50 border border-transparent hover:border-blue-200 transition-all cursor-pointer`}>
-                                <RadioGroupItem
-                                  value={option}
-                                  id={`option-${currentItem.itemNumber}-${optionIndex}`}
-                                />
-                                <Label
-                                  htmlFor={`option-${currentItem.itemNumber}-${optionIndex}`}
-                                  className={`flex-1 cursor-pointer ${deviceStyles.fontSize} leading-relaxed py-2`}
-                                  onClick={() => {
-                                    console.log('Label点击，选项值:', option);
-                                    handleAnswerSelect(currentItem.itemNumber, option);
-                                  }}
-                                >
-                                  <div className="flex items-center justify-between">
-                                    <span>{option}</span>
-                                    <Badge variant="outline" className="text-xs">
-                                      {optionIndex}分
-                                    </Badge>
-                                  </div>
-                                </Label>
-                              </div>
-                            ))}
-                          </RadioGroup>
-                        </>
-                      )}
+                      {/* 题目渲染器 - 支持多种题目类型 */}
+                      <QuestionRenderer
+                        item={currentItem}
+                        itemIndex={currentItemIndex}
+                        value={(() => {
+                          const answer = answers.find(a => a.itemNumber === currentItem.itemNumber);
+                          if (!answer) return '';
+                          
+                          // 根据答案类型返回对应的值
+                          if (answer.selectedOption) return answer.selectedOption;
+                          if (answer.selectedOptions) return answer.selectedOptions;
+                          if (answer.textValue) return answer.textValue;
+                          if (answer.dateValue) return answer.dateValue;
+                          if (answer.drawingValue) return answer.drawingValue;
+                          return '';
+                        })()}
+                        onChange={(value) => {
+                          console.log('QuestionRenderer onChange 触发:', value);
+                          
+                          // 根据题目类型和值类型判断答案类型
+                          let answerType: 'single' | 'multiple' | 'text' | 'date' | 'drawing' = 'single';
+                          
+                          if (Array.isArray(value)) {
+                            answerType = 'multiple';
+                          } else if (currentItem.responseType === 'date' || currentItem.responseType === 'datetime') {
+                            answerType = 'date';
+                          } else if (currentItem.responseType === 'drawing' || currentItem.responseType === 'sketch') {
+                            answerType = 'drawing';
+                          } else if (currentItem.responseType === 'text' || currentItem.responseType === 'textarea' || 
+                                   !currentItem.responseOptions || currentItem.responseOptions.length === 0) {
+                            answerType = 'text';
+                          }
+                          
+                          handleAnswerSelect(currentItem.itemNumber, value, answerType);
+                        }}
+                        disabled={false}
+                        deviceMode={deviceMode}
+                      />
 
                       {/* 手动导航（备用选项） */}
                       <div className={`flex items-center justify-between pt-4 border-t ${deviceMode === 'mobile' ? 'flex-col space-y-3' : ''}`}>
