@@ -64,7 +64,7 @@ export default function Page() {
           }
         ]}
       />
-      <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
+      <div className="flex flex-1 flex-col gap-4 p-4">
         {/* 欢迎区域 */}
         <Card className="bg-linear-to-r from-blue-50 to-purple-50 border-blue-200">
           <CardHeader>

@@ -76,7 +76,7 @@ export default function FavoritesPage() {
     try {
       const response = await fetch('/api/user/favorites');
       const data = await response.json();
-      
+
       if (data.success) {
         setFavorites(data.favorites || []);
         setCollections(data.collections || []);
@@ -90,14 +90,14 @@ export default function FavoritesPage() {
 
   // 筛选收藏
   const filteredFavorites = favorites.filter(fav => {
-    const matchesSearch = !searchQuery || 
+    const matchesSearch = !searchQuery ||
       fav.scale_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       fav.acronym.toLowerCase().includes(searchQuery.toLowerCase()) ||
       fav.description.toLowerCase().includes(searchQuery.toLowerCase());
-    
-    const matchesCollection = selectedCollection === 'all' || 
+
+    const matchesCollection = selectedCollection === 'all' ||
       fav.collection_name === selectedCollection;
-    
+
     return matchesSearch && matchesCollection;
   });
 
@@ -138,8 +138,8 @@ export default function FavoritesPage() {
           { href: "/dashboard/favorites", label: "我的收藏" }
         ]}
       />
-      
-      <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
+
+      <div className="flex flex-1 flex-col gap-4 p-4">
         {/* 页面标题和统计 */}
         <div className="flex items-center justify-between">
           <div>
@@ -148,7 +148,7 @@ export default function FavoritesPage() {
               管理您收藏的量表，按项目和用途分类整理
             </p>
           </div>
-          
+
           {/* 创建分类按钮 */}
           <Dialog open={createCollectionOpen} onOpenChange={setCreateCollectionOpen}>
             <DialogTrigger asChild>
@@ -164,7 +164,7 @@ export default function FavoritesPage() {
                   为您的收藏量表创建一个新的分类
                 </DialogDescription>
               </DialogHeader>
-              
+
               <div className="space-y-4">
                 <div>
                   <Label>分类名称</Label>
@@ -204,7 +204,7 @@ export default function FavoritesPage() {
                     </Select>
                   </div>
                 </div>
-                
+
                 <div className="flex justify-end space-x-2">
                   <Button variant="outline" onClick={() => setCreateCollectionOpen(false)}>
                     取消
@@ -229,7 +229,7 @@ export default function FavoritesPage() {
               className="pl-10"
             />
           </div>
-          
+
           <div className="flex items-center space-x-2">
             <Filter className="h-4 w-4 text-gray-500" />
             <Select value={selectedCollection} onValueChange={setSelectedCollection}>
@@ -246,7 +246,7 @@ export default function FavoritesPage() {
               </SelectContent>
             </Select>
           </div>
-          
+
           <div className="flex border rounded-lg p-1">
             <Button
               variant={viewMode === 'grid' ? 'default' : 'ghost'}
@@ -290,11 +290,10 @@ export default function FavoritesPage() {
                 </CardContent>
               </Card>
             ) : (
-              <div className={`grid gap-4 ${
-                viewMode === 'grid' 
-                  ? 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3' 
+              <div className={`grid gap-4 ${viewMode === 'grid'
+                  ? 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3'
                   : 'grid-cols-1'
-              }`}>
+                }`}>
                 {sortedFavorites.map((favorite) => (
                   <Card key={favorite.id} className="group hover:shadow-md transition-shadow">
                     <CardHeader className="pb-3">
@@ -305,7 +304,7 @@ export default function FavoritesPage() {
                               <Star className="w-4 h-4 text-yellow-500 fill-current" />
                             )}
                             <Badge variant="outline">{favorite.acronym}</Badge>
-                            <Badge 
+                            <Badge
                               style={{ backgroundColor: favorite.collection_color + '20', color: favorite.collection_color }}
                               className="text-xs"
                             >
@@ -321,7 +320,7 @@ export default function FavoritesPage() {
                             </CardDescription>
                           )}
                         </div>
-                        
+
                         <div className="flex items-center space-x-1 opacity-0 group-hover:opacity-100 transition-opacity">
                           <Button variant="ghost" size="icon" className="h-8 w-8">
                             <Edit className="h-3 w-3" />
@@ -335,7 +334,7 @@ export default function FavoritesPage() {
                         </div>
                       </div>
                     </CardHeader>
-                    
+
                     <CardContent>
                       <div className="space-y-3">
                         {/* 量表信息 */}
@@ -349,7 +348,7 @@ export default function FavoritesPage() {
                             {favorite.administration_time}分钟
                           </span>
                         </div>
-                        
+
                         {/* 个人笔记 */}
                         {favorite.personal_notes && (
                           <div className="bg-yellow-50 p-2 rounded text-xs">
@@ -357,7 +356,7 @@ export default function FavoritesPage() {
                             {favorite.personal_notes}
                           </div>
                         )}
-                        
+
                         {/* 标签 */}
                         {favorite.tags && favorite.tags.length > 0 && (
                           <div className="flex flex-wrap gap-1">
@@ -368,7 +367,7 @@ export default function FavoritesPage() {
                             ))}
                           </div>
                         )}
-                        
+
                         {/* 操作按钮 */}
                         <div className="flex space-x-2">
                           <Link href={`/scales/${favorite.scale_id}`}>
@@ -398,7 +397,7 @@ export default function FavoritesPage() {
                   <CardHeader>
                     <div className="flex items-center justify-between">
                       <div className="flex items-center space-x-2">
-                        <div 
+                        <div
                           className="w-8 h-8 rounded-lg flex items-center justify-center text-white"
                           style={{ backgroundColor: collection.color }}
                         >
@@ -411,7 +410,7 @@ export default function FavoritesPage() {
                           </CardDescription>
                         </div>
                       </div>
-                      
+
                       {!collection.is_default && (
                         <Button variant="ghost" size="icon" className="opacity-0 group-hover:opacity-100">
                           <MoreHorizontal className="w-4 h-4" />
@@ -419,7 +418,7 @@ export default function FavoritesPage() {
                       )}
                     </div>
                   </CardHeader>
-                  
+
                   {collection.description && (
                     <CardContent>
                       <p className="text-sm text-muted-foreground">

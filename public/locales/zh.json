@@ -304,7 +304,6 @@
     "contact_tip_2": "• 提供您的专业机构信息和联系方式",
     "contact_tip_3": "• 询问具体的许可要求和可能的费用",
     "contact_tip_4": "• 了解许可的有效期和使用范围限制",
-    "faq_title": "常见问题",
     "faq_academic_q": "Q: 学术研究使用是否需要付费？",
     "faq_academic_a": "A: 大多数量表对学术研究提供免费或优惠许可，具体需要联系版权方确认。",
     "faq_commercial_q": "Q: 商业用途的许可费用大概是多少？",
@@ -668,11 +667,10 @@
   },
   "sidebar": {
     "dashboard": "仪表盘",
-    "ecoa_scales": "eCOA 量表",
+    "ecoa_scales": "量表",
     "scale_search": "搜索",
     "my_favorites": "收藏",
     "search_history": "搜索历史",
-    "scale_comparison": "量表对比",
     "copyright_service": "版权服务",
     "license_inquiry": "许可查询",
     "contact_tickets": "版权工单",
@@ -714,7 +712,7 @@
       "professional": {
         "name": "专业版",
         "price": "$499",
-        "period": "/年",
+        "period": "/月",
         "description": "适合专业研究团队和中型机构",
         "button": "立即订阅",
         "features": [
@@ -733,7 +731,7 @@
       "enterprise": {
         "name": "企业版",
         "price": "$1,299",
-        "period": "/年",
+        "period": "/月",
         "description": "适合大型医疗机构和研究组织",
         "button": "立即订阅",
         "features": [

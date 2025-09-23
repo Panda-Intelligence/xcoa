@@ -126,7 +126,7 @@ export default function CopyrightPage() {
         ]}
       />
 
-      <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
+      <div className="flex flex-1 flex-col gap-4 p-4">
         <Tabs defaultValue="batch-check" className="w-full">
           <TabsList className="grid w-full grid-cols-3">
             <TabsTrigger value="batch-check">批量许可检查</TabsTrigger>

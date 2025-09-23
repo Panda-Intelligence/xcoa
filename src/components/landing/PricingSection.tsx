@@ -26,63 +26,11 @@ const pricingPlans = [
 ];
 
 export function PricingSection() {
-  const { t, language } = useLanguage();
+  const { t, tArray } = useLanguage();
 
   // Helper function to get array translations
   const getArrayTranslation = (key: string): string[] => {
-    // Fallback feature lists for different plans
-    const fallbackFeatures = {
-      professional: language === 'zh' ? [
-        "访问完整量表库 (500+)",
-        "AI 智能检索与推荐",
-        "无限次搜索",
-        "高级数据分析工具",
-        "团队协作功能 (最多10人)",
-        "优先技术支持"
-      ] : [
-        "Access to complete scale library (500+)",
-        "AI intelligent search & recommendations",
-        "Unlimited searches",
-        "Advanced data analysis tools",
-        "Team collaboration features (up to 10 users)"
-      ],
-      enterprise: language === 'zh' ? [
-        "专业版所有功能",
-        "无限团队成员",
-        "量表解读与指南",
-        "版权联系服务",
-        "专业量表解读报告",
-        "企业级数据安全",
-        "99.9% SLA 保障"
-      ] : [
-        "All Professional features",
-        "Unlimited team members",
-        "Scale interpretation & guidance",
-        "Priority copyright contact (24h response)",
-        "Professional scale interpretation reports",
-        "Enterprise-grade data security",
-        "99.9% SLA guarantee"
-      ],
-      custom: language === 'zh' ? [
-        "企业版所有功能",
-        "完全定制化开发",
-        "专属技术架构支持",
-        "7×24小时专属支持",
-        "法规合规咨询",
-        "专业实施团队",
-        "长期技术合作"
-      ] : [
-        "All Enterprise features",
-        "Fully customized development",
-        "Dedicated technical architecture support",
-        "24/7 dedicated support",
-        "Regulatory compliance consulting",
-        "Professional implementation team",
-        "Long-term technical partnership"
-      ]
-    };
-
-    return fallbackFeatures[key as keyof typeof fallbackFeatures] || [];
+    return tArray(`pricing.plans.${key}.features`, []);
   };
 
   return (
@@ -153,29 +101,6 @@ export function PricingSection() {
               </CardContent>
             </Card>
           ))}
-        </div>
-
-        {/* FAQ Section */}
-        <div className="mt-20 text-center">
-          <h3 className="text-xl font-semibold mb-4">{t('pricing.faq.title')}</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
-            <div className="text-left">
-              <h4 className="font-medium mb-2">{t('pricing.faq.can_cancel.question')}</h4>
-              <p className="text-sm text-muted-foreground">{t('pricing.faq.can_cancel.answer')}</p>
-            </div>
-            <div className="text-left">
-              <h4 className="font-medium mb-2">{t('pricing.faq.payment_methods.question')}</h4>
-              <p className="text-sm text-muted-foreground">{t('pricing.faq.payment_methods.answer')}</p>
-            </div>
-            <div className="text-left">
-              <h4 className="font-medium mb-2">{t('pricing.faq.enterprise_services.question')}</h4>
-              <p className="text-sm text-muted-foreground">{t('pricing.faq.enterprise_services.answer')}</p>
-            </div>
-            <div className="text-left">
-              <h4 className="font-medium mb-2">{t('pricing.faq.data_security.question')}</h4>
-              <p className="text-sm text-muted-foreground">{t('pricing.faq.data_security.answer')}</p>
-            </div>
-          </div>
         </div>
       </div>
     </section>

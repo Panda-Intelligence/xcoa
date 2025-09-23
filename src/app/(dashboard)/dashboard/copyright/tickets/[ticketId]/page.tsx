@@ -85,7 +85,7 @@ export default function TicketDetailPage({ params }: TicketDetailPageProps) {
     try {
       const response = await fetch(`/api/user/tickets/${ticketId}`);
       const data = await response.json();
-      
+
       if (data.success) {
         setTicket(data.ticket);
       } else {
@@ -170,8 +170,8 @@ export default function TicketDetailPage({ params }: TicketDetailPageProps) {
           { href: `/dashboard/copyright/tickets/${ticketId}`, label: ticket.ticketNumber }
         ]}
       />
-      
-      <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
+
+      <div className="flex flex-1 flex-col gap-4 p-4">
         {/* 工单标题和状态 */}
         <div className="flex items-start justify-between">
           <div>
@@ -186,7 +186,7 @@ export default function TicketDetailPage({ params }: TicketDetailPageProps) {
               工单号: {ticket.ticketNumber} • 创建于 {new Date(ticket.createdAt * 1000).toLocaleString()}
             </p>
           </div>
-          
+
           <div className="flex space-x-2">
             <Button variant="outline">
               <Download className="w-4 h-4 mr-2" />
@@ -206,7 +206,7 @@ export default function TicketDetailPage({ params }: TicketDetailPageProps) {
                     向版权方发送补充信息或跟进消息
                   </DialogDescription>
                 </DialogHeader>
-                
+
                 <div className="space-y-4">
                   <Textarea
                     placeholder="输入您要发送的消息..."
@@ -214,7 +214,7 @@ export default function TicketDetailPage({ params }: TicketDetailPageProps) {
                     onChange={(e) => setMessage(e.target.value)}
                     className="min-h-[100px]"
                   />
-                  
+
                   <div className="flex justify-end space-x-2">
                     <Button variant="outline" onClick={() => setUpdateMessageOpen(false)}>
                       取消
@@ -388,7 +388,7 @@ export default function TicketDetailPage({ params }: TicketDetailPageProps) {
                       {ticket.status}
                     </Badge>
                   </div>
-                  
+
                   <div className="flex items-center justify-between">
                     <span className="text-sm">回复状态</span>
                     {ticket.responseReceived ? (
@@ -397,7 +397,7 @@ export default function TicketDetailPage({ params }: TicketDetailPageProps) {
                       <Badge className="bg-gray-100 text-gray-700">待回复</Badge>
                     )}
                   </div>
-                  
+
                   <div className="flex items-center justify-between">
                     <span className="text-sm">许可状态</span>
                     {ticket.licenseGranted ? (

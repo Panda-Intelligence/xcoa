@@ -8,6 +8,7 @@ interface LanguageContextType {
   language: Language;
   setLanguage: (lang: Language) => void;
   t: (key: string, defaultValue?: string) => string;
+  tArray: (key: string, defaultValue?: string[]) => string[];
   isLoading: boolean; // 新增loading状态
 }
 
@@ -49,9 +50,9 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
     async function initializeLanguage() {
       const savedLanguage = localStorage.getItem('xcoa-language') as Language;
       console.log('Saved language from localStorage:', savedLanguage);
-      
+
       let targetLanguage: Language = 'en'; // 默认英文
-      
+
       if (savedLanguage && ['zh', 'en'].includes(savedLanguage)) {
         console.log('Using saved language:', savedLanguage);
         targetLanguage = savedLanguage;
@@ -59,7 +60,7 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
         // 默认使用英文，只有明确检测到中文浏览器时才使用中文
         const browserLang = navigator.language;
         console.log('Browser language detected:', browserLang);
-        
+
         if (browserLang.startsWith('zh')) {
           console.log('Chinese browser detected, setting to zh');
           targetLanguage = 'zh';
@@ -68,30 +69,30 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
           targetLanguage = 'en';
         }
       }
-      
+
       // 立即设置语言和加载翻译
       setLanguageState(targetLanguage);
-      
+
       // 加载目标语言的翻译
       await loadTranslations(targetLanguage);
       setTranslationsLoaded(true);
-      
+
       // 预加载另一种语言
       const otherLang = targetLanguage === 'zh' ? 'en' : 'zh';
       loadTranslations(otherLang);
     }
-    
+
     initializeLanguage();
   }, []);
 
   const setLanguage = (lang: Language) => {
     console.log('Setting language to:', lang);
-    
+
     // 如果新语言的翻译还没有加载，设置loading状态
     if (Object.keys(translations[lang]).length === 0) {
       setTranslationsLoaded(false);
     }
-    
+
     setLanguageState(lang);
     localStorage.setItem('xcoa-language', lang);
 
@@ -128,13 +129,35 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
     return defaultValue || key;
   };
 
+  const tArray = (key: string, defaultValue?: string[]): string[] => {
+    if (!translationsLoaded) {
+      return defaultValue || [];
+    }
+
+    const translation = getNestedValue(translations[language], key);
+
+    if (Array.isArray(translation)) {
+      return translation;
+    }
+
+    // 尝试从另一种语言获取翻译
+    const fallbackLang = language === 'zh' ? 'en' : 'zh';
+    const fallbackTranslation = getNestedValue(translations[fallbackLang], key);
+
+    if (Array.isArray(fallbackTranslation)) {
+      return fallbackTranslation;
+    }
+
+    return defaultValue || [];
+  };
+
   return (
-    <LanguageContext.Provider value={{ language, setLanguage, t, isLoading: !translationsLoaded }}>
+    <LanguageContext.Provider value={{ language, setLanguage, t, tArray, isLoading: !translationsLoaded }}>
       {!translationsLoaded ? (
         // 翻译加载中的全局loading界面
         <div className="min-h-screen flex items-center justify-center bg-background">
           <div className="text-center space-y-4">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto" />
             <div className="text-sm text-muted-foreground">Loading application...</div>
           </div>
         </div>

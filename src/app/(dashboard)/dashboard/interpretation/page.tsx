@@ -69,7 +69,7 @@ export default function InterpretationPage() {
         ]}
       />
 
-      <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
+      <div className="flex flex-1 flex-col gap-4 p-4">
         <Tabs defaultValue="guides" className="w-full">
           <TabsList className="grid w-full grid-cols-3">
             <TabsTrigger value="guides">解读指南</TabsTrigger>

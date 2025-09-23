@@ -4,7 +4,7 @@ import {
   BadgeCheck,
   Bell,
   ChevronsUpDown,
-  CreditCard,
+  ShieldPlus,
   LogOut,
 } from "lucide-react"
 
@@ -33,7 +33,6 @@ import { Skeleton } from "@/components/ui/skeleton"
 import useSignOut from "@/hooks/useSignOut"
 import { useRouter } from "next/navigation"
 import { useSessionStore } from "@/state/session"
-import ThemeSwitch from "./theme-switch"
 
 export function NavUser() {
   const { session, isLoading } = useSessionStore();
@@ -68,6 +67,7 @@ export function NavUser() {
 
   const { user } = session;
   const displayName = user.firstName && user.lastName ? `${user.firstName} ${user.lastName}` : user.email;
+  const isAdmin = user.role === 'admin';
 
   return (
     <SidebarMenu>
@@ -117,10 +117,14 @@ export function NavUser() {
                 <BadgeCheck className="size-4" />
                 Account
               </DropdownMenuItem>
-              <DropdownMenuItem className="cursor-pointer">
-                <Bell className="size-4" />
-                Notifications
+              {isAdmin && <DropdownMenuItem className="cursor-pointer" onClick={() => {
+                setOpenMobile(false)
+                router.push('/admin/dashboard')
+              }}>
+                <ShieldPlus className="size-4" />
+                Admin Dashboard
               </DropdownMenuItem>
+              }
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuItem

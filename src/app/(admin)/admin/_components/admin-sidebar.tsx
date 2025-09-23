@@ -5,6 +5,7 @@ import type { Route } from 'next'
 import {
   Users,
   Shield,
+  SquareTerminal,
 } from "lucide-react"
 
 import { NavMain } from "@/components/nav-main"
@@ -19,6 +20,7 @@ import {
   SidebarRail,
   SidebarGroup,
 } from "@/components/ui/sidebar"
+import { useLanguage } from "@/hooks/useLanguage"
 
 export type NavItem = {
   title: string
@@ -31,16 +33,23 @@ export type NavMainItem = NavItem & {
   items?: NavItem[]
 }
 
-const adminNavItems: NavMainItem[] = [
-  {
-    title: "Users",
-    url: "/admin",
-    icon: Users,
-    isActive: true,
-  },
-]
-
 export function AdminSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const { t } = useLanguage();
+  const adminNavItems: NavMainItem[] = [
+    {
+      title: t('sidebar.dashboard'),
+      url: "/admin/dashboard",
+      icon: SquareTerminal,
+      isActive: true,
+    },
+    {
+      title: "Users",
+      url: "/admin",
+      icon: Users,
+      isActive: true,
+    },
+  ]
+
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarContent>
@@ -57,7 +66,7 @@ export function AdminSidebar({ ...props }: React.ComponentProps<typeof Sidebar>)
             </SidebarMenuItem>
           </SidebarMenu>
         </SidebarGroup>
-        <NavMain items={adminNavItems} />
+        <NavMain title="Admin" items={adminNavItems} />
       </SidebarContent>
       <SidebarFooter>
         <NavUser />

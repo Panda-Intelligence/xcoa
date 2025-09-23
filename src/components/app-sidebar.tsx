@@ -85,12 +85,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     teams: formattedTeams,
     navMain: [
       {
-        title: t('sidebar.dashboard'),
-        url: "/dashboard",
-        icon: SquareTerminal,
-        isActive: true,
-      },
-      {
         title: t('sidebar.ecoa_scales'),
         url: "/dashboard/scales#" as Route,
         icon: Search,
