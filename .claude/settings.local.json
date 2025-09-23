@@ -13,7 +13,8 @@
       "Bash(cat:*)",
       "Bash(xargs sed:*)",
       "Bash(xargs rm:*)",
-      "Bash(mkdir -p /Users/isaac/workspace/pdt/xcoa/src/app/api/admin/invoices)"
+      "Bash(mkdir -p /Users/isaac/workspace/pdt/xcoa/src/app/api/admin/invoices)",
+      "Bash(pnpm add jspdf html2canvas)"
     ],
     "deny": [],
     "ask": []

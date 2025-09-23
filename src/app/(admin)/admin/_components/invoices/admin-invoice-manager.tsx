@@ -34,6 +34,8 @@ import {
 } from "lucide-react";
 import { PageHeader } from "@/components/page-header";
 import { useLanguage } from "@/hooks/useLanguage";
+import { TeamSelector } from "./team-selector";
+import { generateInvoicePDF } from "@/utils/pdf-generator";
 
 interface Invoice {
   id: string;
@@ -84,7 +86,6 @@ export function AdminInvoiceManager() {
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(false);
   const [newInvoice, setNewInvoice] = useState({
-    teamId: "",
     customerName: "",
     customerEmail: "",
     customerOrganization: "",
@@ -96,6 +97,7 @@ export function AdminInvoiceManager() {
     dueDate: "",
     currency: "USD"
   });
+  const [selectedTeam, setSelectedTeam] = useState<{ id: string; name: string; slug: string; description?: string; billingEmail?: string; legalName?: string } | null>(null);
 
   useEffect(() => {
     fetchInvoices();
@@ -128,17 +130,22 @@ export function AdminInvoiceManager() {
   };
 
   const handleCreateInvoice = async () => {
+    if (!selectedTeam) {
+      alert("请选择团队");
+      return;
+    }
+
     try {
       const response = await fetch("/api/admin/invoices", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          teamId: newInvoice.teamId || "team_default", // Should get from a team selector
+          teamId: selectedTeam.id,
           ...newInvoice,
           items: [{
             description: newInvoice.description,
             quantity: 1,
-            unitPrice: parseFloat(newInvoice.amount),
+            unitPrice: Number.parseFloat(newInvoice.amount),
             serviceType: "custom"
           }]
         })
@@ -162,7 +169,6 @@ export function AdminInvoiceManager() {
 
   const resetNewInvoice = () => {
     setNewInvoice({
-      teamId: "",
       customerName: "",
       customerEmail: "",
       customerOrganization: "",
@@ -174,6 +180,7 @@ export function AdminInvoiceManager() {
       dueDate: "",
       currency: "USD"
     });
+    setSelectedTeam(null);
   };
 
   const updateInvoiceStatus = async (invoiceId: string, status: string) => {
@@ -219,6 +226,15 @@ export function AdminInvoiceManager() {
     } catch (error) {
       console.error("删除发票错误:", error);
       alert("网络错误，请稍后重试");
+    }
+  };
+
+  const handleDownloadPDF = async (invoice: Invoice) => {
+    try {
+      await generateInvoicePDF(invoice);
+    } catch (error) {
+      console.error("PDF生成失败:", error);
+      alert("PDF生成失败，请稍后重试");
     }
   };
 
@@ -280,11 +296,11 @@ export function AdminInvoiceManager() {
             返回发票列表
           </Button>
           <div className="flex space-x-2">
-            <Button variant="outline">
+            <Button variant="outline" onClick={() => handleDownloadPDF(selectedInvoice)}>
               <Printer className="w-4 h-4 mr-2" />
               打印发票
             </Button>
-            <Button>
+            <Button onClick={() => handleDownloadPDF(selectedInvoice)}>
               <Download className="w-4 h-4 mr-2" />
               下载PDF
             </Button>
@@ -465,6 +481,12 @@ export function AdminInvoiceManager() {
               </DialogHeader>
 
               <div className="space-y-4">
+                {/* Team Selection */}
+                <TeamSelector
+                  selectedTeam={selectedTeam}
+                  onTeamSelect={setSelectedTeam}
+                />
+
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <Label>客户姓名 *</Label>
@@ -565,7 +587,7 @@ export function AdminInvoiceManager() {
                   </Button>
                   <Button
                     onClick={handleCreateInvoice}
-                    disabled={!newInvoice.customerName || !newInvoice.customerEmail || !newInvoice.description || !newInvoice.amount}
+                    disabled={!selectedTeam || !newInvoice.customerName || !newInvoice.customerEmail || !newInvoice.description || !newInvoice.amount}
                   >
                     创建发票
                   </Button>
@@ -688,6 +710,14 @@ export function AdminInvoiceManager() {
                         >
                           <Eye className="w-3 h-3 mr-1" />
                           查看
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => handleDownloadPDF(invoice)}
+                        >
+                          <Download className="w-3 h-3 mr-1" />
+                          PDF
                         </Button>
                         {invoice.status === "draft" && (
                           <Button

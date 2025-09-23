@@ -15,6 +15,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ChevronLeft, ChevronRight, FileText, Download, Eye } from "lucide-react";
 import { format } from "date-fns";
+import { generateInvoicePDF } from "@/utils/pdf-generator";
 
 interface Invoice {
   id: string;
@@ -108,6 +109,15 @@ export function InvoiceList() {
     return labels[status as keyof typeof labels] || status;
   };
 
+  const handleDownloadPDF = async (invoice: Invoice) => {
+    try {
+      await generateInvoicePDF(invoice);
+    } catch (error) {
+      console.error("PDF生成失败:", error);
+      alert("PDF生成失败，请稍后重试");
+    }
+  };
+
   if (isLoading) {
     return (
       <Card>
@@ -137,7 +147,7 @@ export function InvoiceList() {
               ← 返回发票列表
             </Button>
             <div className="flex space-x-2">
-              <Button variant="outline" size="sm">
+              <Button variant="outline" size="sm" onClick={() => handleDownloadPDF(selectedInvoice)}>
                 <Download className="w-4 h-4 mr-2" />
                 下载PDF
               </Button>
