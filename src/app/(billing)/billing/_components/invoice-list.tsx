@@ -68,7 +68,7 @@ export function InvoiceList() {
         const offset = (page - 1) * 20;
         const response = await fetch(`/api/invoices?limit=20&offset=${offset}`);
         const result = await response.json();
-        
+
         if (result.success) {
           setData(result);
         } else {
@@ -139,7 +139,7 @@ export function InvoiceList() {
   }
 
   return (
-    <Card>
+    <div>
       <CardHeader>
         <CardTitle className="flex items-center space-x-2">
           <FileText className="w-5 h-5" />
@@ -177,8 +177,6 @@ export function InvoiceList() {
                 <TableRow>
                   <TableHead>发票号</TableHead>
                   <TableHead>状态</TableHead>
-                  <TableHead>描述</TableHead>
-                  <TableHead>客户</TableHead>
                   <TableHead>金额</TableHead>
                   <TableHead>日期</TableHead>
                   <TableHead>操作</TableHead>
@@ -195,15 +193,6 @@ export function InvoiceList() {
                         {getStatusLabel(invoice.status)}
                       </Badge>
                     </TableCell>
-                    <TableCell>{invoice.description}</TableCell>
-                    <TableCell>
-                      <div>
-                        <div className="font-medium">{invoice.customerName}</div>
-                        {invoice.customerOrganization && (
-                          <div className="text-sm text-muted-foreground">{invoice.customerOrganization}</div>
-                        )}
-                      </div>
-                    </TableCell>
                     <TableCell className="font-medium">
                       ${invoice.totalAmount.toFixed(2)} {invoice.currency}
                     </TableCell>
@@ -212,8 +201,8 @@ export function InvoiceList() {
                     </TableCell>
                     <TableCell>
                       <div className="flex space-x-2">
-                        <Button 
-                          size="sm" 
+                        <Button
+                          size="sm"
                           variant="outline"
                           onClick={() => router.push(`/billing/invoice/${invoice.id}`)}
                         >
@@ -265,8 +254,8 @@ export function InvoiceList() {
                   ${invoice.totalAmount.toFixed(2)} {invoice.currency}
                 </span>
                 <div className="flex space-x-2">
-                  <Button 
-                    size="sm" 
+                  <Button
+                    size="sm"
                     variant="outline"
                     onClick={() => router.push(`/billing/invoice/${invoice.id}`)}
                   >
@@ -316,6 +305,6 @@ export function InvoiceList() {
           </div>
         )}
       </CardContent>
-    </Card>
+    </div>
   );
 }
