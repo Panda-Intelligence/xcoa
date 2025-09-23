@@ -260,7 +260,7 @@ export default function ClinicalCasesPage() {
                     {selectedCase.results.improvement}
                   </p>
                 </div>
-                
+
                 <div>
                   <h4 className="font-medium mb-2">关键发现</h4>
                   <ul className="text-sm text-muted-foreground space-y-2">
@@ -325,7 +325,7 @@ export default function ClinicalCasesPage() {
           { href: "/dashboard/cases", label: "临床案例" }
         ]}
       />
-      
+
       <div className="flex-1 overflow-auto">
         <div className="flex flex-col gap-4 p-4">
           {/* 页面标题和统计 */}
@@ -386,7 +386,7 @@ export default function ClinicalCasesPage() {
               className="pl-10"
             />
           </div>
-          
+
           <div className="flex items-center space-x-2">
             <Filter className="h-4 w-4 text-gray-500" />
             <Select value={diseaseFilter} onValueChange={setDiseaseFilter}>
@@ -403,7 +403,7 @@ export default function ClinicalCasesPage() {
               </SelectContent>
             </Select>
           </div>
-          
+
           <div className="flex items-center space-x-2">
             <Select value={phaseFilter} onValueChange={setPhaseFilter}>
               <SelectTrigger className="w-32">
@@ -422,7 +422,7 @@ export default function ClinicalCasesPage() {
         </div>
 
         {/* 案例列表 */}
-        <div className="grid gap-6">
+        <div className="grid grid-cols-2 gap-6">
           {cases.length === 0 ? (
             <Card>
               <CardContent className="text-center py-12">
@@ -471,7 +471,7 @@ export default function ClinicalCasesPage() {
                     </div>
                   </div>
                 </CardHeader>
-                
+
                 <CardContent>
                   <div className="space-y-4">
                     {/* 主要终点 */}

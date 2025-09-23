@@ -79,12 +79,6 @@ export function Navigation() {
               <a href="#features" className="text-foreground hover:text-primary transition-colors">
                 {t("navigation.features")}
               </a>
-              <button
-                onClick={onInsights}
-                className="text-foreground hover:text-primary transition-colors"
-              >
-                {t("navigation.scale_interpretation")}
-              </button>
               <a href="#pricing" className="text-foreground hover:text-primary transition-colors">
                 {t("navigation.pricing")}
               </a>
@@ -125,15 +119,6 @@ export function Navigation() {
               >
                 {t("navigation.features")}
               </a>
-              <button
-                onClick={() => {
-                  onInsights?.();
-                  setIsMenuOpen(false);
-                }}
-                className="block px-3 py-2 text-foreground hover:text-primary transition-colors text-left w-full"
-              >
-                {t("navigation.scale_interpretation")}
-              </button>
               <a
                 href="#pricing"
                 className="block px-3 py-2 text-foreground hover:text-primary transition-colors"

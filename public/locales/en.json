@@ -50,7 +50,6 @@
     "analytics": "Analytics",
     "quick_search": "Quick Search",
     "my_tickets": "My Tickets",
-    "scale_interpretation": "Interpretation",
     "features": "Features",
     "pricing": "Pricing",
     "about_us": "About Us",
@@ -706,58 +705,71 @@
   },
   "pricing": {
     "title": "Choose the Right Subscription Plan",
-    "description": "From individual research to enterprise deployment, we offer flexible pricing plans to meet different needs",
+    "description": "From professional research to enterprise deployment, we offer flexible pricing plans to meet different scale needs",
     "monthly": "Monthly",
     "yearly": "Yearly",
     "save_20": "Save 20%",
     "recommended": "Recommended",
     "most_popular": "Most Popular",
     "plans": {
-      "basic": {
-        "name": "Basic",
-        "price": "Free",
-        "description": "Perfect for individual researchers and small teams",
-        "button": "Get Started",
-        "features": [
-          "Access to basic scale library (100+)",
-          "Basic search functionality",
-          "50 searches per month",
-          "Community support",
-          "Basic data export"
-        ]
-      },
       "professional": {
         "name": "Professional",
-        "price": "$39",
-        "period": "/month",
-        "description": "Perfect for professional research teams",
+        "price": "$499",
+        "period": "/year",
+        "description": "Perfect for professional research teams and mid-size institutions",
         "button": "Subscribe Now",
         "features": [
           "Access to complete scale library (500+)",
-          "AI intelligent search",
-          "Unlimited searches",
-          "Advanced data analysis",
-          "Team collaboration features",
-          "Priority technical support",
-          "Custom scale uploads",
-          "API integration support"
+          "AI intelligent search & recommendations",
+          "Unlimited searches and downloads",
+          "Advanced data analysis tools",
+          "Team collaboration features (up to 10 users)",
+          "Scale interpretation & guidance",
+          "Copyright contact services",
+          "Priority technical support (48h response)",
+          "Basic API integration",
+          "Data export functionality"
         ]
       },
       "enterprise": {
         "name": "Enterprise",
-        "price": "$129",
-        "period": "/month",
-        "description": "Perfect for large healthcare institutions",
-        "button": "Contact Sales",
+        "price": "$1,299",
+        "period": "/year",
+        "description": "Perfect for large healthcare institutions and research organizations",
+        "button": "Subscribe Now",
         "features": [
           "All Professional features",
-          "Private deployment options",
-          "Enterprise-grade security",
-          "Dedicated account manager",
-          "Custom development",
-          "Training and consulting services",
-          "SLA guarantee",
-          "White-label solutions"
+          "Unlimited team members",
+          "Custom scale upload & management",
+          "Advanced API integration support",
+          "Bulk copyright licensing services",
+          "Professional scale interpretation reports",
+          "Priority copyright contact (24h response)",
+          "Enterprise-grade data security",
+          "Dedicated customer success manager",
+          "Custom training services",
+          "99.9% SLA guarantee",
+          "White-label solution options"
+        ]
+      },
+      "custom": {
+        "name": "Custom",
+        "price": "Contact for pricing",
+        "description": "Tailored for special requirements and large-scale deployments",
+        "button": "Contact Us",
+        "features": [
+          "All Enterprise features",
+          "Private cloud deployment options",
+          "Fully customized development",
+          "Dedicated technical architecture support",
+          "Unlimited copyright licensing",
+          "24/7 dedicated support",
+          "Data localization storage",
+          "Regulatory compliance consulting",
+          "Professional implementation team",
+          "Long-term technical partnership",
+          "Flexible billing models",
+          "Global multi-region deployment"
         ]
       }
     },

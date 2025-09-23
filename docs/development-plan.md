@@ -2,9 +2,9 @@
 
 ## 项目概览
 
-**项目名称：** xCOA - AI 驱动的 eCOA 搜索服务  
-**技术栈：** Next.js 15 + Cloudflare Workers + D1 + Vectorize + Workers AI  
-**开发开始时间：** 2025-09-20  
+**项目名称：** xCOA - AI 驱动的 eCOA 搜索服务
+**技术栈：** Next.js 15 + Cloudflare Workers + D1 + Vectorize + Workers AI
+**开发开始时间：** 2025-09-20
 **当前状态：** 阶段一完成 ✅
 
 ## 项目架构
@@ -23,7 +23,6 @@
 - 🔍 AI 驱动的语义搜索
 - 📊 500+ 专业 eCOA 量表数据库
 - 🎯 智能推荐和个性化
-- 👥 多租户团队协作
 - 💳 积分制计费系统
 - 🔐 企业级安全认证
 
@@ -34,7 +33,7 @@
 
 #### 1.1 数据库模型设计 ✅
 - [x] `ecoaCategoryTable` - 量表分类表
-- [x] `ecoaScaleTable` - 量表主表  
+- [x] `ecoaScaleTable` - 量表主表
 - [x] `ecoaItemTable` - 题项表
 - [x] `userSearchHistoryTable` - 搜索历史
 - [x] `userFavoriteTable` - 用户收藏
@@ -201,7 +200,7 @@ const SEMANTIC_KEYWORDS = {
 function calculateSemanticScore(scale, queryTerms) {
   let score = 0;
   // 精确匹配缩写 = 100分
-  // 标题匹配 = 80分  
+  // 标题匹配 = 80分
   // 部分匹配 = 60分
   // 描述匹配 = 30分
   // + 使用频率加权 + 验证状态加权
@@ -215,7 +214,7 @@ function calculateSemanticScore(scale, queryTerms) {
 POST /api/search
 {
   "query": "PHQ-9",
-  "category": "depression", 
+  "category": "depression",
   "sortBy": "relevance",
   "filters": {
     "validationStatus": "validated",
@@ -223,7 +222,7 @@ POST /api/search
   }
 }
 
-// 语义搜索接口  
+// 语义搜索接口
 POST /api/search/semantic
 {
   "query": "抑郁症筛查",
@@ -246,7 +245,7 @@ POST /api/search/semantic
 curl -X POST localhost:3000/api/search -d '{"query": "PHQ-9"}'
 # ✅ 返回 100% 匹配，1个结果
 
-# 语义搜索测试  
+# 语义搜索测试
 curl -X POST localhost:3000/api/search/semantic -d '{"query": "抑郁症筛查"}'
 # ✅ 智能扩展11个词汇，PHQ-9得分185，4个相关结果
 
@@ -255,7 +254,7 @@ curl "localhost:3000/api/search/suggestions?query=PHQ"
 # ✅ 返回 PHQ-9 建议
 
 # 筛选器测试
-curl "localhost:3000/api/search/filters"  
+curl "localhost:3000/api/search/filters"
 # ✅ 返回5个分类，语言选项，数值范围
 ```
 
@@ -308,8 +307,7 @@ pnpm run cf-typegen
 | **M2: AI 搜索** | 2025-10-04 | 🎯 | 向量搜索 + Workers AI |
 | **M3: 用户体验** | 2025-10-18 | 📅 | 详情页 + 个性化 |
 | **M4: 内容管理** | 2025-11-01 | 📅 | 管理后台 + 工作流 |
-| **M5: 团队协作** | 2025-11-15 | 📅 | 团队功能 + API 开放 |
-| **M6: 生产发布** | 2025-11-29 | 📅 | 性能优化 + 部署 |
+| **M5: 生产发布** | 2025-11-15 | 📅 | 性能优化 + 部署 |
 
 ## 团队和资源
 
@@ -321,7 +319,7 @@ pnpm run cf-typegen
 
 ### 预算估算
 - **Cloudflare Workers:** $20/月
-- **D1 数据库:** $5/月  
+- **D1 数据库:** $5/月
 - **Vectorize:** $10/月
 - **Workers AI:** $30/月
 - **总计：** ~$65/月 (生产环境)
@@ -333,7 +331,7 @@ pnpm run cf-typegen
 2. **Workers AI 限制：** API 调用次数和性能限制
 3. **数据迁移：** 大量量表数据的迁移复杂度
 
-### 业务风险  
+### 业务风险
 1. **数据版权：** 量表使用权限和版权问题
 2. **竞争对手：** 市场上类似产品的竞争
 3. **用户采用：** 目标用户的接受度和使用习惯
@@ -345,14 +343,14 @@ pnpm run cf-typegen
 2. **优先级 P1：** 完善前端搜索界面
 3. **优先级 P2：** 添加量表详情页面
 
-### 下周计划 (2025-09-28 - 2025-10-04)  
+### 下周计划 (2025-09-28 - 2025-10-04)
 1. 集成 Workers AI 文本嵌入
 2. 实现混合搜索算法
 3. 添加更多量表数据
 
 ---
 
-**文档维护者：** Claude Code AI Assistant  
-**最后更新：** 2025-09-20  
-**版本：** v1.0  
+**文档维护者：** Claude Code AI Assistant
+**最后更新：** 2025-09-20
+**版本：** v1.0
 **状态：** 阶段一完成，进入阶段二开发 🚀

@@ -134,19 +134,6 @@ export default async function TeamsIndexPage() {
                 </Card>
               </Link>
             ))}
-
-            <Link href={"/dashboard/teams/create" as Route}>
-              <Card className="h-full border-dashed border-2 hover:border-primary transition-all">
-                <CardHeader className="text-center pt-8">
-                  <CardTitle className="text-xl">Create a new team</CardTitle>
-                </CardHeader>
-                <CardContent className="flex justify-center">
-                  <div className="flex h-16 w-16 items-center justify-center rounded-full bg-muted">
-                    <PlusIcon className="h-8 w-8 text-muted-foreground" />
-                  </div>
-                </CardContent>
-              </Card>
-            </Link>
           </div>
         )}
       </div>

@@ -30,8 +30,6 @@ import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { Progress } from '@/components/ui/progress';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { Label } from '@/components/ui/label';
 import { useLanguage } from '@/hooks/useLanguage';
 import Link from 'next/link';
 import { MobileFrame, PadFrame, DesktopFrame, LaptopFrame } from '@/components/device/Frames';
@@ -132,7 +130,7 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
       console.log('当前答案数组:', prev);
       const existing = prev.find(a => a.itemNumber === itemNumber);
       let newAnswers: Answer[];
-      
+
       const newAnswer: Answer = {
         itemNumber,
         timestamp,
@@ -224,13 +222,13 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
 
       if (item?.responseOptions && item.responseOptions.length > 0) {
         let score = 0;
-        
+
         // 单选题计分
         if (answer.selectedOption) {
           const optionIndex = item.responseOptions.indexOf(answer.selectedOption);
           score = optionIndex >= 0 ? optionIndex : 0;
         }
-        
+
         // 多选题计分
         if (answer.selectedOptions) {
           score = answer.selectedOptions.reduce((total, option) => {
@@ -238,12 +236,12 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
             return total + (optionIndex >= 0 ? optionIndex : 0);
           }, 0);
         }
-        
+
         // 文本题、日期题、画图题暂时不计分，或可以根据需要设置默认分数
         if (answer.textValue || answer.dateValue || answer.drawingValue) {
           score = 1; // 完成即得1分
         }
-        
+
         return sum + score;
       }
       console.log('题目没有选项或匹配失败');
@@ -623,7 +621,7 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
                         value={(() => {
                           const answer = answers.find(a => a.itemNumber === currentItem.itemNumber);
                           if (!answer) return '';
-                          
+
                           // 根据答案类型返回对应的值
                           if (answer.selectedOption) return answer.selectedOption;
                           if (answer.selectedOptions) return answer.selectedOptions;
@@ -634,21 +632,21 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
                         })()}
                         onChange={(value) => {
                           console.log('QuestionRenderer onChange 触发:', value);
-                          
+
                           // 根据题目类型和值类型判断答案类型
                           let answerType: 'single' | 'multiple' | 'text' | 'date' | 'drawing' = 'single';
-                          
+
                           if (Array.isArray(value)) {
                             answerType = 'multiple';
                           } else if (currentItem.responseType === 'date' || currentItem.responseType === 'datetime') {
                             answerType = 'date';
                           } else if (currentItem.responseType === 'drawing' || currentItem.responseType === 'sketch') {
                             answerType = 'drawing';
-                          } else if (currentItem.responseType === 'text' || currentItem.responseType === 'textarea' || 
-                                   !currentItem.responseOptions || currentItem.responseOptions.length === 0) {
+                          } else if (currentItem.responseType === 'text' || currentItem.responseType === 'textarea' ||
+                            !currentItem.responseOptions || currentItem.responseOptions.length === 0) {
                             answerType = 'text';
                           }
-                          
+
                           handleAnswerSelect(currentItem.itemNumber, value, answerType);
                         }}
                         disabled={false}
