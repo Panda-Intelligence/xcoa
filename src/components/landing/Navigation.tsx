@@ -41,37 +41,21 @@ export function Navigation() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { session, isLoading } = useSessionStore()
   const { isOpen, setIsOpen } = useNavStore()
-  const pathname = usePathname()
+
   const { t } = useLanguage()
-
-  const navItems: NavItem[] = [
-    // { name: t("navigation.home"), href: "/" },
-    // ...(session ? [
-    //   { name: t("common.dashboard"), href: "/dashboard" },
-    // ] as NavItem[] : []),
-  ]
-
-  const isActiveLink = (itemHref: string) => {
-    if (itemHref === "/") {
-      return pathname === "/"
-    }
-    return pathname === itemHref || pathname.startsWith(`${itemHref}/`)
-  }
-  const onInsights = () => {
-    window.location.href = "/dashboard/scales/insights";
-
-  }
 
   return (
     <nav className="bg-white/80 backdrop-blur-md border-b border-border sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
-          <div className="flex items-center">
-            <div className="shrink-0">
-              <h1 className="text-xl font-semibold text-primary">xCOA</h1>
+          <Link href="/" className="flex items-center">
+            <div className="flex items-center">
+              <div className="shrink-0">
+                <h1 className="text-xl font-semibold text-primary">xCOA</h1>
+              </div>
             </div>
-          </div>
+          </Link>
 
           {/* Desktop Navigation */}
           <div className="hidden md:block">
@@ -156,19 +140,6 @@ export function Navigation() {
                         </>
                       ) : (
                         <>
-                          {navItems.map((item) => (
-                            <Link
-                              key={item.name}
-                              href={item.href}
-                              className={cn(
-                                "block px-3 py-2 text-base font-medium text-muted-foreground hover:text-foreground hover:bg-muted/50 no-underline transition-colors relative",
-                                isActiveLink(item.href) && "text-foreground"
-                              )}
-                              onClick={() => setIsOpen(false)}
-                            >
-                              {item.name}
-                            </Link>
-                          ))}
                           <div className="px-3 pt-4">
                             <ActionButtons />
                           </div>

@@ -66,10 +66,10 @@ export function Footer() {
             © {new Date().getFullYear()} {COMPANY_NAME}. {t("footer.all_rights_reserved")}.
           </div>
           <div className="flex space-x-6">
-            <a href="#" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+            <a href="/privacy" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
               {t("legal.privacy_policy")}
             </a>
-            <a href="#" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+            <a href="/terms" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
               {t("legal.terms_of_service")}
             </a>
             <a href="#" className="text-sm text-muted-foreground hover:text-foreground transition-colors">

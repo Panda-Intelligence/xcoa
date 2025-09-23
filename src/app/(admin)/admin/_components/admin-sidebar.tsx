@@ -9,6 +9,7 @@ import {
   FileText,
   Scale,
   Beaker,
+  MessageSquare,
 } from "lucide-react"
 
 import { NavMain } from "@/components/nav-main"
@@ -63,6 +64,12 @@ export function AdminSidebar({ ...props }: React.ComponentProps<typeof Sidebar>)
       title: "Clinical Cases",
       url: "/admin/cases" as Route,
       icon: Beaker,
+      isActive: true,
+    },
+    {
+      title: "Copyright Tickets",
+      url: "/admin/tickets" as Route,
+      icon: MessageSquare,
       isActive: true,
     },
     {
