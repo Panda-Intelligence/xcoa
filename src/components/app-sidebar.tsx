@@ -94,11 +94,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             url: "/dashboard/scales" as Route,
           },
           {
-            title: t('sidebar.my_favorites'),
-            url: "/dashboard/scales/favorites" as Route,
+            title: t('sidebar.favorites'),
+            url: "/dashboard/favorites" as Route,
           },
           {
-            title: t('sidebar.contact_tickets'),
+            title: t('sidebar.license'),
             url: "/dashboard/copyright/tickets" as Route,
           }
         ],

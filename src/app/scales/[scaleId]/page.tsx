@@ -188,12 +188,13 @@ export default function ScalePage({ params }: ScalePageProps) {
 
               <CardContent>
                 <Tabs defaultValue="overview" className="w-full">
-                  <TabsList className="grid w-full grid-cols-5">
+                  <TabsList className="grid w-full grid-cols-6">
                     <TabsTrigger value="overview">{t('scale.overview')}</TabsTrigger>
                     <TabsTrigger value="items">{t('scale.items')}</TabsTrigger>
                     <TabsTrigger value="psychometrics">{t('scale.psychometrics')}</TabsTrigger>
                     <TabsTrigger value="cases">临床案例</TabsTrigger>
                     <TabsTrigger value="references">{t('scale.references')}</TabsTrigger>
+                    <TabsTrigger value="copyright">版权许可</TabsTrigger>
                   </TabsList>
 
                   <TabsContent value="overview" className="space-y-4">
@@ -388,6 +389,66 @@ export default function ScalePage({ params }: ScalePageProps) {
                         <p>{t('scale.no_references_available')}</p>
                       </div>
                     )}
+                  </TabsContent>
+
+                  <TabsContent value="copyright" className="space-y-4">
+                    {/* 版权许可信息 */}
+                    <Card>
+                      <CardHeader>
+                        <CardTitle className="flex items-center space-x-2">
+                          <CheckCircle className="w-5 h-5 text-blue-600" />
+                          <span>版权和许可信息</span>
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent className="space-y-4">
+                        {scale.copyrightInfo && (
+                          <div>
+                            <h4 className="font-semibold mb-2">版权声明</h4>
+                            <p className="text-sm text-muted-foreground bg-gray-50 p-3 rounded">
+                              {scale.copyrightInfo}
+                            </p>
+                          </div>
+                        )}
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <Card className="p-4 bg-blue-50 border-blue-200">
+                            <h4 className="font-semibold mb-2 text-blue-900">需要使用许可？</h4>
+                            <p className="text-sm text-blue-800 mb-3">
+                              如果您需要使用此量表，我们可以帮助您联系版权方获取使用许可。
+                            </p>
+                            <Link href={`/dashboard/copyright/create?scaleId=${scale.id}`}>
+                              <Button size="sm" className="w-full">
+                                <Plus className="w-3 h-3 mr-2" />
+                                创建版权工单
+                              </Button>
+                            </Link>
+                          </Card>
+
+                          <Card className="p-4 bg-green-50 border-green-200">
+                            <h4 className="font-semibold mb-2 text-green-900">查看现有工单</h4>
+                            <p className="text-sm text-green-800 mb-3">
+                              查看您已提交的版权申请和联系工单状态。
+                            </p>
+                            <Link href="/dashboard/copyright/tickets">
+                              <Button size="sm" variant="outline" className="w-full">
+                                <Eye className="w-3 h-3 mr-2" />
+                                我的工单
+                              </Button>
+                            </Link>
+                          </Card>
+                        </div>
+
+                        <div className="bg-yellow-50 border border-yellow-200 p-4 rounded-lg">
+                          <h5 className="font-semibold mb-2 text-yellow-900">重要提醒</h5>
+                          <ul className="text-sm text-yellow-800 space-y-1">
+                            <li>• 商业用途通常需要付费许可</li>
+                            <li>• 学术研究可能享有免费或优惠许可</li>
+                            <li>• 建议在使用前确认具体的许可要求</li>
+                            <li>• 我们的团队将协助您与版权方建立联系</li>
+                          </ul>
+                        </div>
+                      </CardContent>
+                    </Card>
                   </TabsContent>
                 </Tabs>
               </CardContent>

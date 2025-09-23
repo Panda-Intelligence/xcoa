@@ -343,10 +343,12 @@ export default function CopyrightPage() {
                     <MessageSquare className="w-5 h-5" />
                     <span>我的联系工单</span>
                   </span>
-                  <Button size="sm">
-                    <Plus className="w-4 h-4 mr-2" />
-                    创建新工单
-                  </Button>
+                  <Link href="/dashboard/copyright/create">
+                    <Button size="sm">
+                      <Plus className="w-4 h-4 mr-2" />
+                      创建新工单
+                    </Button>
+                  </Link>
                 </CardTitle>
                 <CardDescription>
                   跟踪您的版权联系请求状态
