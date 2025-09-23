@@ -7,6 +7,8 @@ import {
   Shield,
   SquareTerminal,
   FileText,
+  Scale,
+  Beaker,
 } from "lucide-react"
 
 import { NavMain } from "@/components/nav-main"
@@ -49,6 +51,18 @@ export function AdminSidebar({ ...props }: React.ComponentProps<typeof Sidebar>)
       title: "Users",
       url: "/admin",
       icon: Users,
+      isActive: true,
+    },
+    {
+      title: "Scales",
+      url: "/admin/scales" as Route,
+      icon: Scale,
+      isActive: true,
+    },
+    {
+      title: "Clinical Cases",
+      url: "/admin/cases" as Route,
+      icon: Beaker,
       isActive: true,
     },
     {
