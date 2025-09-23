@@ -16,6 +16,7 @@ import { Badge } from "@/components/ui/badge";
 import { ChevronLeft, ChevronRight, FileText, Download, Eye } from "lucide-react";
 import { format } from "date-fns";
 import { generateInvoicePDF } from "@/utils/pdf-generator";
+import { useRouter } from "next/navigation";
 
 interface Invoice {
   id: string;
@@ -55,10 +56,10 @@ interface InvoiceListData {
 }
 
 export function InvoiceList() {
+  const router = useRouter();
   const [data, setData] = useState<InvoiceListData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [page, setPage] = useState(1);
-  const [selectedInvoice, setSelectedInvoice] = useState<Invoice | null>(null);
 
   useEffect(() => {
     const fetchInvoices = async () => {
@@ -131,88 +132,6 @@ export function InvoiceList() {
             <Skeleton className="h-8 w-full" />
             <Skeleton className="h-8 w-full" />
             <Skeleton className="h-8 w-full" />
-          </div>
-        </CardContent>
-      </Card>
-    );
-  }
-
-  // 发票详情视图
-  if (selectedInvoice) {
-    return (
-      <Card>
-        <CardHeader>
-          <div className="flex items-center justify-between">
-            <Button variant="ghost" onClick={() => setSelectedInvoice(null)}>
-              ← 返回发票列表
-            </Button>
-            <div className="flex space-x-2">
-              <Button variant="outline" size="sm" onClick={() => handleDownloadPDF(selectedInvoice)}>
-                <Download className="w-4 h-4 mr-2" />
-                下载PDF
-              </Button>
-            </div>
-          </div>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-6">
-            {/* 发票头部信息 */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <h3 className="font-semibold text-lg mb-2">{selectedInvoice.invoiceNumber}</h3>
-                <div className="space-y-1 text-sm">
-                  <p><span className="font-medium">描述:</span> {selectedInvoice.description}</p>
-                  <p><span className="font-medium">开具日期:</span> {format(new Date(selectedInvoice.issueDate), "yyyy年MM月dd日")}</p>
-                  <p><span className="font-medium">到期日期:</span> {format(new Date(selectedInvoice.dueDate), "yyyy年MM月dd日")}</p>
-                </div>
-              </div>
-              <div>
-                <div className="flex items-center space-x-2 mb-2">
-                  <Badge className={getStatusColor(selectedInvoice.status)}>
-                    {getStatusLabel(selectedInvoice.status)}
-                  </Badge>
-                </div>
-                <div className="space-y-1 text-sm">
-                  <p><span className="font-medium">客户:</span> {selectedInvoice.customerName}</p>
-                  {selectedInvoice.customerOrganization && (
-                    <p><span className="font-medium">机构:</span> {selectedInvoice.customerOrganization}</p>
-                  )}
-                  <p><span className="font-medium">邮箱:</span> {selectedInvoice.customerEmail}</p>
-                </div>
-              </div>
-            </div>
-
-            {/* 金额信息 */}
-            <div className="border rounded-lg p-4">
-              <h4 className="font-medium mb-3">金额详情</h4>
-              <div className="space-y-2 text-sm">
-                <div className="flex justify-between">
-                  <span>小计:</span>
-                  <span>${selectedInvoice.subtotal.toFixed(2)}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>税费:</span>
-                  <span>${selectedInvoice.taxAmount.toFixed(2)}</span>
-                </div>
-                <div className="flex justify-between font-semibold text-lg border-t pt-2">
-                  <span>总计:</span>
-                  <span>${selectedInvoice.totalAmount.toFixed(2)} {selectedInvoice.currency}</span>
-                </div>
-              </div>
-            </div>
-
-            {/* 支付信息 */}
-            {selectedInvoice.paidAt && (
-              <div className="border rounded-lg p-4">
-                <h4 className="font-medium mb-3">支付信息</h4>
-                <div className="space-y-1 text-sm">
-                  <p><span className="font-medium">支付日期:</span> {format(new Date(selectedInvoice.paidAt), "yyyy年MM月dd日")}</p>
-                  {selectedInvoice.paymentMethod && (
-                    <p><span className="font-medium">支付方式:</span> {selectedInvoice.paymentMethod}</p>
-                  )}
-                </div>
-              </div>
-            )}
           </div>
         </CardContent>
       </Card>
@@ -292,14 +211,24 @@ export function InvoiceList() {
                       {format(new Date(invoice.issueDate), "MM/dd/yyyy")}
                     </TableCell>
                     <TableCell>
-                      <Button 
-                        size="sm" 
-                        variant="outline"
-                        onClick={() => setSelectedInvoice(invoice)}
-                      >
-                        <Eye className="w-3 h-3 mr-1" />
-                        查看
-                      </Button>
+                      <div className="flex space-x-2">
+                        <Button 
+                          size="sm" 
+                          variant="outline"
+                          onClick={() => router.push(`/billing/invoice/${invoice.id}`)}
+                        >
+                          <Eye className="w-3 h-3 mr-1" />
+                          查看
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => handleDownloadPDF(invoice)}
+                        >
+                          <Download className="w-3 h-3 mr-1" />
+                          PDF
+                        </Button>
+                      </div>
                     </TableCell>
                   </TableRow>
                 )) : (
@@ -335,14 +264,24 @@ export function InvoiceList() {
                 <span className="font-semibold text-lg">
                   ${invoice.totalAmount.toFixed(2)} {invoice.currency}
                 </span>
-                <Button 
-                  size="sm" 
-                  variant="outline"
-                  onClick={() => setSelectedInvoice(invoice)}
-                >
-                  <Eye className="w-3 h-3 mr-1" />
-                  查看
-                </Button>
+                <div className="flex space-x-2">
+                  <Button 
+                    size="sm" 
+                    variant="outline"
+                    onClick={() => router.push(`/billing/invoice/${invoice.id}`)}
+                  >
+                    <Eye className="w-3 h-3 mr-1" />
+                    查看
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => handleDownloadPDF(invoice)}
+                  >
+                    <Download className="w-3 h-3 mr-1" />
+                    PDF
+                  </Button>
+                </div>
               </div>
             </div>
           )) : (

@@ -27,71 +27,62 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import { useLanguage } from '@/hooks/useLanguage';
+import { useRouter } from 'next/navigation';
 
 interface ClinicalCase {
   id: string;
   title: string;
-  trialId: string;
   scaleId: string;
   scaleName: string;
+  scaleNameEn?: string;
   scaleAcronym: string;
-  diseaseArea: string;
-  trialPhase: string;
-  studyType: string;
-  patientCount: number;
-  duration: string;
-  primaryEndpoint: string;
-  secondaryEndpoints: string[];
-  inclusion: string;
-  intervention: string;
-  results: any;
-  sponsor: string;
-  investigator: string;
-  publication: string;
-  keyFindings: string[];
-  limitations: string[];
-  clinicalImplications: string;
-  tags: string[];
-  evidenceLevel: string;
+  scaleDescription?: string;
+  patientBackground?: string;
+  scaleScores?: Record<string, number>;
+  interpretation?: string;
+  clinicalDecision?: string;
+  outcome?: string;
+  learningPoints?: string;
+  difficultyLevel?: string;
+  specialty?: string;
+  author?: string;
+  reviewStatus: string;
+  categoryName?: string;
   createdAt: string;
   updatedAt: string;
 }
 
 interface FilterOptions {
-  diseaseAreas: string[];
-  trialPhases: string[];
-  studyTypes: string[];
-  evidenceLevels: string[];
+  specialties: string[];
+  difficultyLevels: string[];
   scales: Array<{ id: string; name: string; acronym: string }>;
 }
 
 export default function ClinicalCasesPage() {
   const { t } = useLanguage();
+  const router = useRouter();
   const [cases, setCases] = useState<ClinicalCase[]>([]);
   const [filterOptions, setFilterOptions] = useState<FilterOptions>({
-    diseaseAreas: [],
-    trialPhases: [],
-    studyTypes: [],
-    evidenceLevels: [],
+    specialties: [],
+    difficultyLevels: [],
     scales: []
   });
   const [statistics, setStatistics] = useState<any>({});
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
-  const [diseaseFilter, setDiseaseFilter] = useState('all');
-  const [phaseFilter, setPhaseFilter] = useState('all');
-  const [selectedCase, setSelectedCase] = useState<ClinicalCase | null>(null);
+  const [specialtyFilter, setSpecialtyFilter] = useState('all');
+  const [difficultyFilter, setDifficultyFilter] = useState('all');
 
   useEffect(() => {
     fetchCases();
-  }, [diseaseFilter, phaseFilter]);
+  }, [specialtyFilter, difficultyFilter]);
 
   const fetchCases = async () => {
     try {
       const params = new URLSearchParams();
       if (searchQuery) params.append('query', searchQuery);
-      if (diseaseFilter !== 'all') params.append('diseaseArea', diseaseFilter);
-      if (phaseFilter !== 'all') params.append('trialPhase', phaseFilter);
+      if (specialtyFilter !== 'all') params.append('specialty', specialtyFilter);
+      if (difficultyFilter !== 'all') params.append('difficultyLevel', difficultyFilter);
 
       const response = await fetch(`/api/clinical-cases?${params}`);
       const data = await response.json();
@@ -108,24 +99,24 @@ export default function ClinicalCasesPage() {
     }
   };
 
-  const getEvidenceLevelColor = (level: string) => {
+  const getDifficultyLevelColor = (level?: string) => {
     const colorMap = {
-      'A': 'bg-green-100 text-green-800 border-green-200',
-      'B': 'bg-blue-100 text-blue-800 border-blue-200',
-      'C': 'bg-yellow-100 text-yellow-800 border-yellow-200'
+      'beginner': 'bg-green-100 text-green-800 border-green-200',
+      'intermediate': 'bg-blue-100 text-blue-800 border-blue-200',
+      'advanced': 'bg-red-100 text-red-800 border-red-200'
     };
-    return colorMap[level as keyof typeof colorMap] || 'bg-gray-100 text-gray-800 border-gray-200';
+    return level ? colorMap[level as keyof typeof colorMap] || 'bg-gray-100 text-gray-800 border-gray-200' : 'bg-gray-100 text-gray-800 border-gray-200';
   };
 
-  const getDiseaseAreaLabel = (area: string) => {
+  const getSpecialtyLabel = (specialty?: string) => {
     const labels = {
-      depression: '抑郁症',
-      anxiety: '焦虑症',
-      oncology: '肿瘤学',
+      psychiatry: '精神科',
+      oncology: '肿瘤学', 
       neurology: '神经科学',
-      pain_management: '疼痛管理'
+      cardiology: '心脏病学',
+      general: '全科医学'
     };
-    return labels[area as keyof typeof labels] || area;
+    return specialty ? labels[specialty as keyof typeof labels] || specialty : '未知专科';
   };
 
   if (loading) {
@@ -140,176 +131,6 @@ export default function ClinicalCasesPage() {
                 <div key={i} className="h-64 bg-gray-200 rounded"></div>
               ))}
             </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  // 如果选中了特定案例，显示详情页
-  if (selectedCase) {
-    return (
-      <div className="min-h-screen bg-background">
-        <div className="max-w-4xl mx-auto px-4 py-8">
-          <Button
-            variant="ghost"
-            onClick={() => setSelectedCase(null)}
-            className="mb-6"
-          >
-            ← 返回案例列表
-          </Button>
-
-          <div className="space-y-6">
-            {/* 案例标题 */}
-            <div>
-              <h1 className="text-3xl font-bold mb-4">{selectedCase.title}</h1>
-              <div className="flex flex-wrap gap-2 mb-4">
-                <Badge className={getEvidenceLevelColor(selectedCase.evidenceLevel)}>
-                  证据等级 {selectedCase.evidenceLevel}
-                </Badge>
-                <Badge variant="outline">{selectedCase.trialPhase}</Badge>
-                <Badge variant="outline">{selectedCase.studyType}</Badge>
-                <Badge variant="secondary">{getDiseaseAreaLabel(selectedCase.diseaseArea)}</Badge>
-              </div>
-            </div>
-
-            {/* 试验基本信息 */}
-            <Card>
-              <CardHeader>
-                <CardTitle>试验基本信息</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-2 gap-4 text-sm">
-                  <div>
-                    <span className="font-medium">试验登记号:</span>
-                    <p className="text-muted-foreground">{selectedCase.trialId}</p>
-                  </div>
-                  <div>
-                    <span className="font-medium">使用量表:</span>
-                    <p className="text-muted-foreground">
-                      {selectedCase.scaleName} ({selectedCase.scaleAcronym})
-                    </p>
-                  </div>
-                  <div>
-                    <span className="font-medium">样本量:</span>
-                    <p className="text-muted-foreground">{selectedCase.patientCount}例</p>
-                  </div>
-                  <div>
-                    <span className="font-medium">试验周期:</span>
-                    <p className="text-muted-foreground">{selectedCase.duration}</p>
-                  </div>
-                  <div>
-                    <span className="font-medium">申办方:</span>
-                    <p className="text-muted-foreground">{selectedCase.sponsor}</p>
-                  </div>
-                  <div>
-                    <span className="font-medium">主要研究者:</span>
-                    <p className="text-muted-foreground">{selectedCase.investigator}</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* 研究设计 */}
-            <Card>
-              <CardHeader>
-                <CardTitle>研究设计</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div>
-                  <h4 className="font-medium mb-2">入组标准</h4>
-                  <p className="text-sm text-muted-foreground bg-gray-50 p-3 rounded">
-                    {selectedCase.inclusion}
-                  </p>
-                </div>
-                <div>
-                  <h4 className="font-medium mb-2">干预措施</h4>
-                  <p className="text-sm text-muted-foreground bg-gray-50 p-3 rounded">
-                    {selectedCase.intervention}
-                  </p>
-                </div>
-                <div>
-                  <h4 className="font-medium mb-2">主要终点</h4>
-                  <p className="text-sm text-muted-foreground bg-blue-50 p-3 rounded">
-                    {selectedCase.primaryEndpoint}
-                  </p>
-                </div>
-                <div>
-                  <h4 className="font-medium mb-2">次要终点</h4>
-                  <ul className="text-sm text-muted-foreground space-y-1">
-                    {selectedCase.secondaryEndpoints.map((endpoint, index) => (
-                      <li key={index} className="flex items-start">
-                        <span className="mr-2">•</span>
-                        {endpoint}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* 主要结果 */}
-            <Card>
-              <CardHeader>
-                <CardTitle>主要结果</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div>
-                  <h4 className="font-medium mb-2">疗效结果</h4>
-                  <p className="text-sm text-muted-foreground bg-green-50 p-3 rounded">
-                    {selectedCase.results.improvement}
-                  </p>
-                </div>
-
-                <div>
-                  <h4 className="font-medium mb-2">关键发现</h4>
-                  <ul className="text-sm text-muted-foreground space-y-2">
-                    {selectedCase.keyFindings.map((finding, index) => (
-                      <li key={index} className="flex items-start">
-                        <Target className="w-4 h-4 mr-2 mt-0.5 text-green-600 flex-shrink-0" />
-                        {finding}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-
-                <div>
-                  <h4 className="font-medium mb-2">研究局限性</h4>
-                  <ul className="text-sm text-muted-foreground space-y-1">
-                    {selectedCase.limitations.map((limitation, index) => (
-                      <li key={index} className="flex items-start">
-                        <span className="mr-2 text-orange-500">•</span>
-                        {limitation}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-
-                <div>
-                  <h4 className="font-medium mb-2">临床意义</h4>
-                  <p className="text-sm text-muted-foreground bg-blue-50 p-3 rounded">
-                    {selectedCase.clinicalImplications}
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* 发表信息 */}
-            <Card>
-              <CardHeader>
-                <CardTitle>发表信息</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="flex items-center space-x-2 text-sm">
-                  <BookOpen className="w-4 h-4 text-blue-600" />
-                  <span className="font-medium">{selectedCase.publication}</span>
-                  <Button size="sm" variant="outline">
-                    <ExternalLink className="w-3 h-3 mr-1" />
-                    查看原文
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
           </div>
         </div>
       </div>
@@ -352,17 +173,17 @@ export default function ClinicalCasesPage() {
           <Card>
             <CardContent className="p-4 text-center">
               <div className="text-2xl font-bold text-green-600">
-                {statistics.byEvidenceLevel?.A || 0}
+                {statistics.byDifficultyLevel?.beginner || 0}
               </div>
-              <div className="text-sm text-muted-foreground">A级证据</div>
+              <div className="text-sm text-muted-foreground">初级案例</div>
             </CardContent>
           </Card>
           <Card>
             <CardContent className="p-4 text-center">
               <div className="text-2xl font-bold text-purple-600">
-                {Object.keys(statistics.byDiseaseArea || {}).length}
+                {Object.keys(statistics.bySpecialty || {}).length}
               </div>
-              <div className="text-sm text-muted-foreground">治疗领域</div>
+              <div className="text-sm text-muted-foreground">专科领域</div>
             </CardContent>
           </Card>
           <Card>
@@ -389,15 +210,15 @@ export default function ClinicalCasesPage() {
 
           <div className="flex items-center space-x-2">
             <Filter className="h-4 w-4 text-gray-500" />
-            <Select value={diseaseFilter} onValueChange={setDiseaseFilter}>
+            <Select value={specialtyFilter} onValueChange={setSpecialtyFilter}>
               <SelectTrigger className="w-32">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">所有领域</SelectItem>
-                {filterOptions.diseaseAreas.map(area => (
-                  <SelectItem key={area} value={area}>
-                    {getDiseaseAreaLabel(area)}
+                <SelectItem value="all">所有专科</SelectItem>
+                {filterOptions.specialties.map(specialty => (
+                  <SelectItem key={specialty} value={specialty}>
+                    {getSpecialtyLabel(specialty)}
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -405,15 +226,15 @@ export default function ClinicalCasesPage() {
           </div>
 
           <div className="flex items-center space-x-2">
-            <Select value={phaseFilter} onValueChange={setPhaseFilter}>
+            <Select value={difficultyFilter} onValueChange={setDifficultyFilter}>
               <SelectTrigger className="w-32">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">所有期别</SelectItem>
-                {filterOptions.trialPhases.map(phase => (
-                  <SelectItem key={phase} value={phase}>
-                    {phase}
+                <SelectItem value="all">所有难度</SelectItem>
+                {filterOptions.difficultyLevels.map(level => (
+                  <SelectItem key={level} value={level}>
+                    {level}
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -436,20 +257,24 @@ export default function ClinicalCasesPage() {
           ) : (
             cases.map((clinicalCase) => (
               <Card key={clinicalCase.id} className="hover:shadow-md transition-shadow cursor-pointer"
-                    onClick={() => setSelectedCase(clinicalCase)}>
+                    onClick={() => window.location.href = `/dashboard/cases/${clinicalCase.id}`}>
                 <CardHeader className="pb-3">
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
                       <div className="flex items-center space-x-2 mb-2">
                         <Badge variant="outline" className="font-mono text-xs">
-                          {clinicalCase.trialId}
+                          {clinicalCase.scaleAcronym}
                         </Badge>
-                        <Badge className={getEvidenceLevelColor(clinicalCase.evidenceLevel)}>
-                          证据等级 {clinicalCase.evidenceLevel}
-                        </Badge>
-                        <Badge variant="outline">
-                          {clinicalCase.trialPhase}
-                        </Badge>
+                        {clinicalCase.difficultyLevel && (
+                          <Badge className={getDifficultyLevelColor(clinicalCase.difficultyLevel)}>
+                            {clinicalCase.difficultyLevel}
+                          </Badge>
+                        )}
+                        {clinicalCase.specialty && (
+                          <Badge variant="outline">
+                            {getSpecialtyLabel(clinicalCase.specialty)}
+                          </Badge>
+                        )}
                       </div>
                       <CardTitle className="text-xl leading-tight mb-2">
                         {clinicalCase.title}
@@ -459,13 +284,15 @@ export default function ClinicalCasesPage() {
                           <Target className="w-3 h-3 mr-1" />
                           {clinicalCase.scaleAcronym}
                         </span>
-                        <span className="flex items-center">
-                          <Users className="w-3 h-3 mr-1" />
-                          {clinicalCase.patientCount}例
-                        </span>
+                        {clinicalCase.author && (
+                          <span className="flex items-center">
+                            <Users className="w-3 h-3 mr-1" />
+                            {clinicalCase.author}
+                          </span>
+                        )}
                         <span className="flex items-center">
                           <Clock className="w-3 h-3 mr-1" />
-                          {clinicalCase.duration}
+                          {new Date(clinicalCase.createdAt).toLocaleDateString()}
                         </span>
                       </div>
                     </div>
@@ -474,51 +301,62 @@ export default function ClinicalCasesPage() {
 
                 <CardContent>
                   <div className="space-y-4">
-                    {/* 主要终点 */}
-                    <div>
-                      <h5 className="font-medium text-sm mb-1">主要终点</h5>
-                      <p className="text-sm text-muted-foreground bg-blue-50 p-2 rounded">
-                        {clinicalCase.primaryEndpoint}
-                      </p>
-                    </div>
+                    {/* 患者背景 */}
+                    {clinicalCase.patientBackground && (
+                      <div>
+                        <h5 className="font-medium text-sm mb-1">患者背景</h5>
+                        <p className="text-sm text-muted-foreground bg-blue-50 p-2 rounded">
+                          {clinicalCase.patientBackground}
+                        </p>
+                      </div>
+                    )}
 
-                    {/* 关键结果 */}
-                    <div>
-                      <h5 className="font-medium text-sm mb-1">关键结果</h5>
-                      <p className="text-sm text-muted-foreground bg-green-50 p-2 rounded">
-                        {clinicalCase.results.improvement}
-                      </p>
-                    </div>
+                    {/* 结果解读 */}
+                    {clinicalCase.interpretation && (
+                      <div>
+                        <h5 className="font-medium text-sm mb-1">结果解读</h5>
+                        <p className="text-sm text-muted-foreground bg-green-50 p-2 rounded">
+                          {clinicalCase.interpretation}
+                        </p>
+                      </div>
+                    )}
 
-                    {/* 研究信息 */}
+                    {/* 量表评分 */}
+                    {clinicalCase.scaleScores && Object.keys(clinicalCase.scaleScores).length > 0 && (
+                      <div>
+                        <h5 className="font-medium text-sm mb-1">评分结果</h5>
+                        <div className="flex flex-wrap gap-2">
+                          {Object.entries(clinicalCase.scaleScores).map(([key, value]) => (
+                            <div key={key} className="text-xs bg-gray-100 px-2 py-1 rounded">
+                              {key}: {value}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* 案例信息 */}
                     <div className="flex items-center justify-between text-sm text-muted-foreground">
                       <div className="flex items-center space-x-1">
                         <Building className="w-3 h-3" />
-                        <span>{clinicalCase.sponsor}</span>
+                        <span>{getSpecialtyLabel(clinicalCase.specialty)}</span>
                       </div>
                       <div className="flex items-center space-x-1">
                         <BookOpen className="w-3 h-3" />
-                        <span>已发表</span>
+                        <span>{clinicalCase.reviewStatus}</span>
                       </div>
-                    </div>
-
-                    {/* 标签 */}
-                    <div className="flex flex-wrap gap-1">
-                      {clinicalCase.tags.slice(0, 4).map((tag, index) => (
-                        <Badge key={index} variant="secondary" className="text-xs">
-                          {tag}
-                        </Badge>
-                      ))}
-                      {clinicalCase.tags.length > 4 && (
-                        <Badge variant="outline" className="text-xs">
-                          +{clinicalCase.tags.length - 4}
-                        </Badge>
-                      )}
                     </div>
 
                     {/* 操作按钮 */}
                     <div className="flex space-x-2 pt-2">
-                      <Button size="sm" className="flex-1">
+                      <Button 
+                        size="sm" 
+                        className="flex-1"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          router.push(`/dashboard/cases/${clinicalCase.id}`);
+                        }}
+                      >
                         <Eye className="w-3 h-3 mr-1" />
                         查看详情
                       </Button>
@@ -527,9 +365,6 @@ export default function ClinicalCasesPage() {
                           查看量表
                         </Button>
                       </Link>
-                      <Button size="sm" variant="outline">
-                        <Download className="w-3 h-3" />
-                      </Button>
                     </div>
                   </div>
                 </CardContent>

@@ -24,7 +24,6 @@ import {
   Download,
   Eye,
   Plus,
-  Printer,
   Trash2,
   CheckCircle,
   Clock,
@@ -36,6 +35,7 @@ import { PageHeader } from "@/components/page-header";
 import { useLanguage } from "@/hooks/useLanguage";
 import { TeamSelector } from "./team-selector";
 import { generateInvoicePDF } from "@/utils/pdf-generator";
+import { useRouter } from "next/navigation";
 
 interface Invoice {
   id: string;
@@ -57,14 +57,6 @@ interface Invoice {
   paymentMethod?: string;
   paidAt?: string;
   teamName?: string;
-  items?: Array<{
-    id: string;
-    description: string;
-    quantity: number;
-    unitPrice: number;
-    totalPrice: number;
-    serviceType: string;
-  }>;
 }
 
 interface InvoiceStats {
@@ -76,12 +68,12 @@ interface InvoiceStats {
 
 export function AdminInvoiceManager() {
   const { t } = useLanguage();
+  const router = useRouter();
   const [invoices, setInvoices] = useState<Invoice[]>([]);
   const [stats, setStats] = useState<InvoiceStats>({ total: 0, paid: 0, sent: 0, draft: 0 });
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
-  const [selectedInvoice, setSelectedInvoice] = useState<Invoice | null>(null);
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(false);
@@ -183,28 +175,6 @@ export function AdminInvoiceManager() {
     setSelectedTeam(null);
   };
 
-  const updateInvoiceStatus = async (invoiceId: string, status: string) => {
-    try {
-      const response = await fetch(`/api/admin/invoices/${invoiceId}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ status })
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        fetchInvoices();
-        alert("发票状态更新成功！");
-      } else {
-        alert(data.error || "更新发票状态失败");
-      }
-    } catch (error) {
-      console.error("更新发票状态错误:", error);
-      alert("网络错误，请稍后重试");
-    }
-  };
-
   const deleteInvoice = async (invoiceId: string) => {
     if (!confirm("确定要删除这张发票吗？此操作不可逆转。")) {
       return;
@@ -282,161 +252,6 @@ export function AdminInvoiceManager() {
             <p className="mt-2 text-sm text-muted-foreground">加载中...</p>
           </div>
         </div>
-      </div>
-    );
-  }
-
-  // 发票详情视图
-  if (selectedInvoice) {
-    return (
-      <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
-        <div className="flex items-center justify-between">
-          <Button variant="ghost" onClick={() => setSelectedInvoice(null)}>
-            <ChevronLeft className="w-4 h-4 mr-2" />
-            返回发票列表
-          </Button>
-          <div className="flex space-x-2">
-            <Button variant="outline" onClick={() => handleDownloadPDF(selectedInvoice)}>
-              <Printer className="w-4 h-4 mr-2" />
-              打印发票
-            </Button>
-            <Button onClick={() => handleDownloadPDF(selectedInvoice)}>
-              <Download className="w-4 h-4 mr-2" />
-              下载PDF
-            </Button>
-          </div>
-        </div>
-
-        <Card>
-          <CardContent className="p-8">
-            {/* 发票头部 */}
-            <div className="flex justify-between items-start mb-8">
-              <div>
-                <h1 className="text-3xl font-bold text-blue-600 mb-2">xCOA Platform</h1>
-                <p className="text-sm text-gray-600">
-                  Professional eCOA Solutions<br />
-                  Unit 13, Freeland Park<br />
-                  Wareham Road, Poole, UK BH16 6FH<br />
-                  Email: support@xcoa.pandacat.ai
-                </p>
-              </div>
-              <div className="text-right">
-                <h2 className="text-2xl font-bold mb-2">INVOICE</h2>
-                <p className="text-lg font-semibold">{selectedInvoice.invoiceNumber}</p>
-                <p className="text-sm text-gray-600">
-                  Issue Date: {new Date(selectedInvoice.issueDate).toLocaleDateString()}<br />
-                  Due Date: {new Date(selectedInvoice.dueDate).toLocaleDateString()}
-                </p>
-              </div>
-            </div>
-
-            {/* 客户信息和状态 */}
-            <div className="grid grid-cols-2 gap-8 mb-8">
-              <div>
-                <h3 className="font-semibold mb-2">Bill To:</h3>
-                <div className="text-sm text-gray-700">
-                  <p className="font-medium">{selectedInvoice.customerName}</p>
-                  {selectedInvoice.customerOrganization && (
-                    <p>{selectedInvoice.customerOrganization}</p>
-                  )}
-                  {selectedInvoice.customerAddress && (
-                    <p className="whitespace-pre-line">{selectedInvoice.customerAddress}</p>
-                  )}
-                  <p>Email: {selectedInvoice.customerEmail}</p>
-                  {selectedInvoice.customerVatNumber && (
-                    <p>VAT Number: {selectedInvoice.customerVatNumber}</p>
-                  )}
-                </div>
-              </div>
-              <div>
-                <h3 className="font-semibold mb-2">Invoice Status:</h3>
-                <div className="flex items-center space-x-2 mb-4">
-                  <Badge className={getStatusColor(selectedInvoice.status)}>
-                    {getStatusIcon(selectedInvoice.status)}
-                    <span className="ml-1">{getStatusLabel(selectedInvoice.status)}</span>
-                  </Badge>
-                </div>
-
-                {/* Admin状态控制 */}
-                <div className="space-y-2">
-                  <Label>更改状态:</Label>
-                  <Select
-                    value={selectedInvoice.status}
-                    onValueChange={(value) => updateInvoiceStatus(selectedInvoice.id, value)}
-                  >
-                    <SelectTrigger className="w-32">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="draft">草稿</SelectItem>
-                      <SelectItem value="sent">已发送</SelectItem>
-                      <SelectItem value="paid">已支付</SelectItem>
-                      <SelectItem value="overdue">逾期</SelectItem>
-                      <SelectItem value="cancelled">已取消</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                {selectedInvoice.paidAt && (
-                  <p className="text-sm text-gray-600 mt-2">
-                    Paid on: {new Date(selectedInvoice.paidAt).toLocaleDateString()}
-                  </p>
-                )}
-              </div>
-            </div>
-
-            {/* 服务项目 */}
-            <div className="mb-8">
-              <table className="w-full border-collapse border border-gray-300">
-                <thead>
-                  <tr className="bg-gray-50">
-                    <th className="border border-gray-300 p-3 text-left">Description</th>
-                    <th className="border border-gray-300 p-3 text-right">Amount</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td className="border border-gray-300 p-3">{selectedInvoice.description}</td>
-                    <td className="border border-gray-300 p-3 text-right">
-                      ${selectedInvoice.subtotal.toFixed(2)}
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-
-            {/* 总计 */}
-            <div className="flex justify-end mb-8">
-              <div className="w-64">
-                <div className="flex justify-between py-2">
-                  <span>Subtotal:</span>
-                  <span>${selectedInvoice.subtotal.toFixed(2)}</span>
-                </div>
-                <div className="flex justify-between py-2">
-                  <span>Tax (10%):</span>
-                  <span>${selectedInvoice.taxAmount.toFixed(2)}</span>
-                </div>
-                <div className="flex justify-between py-2 border-t font-bold text-lg">
-                  <span>Total:</span>
-                  <span>${selectedInvoice.totalAmount.toFixed(2)} {selectedInvoice.currency}</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Admin操作按钮 */}
-            <div className="border-t pt-4 flex justify-end space-x-2">
-              {selectedInvoice.status === "draft" && (
-                <Button
-                  variant="destructive"
-                  onClick={() => deleteInvoice(selectedInvoice.id)}
-                >
-                  <Trash2 className="w-4 h-4 mr-2" />
-                  删除发票
-                </Button>
-              )}
-            </div>
-          </CardContent>
-        </Card>
       </div>
     );
   }
@@ -703,10 +518,10 @@ export function AdminInvoiceManager() {
                     </TableCell>
                     <TableCell>
                       <div className="flex space-x-2">
-                        <Button
-                          size="sm"
+                        <Button 
+                          size="sm" 
                           variant="outline"
-                          onClick={() => setSelectedInvoice(invoice)}
+                          onClick={() => router.push(`/admin/invoices/${invoice.id}`)}
                         >
                           <Eye className="w-3 h-3 mr-1" />
                           查看
