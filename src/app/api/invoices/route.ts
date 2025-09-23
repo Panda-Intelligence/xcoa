@@ -1,33 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getDB } from '@/db';
-import { invoiceTable, teamTable } from '@/db/schema';
-import { eq, desc, and, like, or } from 'drizzle-orm';
+import { invoiceTable, teamTable, teamMembershipTable } from '@/db/schema';
+import { eq, desc, and, like, or, inArray } from 'drizzle-orm';
 import { getSessionFromCookie } from '@/utils/auth';
-import { z } from 'zod';
-import { nanoid } from 'nanoid';
 
-// 创建发票的请求schema
-const createInvoiceSchema = z.object({
-  teamId: z.string(),
-  customerName: z.string(),
-  customerEmail: z.string().email(),
-  customerOrganization: z.string().optional(),
-  customerAddress: z.string().optional(),
-  customerVatNumber: z.string().optional(),
-  customerCountry: z.string().optional(),
-  description: z.string(),
-  items: z.array(z.object({
-    description: z.string(),
-    quantity: z.number().min(1),
-    unitPrice: z.number().min(0),
-    serviceType: z.string()
-  })),
-  dueDate: z.string(), // ISO date string
-  notes: z.string().optional(),
-  currency: z.string().default('USD')
-});
-
-// 获取发票列表
+// 用户获取自己的发票列表 (只读)
 export async function GET(request: NextRequest) {
   try {
     const session = await getSessionFromCookie();
@@ -42,7 +19,28 @@ export async function GET(request: NextRequest) {
     const limit = parseInt(url.searchParams.get('limit') || '20');
     const offset = parseInt(url.searchParams.get('offset') || '0');
 
-    // 获取用户的团队发票
+    // 首先获取用户所属的团队
+    const userTeams = await db
+      .select({ teamId: teamMembershipTable.teamId })
+      .from(teamMembershipTable)
+      .where(and(
+        eq(teamMembershipTable.userId, session.user.id),
+        eq(teamMembershipTable.isActive, 1)
+      ));
+
+    const teamIds = userTeams.map(t => t.teamId);
+
+    if (teamIds.length === 0) {
+      // 用户不属于任何团队，返回空结果
+      return NextResponse.json({
+        success: true,
+        invoices: [],
+        statistics: { total: 0, paid: 0, sent: 0, draft: 0 },
+        pagination: { total: 0, limit, offset, hasMore: false }
+      });
+    }
+
+    // 获取用户所属团队的发票
     let query = db
       .select({
         id: invoiceTable.id,
@@ -67,14 +65,12 @@ export async function GET(request: NextRequest) {
       })
       .from(invoiceTable)
       .innerJoin(teamTable, eq(invoiceTable.teamId, teamTable.id))
-      .where(
-        eq(teamTable.id, session.user.id) // 假设用户ID和team ID相同，实际应该通过team membership查询
-      );
+      .where(inArray(invoiceTable.teamId, teamIds));
 
     // 添加状态筛选
     if (status !== 'all') {
       query = query.where(and(
-        eq(teamTable.id, session.user.id),
+        inArray(invoiceTable.teamId, teamIds),
         eq(invoiceTable.status, status)
       ));
     }
@@ -82,7 +78,7 @@ export async function GET(request: NextRequest) {
     // 添加搜索
     if (search) {
       query = query.where(and(
-        eq(teamTable.id, session.user.id),
+        inArray(invoiceTable.teamId, teamIds),
         or(
           like(invoiceTable.invoiceNumber, `%${search}%`),
           like(invoiceTable.description, `%${search}%`),
@@ -97,34 +93,40 @@ export async function GET(request: NextRequest) {
       .limit(limit)
       .offset(offset);
 
-    // 获取统计信息
-    const stats = await db
-      .select({
-        total: db.$count(invoiceTable, eq(invoiceTable.teamId, session.user.id)),
-        paid: db.$count(invoiceTable, and(
-          eq(invoiceTable.teamId, session.user.id),
-          eq(invoiceTable.status, 'paid')
-        )),
-        sent: db.$count(invoiceTable, and(
-          eq(invoiceTable.teamId, session.user.id),
-          eq(invoiceTable.status, 'sent')
-        )),
-        draft: db.$count(invoiceTable, and(
-          eq(invoiceTable.teamId, session.user.id),
-          eq(invoiceTable.status, 'draft')
-        ))
-      })
-      .from(invoiceTable);
+    // 获取统计信息 - 只统计用户可见的发票
+    const allInvoices = await db
+      .select({ status: invoiceTable.status })
+      .from(invoiceTable)
+      .where(inArray(invoiceTable.teamId, teamIds));
+
+    let totalCount = 0;
+    let paidCount = 0;
+    let sentCount = 0;
+    let draftCount = 0;
+
+    allInvoices.forEach(invoice => {
+      totalCount++;
+      switch (invoice.status) {
+        case 'paid': paidCount++; break;
+        case 'sent': sentCount++; break;
+        case 'draft': draftCount++; break;
+      }
+    });
 
     return NextResponse.json({
       success: true,
       invoices,
-      statistics: stats[0],
+      statistics: {
+        total: totalCount,
+        paid: paidCount,
+        sent: sentCount,
+        draft: draftCount
+      },
       pagination: {
-        total: stats[0]?.total || 0,
+        total: totalCount,
         limit,
         offset,
-        hasMore: (stats[0]?.total || 0) > offset + limit
+        hasMore: totalCount > offset + limit
       }
     });
 
@@ -132,112 +134,6 @@ export async function GET(request: NextRequest) {
     console.error('获取发票列表错误:', error);
     return NextResponse.json(
       { error: 'Failed to fetch invoices' },
-      { status: 500 }
-    );
-  }
-}
-
-// 创建新发票
-export async function POST(request: NextRequest) {
-  try {
-    const session = await getSessionFromCookie();
-    if (!session?.user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
-
-    const body = await request.json();
-    const invoiceData = createInvoiceSchema.parse(body);
-
-    const db = getDB();
-    const userId = session.user.id;
-
-    // 获取团队信息
-    const team = await db
-      .select()
-      .from(teamTable)
-      .where(eq(teamTable.id, invoiceData.teamId))
-      .limit(1);
-
-    if (team.length === 0) {
-      return NextResponse.json({ error: 'Team not found' }, { status: 404 });
-    }
-
-    // 计算发票金额
-    const subtotal = invoiceData.items.reduce((sum, item) => 
-      sum + (item.quantity * item.unitPrice), 0
-    );
-    const taxRate = team[0].taxRate || 0.1;
-    const taxAmount = subtotal * taxRate;
-    const totalAmount = subtotal + taxAmount;
-
-    // 生成发票号
-    const invoicePrefix = team[0].invoicePrefix || 'INV';
-    const nextNumber = team[0].nextInvoiceNumber || 1;
-    const invoiceNumber = `${invoicePrefix}-${new Date().getFullYear()}-${String(nextNumber).padStart(3, '0')}`;
-
-    // 创建发票记录
-    const invoiceId = nanoid();
-    await db.insert(invoiceTable).values({
-      id: invoiceId,
-      teamId: invoiceData.teamId,
-      invoiceNumber,
-      issueDate: new Date(),
-      dueDate: new Date(invoiceData.dueDate),
-      status: 'draft',
-      subtotal,
-      taxAmount,
-      totalAmount,
-      currency: invoiceData.currency,
-      customerName: invoiceData.customerName,
-      customerEmail: invoiceData.customerEmail,
-      customerOrganization: invoiceData.customerOrganization || null,
-      customerAddress: invoiceData.customerAddress || null,
-      customerVatNumber: invoiceData.customerVatNumber || null,
-      customerCountry: invoiceData.customerCountry || null,
-      description: invoiceData.description,
-      items: invoiceData.items.map(item => ({
-        id: nanoid(),
-        description: item.description,
-        quantity: item.quantity,
-        unitPrice: item.unitPrice,
-        totalPrice: item.quantity * item.unitPrice,
-        serviceType: item.serviceType
-      })),
-      notes: invoiceData.notes || null,
-    });
-
-    // 更新团队的下一个发票号
-    await db
-      .update(teamTable)
-      .set({ nextInvoiceNumber: nextNumber + 1 })
-      .where(eq(teamTable.id, invoiceData.teamId));
-
-    // 获取创建的发票详情
-    const createdInvoice = await db
-      .select()
-      .from(invoiceTable)
-      .where(eq(invoiceTable.id, invoiceId))
-      .limit(1);
-
-    return NextResponse.json({
-      success: true,
-      message: '发票创建成功',
-      invoice: createdInvoice[0],
-      invoiceNumber
-    });
-
-  } catch (error) {
-    console.error('创建发票错误:', error);
-    
-    if (error instanceof z.ZodError) {
-      return NextResponse.json(
-        { error: 'Invalid invoice data', details: error.errors },
-        { status: 400 }
-      );
-    }
-
-    return NextResponse.json(
-      { error: 'Failed to create invoice' },
       { status: 500 }
     );
   }
