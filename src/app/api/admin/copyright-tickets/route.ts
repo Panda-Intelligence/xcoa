@@ -1,7 +1,7 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { type NextRequest, NextResponse } from 'next/server';
 import { getDB } from '@/db';
-import { userTable, ecoaScaleTable } from '@/db/schema';
-import { eq, like, or, and, sql, desc } from 'drizzle-orm';
+import { userTable } from '@/db/schema';
+import { eq, sql } from 'drizzle-orm';
 import { getSessionFromCookie } from '@/utils/auth';
 
 // Admin获取所有版权工单

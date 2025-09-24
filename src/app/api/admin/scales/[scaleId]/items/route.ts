@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { type NextRequest, NextResponse } from 'next/server';
 import { getDB } from '@/db';
 import { ecoaItemTable, ecoaScaleTable, userTable } from '@/db/schema';
 import { eq, desc, sql } from 'drizzle-orm';
@@ -28,7 +28,7 @@ export async function GET(
     }
 
     const db = getDB();
-    
+
     // 检查是否为管理员
     const user = await db
       .select({ role: userTable.role })
@@ -76,7 +76,7 @@ export async function POST(
     }
 
     const db = getDB();
-    
+
     // 检查是否为管理员
     const user = await db
       .select({ role: userTable.role })
@@ -134,7 +134,7 @@ export async function POST(
     // 更新量表的题目数量
     await db
       .update(ecoaScaleTable)
-      .set({ 
+      .set({
         itemsCount: sql`${ecoaScaleTable.itemsCount} + 1`,
         updatedAt: new Date()
       })
@@ -155,7 +155,7 @@ export async function POST(
 
   } catch (error) {
     console.error('创建题目错误:', error);
-    
+
     if (error instanceof z.ZodError) {
       return NextResponse.json(
         { error: 'Invalid item data', details: error.errors },

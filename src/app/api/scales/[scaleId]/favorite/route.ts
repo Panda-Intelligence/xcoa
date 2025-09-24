@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { type NextRequest, NextResponse } from 'next/server';
 import { getDB } from '@/db';
 import { userFavoriteTable } from '@/db/schema';
 import { eq, and } from 'drizzle-orm';
@@ -11,18 +11,18 @@ export async function GET(
   try {
     const session = await getSessionFromCookie();
     if (!session?.user) {
-      return NextResponse.json({ 
+      return NextResponse.json({
         isFavorited: false,
-        requiresAuth: true 
+        requiresAuth: true
       });
     }
 
     const params = await context.params;
     const { scaleId } = params;
     const userId = session.user.id;
-    
+
     const db = getDB();
-    
+
     // 检查是否已收藏（使用现有的userFavoriteTable）
     const favorite = await db
       .select()
@@ -32,13 +32,13 @@ export async function GET(
         eq(userFavoriteTable.scaleId, scaleId)
       ))
       .limit(1);
-    
+
     return NextResponse.json({
       isFavorited: favorite.length > 0,
       favoriteDetails: favorite[0] || null,
       requiresAuth: false
     });
-    
+
   } catch (error) {
     console.error('检查收藏状态错误:', error);
     return NextResponse.json(
@@ -62,9 +62,9 @@ export async function POST(
     const params = await context.params;
     const { scaleId } = params;
     const userId = session.user.id;
-    
+
     const db = getDB();
-    
+
     // 检查是否已收藏
     const existing = await db
       .select()
@@ -74,13 +74,13 @@ export async function POST(
         eq(userFavoriteTable.scaleId, scaleId)
       ))
       .limit(1);
-    
+
     if (existing.length > 0) {
       // 已收藏，移除收藏
       await db
         .delete(userFavoriteTable)
         .where(eq(userFavoriteTable.id, existing[0].id));
-      
+
       return NextResponse.json({
         success: true,
         action: 'removed',
@@ -89,20 +89,20 @@ export async function POST(
     } else {
       // 未收藏，添加收藏
       const body = await request.json().catch(() => ({}));
-      
+
       await db.insert(userFavoriteTable).values({
         userId,
         scaleId,
         notes: body.notes || null,
       });
-      
+
       return NextResponse.json({
         success: true,
         action: 'added',
         message: '收藏成功'
       });
     }
-    
+
   } catch (error) {
     console.error('切换收藏状态错误:', error);
     return NextResponse.json(

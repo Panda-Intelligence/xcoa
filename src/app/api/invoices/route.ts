@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { type NextRequest, NextResponse } from 'next/server';
 import { getDB } from '@/db';
 import { invoiceTable, teamTable, teamMembershipTable } from '@/db/schema';
 import { eq, desc, and, like, or, inArray } from 'drizzle-orm';

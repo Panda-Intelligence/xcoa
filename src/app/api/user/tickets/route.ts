@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { type NextRequest, NextResponse } from 'next/server';
 import { getDB } from '@/db';
 import { copyrightContactRequestTable, ecoaScaleTable, ecoaCategoryTable } from '@/db/schema';
 import { eq, desc, and, sql } from 'drizzle-orm';
@@ -32,7 +32,7 @@ export async function GET(request: NextRequest) {
 
     const db = getDB();
     const userId = session.user.id;
-    
+
     // 获取URL参数
     const url = new URL(request.url);
     const status = url.searchParams.get('status') || 'all';
@@ -41,7 +41,7 @@ export async function GET(request: NextRequest) {
 
     // 构建查询条件
     let whereCondition = eq(copyrightContactRequestTable.userId, userId);
-    
+
     if (status !== 'all') {
       whereCondition = and(
         whereCondition,

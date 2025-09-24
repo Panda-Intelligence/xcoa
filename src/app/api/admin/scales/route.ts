@@ -1,7 +1,7 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { type NextRequest, NextResponse } from 'next/server';
 import { getDB } from '@/db';
-import { ecoaScaleTable, ecoaCategoryTable, userTable, copyrightHolderTable, copyrightLicensesTable } from '@/db/schema';
-import { eq, like, or, and, sql, desc } from 'drizzle-orm';
+import { ecoaScaleTable, ecoaCategoryTable, userTable, copyrightLicensesTable } from '@/db/schema';
+import { eq, like, or, sql, desc } from 'drizzle-orm';
 import { getSessionFromCookie } from '@/utils/auth';
 import { z } from 'zod';
 import { nanoid } from 'nanoid';

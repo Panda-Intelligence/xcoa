@@ -21,7 +21,6 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import { useLanguage } from '@/hooks/useLanguage';
-import { FavoriteButton } from '@/components/favorites/FavoriteButton';
 
 interface FavoriteScale {
   id: string;

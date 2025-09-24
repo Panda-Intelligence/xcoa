@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { type NextRequest, NextResponse } from 'next/server';
 import { getDB } from '@/db';
 import { ecoaScaleTable, ecoaCategoryTable } from '@/db/schema';
 import { eq, desc, sql } from 'drizzle-orm';
@@ -6,7 +6,7 @@ import { eq, desc, sql } from 'drizzle-orm';
 export async function GET(request: NextRequest) {
   try {
     const db = getDB();
-    
+
     // 查询前10个热门量表（按使用次数排序）
     const hotScales = await db
       .select({
@@ -55,7 +55,7 @@ function getScaleIcon(categoryName: string | null, validationStatus: string): st
   if (validationStatus === 'validated') {
     return '✅';
   }
-  
+
   // 根据分类
   if (categoryName?.includes('抑郁')) {
     return '😔';
@@ -68,6 +68,6 @@ function getScaleIcon(categoryName: string | null, validationStatus: string): st
   } else if (categoryName?.includes('疼痛')) {
     return '🩹';
   }
-  
+
   return '📋'; // 默认图标
 }

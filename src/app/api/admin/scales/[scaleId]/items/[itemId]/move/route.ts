@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { type NextRequest, NextResponse } from 'next/server';
 import { getDB } from '@/db';
 import { ecoaItemTable, userTable } from '@/db/schema';
 import { eq, and, sql } from 'drizzle-orm';
@@ -20,7 +20,7 @@ export async function PUT(
     }
 
     const db = getDB();
-    
+
     // 检查是否为管理员
     const user = await db
       .select({ role: userTable.role })
@@ -36,7 +36,7 @@ export async function PUT(
     const { scaleId, itemId } = params;
     const body = await request.json();
     const moveData = moveItemSchema.parse(body);
-    
+
     // 获取当前题目
     const currentItem = await db
       .select()
@@ -49,7 +49,7 @@ export async function PUT(
     }
 
     const current = currentItem[0];
-    
+
     // 获取要交换的题目
     const targetItem = await db
       .select()
@@ -57,13 +57,13 @@ export async function PUT(
       .where(
         and(
           eq(ecoaItemTable.scaleId, scaleId),
-          moveData.direction === 'up' 
+          moveData.direction === 'up'
             ? sql`${ecoaItemTable.sortOrder} < ${current.sortOrder}`
             : sql`${ecoaItemTable.sortOrder} > ${current.sortOrder}`
         )
       )
       .orderBy(
-        moveData.direction === 'up' 
+        moveData.direction === 'up'
           ? sql`${ecoaItemTable.sortOrder} DESC`
           : ecoaItemTable.sortOrder
       )
@@ -81,7 +81,7 @@ export async function PUT(
         .update(ecoaItemTable)
         .set({ sortOrder: target.sortOrder })
         .where(eq(ecoaItemTable.id, current.id));
-      
+
       await tx
         .update(ecoaItemTable)
         .set({ sortOrder: current.sortOrder })
@@ -95,7 +95,7 @@ export async function PUT(
 
   } catch (error) {
     console.error('移动题目错误:', error);
-    
+
     if (error instanceof z.ZodError) {
       return NextResponse.json(
         { error: 'Invalid move data', details: error.errors },

@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { type NextRequest, NextResponse } from 'next/server';
 import { getDB } from '@/db';
 import { copyrightContactRequestTable } from '@/db/schema';
 import { eq, and } from 'drizzle-orm';
@@ -94,7 +94,7 @@ export async function PUT(
 
   } catch (error) {
     console.error('更新工单状态错误:', error);
-    
+
     if (error instanceof z.ZodError) {
       return NextResponse.json(
         { error: 'Invalid update data', details: error.errors },

@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { type NextRequest, NextResponse } from 'next/server';
 import { getDB } from '@/db';
 import { clinicalCasesTable, ecoaScaleTable, userTable } from '@/db/schema';
 import { eq, like, or, and, sql, desc } from 'drizzle-orm';
@@ -143,7 +143,7 @@ export async function POST(request: NextRequest) {
     }
 
     const db = getDB();
-    
+
     // 检查是否为管理员
     const user = await db
       .select({ role: userTable.role })
@@ -201,7 +201,7 @@ export async function POST(request: NextRequest) {
 
   } catch (error) {
     console.error('Admin创建临床案例错误:', error);
-    
+
     if (error instanceof z.ZodError) {
       return NextResponse.json(
         { error: 'Invalid case data', details: error.errors },

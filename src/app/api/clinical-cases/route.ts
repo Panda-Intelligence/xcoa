@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { type NextRequest, NextResponse } from 'next/server';
 import { getDB } from '@/db';
 import { clinicalCasesTable, ecoaScaleTable, ecoaCategoryTable } from '@/db/schema';
 import { eq, like, or, and, sql, desc } from 'drizzle-orm';
@@ -128,10 +128,10 @@ export async function GET(request: NextRequest) {
     const filterOptions = {
       specialties: [...new Set(filterOptionsQuery.map(c => c.specialty).filter(Boolean))],
       difficultyLevels: [...new Set(filterOptionsQuery.map(c => c.difficultyLevel).filter(Boolean))],
-      scales: [...new Set(filterOptionsQuery.map(c => ({ 
-        id: c.scaleId, 
-        name: c.scaleName, 
-        acronym: c.scaleAcronym 
+      scales: [...new Set(filterOptionsQuery.map(c => ({
+        id: c.scaleId,
+        name: c.scaleName,
+        acronym: c.scaleAcronym
       })))],
     };
 

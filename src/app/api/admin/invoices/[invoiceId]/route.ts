@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { type NextRequest, NextResponse } from 'next/server';
 import { getDB } from '@/db';
 import { invoiceTable, userTable } from '@/db/schema';
 import { eq } from 'drizzle-orm';
@@ -24,7 +24,7 @@ export async function GET(
     }
 
     const db = getDB();
-    
+
     // 检查是否为管理员
     const user = await db
       .select({ role: userTable.role })
@@ -75,7 +75,7 @@ export async function PUT(
     }
 
     const db = getDB();
-    
+
     // 检查是否为管理员
     const user = await db
       .select({ role: userTable.role })
@@ -150,7 +150,7 @@ export async function PUT(
 
   } catch (error) {
     console.error('Admin更新发票错误:', error);
-    
+
     if (error instanceof z.ZodError) {
       return NextResponse.json(
         { error: 'Invalid update data', details: error.errors },
@@ -176,7 +176,7 @@ export async function DELETE(
     }
 
     const db = getDB();
-    
+
     // 检查是否为管理员
     const user = await db
       .select({ role: userTable.role })

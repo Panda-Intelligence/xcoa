@@ -1,8 +1,8 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { type NextRequest, NextResponse } from 'next/server';
 import { getDB } from '@/db';
-import { 
-  ecoaScaleTable, 
-  ecoaCategoryTable, 
+import {
+  ecoaScaleTable,
+  ecoaCategoryTable,
   ecoaItemTable,
   scaleUsageTable
 } from '@/db/schema';
@@ -25,15 +25,15 @@ export async function GET(
     const session = await getSessionFromCookie();
     const user = session?.user;
     const ip = await getIP(); // getIP是异步函数
-    
+
     const params = await context.params;
     const { scaleId } = previewParamsSchema.parse(params);
-    
+
     // 检查是否为完整模式（通过URL参数控制）
     const url = new URL(request.url);
     const mode = url.searchParams.get('mode') || 'preview'; // preview 或 full
     const isFullMode = mode === 'full';
-    
+
     // 获取量表基本信息
     const [scale] = await db
       .select({
@@ -83,10 +83,10 @@ export async function GET(
       .from(ecoaItemTable)
       .where(eq(ecoaItemTable.scaleId, scaleId))
       .orderBy(ecoaItemTable.sortOrder, ecoaItemTable.itemNumber);
-    
+
     // 如果是预览模式，只返回前5个题项
-    const items = isFullMode ? 
-      await itemsQuery : 
+    const items = isFullMode ?
+      await itemsQuery :
       await itemsQuery.limit(5);
 
     // 获取所有维度列表
@@ -168,7 +168,7 @@ export async function GET(
 
   } catch (error) {
     console.error('Scale preview API error:', error);
-    
+
     if (error instanceof z.ZodError) {
       return NextResponse.json(
         { error: 'Invalid scale ID' },

@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { type NextRequest, NextResponse } from 'next/server';
 import { getDB } from '@/db';
 import { ecoaScaleTable, ecoaItemTable } from '@/db/schema';
 import { sql, eq } from 'drizzle-orm';
@@ -6,7 +6,7 @@ import { sql, eq } from 'drizzle-orm';
 export async function POST() {
   try {
     const db = getDB();
-    
+
     // 直接插入PHQ-9题目数据
     const phq9Items = [
       { num: 1, q: '做事时提不起劲或没有兴趣', qe: 'Little interest or pleasure in doing things', dim: '核心症状' },
@@ -21,14 +21,14 @@ export async function POST() {
     ];
 
     let insertedCount = 0;
-    
+
     // 先清理现有数据
     try {
       await db.delete(ecoaItemTable).where(eq(ecoaItemTable.scaleId, 'scale_phq9'));
     } catch (error) {
       console.warn('No existing items to delete');
     }
-    
+
     for (const item of phq9Items) {
       try {
         await db.insert(ecoaItemTable).values({

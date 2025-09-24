@@ -32,7 +32,7 @@ import { Separator } from '@/components/ui/separator';
 import { Progress } from '@/components/ui/progress';
 import { useLanguage } from '@/hooks/useLanguage';
 import Link from 'next/link';
-import { MobileFrame, PadFrame, DesktopFrame, LaptopFrame } from '@/components/device/Frames';
+import { MobileFrame, PadFrame, DesktopFrame } from '@/components/device/Frames';
 import { QuestionRenderer } from '@/components/scale-preview/QuestionRenderer';
 
 interface ScalePreviewPageProps {

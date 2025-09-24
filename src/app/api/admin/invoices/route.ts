@@ -1,7 +1,7 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { type NextRequest, NextResponse } from 'next/server';
 import { getDB } from '@/db';
 import { invoiceTable, teamTable, userTable } from '@/db/schema';
-import { eq, desc, and, like, or } from 'drizzle-orm';
+import { eq, desc, like, or } from 'drizzle-orm';
 import { getSessionFromCookie } from '@/utils/auth';
 import { z } from 'zod';
 import { nanoid } from 'nanoid';
@@ -141,7 +141,7 @@ export async function POST(request: NextRequest) {
     }
 
     const db = getDB();
-    
+
     // 检查是否为管理员
     const user = await db
       .select({ role: userTable.role })
@@ -168,7 +168,7 @@ export async function POST(request: NextRequest) {
     }
 
     // 计算发票金额
-    const subtotal = invoiceData.items.reduce((sum, item) => 
+    const subtotal = invoiceData.items.reduce((sum, item) =>
       sum + (item.quantity * item.unitPrice), 0
     );
     const taxRate = team[0].taxRate || 0.1;
@@ -233,7 +233,7 @@ export async function POST(request: NextRequest) {
 
   } catch (error) {
     console.error('Admin创建发票错误:', error);
-    
+
     if (error instanceof z.ZodError) {
       return NextResponse.json(
         { error: 'Invalid invoice data', details: error.errors },

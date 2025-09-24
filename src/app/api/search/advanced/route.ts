@@ -1,8 +1,8 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { type NextRequest, NextResponse } from 'next/server';
 import { getDB } from '@/db';
-import { 
-  ecoaScaleTable, 
-  ecoaCategoryTable, 
+import {
+  ecoaScaleTable,
+  ecoaCategoryTable,
   userSearchHistoryTable,
   scaleUsageTable
 } from '@/db/schema';
@@ -15,45 +15,45 @@ import { z } from 'zod';
 const advancedSearchRequestSchema = z.object({
   // 基础查询
   query: z.string().optional(),
-  
+
   // 分类筛选
   categories: z.array(z.string()).optional(),
-  
+
   // 验证状态筛选
   validationStatuses: z.array(z.string()).optional(),
-  
+
   // 语言筛选
   languages: z.array(z.string()).optional(),
-  
+
   // 数值范围筛选
   itemsCount: z.object({
     min: z.number().optional(),
     max: z.number().optional(),
   }).optional(),
-  
+
   administrationTime: z.object({
     min: z.number().optional(),
     max: z.number().optional(),
   }).optional(),
-  
+
   // 领域筛选
   domains: z.array(z.string()).optional(),
-  
+
   // 目标人群筛选
   targetPopulations: z.array(z.string()).optional(),
-  
+
   // 年龄范围筛选
   ageRanges: z.array(z.string()).optional(),
-  
+
   // 排序和分页
   sortBy: z.enum([
-    'relevance', 'name', 'usage', 'recent', 'items_count', 
+    'relevance', 'name', 'usage', 'recent', 'items_count',
     'administration_time', 'validation_status'
   ]).default('relevance'),
   sortOrder: z.enum(['asc', 'desc']).default('desc'),
   page: z.number().min(1).default(1),
   limit: z.number().min(1).max(100).default(20),
-  
+
   // 搜索选项
   includePartialMatches: z.boolean().default(true),
   caseSensitive: z.boolean().default(false),
@@ -66,10 +66,10 @@ export async function POST(request: NextRequest) {
       const session = await getSessionFromCookie();
       const user = session?.user;
       const ip = getIP(request);
-      
+
       const body = await request.json();
       const searchParams = advancedSearchRequestSchema.parse(body);
-      
+
       const {
         query,
         categories,
@@ -87,15 +87,15 @@ export async function POST(request: NextRequest) {
         includePartialMatches,
         caseSensitive
       } = searchParams;
-      
+
       // 构建查询条件
       const conditions = [eq(ecoaScaleTable.isPublic, 1)];
-      
+
       // 文本搜索条件
       if (query && query.trim()) {
         const searchTerm = caseSensitive ? query.trim() : query.trim().toLowerCase();
         const sqlFunction = caseSensitive ? sql : (field: any) => sql`LOWER(${field})`;
-        
+
         const textConditions = [
           like(sqlFunction(ecoaScaleTable.name), includePartialMatches ? `%${searchTerm}%` : searchTerm),
           like(sqlFunction(ecoaScaleTable.nameEn), includePartialMatches ? `%${searchTerm}%` : searchTerm),
@@ -104,20 +104,20 @@ export async function POST(request: NextRequest) {
           like(sqlFunction(ecoaScaleTable.descriptionEn), `%${searchTerm}%`),
           like(sqlFunction(ecoaScaleTable.targetPopulation), `%${searchTerm}%`),
         ];
-        
+
         conditions.push(or(...textConditions));
       }
-      
+
       // 分类筛选
       if (categories && categories.length > 0) {
         conditions.push(inArray(ecoaScaleTable.categoryId, categories));
       }
-      
+
       // 验证状态筛选
       if (validationStatuses && validationStatuses.length > 0) {
         conditions.push(inArray(ecoaScaleTable.validationStatus, validationStatuses));
       }
-      
+
       // 语言筛选
       if (languages && languages.length > 0) {
         const languageConditions = languages.map(lang =>
@@ -125,7 +125,7 @@ export async function POST(request: NextRequest) {
         );
         conditions.push(or(...languageConditions));
       }
-      
+
       // 题项数量范围筛选
       if (itemsCount?.min !== undefined) {
         conditions.push(gte(ecoaScaleTable.itemsCount, itemsCount.min));
@@ -133,7 +133,7 @@ export async function POST(request: NextRequest) {
       if (itemsCount?.max !== undefined) {
         conditions.push(lte(ecoaScaleTable.itemsCount, itemsCount.max));
       }
-      
+
       // 管理时间范围筛选
       if (administrationTime?.min !== undefined) {
         conditions.push(gte(ecoaScaleTable.administrationTime, administrationTime.min));
@@ -141,7 +141,7 @@ export async function POST(request: NextRequest) {
       if (administrationTime?.max !== undefined) {
         conditions.push(lte(ecoaScaleTable.administrationTime, administrationTime.max));
       }
-      
+
       // 领域筛选
       if (domains && domains.length > 0) {
         const domainConditions = domains.map(domain =>
@@ -149,7 +149,7 @@ export async function POST(request: NextRequest) {
         );
         conditions.push(or(...domainConditions));
       }
-      
+
       // 目标人群筛选
       if (targetPopulations && targetPopulations.length > 0) {
         const targetConditions = targetPopulations.map(target =>
@@ -157,7 +157,7 @@ export async function POST(request: NextRequest) {
         );
         conditions.push(or(...targetConditions));
       }
-      
+
       // 年龄范围筛选
       if (ageRanges && ageRanges.length > 0) {
         const ageConditions = ageRanges.map(age =>
@@ -165,7 +165,7 @@ export async function POST(request: NextRequest) {
         );
         conditions.push(or(...ageConditions));
       }
-      
+
       // 构建排序条件
       const getSortColumn = () => {
         switch (sortBy) {
@@ -186,14 +186,14 @@ export async function POST(request: NextRequest) {
             return ecoaScaleTable.usageCount;
         }
       };
-      
-      const orderByClause = sortOrder === 'asc' ? 
-        getSortColumn() : 
+
+      const orderByClause = sortOrder === 'asc' ?
+        getSortColumn() :
         desc(getSortColumn());
-      
+
       // 计算偏移量
       const offset = (page - 1) * limit;
-      
+
       // 执行搜索查询
       const results = await db
         .select({
@@ -224,14 +224,14 @@ export async function POST(request: NextRequest) {
         .orderBy(orderByClause)
         .limit(limit)
         .offset(offset);
-      
+
       // 获取总数
       const [{ count: totalCount }] = await db
         .select({ count: sql`count(*)`.mapWith(Number) })
         .from(ecoaScaleTable)
         .leftJoin(ecoaCategoryTable, eq(ecoaScaleTable.categoryId, ecoaCategoryTable.id))
         .where(and(...conditions));
-      
+
       // 格式化结果
       const formattedResults = results.map(result => ({
         ...result,
@@ -243,7 +243,7 @@ export async function POST(request: NextRequest) {
         domains_parsed: Array.isArray(result.domains) ? result.domains :
           (result.domains ? JSON.parse(result.domains) : []),
       }));
-      
+
       // 记录搜索历史
       if (user) {
         try {
@@ -259,7 +259,7 @@ export async function POST(request: NextRequest) {
           console.warn('Failed to save search history:', error);
         }
       }
-      
+
       // 记录使用分析
       for (const result of formattedResults.slice(0, 10)) {
         try {
@@ -274,7 +274,7 @@ export async function POST(request: NextRequest) {
           console.warn('Failed to save usage record:', error);
         }
       }
-      
+
       return NextResponse.json({
         results: formattedResults,
         pagination: {
@@ -304,7 +304,7 @@ export async function POST(request: NextRequest) {
             formattedResults.reduce((sum, r) => sum + (r.itemsCount || 0), 0) / formattedResults.length || 0
           ),
           averageAdministrationTime: Math.round(
-            formattedResults.reduce((sum, r) => sum + (r.administrationTime || 0), 0) / 
+            formattedResults.reduce((sum, r) => sum + (r.administrationTime || 0), 0) /
             formattedResults.filter(r => r.administrationTime).length || 0
           ),
           validationStatusDistribution: formattedResults.reduce((acc, r) => {
@@ -316,7 +316,7 @@ export async function POST(request: NextRequest) {
 
     } catch (error) {
       console.error('Advanced search API error:', error);
-      
+
       if (error instanceof z.ZodError) {
         return NextResponse.json(
           { error: 'Invalid search parameters', details: error.errors },

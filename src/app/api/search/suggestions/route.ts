@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { type NextRequest, NextResponse } from 'next/server';
 import { getDB } from '@/db';
 import { ecoaScaleTable } from '@/db/schema';
 import { like, or, limit, sql } from 'drizzle-orm';
@@ -17,7 +17,7 @@ export async function GET(request: NextRequest) {
       const { searchParams } = new URL(request.url);
       const query = searchParams.get('query') || '';
       const limitParam = parseInt(searchParams.get('limit') || '5');
-      
+
       const { query: validatedQuery, limit: validatedLimit } = suggestionRequestSchema.parse({
         query,
         limit: limitParam,
@@ -72,7 +72,7 @@ export async function GET(request: NextRequest) {
 
     } catch (error) {
       console.error('Search suggestions API error:', error);
-      
+
       if (error instanceof z.ZodError) {
         return NextResponse.json(
           { error: 'Invalid request parameters' },

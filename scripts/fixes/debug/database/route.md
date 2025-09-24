@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { type NextRequest, NextResponse } from 'next/server';
 import { getDB } from '@/db';
 import { ecoaScaleTable, ecoaItemTable } from '@/db/schema';
 import { eq, sql } from 'drizzle-orm';
@@ -6,7 +6,7 @@ import { eq, sql } from 'drizzle-orm';
 export async function GET() {
   try {
     const db = getDB();
-    
+
     // 检查所有量表的题目数据
     const scalesWithItems = await db
       .select({

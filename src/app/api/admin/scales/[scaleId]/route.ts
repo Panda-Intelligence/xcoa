@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { type NextRequest, NextResponse } from 'next/server';
 import { getDB } from '@/db';
 import { ecoaScaleTable, userTable, copyrightLicensesTable } from '@/db/schema';
 import { eq } from 'drizzle-orm';
@@ -33,7 +33,7 @@ export async function GET(
     }
 
     const db = getDB();
-    
+
     // 检查是否为管理员
     const user = await db
       .select({ role: userTable.role })
@@ -92,7 +92,7 @@ export async function PUT(
     }
 
     const db = getDB();
-    
+
     // 检查是否为管理员
     const user = await db
       .select({ role: userTable.role })
@@ -142,9 +142,9 @@ export async function PUT(
       .where(eq(ecoaScaleTable.id, scaleId));
 
     // 处理版权许可信息更新
-    if (updateData.copyrightHolderId !== undefined || updateData.licenseType !== undefined || 
-        updateData.licenseTerms !== undefined || updateData.usageRestrictions !== undefined) {
-      
+    if (updateData.copyrightHolderId !== undefined || updateData.licenseType !== undefined ||
+      updateData.licenseTerms !== undefined || updateData.usageRestrictions !== undefined) {
+
       // 检查是否已存在版权许可记录
       const existingLicense = await db
         .select()
@@ -191,7 +191,7 @@ export async function PUT(
 
   } catch (error) {
     console.error('Admin更新量表错误:', error);
-    
+
     if (error instanceof z.ZodError) {
       return NextResponse.json(
         { error: 'Invalid scale data', details: error.errors },
@@ -217,7 +217,7 @@ export async function DELETE(
     }
 
     const db = getDB();
-    
+
     // 检查是否为管理员
     const user = await db
       .select({ role: userTable.role })

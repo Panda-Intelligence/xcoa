@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { type NextRequest, NextResponse } from 'next/server';
 import { getDB } from '@/db';
 import { invoiceTable } from '@/db/schema';
 import { eq } from 'drizzle-orm';
@@ -127,7 +127,7 @@ export async function PUT(
 
   } catch (error) {
     console.error('更新发票错误:', error);
-    
+
     if (error instanceof z.ZodError) {
       return NextResponse.json(
         { error: 'Invalid update data', details: error.errors },

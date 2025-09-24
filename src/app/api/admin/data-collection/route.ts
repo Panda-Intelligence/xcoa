@@ -1,6 +1,6 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { type NextRequest, NextResponse } from 'next/server';
 import { getDB } from '@/db';
-import { ecoaScaleTable, ecoaCategoryTable } from '@/db/schema';
+import { ecoaScaleTable } from '@/db/schema';
 import { getSessionFromCookie } from '@/utils/auth';
 import { ComplianceChecker, RateLimiter, ContentParser, DATA_SOURCES } from '@/utils/scraping/data-collector';
 import { z } from 'zod';
@@ -31,19 +31,19 @@ export async function POST(request: NextRequest) {
     const complianceChecker = new ComplianceChecker();
     const rateLimiter = new RateLimiter();
     const parser = new ContentParser();
-    
+
     const results = [];
     const errors = [];
 
     // 选择要收集的数据源
-    const selectedSources = config.sourceIds 
+    const selectedSources = config.sourceIds
       ? DATA_SOURCES.filter(source => config.sourceIds!.includes(source.id))
       : DATA_SOURCES;
 
     for (const source of selectedSources) {
       try {
         console.log(`开始收集数据源: ${source.name}`);
-        
+
         // 1. 合规性检查
         const compliance = await complianceChecker.checkRobotsTxt(source.baseUrl);
         if (!compliance.allowed) {
@@ -68,7 +68,7 @@ export async function POST(request: NextRequest) {
 
         // 3. 解析量表信息（模拟解析）
         const scaleInfo = parser.extractScaleInfo(mainPageResponse.html, source.selectors);
-        
+
         // 4. 数据质量检查
         if (!scaleInfo.name || !scaleInfo.acronym) {
           errors.push({
@@ -90,7 +90,7 @@ export async function POST(request: NextRequest) {
         } else {
           // 写入数据库（实际实现）
           const db = getDB();
-          
+
           // 检查是否已存在
           const existing = await db
             .select()
@@ -170,7 +170,7 @@ export async function POST(request: NextRequest) {
 
   } catch (error) {
     console.error('数据收集错误:', error);
-    
+
     if (error instanceof z.ZodError) {
       return NextResponse.json(
         { error: 'Invalid collection config', details: error.errors },
@@ -208,7 +208,7 @@ export async function GET(request: NextRequest) {
         dryRun: false
       },
       {
-        id: 'collect_002', 
+        id: 'collect_002',
         timestamp: '2024-09-20T14:30:00Z',
         sources: ['mapi-trust'],
         status: 'completed',
