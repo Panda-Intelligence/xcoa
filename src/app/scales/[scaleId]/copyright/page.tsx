@@ -27,6 +27,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useLanguage } from '@/hooks/useLanguage';
 import Link from 'next/link';
+import { useToast } from '@/hooks/useToast';
 
 interface CopyrightPageProps {
   params: Promise<{ scaleId: string }>;
@@ -34,6 +35,7 @@ interface CopyrightPageProps {
 
 export default function ScaleCopyrightPage({ params }: CopyrightPageProps) {
   const { t } = useLanguage();
+  const toast = useToast();
   const [scaleId, setScaleId] = useState<string>('');
   const [copyrightInfo, setCopyrightInfo] = useState<any>(null);
   const [loading, setLoading] = useState(true);
@@ -95,13 +97,13 @@ export default function ScaleCopyrightPage({ params }: CopyrightPageProps) {
         window.open(mailtoUrl, '_blank');
         setContactDialogOpen(false);
 
-        alert('邮件模板已生成，请查看您的邮件客户端');
+        toast.success('邮件模板已生成，请查看您的邮件客户端');
       } else {
-        alert(`联系请求失败: ${result.error}`);
+        toast.error(`联系请求失败: ${result.error}`);
       }
     } catch (error) {
       console.error('Error submitting contact request:', error);
-      alert('提交联系请求时发生错误');
+      toast.error('提交联系请求时发生错误');
     }
   };
 

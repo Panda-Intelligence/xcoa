@@ -17,6 +17,7 @@ import { ChevronLeft, ChevronRight, FileText, Download, Eye } from "lucide-react
 import { format } from "date-fns";
 import { generateInvoicePDF } from "@/utils/pdf-generator";
 import { useRouter } from "next/navigation";
+import { useToast } from "@/hooks/useToast";
 
 interface Invoice {
   id: string;
@@ -57,6 +58,7 @@ interface InvoiceListData {
 
 export function InvoiceList() {
   const router = useRouter();
+  const toast = useToast();
   const [data, setData] = useState<InvoiceListData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [page, setPage] = useState(1);
@@ -115,7 +117,7 @@ export function InvoiceList() {
       await generateInvoicePDF(invoice);
     } catch (error) {
       console.error("PDF生成失败:", error);
-      alert("PDF生成失败，请稍后重试");
+      toast.error("PDF生成失败，请稍后重试");
     }
   };
 

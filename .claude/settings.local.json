@@ -1,20 +1,7 @@
 {
   "permissions": {
     "allow": [
-      "Bash(bun run:*)",
-      "Bash(bun add:*)",
-      "Bash(bun:*)",
-      "Bash(timeout:*)",
-      "Bash(curl:*)",
-      "Bash(wrangler vectorize create:*)",
-      "Bash(wrangler whoami:*)",
-      "Bash(time curl:*)",
-      "Bash(echo:*)",
-      "Bash(cat:*)",
-      "Bash(xargs sed:*)",
-      "Bash(xargs rm:*)",
-      "Bash(mkdir -p /Users/isaac/workspace/pdt/xcoa/src/app/api/admin/invoices)",
-      "Bash(pnpm add jspdf html2canvas)"
+      "Bash(xargs:*)"
     ],
     "deny": [],
     "ask": []

@@ -61,7 +61,7 @@ export default function InterpretationPage() {
   // 筛选量表
   const filteredScales = scales.filter(scale => {
     if (!searchQuery) return true;
-    
+
     const query = searchQuery.toLowerCase();
     return (
       scale.name.toLowerCase().includes(query) ||
@@ -113,14 +113,16 @@ export default function InterpretationPage() {
         </div>
 
         {/* 搜索 */}
-        <div className="flex-1 relative max-w-md">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-          <Input
-            placeholder="搜索量表名称或缩写..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-10"
-          />
+        <div className='flex'>
+          <div className="flex-1 relative max-w-md">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+            <Input
+              placeholder="搜索量表名称或缩写..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-10"
+            />
+          </div>
         </div>
 
         {/* 量表网格 */}

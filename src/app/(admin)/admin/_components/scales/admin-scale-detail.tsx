@@ -31,6 +31,7 @@ import {
   AlertTriangle
 } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useToast } from "@/hooks/useToast";
 
 interface EcoaScale {
   id: string;
@@ -67,6 +68,7 @@ interface AdminScaleDetailProps {
 
 export function AdminScaleDetail({ scaleId }: AdminScaleDetailProps) {
   const router = useRouter();
+  const toast = useToast();
   const [scale, setScale] = useState<EcoaScale | null>(null);
   const [items, setItems] = useState<EcoaItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -141,13 +143,13 @@ export function AdminScaleDetail({ scaleId }: AdminScaleDetailProps) {
         resetNewItem();
         fetchScaleItems();
         fetchScaleDetails(); // 更新题目数量
-        alert("题目创建成功！");
+        toast.success("题目创建成功！");
       } else {
-        alert(data.error || "创建题目失败");
+        toast.error(data.error || "创建题目失败");
       }
     } catch (error) {
       console.error("创建题目错误:", error);
-      alert("网络错误，请稍后重试");
+      toast.error("网络错误，请稍后重试");
     }
   };
 
@@ -171,13 +173,13 @@ export function AdminScaleDetail({ scaleId }: AdminScaleDetailProps) {
         setEditingItem(null);
         resetNewItem();
         fetchScaleItems();
-        alert("题目更新成功！");
+        toast.success("题目更新成功！");
       } else {
-        alert(data.error || "更新题目失败");
+        toast.error(data.error || "更新题目失败");
       }
     } catch (error) {
       console.error("更新题目错误:", error);
-      alert("网络错误，请稍后重试");
+      toast.error("网络错误，请稍后重试");
     }
   };
 
@@ -196,13 +198,13 @@ export function AdminScaleDetail({ scaleId }: AdminScaleDetailProps) {
       if (response.ok) {
         fetchScaleItems();
         fetchScaleDetails(); // 更新题目数量
-        alert("题目删除成功！");
+        toast.success("题目删除成功！");
       } else {
-        alert(data.error || "删除题目失败");
+        toast.error(data.error || "删除题目失败");
       }
     } catch (error) {
       console.error("删除题目错误:", error);
-      alert("网络错误，请稍后重试");
+      toast.error("网络错误，请稍后重试");
     }
   };
 
@@ -219,11 +221,11 @@ export function AdminScaleDetail({ scaleId }: AdminScaleDetailProps) {
       if (response.ok) {
         fetchScaleItems();
       } else {
-        alert(data.error || "移动题目失败");
+        toast.error(data.error || "移动题目失败");
       }
     } catch (error) {
       console.error("移动题目错误:", error);
-      alert("网络错误，请稍后重试");
+      toast.error("网络错误，请稍后重试");
     }
   };
 

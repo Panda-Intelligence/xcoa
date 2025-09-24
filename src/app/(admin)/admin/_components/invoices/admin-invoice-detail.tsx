@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { generateInvoicePDF } from "@/utils/pdf-generator";
+import { useToast } from "@/hooks/useToast";
 
 interface Invoice {
   id: string;
@@ -47,6 +48,7 @@ interface AdminInvoiceDetailProps {
 
 export function AdminInvoiceDetail({ invoiceId }: AdminInvoiceDetailProps) {
   const router = useRouter();
+  const toast = useToast();
   const [invoice, setInvoice] = useState<Invoice | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -88,13 +90,13 @@ export function AdminInvoiceDetail({ invoiceId }: AdminInvoiceDetailProps) {
 
       if (response.ok) {
         setInvoice({ ...invoice, status });
-        alert("发票状态更新成功！");
+        toast.success("发票状态更新成功！");
       } else {
-        alert(data.error || "更新发票状态失败");
+        toast.error(data.error || "更新发票状态失败");
       }
     } catch (error) {
       console.error("更新发票状态错误:", error);
-      alert("网络错误，请稍后重试");
+      toast.error("网络错误，请稍后重试");
     }
   };
 
@@ -111,14 +113,14 @@ export function AdminInvoiceDetail({ invoiceId }: AdminInvoiceDetailProps) {
       const data = await response.json();
 
       if (response.ok) {
-        alert("发票删除成功！");
+        toast.success("发票删除成功！");
         router.push("/admin/invoices");
       } else {
-        alert(data.error || "删除发票失败");
+        toast.error(data.error || "删除发票失败");
       }
     } catch (error) {
       console.error("删除发票错误:", error);
-      alert("网络错误，请稍后重试");
+      toast.error("网络错误，请稍后重试");
     }
   };
 
@@ -129,7 +131,7 @@ export function AdminInvoiceDetail({ invoiceId }: AdminInvoiceDetailProps) {
       await generateInvoicePDF(invoice);
     } catch (error) {
       console.error("PDF生成失败:", error);
-      alert("PDF生成失败，请稍后重试");
+      toast.error("PDF生成失败，请稍后重试");
     }
   };
 

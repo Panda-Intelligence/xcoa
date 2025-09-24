@@ -36,6 +36,7 @@ import { useLanguage } from "@/hooks/useLanguage";
 import { TeamSelector } from "./team-selector";
 import { generateInvoicePDF } from "@/utils/pdf-generator";
 import { useRouter } from "next/navigation";
+import { useToast } from "@/hooks/useToast";
 
 interface Invoice {
   id: string;
@@ -69,6 +70,7 @@ interface InvoiceStats {
 export function AdminInvoiceManager() {
   const { t } = useLanguage();
   const router = useRouter();
+  const toast = useToast();
   const [invoices, setInvoices] = useState<Invoice[]>([]);
   const [stats, setStats] = useState<InvoiceStats>({ total: 0, paid: 0, sent: 0, draft: 0 });
   const [loading, setLoading] = useState(true);
@@ -123,7 +125,7 @@ export function AdminInvoiceManager() {
 
   const handleCreateInvoice = async () => {
     if (!selectedTeam) {
-      alert("请选择团队");
+      toast.warning("请选择团队");
       return;
     }
 
@@ -149,13 +151,13 @@ export function AdminInvoiceManager() {
         setCreateDialogOpen(false);
         resetNewInvoice();
         fetchInvoices();
-        alert("发票创建成功！");
+        toast.success("发票创建成功！");
       } else {
-        alert(data.error || "创建发票失败");
+        toast.error(data.error || "创建发票失败");
       }
     } catch (error) {
       console.error("创建发票错误:", error);
-      alert("网络错误，请稍后重试");
+      toast.error("网络错误，请稍后重试");
     }
   };
 
@@ -189,13 +191,13 @@ export function AdminInvoiceManager() {
 
       if (response.ok) {
         fetchInvoices();
-        alert("发票删除成功！");
+        toast.success("发票删除成功！");
       } else {
-        alert(data.error || "删除发票失败");
+        toast.error(data.error || "删除发票失败");
       }
     } catch (error) {
       console.error("删除发票错误:", error);
-      alert("网络错误，请稍后重试");
+      toast.error("网络错误，请稍后重试");
     }
   };
 
@@ -204,7 +206,7 @@ export function AdminInvoiceManager() {
       await generateInvoicePDF(invoice);
     } catch (error) {
       console.error("PDF生成失败:", error);
-      alert("PDF生成失败，请稍后重试");
+      toast.error("PDF生成失败，请稍后重试");
     }
   };
 

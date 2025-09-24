@@ -40,6 +40,7 @@ import { PageHeader } from "@/components/page-header";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useRouter } from "next/navigation";
 import { format } from "date-fns";
+import { useToast } from "@/hooks/useToast";
 
 interface CopyrightTicket {
   id: string;
@@ -77,6 +78,7 @@ interface TicketStats {
 export function AdminTicketsManager() {
   const { t } = useLanguage();
   const router = useRouter();
+  const toast = useToast();
   const [tickets, setTickets] = useState<CopyrightTicket[]>([]);
   const [stats, setStats] = useState<TicketStats>({ total: 0, open: 0, in_progress: 0, waiting_response: 0, resolved: 0, closed: 0 });
   const [loading, setLoading] = useState(true);
@@ -143,13 +145,13 @@ export function AdminTicketsManager() {
         fetchTickets();
         setUpdateDialogOpen(false);
         setSelectedTicket(null);
-        alert("工单状态更新成功！");
+        toast.success("工单状态更新成功！");
       } else {
-        alert(data.error || "更新工单状态失败");
+        toast.error(data.error || "更新工单状态失败");
       }
     } catch (error) {
       console.error("更新工单状态错误:", error);
-      alert("网络错误，请稍后重试");
+      toast.error("网络错误，请稍后重试");
     }
   };
 
@@ -167,13 +169,13 @@ export function AdminTicketsManager() {
 
       if (response.ok) {
         fetchTickets();
-        alert("工单删除成功！");
+        toast.success("工单删除成功！");
       } else {
-        alert(data.error || "删除工单失败");
+        toast.error(data.error || "删除工单失败");
       }
     } catch (error) {
       console.error("删除工单错误:", error);
-      alert("网络错误，请稍后重试");
+      toast.error("网络错误，请稍后重试");
     }
   };
 

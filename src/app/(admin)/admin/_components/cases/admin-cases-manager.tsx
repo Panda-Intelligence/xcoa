@@ -33,6 +33,7 @@ import {
 import { PageHeader } from "@/components/page-header";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useRouter } from "next/navigation";
+import { useToast } from "@/hooks/useToast";
 
 interface ClinicalCase {
   id: string;
@@ -64,6 +65,7 @@ interface CaseStats {
 export function AdminCasesManager() {
   const { t } = useLanguage();
   const router = useRouter();
+  const toast = useToast();
   const [cases, setCases] = useState<ClinicalCase[]>([]);
   const [stats, setStats] = useState<CaseStats>({ total: 0, published: 0, draft: 0, reviewed: 0 });
   const [scales, setScales] = useState<Array<{ id: string; name: string; acronym: string }>>([]);
@@ -150,13 +152,13 @@ export function AdminCasesManager() {
         setCreateDialogOpen(false);
         resetNewCase();
         fetchCases();
-        alert("临床案例创建成功！");
+        toast.success("临床案例创建成功！");
       } else {
-        alert(data.error || "创建案例失败");
+        toast.error(data.error || "创建案例失败");
       }
     } catch (error) {
       console.error("创建案例错误:", error);
-      alert("网络错误，请稍后重试");
+      toast.error("网络错误，请稍后重试");
     }
   };
 
@@ -177,13 +179,13 @@ export function AdminCasesManager() {
         setEditingCase(null);
         resetNewCase();
         fetchCases();
-        alert("案例更新成功！");
+        toast.success("案例更新成功！");
       } else {
-        alert(data.error || "更新案例失败");
+        toast.error(data.error || "更新案例失败");
       }
     } catch (error) {
       console.error("更新案例错误:", error);
-      alert("网络错误，请稍后重试");
+      toast.error("网络错误，请稍后重试");
     }
   };
 
@@ -201,13 +203,13 @@ export function AdminCasesManager() {
 
       if (response.ok) {
         fetchCases();
-        alert("案例删除成功！");
+        toast.success("案例删除成功！");
       } else {
-        alert(data.error || "删除案例失败");
+        toast.error(data.error || "删除案例失败");
       }
     } catch (error) {
       console.error("删除案例错误:", error);
-      alert("网络错误，请稍后重试");
+      toast.error("网络错误，请稍后重试");
     }
   };
 

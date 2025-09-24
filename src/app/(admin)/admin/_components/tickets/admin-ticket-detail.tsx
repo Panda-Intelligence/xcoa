@@ -24,6 +24,7 @@ import {
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { format } from "date-fns";
+import { useToast } from "@/hooks/useToast";
 
 interface TicketDetail {
   id: string;
@@ -66,6 +67,7 @@ interface AdminTicketDetailProps {
 
 export function AdminTicketDetail({ ticketId }: AdminTicketDetailProps) {
   const router = useRouter();
+  const toast = useToast();
   const [ticket, setTicket] = useState<TicketDetail | null>(null);
   const [messages, setMessages] = useState<TicketMessage[]>([]);
   const [loading, setLoading] = useState(true);
@@ -122,13 +124,13 @@ export function AdminTicketDetail({ ticketId }: AdminTicketDetailProps) {
       if (response.ok) {
         fetchTicketDetail();
         setUpdateForm(prev => ({ ...prev, adminNotes: "", responseMessage: "" }));
-        alert("工单更新成功！");
+        toast.success("工单更新成功！");
       } else {
-        alert(data.error || "更新工单失败");
+        toast.error(data.error || "更新工单失败");
       }
     } catch (error) {
       console.error("更新工单错误:", error);
-      alert("网络错误，请稍后重试");
+      toast.error("网络错误，请稍后重试");
     }
   };
 

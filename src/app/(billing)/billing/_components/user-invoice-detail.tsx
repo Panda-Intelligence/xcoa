@@ -15,6 +15,7 @@ import {
 import { useRouter } from "next/navigation";
 import { generateInvoicePDF } from "@/utils/pdf-generator";
 import { format } from "date-fns";
+import { useToast } from "@/hooks/useToast";
 
 interface Invoice {
   id: string;
@@ -44,6 +45,7 @@ interface UserInvoiceDetailProps {
 
 export function UserInvoiceDetail({ invoiceId }: UserInvoiceDetailProps) {
   const router = useRouter();
+  const toast = useToast();
   const [invoice, setInvoice] = useState<Invoice | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -78,7 +80,7 @@ export function UserInvoiceDetail({ invoiceId }: UserInvoiceDetailProps) {
       await generateInvoicePDF(invoice);
     } catch (error) {
       console.error("PDF生成失败:", error);
-      alert("PDF生成失败，请稍后重试");
+      toast.error("PDF生成失败，请稍后重试");
     }
   };
 

@@ -34,6 +34,7 @@ import {
 import { PageHeader } from "@/components/page-header";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useRouter } from "next/navigation";
+import { useToast } from "@/hooks/useToast";
 
 interface EcoaScale {
   id: string;
@@ -66,6 +67,7 @@ interface ScaleStats {
 export function AdminScalesManager() {
   const { t } = useLanguage();
   const router = useRouter();
+  const toast = useToast();
   const [scales, setScales] = useState<EcoaScale[]>([]);
   const [stats, setStats] = useState<ScaleStats>({ total: 0, published: 0, draft: 0, validated: 0 });
   const [loading, setLoading] = useState(true);
@@ -135,13 +137,13 @@ export function AdminScalesManager() {
         setCreateDialogOpen(false);
         resetNewScale();
         fetchScales();
-        alert("量表创建成功！");
+        toast.success("量表创建成功！");
       } else {
-        alert(data.error || "创建量表失败");
+        toast.error(data.error || "创建量表失败");
       }
     } catch (error) {
       console.error("创建量表错误:", error);
-      alert("网络错误，请稍后重试");
+      toast.error("网络错误，请稍后重试");
     }
   };
 
@@ -165,13 +167,13 @@ export function AdminScalesManager() {
         setEditingScale(null);
         resetNewScale();
         fetchScales();
-        alert("量表更新成功！");
+        toast.success("量表更新成功！");
       } else {
-        alert(data.error || "更新量表失败");
+        toast.error(data.error || "更新量表失败");
       }
     } catch (error) {
       console.error("更新量表错误:", error);
-      alert("网络错误，请稍后重试");
+      toast.error("网络错误，请稍后重试");
     }
   };
 
@@ -189,13 +191,13 @@ export function AdminScalesManager() {
 
       if (response.ok) {
         fetchScales();
-        alert("量表删除成功！");
+        toast.success("量表删除成功！");
       } else {
-        alert(data.error || "删除量表失败");
+        toast.error(data.error || "删除量表失败");
       }
     } catch (error) {
       console.error("删除量表错误:", error);
-      alert("网络错误，请稍后重试");
+      toast.error("网络错误，请稍后重试");
     }
   };
 

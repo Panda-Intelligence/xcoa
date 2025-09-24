@@ -9,7 +9,6 @@ import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import {
   Search,
-  MessageSquare,
   Eye,
   Clock,
   Users,
@@ -20,6 +19,7 @@ import Link from 'next/link';
 import { useLanguage } from '@/hooks/useLanguage';
 import { useFavoritesStore } from '@/state/favorites';
 import { FavoriteButton } from '@/components/favorites/FavoriteButton';
+import { useRouter } from 'next/navigation';
 
 interface SearchResult {
   id: string;
@@ -52,6 +52,7 @@ interface HotScale {
 }
 
 export default function ScalesPage() {
+  const router = useRouter();
   const { t } = useLanguage();
   const { fetchUserFavorites } = useFavoritesStore();
   const [query, setQuery] = useState('');
@@ -160,77 +161,77 @@ export default function ScalesPage() {
               </CardDescription>
             </CardHeader>
 
-          <CardContent className="space-y-4">
-            {/* 搜索输入 */}
-            <div className="flex space-x-2">
-              <div className="flex-1">
-                <Input
-                  placeholder={t("scales_page.search_placeholder")}
-                  value={query}
-                  onChange={(e) => setQuery(e.target.value)}
-                  onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
-                />
-              </div>
-              <Button onClick={handleSearch} disabled={loading}>
-                {loading ? t("scales_page.searching") : t("scales_page.search")}
-              </Button>
-            </div>
-
-            {/* 搜索选项 */}
-            <div className="flex flex-wrap gap-4">
-
-              <div className="flex items-center space-x-2">
-                <span className="text-sm font-medium">{t("scales_page.category")}:</span>
-                <Select value={filters.category} onValueChange={(value) =>
-                  setFilters(prev => ({ ...prev, category: value }))}>
-                  <SelectTrigger className="w-40">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">{t("scales_page.all_categories")}</SelectItem>
-                    {categories.map(cat => (
-                      <SelectItem key={cat.id} value={cat.id}>
-                        {cat.name} ({cat.scaleCount})
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+            <CardContent className="space-y-4">
+              {/* 搜索输入 */}
+              <div className="flex space-x-2">
+                <div className="flex-1">
+                  <Input
+                    placeholder={t("scales_page.search_placeholder")}
+                    value={query}
+                    onChange={(e) => setQuery(e.target.value)}
+                    onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
+                  />
+                </div>
+                <Button onClick={handleSearch} disabled={loading}>
+                  {loading ? t("scales_page.searching") : t("scales_page.search")}
+                </Button>
               </div>
 
-              <div className="flex items-center space-x-2">
-                <span className="text-sm font-medium">{t("scales_page.sort_by")}:</span>
-                <Select value={filters.sortBy} onValueChange={(value) =>
-                  setFilters(prev => ({ ...prev, sortBy: value }))}>
-                  <SelectTrigger className="w-32">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="relevance">{t("scales_page.relevance")}</SelectItem>
-                    <SelectItem value="name">{t("scales_page.name")}</SelectItem>
-                    <SelectItem value="usage">{t("scales_page.usage_frequency")}</SelectItem>
-                    <SelectItem value="recent">{t("scales_page.recent")}</SelectItem>
-                  </SelectContent>
-                </Select>
+              {/* 搜索选项 */}
+              <div className="flex flex-wrap gap-4">
+
+                <div className="flex items-center space-x-2">
+                  <span className="text-sm font-medium">{t("scales_page.category")}:</span>
+                  <Select value={filters.category} onValueChange={(value) =>
+                    setFilters(prev => ({ ...prev, category: value }))}>
+                    <SelectTrigger className="w-40">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">{t("scales_page.all_categories")}</SelectItem>
+                      {categories.map(cat => (
+                        <SelectItem key={cat.id} value={cat.id}>
+                          {cat.name} ({cat.scaleCount})
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="flex items-center space-x-2">
+                  <span className="text-sm font-medium">{t("scales_page.sort_by")}:</span>
+                  <Select value={filters.sortBy} onValueChange={(value) =>
+                    setFilters(prev => ({ ...prev, sortBy: value }))}>
+                    <SelectTrigger className="w-32">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="relevance">{t("scales_page.relevance")}</SelectItem>
+                      <SelectItem value="name">{t("scales_page.name")}</SelectItem>
+                      <SelectItem value="usage">{t("scales_page.usage_frequency")}</SelectItem>
+                      <SelectItem value="recent">{t("scales_page.recent")}</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
               </div>
-            </div>
-          </CardContent>
-        </div>
+            </CardContent>
+          </div>
 
-        {/* 搜索结果 */}
-        {results.length > 0 && (
-          <Card>
-            <CardHeader>
-              <CardTitle>{t("scales_page.search_results")}</CardTitle>
-              <CardDescription>
-                {t("scales_page.found_matches", `找到 ${results.length} 个匹配的量表`).replace("{count}", results.length.toString())}
-              </CardDescription>
-            </CardHeader>
+          {/* 搜索结果 */}
+          {results.length > 0 && (
+            <div>
+              <CardHeader>
+                <CardTitle>{t("scales_page.search_results")}</CardTitle>
+                <CardDescription>
+                  {t("scales_page.found_matches", `找到 ${results.length} 个匹配的量表`).replace("{count}", results.length.toString())}
+                </CardDescription>
+              </CardHeader>
 
-            <CardContent>
-              <div className="space-y-4">
-                {results.map((result) => (
-                  <Link key={result.id} href={`/scales/${result.id}`} className="block">
-                    <Card className="p-4 hover:shadow-md transition-shadow cursor-pointer group">
+              <CardContent>
+                <div className="space-y-4">
+                  {results.map((result) => (
+                    <Card key={result.id} className="p-4 hover:shadow-md transition-shadow cursor-pointer group"
+                      onClick={() => router.push(`/scales/${result.id}`)}>
                       <div className="flex items-start justify-between">
                         <div className="flex-1">
                           <div className="flex items-center space-x-3 mb-2">
@@ -285,57 +286,56 @@ export default function ScalesPage() {
                         </div>
                       </div>
                     </Card>
-                  </Link>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        )}
-
-        {/* 空状态 */}
-        {!loading && results.length === 0 && query && (
-          <Card>
-            <CardContent className="text-center py-8">
-              <Search className="w-12 h-12 mx-auto mb-4 text-muted-foreground opacity-50" />
-              <h3 className="text-lg font-medium mb-2">没有找到匹配的量表</h3>
-              <p className="text-muted-foreground mb-4">
-                尝试使用不同的关键词或调整筛选条件
-              </p>
-              <Button variant="outline" onClick={() => setQuery('')}>
-                清除搜索
-              </Button>
-            </CardContent>
-          </Card>
-        )}
-
-        {/* 默认显示热门量表 */}
-        {!query && results.length === 0 && (
-          <div>
-            <CardHeader>
-              <CardTitle>热门量表</CardTitle>
-              <CardDescription>
-                最常用的 eCOA 评估工具
-              </CardDescription>
-            </CardHeader>
-
-            <CardContent>
-              {loadingHotScales ? (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {Array.from({ length: 6 }).map((_, index) => (
-                    <Card key={index} className="animate-pulse">
-                      <CardContent className="p-4">
-                        <div className="h-4 bg-gray-200 rounded mb-2"></div>
-                        <div className="h-3 bg-gray-200 rounded mb-1"></div>
-                        <div className="h-2 bg-gray-200 rounded"></div>
-                      </CardContent>
-                    </Card>
                   ))}
                 </div>
-              ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {hotScales.map((scale) => (
-                    <Link key={scale.id} href={`/scales/${scale.id}`} className="block">
-                      <Card className="hover:shadow-md transition-shadow cursor-pointer group">
+              </CardContent>
+            </div>
+          )}
+
+          {/* 空状态 */}
+          {!loading && results.length === 0 && query && (
+            <Card>
+              <CardContent className="text-center py-8">
+                <Search className="w-12 h-12 mx-auto mb-4 text-muted-foreground opacity-50" />
+                <h3 className="text-lg font-medium mb-2">没有找到匹配的量表</h3>
+                <p className="text-muted-foreground mb-4">
+                  尝试使用不同的关键词或调整筛选条件
+                </p>
+                <Button variant="outline" onClick={() => setQuery('')}>
+                  清除搜索
+                </Button>
+              </CardContent>
+            </Card>
+          )}
+
+          {/* 默认显示热门量表 */}
+          {!query && results.length === 0 && (
+            <div>
+              <CardHeader>
+                <CardTitle>热门量表</CardTitle>
+                <CardDescription>
+                  最常用的 eCOA 评估工具
+                </CardDescription>
+              </CardHeader>
+
+              <CardContent>
+                {loadingHotScales ? (
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {Array.from({ length: 6 }).map((_, index) => (
+                      <Card key={index} className="animate-pulse">
+                        <CardContent className="p-4">
+                          <div className="h-4 bg-gray-200 rounded mb-2" />
+                          <div className="h-3 bg-gray-200 rounded mb-1" />
+                          <div className="h-2 bg-gray-200 rounded" />
+                        </CardContent>
+                      </Card>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {hotScales.map((scale) => (
+                      <Card key={scale.id} className="hover:shadow-md transition-shadow cursor-pointer group"
+                        onClick={() => router.push(`/scales/${scale.id}`)}>
                         <CardContent className="p-4">
                           <div className="flex items-center justify-between mb-2">
                             <h4 className="font-medium text-sm leading-tight group-hover:text-blue-600 transition-colors">{scale.name}</h4>
@@ -353,7 +353,7 @@ export default function ScalesPage() {
                               <span>{scale.administrationTime}分钟</span>
                             </div>
                           </div>
-                          
+
                           {/* 快速操作区 - 阻止卡片点击事件 */}
                           <div className="flex gap-1" onClick={(e) => e.stopPropagation()}>
                             <Link href={`/scales/${scale.id}/preview`}>
@@ -374,13 +374,12 @@ export default function ScalesPage() {
                           </div>
                         </CardContent>
                       </Card>
-                    </Link>
-                  ))}
-                </div>
-              )}
-            </CardContent>
-          </div>
-        )}
+                    ))}
+                  </div>
+                )}
+              </CardContent>
+            </div>
+          )}
         </div>
       </div>
     </div>

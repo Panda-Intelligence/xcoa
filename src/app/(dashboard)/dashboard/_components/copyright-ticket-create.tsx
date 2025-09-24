@@ -21,6 +21,7 @@ import {
 } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useRouter } from "next/navigation";
+import { useToast } from "@/hooks/useToast";
 
 interface Scale {
   id: string;
@@ -33,6 +34,7 @@ interface Scale {
 export function CopyrightTicketCreate() {
   const { t } = useLanguage();
   const router = useRouter();
+  const toast = useToast();
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState<Scale[]>([]);
   const [selectedScale, setSelectedScale] = useState<Scale | null>(null);
@@ -114,12 +116,12 @@ export function CopyrightTicketCreate() {
   // 提交版权工单
   const handleSubmit = async () => {
     if (!selectedScale) {
-      alert("请先选择量表");
+      toast.warning("请先选择量表");
       return;
     }
 
     if (!ticketForm.contactName || !ticketForm.contactEmail) {
-      alert("请填写联系人姓名和邮箱");
+      toast.warning("请填写联系人姓名和邮箱");
       return;
     }
 
@@ -141,14 +143,14 @@ export function CopyrightTicketCreate() {
       const data = await response.json();
 
       if (response.ok) {
-        alert("版权工单创建成功！我们将尽快为您联系版权方。");
+        toast.success("版权工单创建成功！我们将尽快为您联系版权方。");
         router.push("/dashboard/copyright/tickets");
       } else {
-        alert(data.error || "创建工单失败");
+        toast.error(data.error || "创建工单失败");
       }
     } catch (error) {
       console.error('提交工单失败:', error);
-      alert("网络错误，请稍后重试");
+      toast.error("网络错误，请稍后重试");
     } finally {
       setSubmitting(false);
     }
