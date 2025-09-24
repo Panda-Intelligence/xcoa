@@ -595,10 +595,10 @@ export function AdminCasesManager() {
                     </TableCell>
                     <TableCell>
                       <div className="flex space-x-2">
-                        <Button 
-                          size="sm" 
+                        <Button
+                          size="sm"
                           variant="outline"
-                          onClick={() => router.push(`/dashboard/cases/${caseItem.id}`)}
+                          onClick={() => router.push(`/insights/cases/${caseItem.id}`)}
                         >
                           <Eye className="w-3 h-3 mr-1" />
                           查看

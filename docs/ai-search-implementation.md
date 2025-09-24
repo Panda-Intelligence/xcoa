@@ -15,7 +15,7 @@
 interface QueryIntent {
   intent: 'find_scale' | 'compare_scales' | 'get_info';
   domain: string;        // 治疗领域
-  population: string;    // 目标人群  
+  population: string;    // 目标人群
   scaleType: string;     // 量表类型
   requirements: string[]; // 特殊要求
   confidence: number;    // 解析置信度
@@ -54,7 +54,7 @@ GET  /api/search/suggestions/smart
 ↓
 解析结果: {
   intent: "find_scale",
-  target_condition: "depression", 
+  target_condition: "depression",
   target_population: "elderly",
   scale_purpose: "assessment",
   language_preference: "chinese"
@@ -95,7 +95,7 @@ const domainKnowledge = {
 ```typescript
 // 新的搜索界面组件
 <ConversationalSearch>
-  <SearchInput 
+  <SearchInput
     placeholder="试试这样问：帮我找适合老年痴呆患者的认知量表"
     suggestions={smartSuggestions}
     onQuery={handleConversationalQuery}
@@ -115,7 +115,7 @@ const domainKnowledge = {
   <QueryUnderstanding>
     您要找：老年抑郁患者 → 抑郁症评估量表 → 适合老年人群
   </QueryUnderstanding>
-  
+
   <RecommendationCard>
     <PrimaryRecommendation scale="GDS" confidence={95} />
     <AlternativeOptions scales={["PHQ-9", "HAM-D"]} />
@@ -145,7 +145,7 @@ src/data/domain-knowledge.json
 # 1. 语义相似度计算
 src/utils/ai/semantic-matcher.ts
 
-# 2. 上下文推荐引擎  
+# 2. 上下文推荐引擎
 src/utils/ai/recommendation-engine.ts
 
 # 3. 结果排序和解释
@@ -161,7 +161,7 @@ src/components/search/ConversationalSearch.tsx
 src/components/search/IntelligentResults.tsx
 
 # 3. 搜索界面重构
-src/app/(dashboard)/dashboard/scales/page.tsx
+src/app/(dashboard)/scales/page.tsx
 ```
 
 ## 💡 使用场景示例
@@ -172,7 +172,7 @@ src/app/(dashboard)/dashboard/scales/page.tsx
 
 AI解析: {
   disease: "breast_cancer",
-  intervention: "chemotherapy", 
+  intervention: "chemotherapy",
   outcome: "quality_of_life",
   population: "cancer_patients"
 }
@@ -215,13 +215,13 @@ AI解析: {
 - **响应时间**: <800ms
 - **用户满意度**: >4.5/5
 
-### 业务指标  
+### 业务指标
 - **搜索成功率**: 用户找到合适量表的比例 >80%
 - **深度使用**: 从搜索到收藏/下载的转化率 >60%
 - **专家认可**: 领域专家对推荐准确性的认可度 >85%
 
 ---
 
-**📅 实施时间**: 1周内完成MVP版本  
-**🎯 目标**: 建立行业首个AI驱动的专业量表搜索引擎  
+**📅 实施时间**: 1周内完成MVP版本
+**🎯 目标**: 建立行业首个AI驱动的专业量表搜索引擎
 **📈 价值**: 大幅提升专业用户的工作效率和准确性

@@ -14,7 +14,7 @@ export default async function MarketplacePage() {
       <PageHeader
         items={[
           {
-            href: "/dashboard/marketplace",
+            href: "/marketplace",
             label: "Marketplace"
           }
         ]}

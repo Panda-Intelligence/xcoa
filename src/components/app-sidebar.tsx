@@ -6,7 +6,6 @@ import type { Route } from 'next'
 import {
   Building2,
   Settings2,
-  SquareTerminal,
   CreditCard,
   Users,
   Search,
@@ -105,16 +104,16 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       },
       {
         title: t('sidebar.scale_interpretation'),
-        url: "/dashboard/interpretation#" as Route,
+        url: "/insights/interpretation#" as Route,
         icon: BookOpen,
         items: [
           {
             title: t('sidebar.interpretation_guide'),
-            url: "/dashboard/interpretation" as Route,
+            url: "/insights/interpretation" as Route,
           },
           {
             title: t('sidebar.clinical_cases'),
-            url: "/dashboard/cases" as Route,
+            url: "/insights/cases" as Route,
           },
         ],
       },

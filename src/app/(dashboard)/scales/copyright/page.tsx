@@ -121,7 +121,7 @@ export default function CopyrightPage() {
     <>
       <PageHeader
         items={[
-          { href: "/dashboard", label: "Dashboard" },
+          { href: "/scales", label: "Dashboard" },
           { href: "/scales/copyright", label: "版权服务" }
         ]}
       />

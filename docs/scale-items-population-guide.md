@@ -13,7 +13,7 @@
 
 ### API端点列表
 1. **基础量表数据填充**: `/api/admin/populate-scale-items`
-2. **所有核心量表**: `/api/admin/populate-all-items` 
+2. **所有核心量表**: `/api/admin/populate-all-items`
 3. **额外量表扩展**: `/api/admin/populate-additional-items`
 
 ## 📋 执行步骤
@@ -74,7 +74,7 @@ curl -X POST http://localhost:3000/api/admin/populate-additional-items
 → 应该显示9个PHQ-9题目
 → 选择答案后自动计分和进展
 
-访问 /scales/scale_gad7/preview  
+访问 /scales/scale_gad7/preview
 → 应该显示7个GAD-7题目
 → 焦虑症状等级实时评估
 ```
@@ -91,7 +91,7 @@ PHQ-9测试流程:
 #### 3. **收藏功能测试**
 ```
 在任何量表页面 → 点击❤️按钮 → 应该显示"收藏成功"
-访问 /dashboard/scales/favorites → 查看收藏列表
+访问 /scales/favorites → 查看收藏列表
 ```
 
 ## 📈 数据质量保证
@@ -115,7 +115,7 @@ PHQ-9测试流程:
 
 **完整的数字化量表评估**:
 - PHQ-9: 9题逐题填写 → 抑郁症状等级评估
-- GAD-7: 7题快速筛查 → 焦虑症状等级评估  
+- GAD-7: 7题快速筛查 → 焦虑症状等级评估
 - MMSE-2: 10题认知测试 → 认知功能评估
 - SF-36: 10题健康调查 → 生活质量评估
 - EORTC QLQ-C30: 15题癌症专用评估
