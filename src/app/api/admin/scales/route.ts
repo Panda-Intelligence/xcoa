@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getDB } from '@/db';
-import { ecoaScaleTable, ecoaCategoryTable, userTable, copyrightHolderTable } from '@/db/schema';
+import { ecoaScaleTable, ecoaCategoryTable, userTable, copyrightHolderTable, copyrightLicensesTable } from '@/db/schema';
 import { eq, like, or, and, sql, desc } from 'drizzle-orm';
 import { getSessionFromCookie } from '@/utils/auth';
 import { z } from 'zod';
@@ -16,7 +16,7 @@ const createScaleSchema = z.object({
   targetPopulation: z.string().optional(),
   ageRange: z.string().optional(),
   validationStatus: z.enum(['draft', 'validated', 'published']).default('draft'),
-  // Copyright fields
+  // Copyright license information (separate table)
   copyrightHolderId: z.string().optional(),
   licenseType: z.enum(['public_domain', 'open_source', 'academic_free', 'commercial', 'restricted', 'contact_required']).optional(),
   copyrightYear: z.number().optional(),
@@ -72,18 +72,16 @@ export async function GET(request: NextRequest) {
         isPublic: ecoaScaleTable.isPublic,
         createdAt: ecoaScaleTable.createdAt,
         updatedAt: ecoaScaleTable.updatedAt,
-        // Copyright fields
-        copyrightHolderId: ecoaScaleTable.copyrightHolderId,
-        copyrightHolderName: copyrightHolderTable.name,
-        licenseType: ecoaScaleTable.licenseType,
-        copyrightYear: ecoaScaleTable.copyrightYear,
         copyrightInfo: ecoaScaleTable.copyrightInfo,
-        licenseTerms: ecoaScaleTable.licenseTerms,
-        usageRestrictions: ecoaScaleTable.usageRestrictions,
+        // Copyright license information from separate table
+        copyrightHolderName: copyrightLicensesTable.copyrightHolder,
+        licenseType: copyrightLicensesTable.licenseType,
+        licenseTerms: copyrightLicensesTable.licenseTerms,
+        usageRestrictions: copyrightLicensesTable.usageRestrictions,
       })
       .from(ecoaScaleTable)
       .leftJoin(ecoaCategoryTable, eq(ecoaScaleTable.categoryId, ecoaCategoryTable.id))
-      .leftJoin(copyrightHolderTable, eq(ecoaScaleTable.copyrightHolderId, copyrightHolderTable.id));
+      .leftJoin(copyrightLicensesTable, eq(ecoaScaleTable.id, copyrightLicensesTable.scaleId));
 
     // 添加状态筛选
     if (status !== 'all') {
@@ -108,23 +106,23 @@ export async function GET(request: NextRequest) {
       .offset(offset);
 
     // 获取统计信息
-    const totalCount = await db
+    const totalCountResult = await db
       .select({ count: sql<number>`count(*)` })
       .from(ecoaScaleTable);
-
-    const statusStats = await db
+    console.warn('statusStatsResult1111', totalCountResult);
+    const statusStatsResult = await db
       .select({
         validationStatus: ecoaScaleTable.validationStatus,
         count: sql<number>`count(*)`
       })
       .from(ecoaScaleTable)
       .groupBy(ecoaScaleTable.validationStatus);
-
+    console.warn('statusStatsResult1111', statusStatsResult);
     const statistics = {
-      total: totalCount[0]?.count || 0,
-      published: statusStats.find(s => s.validationStatus === 'published')?.count || 0,
-      validated: statusStats.find(s => s.validationStatus === 'validated')?.count || 0,
-      draft: statusStats.find(s => s.validationStatus === 'draft')?.count || 0,
+      total: totalCountResult?.[0]?.count || 0,
+      published: statusStatsResult?.find(s => s?.validationStatus === 'published')?.count || 0,
+      validated: statusStatsResult?.find(s => s?.validationStatus === 'validated')?.count || 0,
+      draft: statusStatsResult?.find(s => s?.validationStatus === 'draft')?.count || 0,
     };
 
     return NextResponse.json({
@@ -132,10 +130,10 @@ export async function GET(request: NextRequest) {
       scales,
       statistics,
       pagination: {
-        total: totalCount[0]?.count || 0,
+        total: totalCountResult?.[0]?.count || 0,
         limit,
         offset,
-        hasMore: (totalCount[0]?.count || 0) > offset + limit
+        hasMore: (totalCountResult?.[0]?.count || 0) > offset + limit
       }
     });
 
@@ -157,7 +155,7 @@ export async function POST(request: NextRequest) {
     }
 
     const db = getDB();
-    
+
     // 检查是否为管理员
     const user = await db
       .select({ role: userTable.role })
@@ -190,14 +188,19 @@ export async function POST(request: NextRequest) {
       languages: [],
       usageCount: 0,
       favoriteCount: 0,
-      // Copyright fields
-      copyrightHolderId: scaleData.copyrightHolderId || null,
-      licenseType: scaleData.licenseType || 'contact_required',
-      copyrightYear: scaleData.copyrightYear || null,
       copyrightInfo: scaleData.copyrightInfo || null,
-      licenseTerms: scaleData.licenseTerms || null,
-      usageRestrictions: scaleData.usageRestrictions || null,
     });
+
+    // 如果有版权信息，创建版权许可记录
+    if (scaleData.copyrightHolderId || scaleData.licenseType) {
+      await db.insert(copyrightLicensesTable).values({
+        scaleId: scaleId,
+        licenseType: scaleData.licenseType || 'contact_required',
+        copyrightHolder: scaleData.copyrightHolderId || null,
+        licenseTerms: scaleData.licenseTerms || null,
+        usageRestrictions: scaleData.usageRestrictions || null,
+      });
+    }
 
     // 获取创建的量表详情
     const createdScale = await db
@@ -214,7 +217,7 @@ export async function POST(request: NextRequest) {
 
   } catch (error) {
     console.error('Admin创建量表错误:', error);
-    
+
     if (error instanceof z.ZodError) {
       return NextResponse.json(
         { error: 'Invalid scale data', details: error.errors },

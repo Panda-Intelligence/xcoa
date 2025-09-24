@@ -13,7 +13,8 @@ import {
   CheckCircle,
   AlertCircle,
   BookOpen,
-  BarChart3
+  BarChart3,
+  Plus
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';

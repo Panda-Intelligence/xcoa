@@ -75,7 +75,7 @@ export async function GET(request: NextRequest) {
     `);
 
     // 获取统计信息
-    const statsResult = await db.execute(sql`
+    const statsResult = await db.run(sql`
       SELECT
         COUNT(*) as total,
         SUM(CASE WHEN status = 'open' THEN 1 ELSE 0 END) as open,

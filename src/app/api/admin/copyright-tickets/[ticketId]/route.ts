@@ -24,7 +24,7 @@ export async function GET(
     }
 
     const db = getDB();
-    
+
     // 检查是否为管理员
     const user = await db
       .select({ role: userTable.role })
@@ -40,9 +40,9 @@ export async function GET(
     const { ticketId } = params;
 
     // 获取工单详情
-    const ticketResult = await db.execute(sql`
+    const ticketResult = await db.run(sql`
       SELECT
-        ct.*, 
+        ct.*,
         u.firstName as userName, u.lastName as userLastName, u.email as userEmail,
         es.name as scaleName, es.acronym as scaleAcronym, es.description as scaleDescription
       FROM copyright_ticket ct
@@ -58,7 +58,7 @@ export async function GET(
     const ticket = ticketResult.results[0];
 
     // 获取工单消息历史
-    const messagesResult = await db.execute(sql`
+    const messagesResult = await db.run(sql`
       SELECT *
       FROM copyright_ticket_message
       WHERE ticketId = ${ticketId}
@@ -94,7 +94,7 @@ export async function PUT(
     }
 
     const db = getDB();
-    
+
     // 检查是否为管理员
     const user = await db
       .select({ role: userTable.role })
@@ -112,7 +112,7 @@ export async function PUT(
     const updateData = updateTicketSchema.parse(body);
 
     // 检查工单是否存在
-    const ticketCheck = await db.execute(sql`
+    const ticketCheck = await db.run(sql`
       SELECT id FROM copyright_ticket WHERE id = ${ticketId}
     `);
 
@@ -143,15 +143,15 @@ export async function PUT(
     updateValues.push(Math.floor(Date.now() / 1000));
 
     // 执行更新
-    await db.execute(sql`
-      UPDATE copyright_ticket 
+    await db.run(sql`
+      UPDATE copyright_ticket
       SET ${sql.raw(updateFields.join(', '))}
       WHERE id = ${ticketId}
     `);
 
     // 如果有管理员备注，添加消息记录
     if (updateData.adminNotes) {
-      await db.execute(sql`
+      await db.run(sql`
         INSERT INTO copyright_ticket_message (
           id, ticketId, messageType, sender, subject, content, isRead, isPublic, createdAt
         ) VALUES (
@@ -163,7 +163,7 @@ export async function PUT(
 
     // 如果有回复消息，添加用户可见的消息
     if (updateData.responseMessage) {
-      await db.execute(sql`
+      await db.run(sql`
         INSERT INTO copyright_ticket_message (
           id, ticketId, messageType, sender, subject, content, isRead, isPublic, createdAt
         ) VALUES (
@@ -180,7 +180,7 @@ export async function PUT(
 
   } catch (error) {
     console.error('Admin更新工单错误:', error);
-    
+
     if (error instanceof z.ZodError) {
       return NextResponse.json(
         { error: 'Invalid update data', details: error.errors },
@@ -206,7 +206,7 @@ export async function DELETE(
     }
 
     const db = getDB();
-    
+
     // 检查是否为管理员
     const user = await db
       .select({ role: userTable.role })
@@ -222,12 +222,12 @@ export async function DELETE(
     const { ticketId } = params;
 
     // 删除相关消息
-    await db.execute(sql`
+    await db.run(sql`
       DELETE FROM copyright_ticket_message WHERE ticketId = ${ticketId}
     `);
 
     // 删除工单
-    await db.execute(sql`
+    await db.run(sql`
       DELETE FROM copyright_ticket WHERE id = ${ticketId}
     `);
 

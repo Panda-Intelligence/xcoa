@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getDB } from '@/db';
-import { ecoaScaleTable, userTable } from '@/db/schema';
+import { ecoaScaleTable, userTable, copyrightLicensesTable } from '@/db/schema';
 import { eq } from 'drizzle-orm';
 import { getSessionFromCookie } from '@/utils/auth';
 import { z } from 'zod';
@@ -14,11 +14,10 @@ const updateScaleSchema = z.object({
   targetPopulation: z.string().optional(),
   ageRange: z.string().optional(),
   validationStatus: z.enum(['draft', 'validated', 'published']).optional(),
-  // Copyright fields
+  copyrightInfo: z.string().optional(),
+  // Copyright license fields (for separate table)
   copyrightHolderId: z.string().optional(),
   licenseType: z.enum(['public_domain', 'open_source', 'academic_free', 'commercial', 'restricted', 'contact_required']).optional(),
-  copyrightYear: z.number().optional(),
-  copyrightInfo: z.string().optional(),
   licenseTerms: z.string().optional(),
   usageRestrictions: z.string().optional()
 });
@@ -51,8 +50,16 @@ export async function GET(
 
     // 获取量表详情
     const scale = await db
-      .select()
+      .select({
+        ...ecoaScaleTable,
+        // Copyright license info from separate table
+        copyrightHolderName: copyrightLicensesTable.copyrightHolder,
+        licenseType: copyrightLicensesTable.licenseType,
+        licenseTerms: copyrightLicensesTable.licenseTerms,
+        usageRestrictions: copyrightLicensesTable.usageRestrictions,
+      })
       .from(ecoaScaleTable)
+      .leftJoin(copyrightLicensesTable, eq(ecoaScaleTable.id, copyrightLicensesTable.scaleId))
       .where(eq(ecoaScaleTable.id, scaleId))
       .limit(1);
 
@@ -126,19 +133,48 @@ export async function PUT(
     if (updateData.targetPopulation !== undefined) updateFields.targetPopulation = updateData.targetPopulation;
     if (updateData.ageRange !== undefined) updateFields.ageRange = updateData.ageRange;
     if (updateData.validationStatus) updateFields.validationStatus = updateData.validationStatus;
-    // Copyright fields
-    if (updateData.copyrightHolderId !== undefined) updateFields.copyrightHolderId = updateData.copyrightHolderId;
-    if (updateData.licenseType !== undefined) updateFields.licenseType = updateData.licenseType;
-    if (updateData.copyrightYear !== undefined) updateFields.copyrightYear = updateData.copyrightYear;
     if (updateData.copyrightInfo !== undefined) updateFields.copyrightInfo = updateData.copyrightInfo;
-    if (updateData.licenseTerms !== undefined) updateFields.licenseTerms = updateData.licenseTerms;
-    if (updateData.usageRestrictions !== undefined) updateFields.usageRestrictions = updateData.usageRestrictions;
 
-    // 执行更新
+    // 执行量表基本信息更新
     await db
       .update(ecoaScaleTable)
       .set(updateFields)
       .where(eq(ecoaScaleTable.id, scaleId));
+
+    // 处理版权许可信息更新
+    if (updateData.copyrightHolderId !== undefined || updateData.licenseType !== undefined || 
+        updateData.licenseTerms !== undefined || updateData.usageRestrictions !== undefined) {
+      
+      // 检查是否已存在版权许可记录
+      const existingLicense = await db
+        .select()
+        .from(copyrightLicensesTable)
+        .where(eq(copyrightLicensesTable.scaleId, scaleId))
+        .limit(1);
+
+      if (existingLicense.length > 0) {
+        // 更新现有记录
+        const licenseUpdateFields: any = {};
+        if (updateData.licenseType !== undefined) licenseUpdateFields.licenseType = updateData.licenseType;
+        if (updateData.copyrightHolderId !== undefined) licenseUpdateFields.copyrightHolder = updateData.copyrightHolderId;
+        if (updateData.licenseTerms !== undefined) licenseUpdateFields.licenseTerms = updateData.licenseTerms;
+        if (updateData.usageRestrictions !== undefined) licenseUpdateFields.usageRestrictions = updateData.usageRestrictions;
+
+        await db
+          .update(copyrightLicensesTable)
+          .set(licenseUpdateFields)
+          .where(eq(copyrightLicensesTable.scaleId, scaleId));
+      } else {
+        // 创建新记录
+        await db.insert(copyrightLicensesTable).values({
+          scaleId: scaleId,
+          licenseType: updateData.licenseType || 'contact_required',
+          copyrightHolder: updateData.copyrightHolderId || null,
+          licenseTerms: updateData.licenseTerms || null,
+          usageRestrictions: updateData.usageRestrictions || null,
+        });
+      }
+    }
 
     // 获取更新后的量表
     const updatedScale = await db

@@ -228,7 +228,7 @@ export async function PUT(request: NextRequest) {
     const updateData = teamTypeUpdateSchema.parse(body);
 
     // 更新用户团队类型信息 (通过 SQL 直接更新，因为表结构是新增的)
-    await db.execute(sql`
+    await db.run(sql`
       UPDATE user SET
         teamType = ${updateData.teamType},
         organizationName = ${updateData.organizationName || null},
@@ -240,7 +240,7 @@ export async function PUT(request: NextRequest) {
     `);
 
     // 获取更新后的用户信息
-    const updatedUser = await db.execute(sql`
+    const updatedUser = await db.run(sql`
       SELECT teamType, organizationName, organizationSize, organizationCountry
       FROM user WHERE id = ${user.id}
     `);

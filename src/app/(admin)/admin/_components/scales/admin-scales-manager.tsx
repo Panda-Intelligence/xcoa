@@ -56,12 +56,10 @@ interface EcoaScale {
   isPublic: number;
   createdAt: string;
   updatedAt: string;
-  // Copyright fields
+  // Copyright fields (from copyright_licenses table)
   copyrightHolderId?: string;
   copyrightHolderName?: string;
   licenseType?: string;
-  copyrightYear?: number;
-  copyrightInfo?: string;
   licenseTerms?: string;
   usageRestrictions?: string;
 }
@@ -92,16 +90,14 @@ export function AdminScalesManager() {
     nameEn: "",
     acronym: "",
     description: "",
-    descriptionEn: "",
     administrationTime: "",
     targetPopulation: "",
     ageRange: "",
     validationStatus: "draft",
-    // Copyright fields
+    copyrightInfo: "",
+    // Copyright license fields (for separate table)
     copyrightHolderId: "",
     licenseType: "contact_required",
-    copyrightYear: "",
-    copyrightInfo: "",
     licenseTerms: "",
     usageRestrictions: ""
   });
@@ -157,8 +153,7 @@ export function AdminScalesManager() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           ...newScale,
-          administrationTime: newScale.administrationTime ? parseInt(newScale.administrationTime) : null,
-          copyrightYear: newScale.copyrightYear ? parseInt(newScale.copyrightYear) : null,
+          administrationTime: newScale.administrationTime ? Number.parseInt(newScale.administrationTime) : null,
         })
       });
 
@@ -187,8 +182,7 @@ export function AdminScalesManager() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           ...newScale,
-          administrationTime: newScale.administrationTime ? parseInt(newScale.administrationTime) : null,
-          copyrightYear: newScale.copyrightYear ? parseInt(newScale.copyrightYear) : null,
+          administrationTime: newScale.administrationTime ? Number.parseInt(newScale.administrationTime) : null,
         })
       });
 
@@ -240,16 +234,14 @@ export function AdminScalesManager() {
       nameEn: scale.nameEn || "",
       acronym: scale.acronym || "",
       description: scale.description || "",
-      descriptionEn: "", // Not in current schema
       administrationTime: scale.administrationTime?.toString() || "",
       targetPopulation: scale.targetPopulation || "",
       ageRange: scale.ageRange || "",
       validationStatus: scale.validationStatus,
-      // Copyright fields
+      copyrightInfo: scale.copyrightInfo || "",
+      // Copyright license fields
       copyrightHolderId: scale.copyrightHolderId || "",
       licenseType: scale.licenseType || "contact_required",
-      copyrightYear: scale.copyrightYear?.toString() || "",
-      copyrightInfo: scale.copyrightInfo || "",
       licenseTerms: scale.licenseTerms || "",
       usageRestrictions: scale.usageRestrictions || ""
     });
@@ -262,16 +254,14 @@ export function AdminScalesManager() {
       nameEn: "",
       acronym: "",
       description: "",
-      descriptionEn: "",
       administrationTime: "",
       targetPopulation: "",
       ageRange: "",
       validationStatus: "draft",
-      // Copyright fields
+      copyrightInfo: "",
+      // Copyright license fields
       copyrightHolderId: "",
       licenseType: "contact_required",
-      copyrightYear: "",
-      copyrightInfo: "",
       licenseTerms: "",
       usageRestrictions: ""
     });
