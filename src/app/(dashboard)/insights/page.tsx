@@ -8,5 +8,5 @@ export default async function DashboardPage() {
     redirect("/sign-in");
   }
 
-  redirect("/dashboard/scales");
+  redirect("/scales");
 }

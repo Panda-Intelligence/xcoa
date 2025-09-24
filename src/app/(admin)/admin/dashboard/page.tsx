@@ -59,7 +59,7 @@ export default function Page() {
       <PageHeader
         items={[
           {
-            href: "/dashboard",
+            href: "/scales",
             label: t("common.dashboard")
           }
         ]}
@@ -115,7 +115,7 @@ export default function Page() {
             </Card>
           </Link>
 
-          <Link href="/dashboard/interpretation">
+          <Link href="/insights/interpretation">
             <Card className="hover:shadow-md transition-shadow cursor-pointer h-full">
               <CardContent className="p-6 text-center">
                 <BookOpen className="w-12 h-12 mx-auto mb-3 text-purple-600" />
@@ -308,7 +308,7 @@ export default function Page() {
                 </Button>
               </Link>
 
-              <Link href="/dashboard/interpretation">
+              <Link href="/insights/interpretation">
                 <Button variant="outline" className="w-full justify-start">
                   <BookOpen className="w-4 h-4 mr-2" />
                   {t("dashboard.scale_guide")}

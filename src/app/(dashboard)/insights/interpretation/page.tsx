@@ -93,7 +93,7 @@ export default function InterpretationPage() {
     <>
       <PageHeader
         items={[
-          { href: "/dashboard/interpretation", label: "量表解读" }
+          { href: "/insights/interpretation", label: "量表解读" }
         ]}
       />
 
@@ -197,7 +197,7 @@ export default function InterpretationPage() {
 
                     {/* 操作按钮 */}
                     <div className="flex space-x-2 pt-2">
-                      <Link href={`/dashboard/interpretation/${scale.id}`} className="flex-1">
+                      <Link href={`/insights/interpretation/${scale.id}`} className="flex-1">
                         <Button size="sm" className="w-full">
                           <Eye className="w-3 h-3 mr-1" />
                           查看解读

@@ -113,7 +113,7 @@ export function ClinicalCaseDetail({ caseId }: ClinicalCaseDetailProps) {
             <AlertTriangle className="w-12 h-12 mx-auto mb-4 text-red-500" />
             <p className="text-lg font-medium mb-2">加载失败</p>
             <p className="text-muted-foreground mb-4">{error || "案例不存在"}</p>
-            <Button onClick={() => router.push("/dashboard/cases")}>
+            <Button onClick={() => router.push("/insights/cases")}>
               返回案例列表
             </Button>
           </div>
@@ -127,7 +127,7 @@ export function ClinicalCaseDetail({ caseId }: ClinicalCaseDetailProps) {
       <div className="max-w-4xl mx-auto px-4 py-8">
         <Button
           variant="ghost"
-          onClick={() => router.push("/dashboard/cases")}
+          onClick={() => router.push("/insights/cases")}
           className="mb-6"
         >
           <ChevronLeft className="w-4 h-4 mr-2" />

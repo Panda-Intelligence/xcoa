@@ -12,11 +12,7 @@ import { Badge } from "@/components/ui/badge";
 import {
   Shield,
   Search,
-  Plus,
   ChevronLeft,
-  Mail,
-  Building,
-  User,
   Send
 } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
@@ -160,7 +156,6 @@ export function CopyrightTicketCreate() {
     <>
       <PageHeader
         items={[
-          { href: "/dashboard", label: t("common.dashboard") },
           { href: "/scales/copyright", label: "版权服务" },
           { href: "/scales/copyright/create", label: "创建工单" }
         ]}

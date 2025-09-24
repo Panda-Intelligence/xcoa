@@ -141,8 +141,8 @@ export default function ClinicalCasesPage() {
     <div className="flex flex-col h-screen">
       <PageHeader
         items={[
-          { href: "/dashboard/interpretation", label: "量表解读" },
-          { href: "/dashboard/cases", label: "临床案例" }
+          { href: "/insights/interpretation", label: "量表解读" },
+          { href: "/insights/cases", label: "临床案例" }
         ]}
       />
 
@@ -256,7 +256,7 @@ export default function ClinicalCasesPage() {
             ) : (
               cases.map((clinicalCase) => (
                 <Card key={clinicalCase.id} className="hover:shadow-md transition-shadow cursor-pointer"
-                  onClick={() => window.location.href = `/dashboard/cases/${clinicalCase.id}`}>
+                  onClick={() => window.location.href = `/insights/cases/${clinicalCase.id}`}>
                   <CardHeader className="pb-3">
                     <div className="flex items-start justify-between">
                       <div className="flex-1">
@@ -353,7 +353,7 @@ export default function ClinicalCasesPage() {
                           className="flex-1"
                           onClick={(e) => {
                             e.stopPropagation();
-                            router.push(`/dashboard/cases/${clinicalCase.id}`);
+                            router.push(`/insights/cases/${clinicalCase.id}`);
                           }}
                         >
                           <Eye className="w-3 h-3 mr-1" />

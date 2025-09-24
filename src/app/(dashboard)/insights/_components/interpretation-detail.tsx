@@ -114,7 +114,7 @@ export function InterpretationDetail({ scaleId }: InterpretationDetailProps) {
             <AlertTriangle className="w-12 h-12 mx-auto mb-4 text-red-500" />
             <p className="text-lg font-medium mb-2">加载失败</p>
             <p className="text-muted-foreground mb-4">{error || "解读指南不存在"}</p>
-            <Button onClick={() => router.push("/dashboard/interpretation")}>
+            <Button onClick={() => router.push("/insights/interpretation")}>
               返回解读指南列表
             </Button>
           </div>
@@ -126,7 +126,7 @@ export function InterpretationDetail({ scaleId }: InterpretationDetailProps) {
   return (
     <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
       <div className="flex items-center justify-between">
-        <Button variant="ghost" onClick={() => router.push("/dashboard/interpretation")}>
+        <Button variant="ghost" onClick={() => router.push("/insights/interpretation")}>
           <ChevronLeft className="w-4 h-4 mr-2" />
           返回解读指南列表
         </Button>
