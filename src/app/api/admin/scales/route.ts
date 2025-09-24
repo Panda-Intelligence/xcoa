@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getDB } from '@/db';
-import { ecoaScaleTable, ecoaCategoryTable, userTable } from '@/db/schema';
+import { ecoaScaleTable, ecoaCategoryTable, userTable, copyrightHolderTable } from '@/db/schema';
 import { eq, like, or, and, sql, desc } from 'drizzle-orm';
 import { getSessionFromCookie } from '@/utils/auth';
 import { z } from 'zod';
@@ -15,7 +15,14 @@ const createScaleSchema = z.object({
   administrationTime: z.number().optional(),
   targetPopulation: z.string().optional(),
   ageRange: z.string().optional(),
-  validationStatus: z.enum(['draft', 'validated', 'published']).default('draft')
+  validationStatus: z.enum(['draft', 'validated', 'published']).default('draft'),
+  // Copyright fields
+  copyrightHolderId: z.string().optional(),
+  licenseType: z.enum(['public_domain', 'open_source', 'academic_free', 'commercial', 'restricted', 'contact_required']).optional(),
+  copyrightYear: z.number().optional(),
+  copyrightInfo: z.string().optional(),
+  licenseTerms: z.string().optional(),
+  usageRestrictions: z.string().optional()
 });
 
 // Admin获取量表列表
@@ -65,9 +72,18 @@ export async function GET(request: NextRequest) {
         isPublic: ecoaScaleTable.isPublic,
         createdAt: ecoaScaleTable.createdAt,
         updatedAt: ecoaScaleTable.updatedAt,
+        // Copyright fields
+        copyrightHolderId: ecoaScaleTable.copyrightHolderId,
+        copyrightHolderName: copyrightHolderTable.name,
+        licenseType: ecoaScaleTable.licenseType,
+        copyrightYear: ecoaScaleTable.copyrightYear,
+        copyrightInfo: ecoaScaleTable.copyrightInfo,
+        licenseTerms: ecoaScaleTable.licenseTerms,
+        usageRestrictions: ecoaScaleTable.usageRestrictions,
       })
       .from(ecoaScaleTable)
-      .leftJoin(ecoaCategoryTable, eq(ecoaScaleTable.categoryId, ecoaCategoryTable.id));
+      .leftJoin(ecoaCategoryTable, eq(ecoaScaleTable.categoryId, ecoaCategoryTable.id))
+      .leftJoin(copyrightHolderTable, eq(ecoaScaleTable.copyrightHolderId, copyrightHolderTable.id));
 
     // 添加状态筛选
     if (status !== 'all') {
@@ -174,6 +190,13 @@ export async function POST(request: NextRequest) {
       languages: [],
       usageCount: 0,
       favoriteCount: 0,
+      // Copyright fields
+      copyrightHolderId: scaleData.copyrightHolderId || null,
+      licenseType: scaleData.licenseType || 'contact_required',
+      copyrightYear: scaleData.copyrightYear || null,
+      copyrightInfo: scaleData.copyrightInfo || null,
+      licenseTerms: scaleData.licenseTerms || null,
+      usageRestrictions: scaleData.usageRestrictions || null,
     });
 
     // 获取创建的量表详情

@@ -9,6 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Table,
   TableBody,
@@ -55,6 +56,14 @@ interface EcoaScale {
   isPublic: number;
   createdAt: string;
   updatedAt: string;
+  // Copyright fields
+  copyrightHolderId?: string;
+  copyrightHolderName?: string;
+  licenseType?: string;
+  copyrightYear?: number;
+  copyrightInfo?: string;
+  licenseTerms?: string;
+  usageRestrictions?: string;
 }
 
 interface ScaleStats {
@@ -87,12 +96,33 @@ export function AdminScalesManager() {
     administrationTime: "",
     targetPopulation: "",
     ageRange: "",
-    validationStatus: "draft"
+    validationStatus: "draft",
+    // Copyright fields
+    copyrightHolderId: "",
+    licenseType: "contact_required",
+    copyrightYear: "",
+    copyrightInfo: "",
+    licenseTerms: "",
+    usageRestrictions: ""
   });
+  const [copyrightHolders, setCopyrightHolders] = useState<Array<{ id: string; name: string; organizationType: string }>>([]);
 
   useEffect(() => {
     fetchScales();
+    fetchCopyrightHolders();
   }, [statusFilter, page]);
+
+  const fetchCopyrightHolders = async () => {
+    try {
+      const response = await fetch("/api/admin/copyright-holders");
+      const data = await response.json();
+      if (data.success) {
+        setCopyrightHolders(data.copyrightHolders || []);
+      }
+    } catch (error) {
+      console.error("加载版权方列表失败:", error);
+    }
+  };
 
   const fetchScales = async () => {
     try {
@@ -128,6 +158,7 @@ export function AdminScalesManager() {
         body: JSON.stringify({
           ...newScale,
           administrationTime: newScale.administrationTime ? parseInt(newScale.administrationTime) : null,
+          copyrightYear: newScale.copyrightYear ? parseInt(newScale.copyrightYear) : null,
         })
       });
 
@@ -157,6 +188,7 @@ export function AdminScalesManager() {
         body: JSON.stringify({
           ...newScale,
           administrationTime: newScale.administrationTime ? parseInt(newScale.administrationTime) : null,
+          copyrightYear: newScale.copyrightYear ? parseInt(newScale.copyrightYear) : null,
         })
       });
 
@@ -212,7 +244,14 @@ export function AdminScalesManager() {
       administrationTime: scale.administrationTime?.toString() || "",
       targetPopulation: scale.targetPopulation || "",
       ageRange: scale.ageRange || "",
-      validationStatus: scale.validationStatus
+      validationStatus: scale.validationStatus,
+      // Copyright fields
+      copyrightHolderId: scale.copyrightHolderId || "",
+      licenseType: scale.licenseType || "contact_required",
+      copyrightYear: scale.copyrightYear?.toString() || "",
+      copyrightInfo: scale.copyrightInfo || "",
+      licenseTerms: scale.licenseTerms || "",
+      usageRestrictions: scale.usageRestrictions || ""
     });
     setEditDialogOpen(true);
   };
@@ -227,7 +266,14 @@ export function AdminScalesManager() {
       administrationTime: "",
       targetPopulation: "",
       ageRange: "",
-      validationStatus: "draft"
+      validationStatus: "draft",
+      // Copyright fields
+      copyrightHolderId: "",
+      licenseType: "contact_required",
+      copyrightYear: "",
+      copyrightInfo: "",
+      licenseTerms: "",
+      usageRestrictions: ""
     });
   };
 
@@ -293,7 +339,7 @@ export function AdminScalesManager() {
                 创建量表
               </Button>
             </DialogTrigger>
-            <DialogContent className="max-w-3xl">
+            <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
               <DialogHeader>
                 <DialogTitle>创建新量表</DialogTitle>
                 <DialogDescription>
@@ -301,101 +347,121 @@ export function AdminScalesManager() {
                 </DialogDescription>
               </DialogHeader>
 
-              <div className="space-y-4">
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <Label>量表名称 (中文) *</Label>
-                    <Input
-                      value={newScale.name}
-                      onChange={(e) => setNewScale({ ...newScale, name: e.target.value })}
-                      placeholder="患者健康问卷"
-                    />
-                  </div>
-                  <div>
-                    <Label>量表名称 (英文)</Label>
-                    <Input
-                      value={newScale.nameEn}
-                      onChange={(e) => setNewScale({ ...newScale, nameEn: e.target.value })}
-                      placeholder="Patient Health Questionnaire"
-                    />
-                  </div>
-                </div>
+              <Tabs defaultValue="basic" className="w-full">
+                <TabsList className="grid w-full grid-cols-2">
+                  <TabsTrigger value="basic">基本信息</TabsTrigger>
+                  <TabsTrigger value="copyright">版权信息</TabsTrigger>
+                </TabsList>
 
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <Label>缩写 *</Label>
-                    <Input
-                      value={newScale.acronym}
-                      onChange={(e) => setNewScale({ ...newScale, acronym: e.target.value })}
-                      placeholder="PHQ-9"
-                    />
+                <TabsContent value="basic" className="space-y-4 mt-4">
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <Label>量表名称 (中文) *</Label>
+                      <Input
+                        value={newScale.name}
+                        onChange={(e) => setNewScale({ ...newScale, name: e.target.value })}
+                        placeholder="患者健康问卷"
+                      />
+                    </div>
+                    <div>
+                      <Label>量表名称 (英文)</Label>
+                      <Input
+                        value={newScale.nameEn}
+                        onChange={(e) => setNewScale({ ...newScale, nameEn: e.target.value })}
+                        placeholder="Patient Health Questionnaire"
+                      />
+                    </div>
                   </div>
-                  <div>
-                    <Label>状态</Label>
-                    <Select value={newScale.validationStatus} onValueChange={(value) =>
-                      setNewScale({ ...newScale, validationStatus: value })}>
-                      <SelectTrigger>
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="draft">草稿</SelectItem>
-                        <SelectItem value="validated">已验证</SelectItem>
-                        <SelectItem value="published">已发布</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </div>
 
-                <div>
-                  <Label>描述</Label>
-                  <Textarea
-                    value={newScale.description}
-                    onChange={(e) => setNewScale({ ...newScale, description: e.target.value })}
-                    placeholder="量表的详细描述..."
-                    rows={3}
-                  />
-                </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <Label>缩写 *</Label>
+                      <Input
+                        value={newScale.acronym}
+                        onChange={(e) => setNewScale({ ...newScale, acronym: e.target.value })}
+                        placeholder="PHQ-9"
+                      />
+                    </div>
+                    <div>
+                      <Label>状态</Label>
+                      <Select value={newScale.validationStatus} onValueChange={(value) =>
+                        setNewScale({ ...newScale, validationStatus: value })}>
+                        <SelectTrigger>
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="draft">草稿</SelectItem>
+                          <SelectItem value="validated">已验证</SelectItem>
+                          <SelectItem value="published">已发布</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
 
-                <div className="grid grid-cols-3 gap-4">
                   <div>
-                    <Label>管理时间 (分钟)</Label>
-                    <Input
-                      type="number"
-                      value={newScale.administrationTime}
-                      onChange={(e) => setNewScale({ ...newScale, administrationTime: e.target.value })}
-                      placeholder="10"
+                    <Label>描述</Label>
+                    <Textarea
+                      value={newScale.description}
+                      onChange={(e) => setNewScale({ ...newScale, description: e.target.value })}
+                      placeholder="量表的详细描述..."
+                      rows={3}
                     />
                   </div>
-                  <div>
-                    <Label>目标人群</Label>
-                    <Input
-                      value={newScale.targetPopulation}
-                      onChange={(e) => setNewScale({ ...newScale, targetPopulation: e.target.value })}
-                      placeholder="成年患者"
-                    />
-                  </div>
-                  <div>
-                    <Label>年龄范围</Label>
-                    <Input
-                      value={newScale.ageRange}
-                      onChange={(e) => setNewScale({ ...newScale, ageRange: e.target.value })}
-                      placeholder="18-65岁"
-                    />
-                  </div>
-                </div>
 
-                <div className="flex justify-end space-x-2">
-                  <Button variant="outline" onClick={() => setCreateDialogOpen(false)}>
-                    取消
-                  </Button>
-                  <Button
-                    onClick={handleCreateScale}
-                    disabled={!newScale.name || !newScale.acronym}
-                  >
-                    创建量表
-                  </Button>
-                </div>
-              </div>
+                  <div className="grid grid-cols-3 gap-4">
+                    <div>
+                      <Label>管理时间 (分钟)</Label>
+                      <Input
+                        type="number"
+                        value={newScale.administrationTime}
+                        onChange={(e) => setNewScale({ ...newScale, administrationTime: e.target.value })}
+                        placeholder="10"
+                      />
+                    </div>
+                    <div>
+                      <Label>目标人群</Label>
+                      <Input
+                        value={newScale.targetPopulation}
+                        onChange={(e) => setNewScale({ ...newScale, targetPopulation: e.target.value })}
+                        placeholder="成年患者"
+                      />
+                    </div>
+                    <div>
+                      <Label>年龄范围</Label>
+                      <Input
+                        value={newScale.ageRange}
+                        onChange={(e) => setNewScale({ ...newScale, ageRange: e.target.value })}
+                        placeholder="18-65岁"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="flex justify-end space-x-2">
+                    <Button variant="outline" onClick={() => setCreateDialogOpen(false)}>
+                      取消
+                    </Button>
+                    <Button
+                      onClick={handleCreateScale}
+                      disabled={!newScale.name || !newScale.acronym}
+                    >
+                      创建量表
+                    </Button>
+                  </div>
+                </TabsContent>
+                <TabsContent value="copyright">
+                  <div className="space-y-4">
+                    <div>
+                      <Label>版权信息</Label>
+                      <Textarea
+                        value={newScale.copyrightInfo}
+                        onChange={(e) => setNewScale({ ...newScale, copyrightInfo: e.target.value })}
+                        placeholder="版权所有 © 2023 患者健康问卷"
+                        rows={3}
+                      />
+                    </div>
+                  </div>
+                </TabsContent>
+              </Tabs>
             </DialogContent>
           </Dialog>
 
@@ -578,9 +644,10 @@ export function AdminScalesManager() {
                   <TableHead>量表信息</TableHead>
                   <TableHead>缩写</TableHead>
                   <TableHead>状态</TableHead>
+                  <TableHead>版权方</TableHead>
+                  <TableHead>许可类型</TableHead>
                   <TableHead>题目数</TableHead>
                   <TableHead>使用次数</TableHead>
-                  <TableHead>收藏数</TableHead>
                   <TableHead>操作</TableHead>
                 </TableRow>
               </TableHeader>
@@ -608,27 +675,37 @@ export function AdminScalesManager() {
                         {getStatusLabel(scale.validationStatus)}
                       </Badge>
                     </TableCell>
+                    <TableCell>
+                      {scale.copyrightHolderName || "未设置"}
+                    </TableCell>
+                    <TableCell>
+                      {scale.licenseType ? (
+                        <Badge variant="outline" className="text-xs">
+                          {scale.licenseType === 'public_domain' ? '公共领域' :
+                            scale.licenseType === 'academic_free' ? '学术免费' :
+                              scale.licenseType === 'commercial' ? '商业许可' :
+                                scale.licenseType === 'contact_required' ? '需联系' : scale.licenseType}
+                        </Badge>
+                      ) : "未设置"}
+                    </TableCell>
                     <TableCell className="text-center">
                       {scale.itemsCount}
                     </TableCell>
                     <TableCell className="text-center">
                       {scale.usageCount}
                     </TableCell>
-                    <TableCell className="text-center">
-                      {scale.favoriteCount}
-                    </TableCell>
                     <TableCell>
                       <div className="flex space-x-2">
-                        <Button 
-                          size="sm" 
+                        <Button
+                          size="sm"
                           variant="outline"
                           onClick={() => router.push(`/scales/${scale.id}`)}
                         >
                           <Eye className="w-3 h-3 mr-1" />
                           预览
                         </Button>
-                        <Button 
-                          size="sm" 
+                        <Button
+                          size="sm"
                           variant="outline"
                           onClick={() => router.push(`/admin/scales/${scale.id}`)}
                         >
@@ -658,7 +735,7 @@ export function AdminScalesManager() {
                   </TableRow>
                 )) : (
                   <TableRow>
-                    <TableCell colSpan={7} className="h-24 text-center">
+                    <TableCell colSpan={8} className="h-24 text-center">
                       暂无量表记录
                     </TableCell>
                   </TableRow>

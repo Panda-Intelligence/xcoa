@@ -13,7 +13,14 @@ const updateScaleSchema = z.object({
   administrationTime: z.number().optional(),
   targetPopulation: z.string().optional(),
   ageRange: z.string().optional(),
-  validationStatus: z.enum(['draft', 'validated', 'published']).optional()
+  validationStatus: z.enum(['draft', 'validated', 'published']).optional(),
+  // Copyright fields
+  copyrightHolderId: z.string().optional(),
+  licenseType: z.enum(['public_domain', 'open_source', 'academic_free', 'commercial', 'restricted', 'contact_required']).optional(),
+  copyrightYear: z.number().optional(),
+  copyrightInfo: z.string().optional(),
+  licenseTerms: z.string().optional(),
+  usageRestrictions: z.string().optional()
 });
 
 export async function GET(
@@ -119,6 +126,13 @@ export async function PUT(
     if (updateData.targetPopulation !== undefined) updateFields.targetPopulation = updateData.targetPopulation;
     if (updateData.ageRange !== undefined) updateFields.ageRange = updateData.ageRange;
     if (updateData.validationStatus) updateFields.validationStatus = updateData.validationStatus;
+    // Copyright fields
+    if (updateData.copyrightHolderId !== undefined) updateFields.copyrightHolderId = updateData.copyrightHolderId;
+    if (updateData.licenseType !== undefined) updateFields.licenseType = updateData.licenseType;
+    if (updateData.copyrightYear !== undefined) updateFields.copyrightYear = updateData.copyrightYear;
+    if (updateData.copyrightInfo !== undefined) updateFields.copyrightInfo = updateData.copyrightInfo;
+    if (updateData.licenseTerms !== undefined) updateFields.licenseTerms = updateData.licenseTerms;
+    if (updateData.usageRestrictions !== undefined) updateFields.usageRestrictions = updateData.usageRestrictions;
 
     // 执行更新
     await db
