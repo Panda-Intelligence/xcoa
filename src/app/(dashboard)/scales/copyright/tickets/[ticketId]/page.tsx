@@ -165,9 +165,8 @@ export default function TicketDetailPage({ params }: TicketDetailPageProps) {
     <>
       <PageHeader
         items={[
-          { href: "/dashboard", label: t("common.dashboard") },
-          { href: "/dashboard/copyright/tickets", label: "我的工单" },
-          { href: `/dashboard/copyright/tickets/${ticketId}`, label: ticket.ticketNumber }
+          { href: "/scales/copyright/tickets", label: "我的工单" },
+          { href: `/scales/copyright/tickets/${ticketId}`, label: ticket.ticketNumber }
         ]}
       />
 

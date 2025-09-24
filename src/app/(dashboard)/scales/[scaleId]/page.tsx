@@ -417,7 +417,7 @@ export default function ScalePage({ params }: ScalePageProps) {
                             <p className="text-sm text-blue-800 mb-3">
                               如果您需要使用此量表，我们可以帮助您联系版权方获取使用许可。
                             </p>
-                            <Link href={`/dashboard/copyright/create?scaleId=${scale.id}`}>
+                            <Link href={`/scales/copyright/create?scaleId=${scale.id}`}>
                               <Button size="sm" className="w-full">
                                 <Plus className="w-3 h-3 mr-2" />
                                 创建版权工单
@@ -430,7 +430,7 @@ export default function ScalePage({ params }: ScalePageProps) {
                             <p className="text-sm text-green-800 mb-3">
                               查看您已提交的版权申请和联系工单状态。
                             </p>
-                            <Link href="/dashboard/copyright/tickets">
+                            <Link href="/scales/copyright/tickets">
                               <Button size="sm" variant="outline" className="w-full">
                                 <Eye className="w-3 h-3 mr-2" />
                                 我的工单

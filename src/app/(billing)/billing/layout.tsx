@@ -26,16 +26,8 @@ export default async function SettingsLayout({
         <PageHeader
           items={[
             {
-              href: "/settings",
+              href: "/billing",
               label: "Overview"
-            },
-            {
-              href: "/settings/security",
-              label: "Security"
-            },
-            {
-              href: "/settings/sessions",
-              label: "Sessions"
             }
           ]}
         />

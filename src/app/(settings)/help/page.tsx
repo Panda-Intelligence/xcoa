@@ -76,7 +76,7 @@ const FAQ_DATA: FAQItem[] = [
     id: 'favorites_002',
     category: '收藏功能',
     question: '收藏的量表在哪里查看？',
-    answer: '访问侧边栏的"我的收藏"或直接访问/dashboard/scales/favorites页面。您可以搜索、筛选收藏的量表，也可以添加个人笔记。',
+    answer: '访问侧边栏的"我的收藏"或直接访问/scales/favorites页面。您可以搜索、筛选收藏的量表，也可以添加个人笔记。',
     tags: ['收藏', '管理'],
     helpful: true
   },
@@ -206,7 +206,6 @@ export default function HelpPage() {
     <div className="flex flex-col h-screen">
       <PageHeader
         items={[
-          { href: "/dashboard", label: t("common.dashboard") },
           { href: "/help", label: "帮助中心" }
         ]}
       />

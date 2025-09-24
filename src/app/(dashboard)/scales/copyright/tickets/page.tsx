@@ -161,9 +161,8 @@ export default function CopyrightTicketsPage() {
     <div className="flex flex-col h-screen">
       <PageHeader
         items={[
-          { href: "/dashboard", label: t("common.dashboard") },
-          { href: "/dashboard/copyright", label: "版权服务" },
-          { href: "/dashboard/copyright/tickets", label: "我的工单" }
+          { href: "/scales/copyright", label: "版权服务" },
+          { href: "/scales/copyright/tickets", label: "我的工单" }
         ]}
       />
 
@@ -181,7 +180,7 @@ export default function CopyrightTicketsPage() {
               </p>
             </div>
 
-            <Link href="/dashboard/copyright/create">
+            <Link href="/scales/copyright/create">
               <Button>
                 <Plus className="w-4 h-4 mr-2" />
                 申请新的许可
@@ -268,7 +267,7 @@ export default function CopyrightTicketsPage() {
                       : '当您需要获取量表使用许可时，可以通过我们的平台创建工单'
                     }
                   </p>
-                  <Link href="/dashboard/scales">
+                  <Link href="/scales">
                     <Button>
                       <Search className="w-4 h-4 mr-2" />
                       浏览量表库
@@ -415,7 +414,7 @@ export default function CopyrightTicketsPage() {
                 <p className="text-xs text-muted-foreground mb-3">
                   浏览量表库并申请使用许可
                 </p>
-                <Link href="/dashboard/scales">
+                <Link href="/scales">
                   <Button size="sm" variant="outline" className="w-full">
                     浏览量表
                   </Button>

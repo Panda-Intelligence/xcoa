@@ -121,9 +121,8 @@ export default function ScaleFavoritesPage() {
     <div className="flex flex-col h-screen">
       <PageHeader
         items={[
-          { href: "/dashboard", label: t("common.dashboard") },
-          { href: "/dashboard/scales", label: t("scales_page.title") },
-          { href: "/dashboard/scales/favorites", label: "我的收藏" }
+          { href: "/scales", label: t("scales_page.title") },
+          { href: "/scales/favorites", label: "我的收藏" }
         ]}
       />
 
@@ -141,7 +140,7 @@ export default function ScaleFavoritesPage() {
               </p>
             </div>
 
-            <Link href="/dashboard/scales">
+            <Link href="/scales">
               <Button>
                 <Plus className="w-4 h-4 mr-2" />
                 添加量表
@@ -210,7 +209,7 @@ export default function ScaleFavoritesPage() {
                     : '开始收藏您常用的量表，建立个人工具箱'
                   }
                 </p>
-                <Link href="/dashboard/scales">
+                <Link href="/scales">
                   <Button>
                     <Search className="w-4 h-4 mr-2" />
                     去搜索量表

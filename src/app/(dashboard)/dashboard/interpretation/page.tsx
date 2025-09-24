@@ -93,7 +93,6 @@ export default function InterpretationPage() {
     <>
       <PageHeader
         items={[
-          { href: "/dashboard", label: t("common.dashboard") },
           { href: "/dashboard/interpretation", label: "量表解读" }
         ]}
       />

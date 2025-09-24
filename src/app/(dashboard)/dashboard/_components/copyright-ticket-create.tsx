@@ -57,7 +57,7 @@ export function CopyrightTicketCreate() {
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const scaleId = urlParams.get('scaleId');
-    
+
     if (scaleId) {
       fetchScaleById(scaleId);
     }
@@ -68,7 +68,7 @@ export function CopyrightTicketCreate() {
     try {
       const response = await fetch(`/api/scales/${scaleId}`);
       const data = await response.json();
-      
+
       if (data.scale) {
         setSelectedScale({
           id: data.scale.id,
@@ -144,7 +144,7 @@ export function CopyrightTicketCreate() {
 
       if (response.ok) {
         toast.success("版权工单创建成功！我们将尽快为您联系版权方。");
-        router.push("/dashboard/copyright/tickets");
+        router.push("/scales/copyright/tickets");
       } else {
         toast.error(data.error || "创建工单失败");
       }
@@ -161,8 +161,8 @@ export function CopyrightTicketCreate() {
       <PageHeader
         items={[
           { href: "/dashboard", label: t("common.dashboard") },
-          { href: "/dashboard/copyright", label: "版权服务" },
-          { href: "/dashboard/copyright/create", label: "创建工单" }
+          { href: "/scales/copyright", label: "版权服务" },
+          { href: "/scales/copyright/create", label: "创建工单" }
         ]}
       />
 
@@ -177,7 +177,7 @@ export function CopyrightTicketCreate() {
               申请量表使用许可，我们将协助您联系版权方
             </p>
           </div>
-          <Button variant="ghost" onClick={() => router.push("/dashboard/copyright/tickets")}>
+          <Button variant="ghost" onClick={() => router.push("/scales/copyright/tickets")}>
             <ChevronLeft className="w-4 h-4 mr-2" />
             返回工单列表
           </Button>
@@ -403,9 +403,9 @@ export function CopyrightTicketCreate() {
                 </div>
 
                 <div className="flex justify-end space-x-2">
-                  <Button 
-                    variant="outline" 
-                    onClick={() => router.push("/dashboard/copyright/tickets")}
+                  <Button
+                    variant="outline"
+                    onClick={() => router.push("/scales/copyright/tickets")}
                   >
                     取消
                   </Button>

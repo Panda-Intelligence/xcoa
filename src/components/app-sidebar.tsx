@@ -86,20 +86,20 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     navMain: [
       {
         title: t('sidebar.ecoa_scales'),
-        url: "/dashboard/scales#" as Route,
+        url: "/scales#" as Route,
         icon: Search,
         items: [
           {
             title: t('sidebar.scale_search'),
-            url: "/dashboard/scales" as Route,
+            url: "/scales" as Route,
           },
           {
             title: t('sidebar.favorites'),
-            url: "/dashboard/favorites" as Route,
+            url: "/scales/favorites" as Route,
           },
           {
             title: t('sidebar.license'),
-            url: "/dashboard/copyright/tickets" as Route,
+            url: "/scales/copyright/tickets" as Route,
           }
         ],
       },
@@ -120,7 +120,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       },
       {
         title: t('sidebar.team_management'),
-        url: "/dashboard/teams" as Route,
+        url: "/teams" as Route,
         icon: Users,
       },
     ],
@@ -137,7 +137,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       },
       {
         title: t('sidebar.help'),
-        url: "/dashboard/help" as Route,
+        url: "/help" as Route,
         icon: HelpCircle,
       },
     ],

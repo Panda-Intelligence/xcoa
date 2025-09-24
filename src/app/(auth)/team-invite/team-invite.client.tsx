@@ -33,9 +33,9 @@ export default function TeamInviteClientComponent() {
       // Redirect to the team dashboard, with fallback to general dashboard
       setTimeout(() => {
         if (data && typeof data === 'object' && 'teamId' in data) {
-          router.push(`/dashboard/teams/${data.teamId}`);
+          router.push(`/teams/${data.teamId}`);
         } else if (data && typeof data === 'object' && data.data && 'teamId' in data.data) {
-          router.push(`/dashboard/teams/${data.data.teamId}`);
+          router.push(`/teams/${data.data.teamId}`);
         } else {
           // Fallback to dashboard if teamId is not found
           router.push('/dashboard');
@@ -91,8 +91,8 @@ export default function TeamInviteClientComponent() {
               {error?.code === "CONFLICT"
                 ? "You are already a member of this team."
                 : error?.code === "FORBIDDEN" && error?.message.includes("limit")
-                ? "You've reached the maximum number of teams you can join."
-                : "The invitation may have expired or been revoked."}
+                  ? "You've reached the maximum number of teams you can join."
+                  : "The invitation may have expired or been revoked."}
             </p>
             <Button
               variant="outline"

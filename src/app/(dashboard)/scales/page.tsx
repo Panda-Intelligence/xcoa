@@ -142,8 +142,7 @@ export default function ScalesPage() {
     <div className="flex flex-col h-screen">
       <PageHeader
         items={[
-          { href: "/dashboard", label: t("common.dashboard") },
-          { href: "/dashboard/scales", label: t("scales_page.title") }
+          { href: "/scales", label: t("scales_page.title") }
         ]}
       />
 

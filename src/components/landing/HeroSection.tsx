@@ -10,7 +10,7 @@ export function HeroSection() {
   const { t } = useLanguage()
   const router = useRouter()
   const onStartSearch = () => {
-    router.push('/dashboard/scales')
+    router.push('/scales')
   }
   return (
     <section className="py-20 bg-linear-to-br from-background to-secondary/20">

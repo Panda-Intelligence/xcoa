@@ -34,7 +34,7 @@ export default async function TeamsIndexPage() {
   const session = await getSessionFromCookie();
 
   if (!session) {
-    redirect("/sign-in?redirect=/dashboard/teams");
+    redirect("/sign-in?redirect=/teams");
   }
 
   // Get teams data
@@ -55,7 +55,7 @@ export default async function TeamsIndexPage() {
       <PageHeader
         items={[
           {
-            href: "/dashboard/teams",
+            href: "/teams",
             label: "Teams"
           }
         ]}
@@ -67,7 +67,7 @@ export default async function TeamsIndexPage() {
             <p className="text-muted-foreground mt-2">Manage your teams and collaborations</p>
           </div>
           <Button asChild>
-            <Link href={"/dashboard/teams/create" as Route}>
+            <Link href={"/teams/create" as Route}>
               <PlusIcon className="h-4 w-4 mr-2" />
               Create Team
             </Link>
@@ -90,7 +90,7 @@ export default async function TeamsIndexPage() {
             </CardContent>
             <CardFooter className="flex justify-center pb-8">
               <Button asChild>
-                <Link href={"/dashboard/teams/create" as Route}>
+                <Link href={"/teams/create" as Route}>
                   <PlusIcon className="h-4 w-4 mr-2" />
                   Create your first team
                 </Link>
@@ -100,7 +100,7 @@ export default async function TeamsIndexPage() {
         ) : (
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {teams.map((team) => (
-              <Link key={team.id} href={`/dashboard/teams/${team.slug}` as Route}>
+              <Link key={team.id} href={`/teams/${team.slug}` as Route}>
                 <Card className="h-full transition-all hover:border-primary hover:shadow-md">
                   <CardHeader className="flex flex-row items-start gap-4">
                     {team.avatarUrl ? (

@@ -122,7 +122,7 @@ export default function CopyrightPage() {
       <PageHeader
         items={[
           { href: "/dashboard", label: "Dashboard" },
-          { href: "/dashboard/copyright", label: "版权服务" }
+          { href: "/scales/copyright", label: "版权服务" }
         ]}
       />
 
@@ -343,7 +343,7 @@ export default function CopyrightPage() {
                     <MessageSquare className="w-5 h-5" />
                     <span>我的联系工单</span>
                   </span>
-                  <Link href="/dashboard/copyright/create">
+                  <Link href="/scales/copyright/create">
                     <Button size="sm">
                       <Plus className="w-4 h-4 mr-2" />
                       创建新工单

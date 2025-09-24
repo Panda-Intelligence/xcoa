@@ -96,7 +96,7 @@ export function TeamSwitcher({
             <DropdownMenuSeparator />
             <DropdownMenuItem className="gap-2 p-2 cursor-pointer" asChild>
               <Link
-                href="/dashboard/teams/create"
+                href="/teams/create"
                 onClick={() => setOpenMobile(false)}
               >
                 <div className="flex size-6 items-center justify-center rounded-md border bg-background">

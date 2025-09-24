@@ -85,8 +85,7 @@ export const COMPONENTS: MarketplaceComponent[] = [
     preview: () => (
       <PageHeader
         items={[
-          { href: "/dashboard", label: "Dashboard" },
-          { href: "/dashboard/settings", label: "Settings" },
+          { href: "/settings", label: "Settings" },
         ]}
       />
     ),

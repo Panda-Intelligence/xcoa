@@ -67,7 +67,7 @@ export default async function TeamDashboardPage({ params }: TeamPageProps) {
   // Check if user is authenticated
   const session = await getSessionFromCookie();
   if (!session) {
-    redirect("/sign-in?returnTo=" + encodeURIComponent(`/dashboard/teams/${teamSlug}`));
+    redirect("/sign-in?returnTo=" + encodeURIComponent(`/teams/${teamSlug}`));
   }
 
   // Check team membership using the new function
@@ -80,7 +80,7 @@ export default async function TeamDashboardPage({ params }: TeamPageProps) {
         <PageHeader
           items={[
             {
-              href: "/dashboard/teams",
+              href: "/teams",
               label: "Teams"
             }
           ]}
@@ -95,7 +95,7 @@ export default async function TeamDashboardPage({ params }: TeamPageProps) {
             You don&apos;t have permission to access team &quot;{team.name}&quot;. Please contact the team owner to request access.
           </AlertDescription>
           <Button asChild className="mt-4">
-            <Link href="/dashboard/teams">
+            <Link href="/teams">
               Return to Teams
             </Link>
           </Button>
@@ -116,11 +116,11 @@ export default async function TeamDashboardPage({ params }: TeamPageProps) {
       <PageHeader
         items={[
           {
-            href: "/dashboard/teams",
+            href: "/teams",
             label: "Teams"
           },
           {
-            href: `/dashboard/teams/${teamSlug}`,
+            href: `/teams/${teamSlug}`,
             label: team.name
           }
         ]}

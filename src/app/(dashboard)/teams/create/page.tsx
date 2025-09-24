@@ -13,7 +13,7 @@ export default async function CreateTeamPage() {
   const session = await getSessionFromCookie();
 
   if (!session) {
-    redirect("/sign-in?redirect=/dashboard/teams/create");
+    redirect("/sign-in?redirect=/teams/create");
   }
 
   return (
@@ -21,11 +21,11 @@ export default async function CreateTeamPage() {
       <PageHeader
         items={[
           {
-            href: "/dashboard/teams",
+            href: "/teams",
             label: "Teams"
           },
           {
-            href: "/dashboard/teams/create",
+            href: "/teams/create",
             label: "Create Team"
           }
         ]}

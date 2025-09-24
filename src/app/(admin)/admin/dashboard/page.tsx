@@ -85,7 +85,7 @@ export default function Page() {
 
         {/* 核心功能快速入口 */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          <Link href="/dashboard/scales">
+          <Link href="/scales">
             <Card className="hover:shadow-md transition-shadow cursor-pointer h-full">
               <CardContent className="p-6 text-center">
                 <Search className="w-12 h-12 mx-auto mb-3 text-blue-600" />
@@ -100,7 +100,7 @@ export default function Page() {
             </Card>
           </Link>
 
-          <Link href="/dashboard/copyright">
+          <Link href="/scales/copyright">
             <Card className="hover:shadow-md transition-shadow cursor-pointer h-full">
               <CardContent className="p-6 text-center">
                 <Shield className="w-12 h-12 mx-auto mb-3 text-green-600" />
@@ -130,7 +130,7 @@ export default function Page() {
             </Card>
           </Link>
 
-          <Link href="/dashboard/teams">
+          <Link href="/teams">
             <Card className="hover:shadow-md transition-shadow cursor-pointer h-full">
               <CardContent className="p-6 text-center">
                 <MessageSquare className="w-12 h-12 mx-auto mb-3 text-orange-600" />
@@ -294,14 +294,14 @@ export default function Page() {
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-              <Link href="/dashboard/scales">
+              <Link href="/scales">
                 <Button variant="outline" className="w-full justify-start">
                   <Search className="w-4 h-4 mr-2" />
                   {t("dashboard.search_scales")}
                 </Button>
               </Link>
 
-              <Link href="/dashboard/copyright">
+              <Link href="/scales/copyright">
                 <Button variant="outline" className="w-full justify-start">
                   <Shield className="w-4 h-4 mr-2" />
                   {t("dashboard.check_license")}
