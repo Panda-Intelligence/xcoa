@@ -5,17 +5,11 @@ import { useState } from "react";
 import Link from "next/link"
 import { useSessionStore } from "@/state/session";
 import { useNavStore } from "@/state/nav";
-import { usePathname } from "next/navigation";
 import { LanguageToggle, useLanguage } from "@/hooks/useLanguage";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
-import { cn } from '@/lib/utils'
-import ThemeSwitch from "../theme-switch";
 
-type NavItem = {
-  name: string;
-  href: Route;
-}
+import ThemeSwitch from "../theme-switch";
 
 const ActionButtons = () => {
   const { session, isLoading } = useSessionStore()
@@ -27,7 +21,11 @@ const ActionButtons = () => {
   }
 
   if (session) {
-    return null;
+    return (
+      <Button asChild>
+        <Link href="/scales">{t("common.dashboard")}</Link>
+      </Button>
+    );
   }
 
   return (

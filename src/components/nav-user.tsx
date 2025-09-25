@@ -2,7 +2,6 @@
 
 import {
   BadgeCheck,
-  Bell,
   ChevronsUpDown,
   ShieldPlus,
   LogOut,
@@ -31,7 +30,7 @@ import {
 } from "@/components/ui/sidebar"
 import { Skeleton } from "@/components/ui/skeleton"
 import useSignOut from "@/hooks/useSignOut"
-import { useRouter } from "next/navigation"
+import { useRouter, usePathname } from "next/navigation"
 import { useSessionStore } from "@/state/session"
 
 export function NavUser() {
@@ -39,6 +38,7 @@ export function NavUser() {
   const { signOut } = useSignOut();
   const { isMobile, setOpenMobile } = useSidebar()
   const router = useRouter()
+  const pathname = usePathname();
 
   if (isLoading) {
     return (
@@ -68,6 +68,7 @@ export function NavUser() {
   const { user } = session;
   const displayName = user.firstName && user.lastName ? `${user.firstName} ${user.lastName}` : user.email;
   const isAdmin = user.role === 'admin';
+  const isAdminRoute = pathname?.startsWith('/admin');
 
   return (
     <SidebarMenu>
@@ -119,10 +120,10 @@ export function NavUser() {
               </DropdownMenuItem>
               {isAdmin && <DropdownMenuItem className="cursor-pointer" onClick={() => {
                 setOpenMobile(false)
-                router.push('/admin/dashboard')
+                router.push(isAdminRoute ? '/scales' : '/admin/dashboard')
               }}>
                 <ShieldPlus className="size-4" />
-                Admin Dashboard
+                {isAdminRoute ? 'Dashboard' : 'Admin Panel'}
               </DropdownMenuItem>
               }
             </DropdownMenuGroup>
