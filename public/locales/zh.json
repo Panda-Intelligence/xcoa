@@ -571,7 +571,9 @@
   },
   "landing": {
     "ai_intelligent_search": "AI 智能检索",
-    "hero_title": "专业的 eCOA 量表 AI 检索平台",
+    "hero_title_start": "eCOA 量表",
+    "hero_title_highlight": "检索, 授权",
+    "hero_title_end": " 管理系统",
     "hero_subtitle": "提供全面的电子临床结果评估量表库，支持 AI 智能检索和个性化推荐。为临床研究和医疗实践提供专业的数字化解决方案。",
     "search_ecoa_scales": "搜索 eCOA 量表...",
     "ecoa_search": "搜索",

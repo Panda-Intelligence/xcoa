@@ -43,7 +43,7 @@ export function Navigation() {
   const { t } = useLanguage()
 
   return (
-    <nav className="bg-white/80 backdrop-blur-md border-b border-border sticky top-0 z-50">
+    <nav className="bg-background/80 backdrop-blur-md border-b border-border sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
@@ -90,7 +90,7 @@ export function Navigation() {
         {/* Mobile Navigation */}
         {isMenuOpen && (
           <div className="md:hidden">
-            <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-white border-t border-border">
+            <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-background border-t border-border">
               <a
                 href="/#features"
                 className="block px-3 py-2 text-foreground hover:text-primary transition-colors"

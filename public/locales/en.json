@@ -572,7 +572,9 @@
   },
   "landing": {
     "ai_intelligent_search": "AI Powered Search",
-    "hero_title": "eCOA Scale Search, Licensing, Validation Platform",
+    "hero_title_start": "eCOA Scale ",
+    "hero_title_highlight": "Search, Licensing",
+    "hero_title_end": " SaaS Platform",
     "hero_subtitle": "Comprehensive eCOA scale database with AI powered search, licensing contact & management. Language translation & validation services.",
     "search_ecoa_scales": "Search eCOA scales...",
     "ecoa_search": "Search",
