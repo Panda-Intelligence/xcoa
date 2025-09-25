@@ -950,5 +950,36 @@
     "chinese": "中文",
     "related_scales": "相关量表",
     "related_scales_description": "同类别的其他评估工具"
+  },
+  "favorites": {
+    "title": "我的收藏",
+    "page_title": "我的量表收藏",
+    "description": "已收藏 {count} 个量表，快速访问您常用的评估工具",
+    "add_scale": "添加量表",
+    "search_placeholder": "搜索收藏的量表...",
+    "all_categories": "所有分类",
+    "no_favorites_title": "还没有收藏的量表",
+    "no_favorites_description": "开始收藏您常用的量表，建立个人工具箱",
+    "no_search_results_title": "没有找到匹配的收藏",
+    "no_search_results_description": "尝试调整搜索条件或筛选器",
+    "go_search_scales": "去搜索量表",
+    "items_count": "{count}题",
+    "administration_time": "{time}分钟",
+    "notes_label": "笔记: ",
+    "favorite_time": "收藏时间: {date}",
+    "view_details": "查看详情",
+    "preview": "预览",
+    "remove_favorite": "移除收藏",
+    "statistics": {
+      "title": "收藏统计",
+      "total_favorites": "总收藏",
+      "categories_count": "涉及分类",
+      "this_week": "本周新增",
+      "average_time": "平均时长(分钟)"
+    },
+    "loading": {
+      "failed_to_load": "加载收藏失败:",
+      "failed_to_remove": "移除收藏失败:"
+    }
   }
 }

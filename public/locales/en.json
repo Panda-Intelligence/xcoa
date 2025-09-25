@@ -951,5 +951,36 @@
     "chinese": "Chinese",
     "related_scales": "Related Scales",
     "related_scales_description": "Other assessment tools in the same category"
+  },
+  "favorites": {
+    "title": "My Favorites",
+    "page_title": "My Scale Favorites",
+    "description": "{count} scales bookmarked, quick access to your commonly used assessment tools",
+    "add_scale": "Add Scale",
+    "search_placeholder": "Search favorite scales...",
+    "all_categories": "All Categories",
+    "no_favorites_title": "No favorite scales yet",
+    "no_favorites_description": "Start bookmarking your frequently used scales to build your personal toolkit",
+    "no_search_results_title": "No matching favorites found",
+    "no_search_results_description": "Try adjusting your search criteria or filters",
+    "go_search_scales": "Go Search Scales",
+    "items_count": "{count} items",
+    "administration_time": "{time} mins",
+    "notes_label": "Notes: ",
+    "favorite_time": "Bookmarked: {date}",
+    "view_details": "View Details",
+    "preview": "Preview",
+    "remove_favorite": "Remove Favorite",
+    "statistics": {
+      "title": "Favorite Statistics",
+      "total_favorites": "Total Favorites",
+      "categories_count": "Categories",
+      "this_week": "This Week",
+      "average_time": "Avg Time (mins)"
+    },
+    "loading": {
+      "failed_to_load": "Failed to load favorites:",
+      "failed_to_remove": "Failed to remove favorite:"
+    }
   }
 }

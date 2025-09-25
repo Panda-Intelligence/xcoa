@@ -163,6 +163,43 @@ export default function ScalesPage() {
             <CardContent className="space-y-4">
               {/* 搜索输入 */}
               <div className="flex space-x-2">
+                {/* 搜索选项 */}
+                <div className="flex flex-wrap gap-4">
+
+                  <div className="flex items-center space-x-2">
+                    <span className="text-sm font-medium">{t("scales_page.category")}:</span>
+                    <Select value={filters.category} onValueChange={(value) =>
+                      setFilters(prev => ({ ...prev, category: value }))}>
+                      <SelectTrigger className="w-40">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="all">{t("scales_page.all_categories")}</SelectItem>
+                        {categories.map(cat => (
+                          <SelectItem key={cat.id} value={cat.id}>
+                            {cat.name} ({cat.scaleCount})
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div className="flex items-center space-x-2">
+                    <span className="text-sm font-medium">{t("scales_page.sort_by")}:</span>
+                    <Select value={filters.sortBy} onValueChange={(value) =>
+                      setFilters(prev => ({ ...prev, sortBy: value }))}>
+                      <SelectTrigger className="w-32">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="relevance">{t("scales_page.relevance")}</SelectItem>
+                        <SelectItem value="name">{t("scales_page.name")}</SelectItem>
+                        <SelectItem value="usage">{t("scales_page.usage_frequency")}</SelectItem>
+                        <SelectItem value="recent">{t("scales_page.recent")}</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
                 <div className="flex-1">
                   <Input
                     placeholder={t("scales_page.search_placeholder")}
@@ -174,44 +211,6 @@ export default function ScalesPage() {
                 <Button onClick={handleSearch} disabled={loading}>
                   {loading ? t("scales_page.searching") : t("scales_page.search")}
                 </Button>
-              </div>
-
-              {/* 搜索选项 */}
-              <div className="flex flex-wrap gap-4">
-
-                <div className="flex items-center space-x-2">
-                  <span className="text-sm font-medium">{t("scales_page.category")}:</span>
-                  <Select value={filters.category} onValueChange={(value) =>
-                    setFilters(prev => ({ ...prev, category: value }))}>
-                    <SelectTrigger className="w-40">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all">{t("scales_page.all_categories")}</SelectItem>
-                      {categories.map(cat => (
-                        <SelectItem key={cat.id} value={cat.id}>
-                          {cat.name} ({cat.scaleCount})
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                <div className="flex items-center space-x-2">
-                  <span className="text-sm font-medium">{t("scales_page.sort_by")}:</span>
-                  <Select value={filters.sortBy} onValueChange={(value) =>
-                    setFilters(prev => ({ ...prev, sortBy: value }))}>
-                    <SelectTrigger className="w-32">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="relevance">{t("scales_page.relevance")}</SelectItem>
-                      <SelectItem value="name">{t("scales_page.name")}</SelectItem>
-                      <SelectItem value="usage">{t("scales_page.usage_frequency")}</SelectItem>
-                      <SelectItem value="recent">{t("scales_page.recent")}</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
               </div>
             </CardContent>
           </div>

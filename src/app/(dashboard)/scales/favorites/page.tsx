@@ -57,10 +57,10 @@ export default function ScaleFavoritesPage() {
       if (data.success) {
         setFavorites(data.favorites || []);
       } else {
-        console.error('加载收藏失败:', data.error);
+        console.error(t('favorites.loading.failed_to_load'), data.error);
       }
     } catch (error) {
-      console.error('加载收藏失败:', error);
+      console.error(t('favorites.loading.failed_to_load'), error);
     } finally {
       setLoading(false);
     }
@@ -78,7 +78,7 @@ export default function ScaleFavoritesPage() {
         setFavorites(prev => prev.filter(fav => fav.scaleId !== scaleId));
       }
     } catch (error) {
-      console.error('移除收藏失败:', error);
+      console.error(t('favorites.loading.failed_to_remove'), error);
     }
   };
 
@@ -121,7 +121,7 @@ export default function ScaleFavoritesPage() {
       <PageHeader
         items={[
           { href: "/scales", label: t("scales_page.title") },
-          { href: "/scales/favorites", label: "我的收藏" }
+          { href: "/scales/favorites", label: t("favorites.title") }
         ]}
       />
 
@@ -132,17 +132,17 @@ export default function ScaleFavoritesPage() {
             <div>
               <h1 className="text-2xl font-bold flex items-center space-x-2">
                 <Heart className="w-6 h-6 text-red-500" />
-                <span>我的量表收藏</span>
+                <span>{t('favorites.page_title')}</span>
               </h1>
               <p className="text-muted-foreground">
-                已收藏 {favorites.length} 个量表，快速访问您常用的评估工具
+                {t('favorites.description', { count: favorites.length })}
               </p>
             </div>
 
             <Link href="/scales">
               <Button>
                 <Plus className="w-4 h-4 mr-2" />
-                添加量表
+                {t('favorites.add_scale')}
               </Button>
             </Link>
           </div>
@@ -152,7 +152,7 @@ export default function ScaleFavoritesPage() {
             <div className="flex-1 relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
               <Input
-                placeholder="搜索收藏的量表..."
+                placeholder={t('favorites.search_placeholder')}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="pl-10"
@@ -166,7 +166,7 @@ export default function ScaleFavoritesPage() {
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">所有分类</SelectItem>
+                  <SelectItem value="all">{t('favorites.all_categories')}</SelectItem>
                   {categories.map(category => (
                     <SelectItem key={category} value={category}>
                       {category}
@@ -200,18 +200,18 @@ export default function ScaleFavoritesPage() {
               <CardContent className="text-center py-12">
                 <Heart className="w-12 h-12 mx-auto mb-4 text-gray-400" />
                 <h3 className="text-lg font-medium mb-2">
-                  {searchQuery || categoryFilter !== 'all' ? '没有找到匹配的收藏' : '还没有收藏的量表'}
+                  {searchQuery || categoryFilter !== 'all' ? t('favorites.no_search_results_title') : t('favorites.no_favorites_title')}
                 </h3>
                 <p className="text-muted-foreground mb-4">
                   {searchQuery || categoryFilter !== 'all'
-                    ? '尝试调整搜索条件或筛选器'
-                    : '开始收藏您常用的量表，建立个人工具箱'
+                    ? t('favorites.no_search_results_description')
+                    : t('favorites.no_favorites_description')
                   }
                 </p>
                 <Link href="/scales">
                   <Button>
                     <Search className="w-4 h-4 mr-2" />
-                    去搜索量表
+                    {t('favorites.go_search_scales')}
                   </Button>
                 </Link>
               </CardContent>
@@ -248,6 +248,7 @@ export default function ScaleFavoritesPage() {
                           size="icon"
                           className="h-8 w-8 text-red-500"
                           onClick={() => handleRemoveFavorite(favorite.scaleId)}
+                          title={t('favorites.remove_favorite')}
                         >
                           <Trash2 className="h-3 w-3" />
                         </Button>
@@ -261,25 +262,25 @@ export default function ScaleFavoritesPage() {
                       <div className="flex items-center space-x-4 text-sm text-muted-foreground">
                         <span className="flex items-center">
                           <BookOpen className="w-3 h-3 mr-1" />
-                          {favorite.itemsCount}题
+                          {t('favorites.items_count', { count: favorite.itemsCount })}
                         </span>
                         <span className="flex items-center">
                           <Clock className="w-3 h-3 mr-1" />
-                          {favorite.administrationTime}分钟
+                          {t('favorites.administration_time', { time: favorite.administrationTime })}
                         </span>
                       </div>
 
                       {/* 个人笔记 */}
                       {favorite.notes && (
                         <div className="bg-yellow-50 p-2 rounded text-xs">
-                          <span className="font-medium">笔记: </span>
+                          <span className="font-medium">{t('favorites.notes_label')}</span>
                           {favorite.notes}
                         </div>
                       )}
 
                       {/* 收藏时间 */}
                       <div className="text-xs text-muted-foreground">
-                        收藏时间: {new Date(favorite.createdAt).toLocaleDateString()}
+                        {t('favorites.favorite_time', { date: new Date(favorite.createdAt).toLocaleDateString() })}
                       </div>
 
                       {/* 操作按钮 */}
@@ -287,12 +288,12 @@ export default function ScaleFavoritesPage() {
                         <Link href={`/scales/${favorite.scaleId}`}>
                           <Button size="sm" className="flex-1">
                             <Eye className="w-3 h-3 mr-1" />
-                            查看详情
+                            {t('favorites.view_details')}
                           </Button>
                         </Link>
                         <Link href={`/scales/${favorite.scaleId}/preview`}>
                           <Button size="sm" variant="outline">
-                            预览
+                            {t('favorites.preview')}
                           </Button>
                         </Link>
                       </div>
@@ -307,17 +308,17 @@ export default function ScaleFavoritesPage() {
           {favorites.length > 0 && (
             <Card>
               <CardHeader>
-                <CardTitle className="text-lg">收藏统计</CardTitle>
+                <CardTitle className="text-lg">{t('favorites.statistics.title')}</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
                   <div>
                     <div className="text-2xl font-bold text-blue-600">{favorites.length}</div>
-                    <div className="text-sm text-muted-foreground">总收藏</div>
+                    <div className="text-sm text-muted-foreground">{t('favorites.statistics.total_favorites')}</div>
                   </div>
                   <div>
                     <div className="text-2xl font-bold text-green-600">{categories.length}</div>
-                    <div className="text-sm text-muted-foreground">涉及分类</div>
+                    <div className="text-sm text-muted-foreground">{t('favorites.statistics.categories_count')}</div>
                   </div>
                   <div>
                     <div className="text-2xl font-bold text-purple-600">
@@ -327,13 +328,13 @@ export default function ScaleFavoritesPage() {
                         return new Date(f.createdAt) > weekAgo;
                       }).length}
                     </div>
-                    <div className="text-sm text-muted-foreground">本周新增</div>
+                    <div className="text-sm text-muted-foreground">{t('favorites.statistics.this_week')}</div>
                   </div>
                   <div>
                     <div className="text-2xl font-bold text-orange-600">
                       {Math.round(favorites.reduce((sum, fav) => sum + fav.administrationTime, 0) / favorites.length) || 0}
                     </div>
-                    <div className="text-sm text-muted-foreground">平均时长(分钟)</div>
+                    <div className="text-sm text-muted-foreground">{t('favorites.statistics.average_time')}</div>
                   </div>
                 </div>
               </CardContent>
