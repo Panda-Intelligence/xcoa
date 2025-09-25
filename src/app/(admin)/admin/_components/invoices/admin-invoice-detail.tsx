@@ -229,7 +229,7 @@ export function AdminInvoiceDetail({ invoiceId }: AdminInvoiceDetailProps) {
                 Professional eCOA Solutions<br />
                 Unit 13, Freeland Park<br />
                 Wareham Road, Poole, UK BH16 6FH<br />
-                Email: support@xcoa.pandacat.ai
+                Email: support@xcoa.pro
               </p>
             </div>
             <div className="text-right">
@@ -268,7 +268,7 @@ export function AdminInvoiceDetail({ invoiceId }: AdminInvoiceDetailProps) {
                   <span className="ml-1">{getStatusLabel(invoice.status)}</span>
                 </Badge>
               </div>
-              
+
               {/* Admin状态控制 */}
               <div className="space-y-2">
                 <Label>更改状态:</Label>

@@ -428,7 +428,7 @@ export default function PrivacyPage() {
           We will only collect and process personal data about you where we have lawful bases. Lawful bases include <i>consent</i> (where you have given consent), contract (where processing is necessary for the performance of a contract with you (e.g. to deliver the <span>Panda Intelligence</span> Services you have requested)) and “legitimate interests”.
         </p>
         <p className="p">
-          Where we rely on your consent to process personal data, you have the right to withdraw or decline your consent at any time and where we rely on legitimate interests, you have the right to object. If you have any questions about the lawful bases upon which we collect and use your personal data, please contact our Data Protection Mail dataprotection@pandacat.ai.
+          Where we rely on your consent to process personal data, you have the right to withdraw or decline your consent at any time and where we rely on legitimate interests, you have the right to object. If you have any questions about the lawful bases upon which we collect and use your personal data, please contact our Data Protection Mail dataprotection@xcoa.pro.
         </p>
         <h3>
           <b>5.</b><b>4</b><b>. Contact Information</b><b />
@@ -437,7 +437,7 @@ export default function PrivacyPage() {
           You can contact us or use other options to resolve any complaints.
         </p>
         <p className="p">
-          If you have questions or complaints regarding this Policy, please first contact <a href="mailto:dataprotection@pandacat.ai"><u>dataprotection@pandacat.ai</u></a>. You can also reach us by <span>postal</span> mail.
+          If you have questions or complaints regarding this Policy, please first contact <a href="mailto:dataprotection@xcoa.pro"><u>dataprotection@xcoa.pro</u></a>. You can also reach us by <span>postal</span> mail.
         </p>
       </div>
     </div>

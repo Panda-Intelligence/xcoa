@@ -134,7 +134,7 @@ export function FAQ() {
             <li>专家咨询：资深临床专家提供量表选择和应用建议</li>
             <li>培训服务：量表使用培训和最佳实践分享</li>
             <li>定制服务：根据特殊需求提供定制化解决方案</li>
-            <li>邮件支持：support@xcoa.pandacat.ai 提供技术支持</li>
+            <li>邮件支持：support@xcoa.pro 提供技术支持</li>
           </ul>
         </>
       ),

@@ -39,9 +39,9 @@
      * https://developers.cloudflare.com/workers/wrangler/configuration/#environment-variables
      */
   "vars": {
-    "EMAIL_FROM": "no-reply@notifications.pandacat.ai",
+    "EMAIL_FROM": "no-reply@notifications.xcoa.pro",
     "EMAIL_FROM_NAME": "xCOA",
-    "EMAIL_REPLY_TO": "support@pandacat.ai"
+    "EMAIL_REPLY_TO": "support@xcoa.pro"
   },
   /**
      * Note: Use secrets to store sensitive data.

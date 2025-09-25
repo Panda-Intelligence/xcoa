@@ -64,32 +64,32 @@ export class ComplianceChecker {
       if (!robotsResponse.ok) {
         return { allowed: true }; // 没有robots.txt，默认允许
       }
-      
+
       const robotsText = await robotsResponse.text();
       const lines = robotsText.split('\n');
-      
+
       let currentUserAgent = '';
       let isRelevantSection = false;
-      
+
       for (const line of lines) {
         const trimmedLine = line.trim().toLowerCase();
-        
+
         if (trimmedLine.startsWith('user-agent:')) {
           currentUserAgent = trimmedLine.split(':')[1].trim();
           isRelevantSection = currentUserAgent === '*' || currentUserAgent.includes('bot');
         }
-        
+
         if (isRelevantSection && trimmedLine.startsWith('disallow:')) {
           const disallowPath = trimmedLine.split(':')[1].trim();
           if (disallowPath === '/' || disallowPath === '*') {
-            return { 
-              allowed: false, 
-              reason: `robots.txt禁止访问: ${disallowPath}` 
+            return {
+              allowed: false,
+              reason: `robots.txt禁止访问: ${disallowPath}`
             };
           }
         }
       }
-      
+
       return { allowed: true };
     } catch (error) {
       console.warn('无法检查robots.txt:', error);
@@ -120,16 +120,16 @@ export class ComplianceChecker {
 // 请求频率限制器
 export class RateLimiter {
   private requestTimes: Map<string, number[]> = new Map();
-  
+
   async fetch(url: string, options: RequestInit = {}): Promise<{ html: string; status: number }> {
     const domain = new URL(url).hostname;
     await this.waitForRateLimit(domain);
-    
+
     try {
       const response = await fetch(url, {
         ...options,
         headers: {
-          'User-Agent': 'xCOA-Academic-Research-Bot/1.0 (+https://xcoa.pandacat.ai/about-crawler)',
+          'User-Agent': 'xCOA-Academic-Research-Bot/1.0 (+https://xcoa.pro/about-crawler)',
           'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
           'Accept-Language': 'en-US,en;q=0.5',
           'Accept-Encoding': 'gzip, deflate',
@@ -140,7 +140,7 @@ export class RateLimiter {
       });
 
       this.recordRequest(domain);
-      
+
       const html = await response.text();
       return { html, status: response.status };
     } catch (error) {
@@ -152,10 +152,10 @@ export class RateLimiter {
   private async waitForRateLimit(domain: string): Promise<void> {
     const now = Date.now();
     const requests = this.requestTimes.get(domain) || [];
-    
+
     // 清理1分钟前的请求记录
     const recentRequests = requests.filter(time => now - time < 60000);
-    
+
     // 如果最近1分钟内请求过多，等待
     if (recentRequests.length >= 60) { // 每分钟最多60次请求
       const oldestRequest = Math.min(...recentRequests);
@@ -170,7 +170,7 @@ export class RateLimiter {
     const now = Date.now();
     const requests = this.requestTimes.get(domain) || [];
     requests.push(now);
-    
+
     // 只保留最近1小时的记录
     const recentRequests = requests.filter(time => now - time < 3600000);
     this.requestTimes.set(domain, recentRequests);
@@ -181,7 +181,7 @@ export class RateLimiter {
 export class ContentParser {
   extractScaleInfo(html: string, selectors: ScaleSelectors): Partial<NormalizedScale> {
     const dom = new DOMParser().parseFromString(html, 'text/html');
-    
+
     return {
       name: this.extractText(dom, selectors.name),
       nameEn: this.extractText(dom, selectors.nameEn || []),
@@ -212,7 +212,7 @@ export class ContentParser {
   private extractNumber(dom: Document, selectors: string[]): number | undefined {
     const text = this.extractText(dom, selectors);
     if (!text) return undefined;
-    
+
     const numberMatch = text.match(/(\d+)/);
     return numberMatch ? parseInt(numberMatch[1]) : undefined;
   }

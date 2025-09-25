@@ -17,7 +17,7 @@ export function Footer() {
             <div className="space-y-2">
               <div className="flex items-center space-x-2 text-sm text-muted-foreground">
                 <Mail className="h-4 w-4" />
-                <span>support@pandacat.ai</span>
+                <span>support@xcoa.pro</span>
               </div>
               <div className="flex flex-col items-start space-x-2 text-sm text-muted-foreground">
                 <div className="flex">
@@ -54,7 +54,7 @@ export function Footer() {
             <h4 className="font-semibold text-foreground mb-4">{t("footer.company")}</h4>
             <ul className="space-y-2">
               <li><a href="#" className="text-sm text-muted-foreground hover:text-foreground transition-colors">{t("footer.about_us")}</a></li>
-              <li><a href="mailto:support@pandacat.ai" className="text-sm text-muted-foreground hover:text-foreground transition-colors">{t("footer.contact_us")}</a></li>
+              <li><a href="mailto:support@xcoa.pro" className="text-sm text-muted-foreground hover:text-foreground transition-colors">{t("footer.contact_us")}</a></li>
             </ul>
           </div>
         </div>
