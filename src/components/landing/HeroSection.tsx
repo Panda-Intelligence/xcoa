@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Search, Sparkles } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useRouter } from "next/navigation";
+import { Badge } from "../ui/badge";
 
 export function HeroSection() {
   const { t } = useLanguage()
@@ -24,79 +25,51 @@ export function HeroSection() {
             </div>
 
             <h1 className="text-4xl lg:text-6xl font-bold text-foreground leading-tight">
-              {t("landing.professional_ecoa_scale_ai_search_platform")}
+              {t("landing.hero_title")}
             </h1>
 
             <p className="text-lg text-muted-foreground leading-relaxed max-w-2xl mx-auto">
-              {t("landing.comprehensive_ecoa_scale_library_description")}
+              {t("landing.hero_subtitle")}
             </p>
           </div>
 
           {/* Prominent Search Demo - Google style */}
-          <div className="max-w-2xl mx-auto">
-            <div className="bg-white rounded-full shadow-lg hover:shadow-xl transition-shadow duration-200 p-2">
-              <div className="flex items-center">
-                <Search className="ml-4 h-5 w-5 text-gray-400" />
+          <div className="max-w-3xl mx-auto items-center">
+            <div className="bg-white rounded-full shadow-lg hover:shadow-xl transition-shadow duration-200">
+              <div className="flex relative items-center">
                 <Input
                   placeholder={t("landing.search_ecoa_scales")}
-                  className="flex-1 px-4 py-3 text-base bg-transparent border-0 focus:ring-0 focus:outline-hidden"
-                  readOnly
+                  className="flex-1 px-3 h-16 py-5 text-lg rounded-full bg-transparent border-0 focus:ring-0 focus:outline-hidden"
                 />
-                <Button
-                  size="lg"
-                  onClick={onStartSearch}
-                  className="mr-1 px-8 bg-gray-100 hover:bg-gray-200 text-gray-700 border-0"
-                >
-                  {t("landing.ecoa_search")}
-                </Button>
+                <div className="absolute right-2 top-1/2 transform -translate-y-1/2 z-30">
+                  <Button
+                    size="lg"
+                    onClick={onStartSearch}
+                    variant="outline"
+                    className="mr-1 px-8 border-0"
+                  >
+                    <Search className="ml-4 h-5 w-5 text-gray-400" />
+                  </Button>
+                </div>
+              </div>
+
+            </div>
+            <div className="mt-3 flex justify-center items-center">
+              <div className="flex gap-1.5 text-stone-600">
+                <small className="font-sans antialiased text-sm text-current">Try example:</small>
+                <Badge className="ml-2" variant="outline">
+                  MMSE-2
+                </Badge>
+                <Badge className="ml-2" variant="outline">
+                  PHQ-9
+                </Badge>
+                <Badge className="ml-2" variant="outline">
+                  EORTC QLQ-C30
+                </Badge>
               </div>
             </div>
           </div>
 
-          {/* Stats in a more compact layout */}
-          <div className="grid grid-cols-3 gap-8 max-w-lg mx-auto">
-            <div className="text-center">
-              <div className="font-semibold text-2xl text-primary">500+</div>
-              <div className="text-sm text-muted-foreground">{t("landing.professional_scales")}</div>
-            </div>
-            <div className="text-center">
-              <div className="font-semibold text-2xl text-primary">50+</div>
-              <div className="text-sm text-muted-foreground">{t("landing.disease_areas")}</div>
-            </div>
-            <div className="text-center">
-              <div className="font-semibold text-2xl text-primary">AI</div>
-              <div className="text-sm text-muted-foreground">{t("landing.ai_intelligent_recommendation")}</div>
-            </div>
-          </div>
-
-          {/* Simplified CTA Buttons */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" onClick={onStartSearch} className="px-8">
-              {t("landing.start_free_search")}
-            </Button>
-            <Button variant="outline" size="lg" className="px-8">
-              {t("landing.view_demo")}
-            </Button>
-          </div>
-
-          {/* Quick search suggestions */}
-          <div className="pt-4">
-            <div className="text-sm text-muted-foreground mb-3">{t("landing.quick_search")}：</div>
-            <div className="flex flex-wrap justify-center gap-2">
-              {[
-                "MMSE-2", "PHQ-9", "GAD-7", "EORTC QLQ-C30", "SF-36"
-              ].map((suggestion) => (
-                <button
-                  key={suggestion}
-                  type="button"
-                  onClick={onStartSearch}
-                  className="text-sm text-blue-600 hover:underline px-3 py-1 rounded-full hover:bg-blue-50"
-                >
-                  {suggestion}
-                </button>
-              ))}
-            </div>
-          </div>
         </div>
       </div>
     </section>
