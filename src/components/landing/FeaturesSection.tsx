@@ -1,7 +1,7 @@
 'use client';
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Search, Database, BarChart3, Users, Shield, Zap } from "lucide-react";
+import { Search, BookOpen, Stethoscope, Scale, Shield, FileText } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
 
 export function FeaturesSection() {
@@ -15,33 +15,33 @@ export function FeaturesSection() {
       color: "text-blue-600"
     },
     {
-      icon: Database,
-      title: t('landing.feature_rich_library_title'),
-      description: t('landing.feature_rich_library_description'),
+      icon: BookOpen,
+      title: t('landing.feature_interpretation_title'),
+      description: t('landing.feature_interpretation_description'),
       color: "text-green-600"
     },
     {
-      icon: BarChart3,
-      title: t('landing.feature_data_analysis_title'),
-      description: t('landing.feature_data_analysis_description'),
+      icon: Stethoscope,
+      title: t('landing.feature_cases_title'),
+      description: t('landing.feature_cases_description'),
       color: "text-purple-600"
     },
     {
-      icon: Users,
-      title: t('landing.feature_collaboration_title'),
-      description: t('landing.feature_collaboration_description'),
+      icon: Scale,
+      title: t('landing.feature_rich_library_title'),
+      description: t('landing.feature_rich_library_description'),
       color: "text-orange-600"
     },
     {
       icon: Shield,
-      title: t('landing.feature_security_title'),
-      description: t('landing.feature_security_description'),
+      title: t('landing.feature_copyright_title'),
+      description: t('landing.feature_copyright_description'),
       color: "text-red-600"
     },
     {
-      icon: Zap,
-      title: t('landing.feature_deployment_title'),
-      description: t('landing.feature_deployment_description'),
+      icon: FileText,
+      title: t('landing.feature_support_title'),
+      description: t('landing.feature_support_description'),
       color: "text-yellow-600"
     }
   ];
@@ -78,7 +78,7 @@ export function FeaturesSection() {
           ))}
         </div>
 
-        {/* AI Search Demo Section */}
+        {/* Clinical Search Demo Section */}
         <div className="mt-20 rounded-2xl p-8 lg:p-12">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
             <div className="space-y-6">
@@ -97,7 +97,7 @@ export function FeaturesSection() {
                     <div className="w-2 h-2 bg-blue-500 rounded-full mt-2" />
                     <div>
                       <p className="text-sm text-muted-foreground">{t('landing.user_input')}</p>
-                      <p className="font-medium">&ldquo;{t('landing.cancer_quality_input')}&rdquo;</p>
+                      <p className="font-medium">"{t('landing.cancer_quality_input')}"</p>
                     </div>
                   </div>
                 </div>
@@ -107,7 +107,7 @@ export function FeaturesSection() {
                     <div className="w-2 h-2 bg-primary rounded-full mt-2" />
                     <div>
                       <p className="text-sm text-muted-foreground">{t('landing.ai_recommendation')}</p>
-                      <p className="font-medium">{t('landing.ai_cancer_recommendation')}</p>
+                      <p className="font-medium">推荐EORTC QLQ-C30和FACT-G量表，专门用于肿瘤患者生活质量评估</p>
                     </div>
                   </div>
                 </div>

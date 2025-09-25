@@ -663,7 +663,23 @@
     "ai_cancer_recommendation": "EORTC QLQ-C30, FACT-G, SF-36...",
     "eortc_desc": "欧洲癌症研究治疗组织生活质量量表",
     "fact_desc": "癌症治疗功能评估量表",
-    "sf36_desc": "简明健康状况调查表"
+    "sf36_desc": "简明健康状况调查表",
+    "feature_interpretation_title": "专业解读指南",
+    "feature_interpretation_description": "提供量表使用指导、评分方法、结果解读等专业内容。帮助临床医生和研究人员正确使用和解读评估结果。",
+    "feature_cases_title": "临床案例库",
+    "feature_cases_description": "收录真实临床案例，按专科分类和难度分级。为临床实践提供参考，提升量表应用的专业水平。",
+    "feature_copyright_title": "版权合规服务",
+    "feature_copyright_description": "专业的版权许可申请服务，协助用户与版权方建立联系，确保合规使用评估量表，避免法律风险。",
+    "feature_support_title": "研究支持服务",
+    "feature_support_description": "提供量表选择建议、研究设计咨询、数据分析指导等专业服务，全方位支持临床研究项目。",
+    "faq_scales_coverage": "xCOA平台包含哪些临床评估量表？",
+    "faq_copyright_compliance": "如何确保量表使用的版权合规性？",
+    "faq_interpretation_content": "量表的解读指南包含哪些内容？",
+    "faq_cases_value": "临床案例库如何帮助提升实践水平？",
+    "faq_scale_selection": "如何选择适合的评估量表？",
+    "faq_data_security": "平台如何保证数据安全和隐私？",
+    "faq_user_types": "平台支持哪些用户类型和使用场景？",
+    "faq_support_service": "如何获得技术支持和专业咨询？"
   },
   "sidebar": {
     "dashboard": "仪表盘",
@@ -754,6 +770,7 @@
         "price": "咨询定价",
         "description": "专为特殊需求和大规模部署定制",
         "button": "联系我们",
+        "period": "",
         "features": [
           "企业版所有功能",
           "私有云部署选项",

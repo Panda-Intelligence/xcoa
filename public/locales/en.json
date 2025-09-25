@@ -664,7 +664,23 @@
     "ai_cancer_recommendation": "EORTC QLQ-C30, FACT-G, SF-36...",
     "eortc_desc": "European Organisation for Research and Treatment of Cancer Quality of Life Questionnaire",
     "fact_desc": "Functional Assessment of Cancer Therapy - General",
-    "sf36_desc": "36-Item Short Form Health Survey"
+    "sf36_desc": "36-Item Short Form Health Survey",
+    "feature_interpretation_title": "Professional Interpretation Guide",
+    "feature_interpretation_description": "Provides comprehensive guidance on scale usage, scoring methods, and result interpretation. Helps clinicians and researchers use and interpret assessment results correctly.",
+    "feature_cases_title": "Clinical Case Library",
+    "feature_cases_description": "Curated real clinical cases classified by specialty and difficulty level. Provides practical references to enhance professional scale application.",
+    "feature_copyright_title": "Copyright Compliance Service",
+    "feature_copyright_description": "Professional copyright licensing application service, assisting users in contacting copyright holders to ensure compliant scale usage and avoid legal risks.",
+    "feature_support_title": "Research Support Service",
+    "feature_support_description": "Provides scale selection recommendations, research design consultation, and data analysis guidance to comprehensively support clinical research projects.",
+    "faq_scales_coverage": "What clinical assessment scales does xCOA platform include?",
+    "faq_copyright_compliance": "How to ensure copyright compliance when using scales?",
+    "faq_interpretation_content": "What content does the scale interpretation guide include?",
+    "faq_cases_value": "How does the clinical case library help improve practice level?",
+    "faq_scale_selection": "How to choose appropriate assessment scales?",
+    "faq_data_security": "How does the platform ensure data security and privacy?",
+    "faq_user_types": "What user types and usage scenarios does the platform support?",
+    "faq_support_service": "How to get technical support and professional consultation?"
   },
   "sidebar": {
     "dashboard": "Dashboard",
@@ -713,7 +729,7 @@
       "professional": {
         "name": "Professional",
         "price": "$499",
-        "period": "/year",
+        "period": "/mo",
         "description": "Perfect for professional research teams and mid-size institutions",
         "button": "Subscribe Now",
         "features": [
@@ -732,7 +748,7 @@
       "enterprise": {
         "name": "Enterprise",
         "price": "$1,299",
-        "period": "/year",
+        "period": "/mo",
         "description": "Perfect for large healthcare institutions and research organizations",
         "button": "Subscribe Now",
         "features": [
@@ -755,6 +771,7 @@
         "price": "Custom",
         "description": "Tailored for special requirements and large-scale deployments",
         "button": "Contact Us",
+        "period": "",
         "features": [
           "All Enterprise features",
           "Private cloud deployment options",
