@@ -1,1 +1,2 @@
 - Use `pnpm` as package manager for current project!
+- 项目的说明性文档都在 docs 目录下

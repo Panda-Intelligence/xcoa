@@ -2,7 +2,11 @@
   "permissions": {
     "allow": [
       "Bash(xargs:*)",
-      "WebSearch"
+      "WebSearch",
+      "Bash(pnpm add:*)",
+      "Bash(pnpm run dev:*)",
+      "Bash(pnpm run lint)",
+      "Bash(pnpm lint:*)"
     ],
     "deny": [],
     "ask": []

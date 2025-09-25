@@ -7,6 +7,8 @@ import "server-only";
 import { ThemeProvider } from "@/components/providers";
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { CookieConsentBanner } from "@/components/cookie-consent";
+import { ConditionalAnalytics } from "@/components/conditional-analytics";
 import NextTopLoader from 'nextjs-toploader'
 import { SITE_NAME, SITE_DESCRIPTION, SITE_URL } from "@/constants";
 
@@ -77,13 +79,8 @@ export default function BaseLayout({
           </TooltipProvider>
         </ThemeProvider>
         <Toaster richColors closeButton position="top-right" expand duration={7000} />
-        
-        {/* Ahrefs Analytics */}
-        <Script
-          src="https://analytics.ahrefs.com/analytics.js"
-          data-key="Vm9gbLxnL4qwA4FmeGc80g"
-          strategy="afterInteractive"
-        />
+        <CookieConsentBanner />
+        <ConditionalAnalytics />
       </body>
     </html>
   );

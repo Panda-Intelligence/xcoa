@@ -3,9 +3,15 @@ import { Separator } from "@/components/ui/separator";
 import { COMPANY_NAME, SITE_NAME } from "@/constants";
 import { Mail, MapPin } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
+import { openCookiePreferences } from "@/components/cookie-consent";
 
 export function Footer() {
   const { t } = useLanguage();
+
+  const handleCookiePolicyClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    openCookiePreferences();
+  };
 
   return (
     <footer className="border-t border-border">
@@ -72,9 +78,13 @@ export function Footer() {
             <a href="/terms" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
               {t("legal.terms_of_service")}
             </a>
-            <a href="#" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+            <button 
+              type="button"
+              onClick={handleCookiePolicyClick}
+              className="text-sm text-muted-foreground hover:text-foreground transition-colors cursor-pointer border-none bg-transparent p-0 underline-offset-4 hover:underline"
+            >
               {t("legal.cookie_policy")}
-            </a>
+            </button>
           </div>
         </div>
       </div>
