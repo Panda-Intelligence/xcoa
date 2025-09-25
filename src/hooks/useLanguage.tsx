@@ -85,25 +85,47 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
     initializeLanguage();
   }, []);
 
-  const setLanguage = (lang: Language) => {
+  const setLanguage = async (lang: Language) => {
     console.log('Setting language to:', lang);
 
-    // 如果新语言的翻译还没有加载，设置loading状态
-    if (Object.keys(translations[lang]).length === 0) {
-      setTranslationsLoaded(false);
+    // Prevent multiple simultaneous language changes
+    if (!translationsLoaded) {
+      console.warn('Translation loading in progress, ignoring language change');
+      return;
     }
 
+    // If new language's translations are already loaded, switch immediately
+    if (Object.keys(translations[lang]).length > 0) {
+      setLanguageState(lang);
+      localStorage.setItem('xcoa-language', lang);
+      return;
+    }
+
+    // Set loading state for new language
+    setTranslationsLoaded(false);
     setLanguageState(lang);
     localStorage.setItem('xcoa-language', lang);
 
-    // 加载新语言的翻译
-    loadTranslations(lang).then(() => {
+    try {
+      // Load new language's translations
+      await loadTranslations(lang);
       setTranslationsLoaded(true);
-    });
 
-    // 预加载另一种语言的翻译
-    const otherLang = lang === 'zh' ? 'en' : 'zh';
-    loadTranslations(otherLang);
+      // Preload other language in background
+      const otherLang = lang === 'zh' ? 'en' : 'zh';
+      loadTranslations(otherLang).catch(console.error);
+    } catch (error) {
+      console.error('Failed to load translations for', lang, error);
+      // Fallback to English if translation loading fails
+      if (lang !== 'en') {
+        console.log('Falling back to English');
+        setLanguageState('en');
+        await loadTranslations('en').catch(() => {
+          console.error('Failed to load fallback English translations');
+        });
+      }
+      setTranslationsLoaded(true);
+    }
   };
 
   const t = (key: string, defaultValue?: string): string => {

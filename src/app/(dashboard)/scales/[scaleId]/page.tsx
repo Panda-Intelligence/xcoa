@@ -249,7 +249,7 @@ export default function ScalePage({ params }: ScalePageProps) {
                   <TabsContent value="items" className="space-y-4">
                     {meta.hasItems ? (
                       <div className="space-y-3">
-                        {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+                        { }
                         {items.map((item: any) => (
                           <Card key={item.id} className="p-4">
                             <div className="flex items-start space-x-3">

@@ -29,7 +29,21 @@ export function CookieConsentBanner() {
     // Load saved preferences from localStorage
     const saved = localStorage.getItem("cookiePreferences");
     if (saved) {
-      setPreferences(JSON.parse(saved));
+      try {
+        const parsed = JSON.parse(saved);
+        // Validate the parsed object has the expected structure
+        if (parsed && typeof parsed === 'object' && 
+            'necessary' in parsed && 'functional' in parsed && 
+            'analytics' in parsed && 'marketing' in parsed) {
+          setPreferences(parsed);
+        } else {
+          console.warn('Invalid cookie preferences structure, using defaults');
+          localStorage.removeItem("cookiePreferences");
+        }
+      } catch (error) {
+        console.error('Failed to parse cookie preferences:', error);
+        localStorage.removeItem("cookiePreferences");
+      }
     }
 
     // Listen for external requests to open cookie preferences
@@ -295,12 +309,42 @@ export function getCookiePreferences(): CookiePreferences {
     };
   }
   const saved = localStorage.getItem("cookiePreferences");
-  return saved ? JSON.parse(saved) : {
-    necessary: true,
-    functional: false,
-    analytics: false,
-    marketing: false,
-  };
+  if (!saved) {
+    return {
+      necessary: true,
+      functional: false,
+      analytics: false,
+      marketing: false,
+    };
+  }
+  
+  try {
+    const parsed = JSON.parse(saved);
+    // Validate the parsed object has the expected structure
+    if (parsed && typeof parsed === 'object' && 
+        'necessary' in parsed && 'functional' in parsed && 
+        'analytics' in parsed && 'marketing' in parsed) {
+      return parsed;
+    } else {
+      console.warn('Invalid cookie preferences structure in storage, using defaults');
+      localStorage.removeItem("cookiePreferences");
+      return {
+        necessary: true,
+        functional: false,
+        analytics: false,
+        marketing: false,
+      };
+    }
+  } catch (error) {
+    console.error('Failed to parse cookie preferences from storage:', error);
+    localStorage.removeItem("cookiePreferences");
+    return {
+      necessary: true,
+      functional: false,
+      analytics: false,
+      marketing: false,
+    };
+  }
 }
 
 export function hasAnalyticsConsent(): boolean {
