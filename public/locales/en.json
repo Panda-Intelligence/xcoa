@@ -641,7 +641,7 @@
     "optionally_update_color_palette": "Optionally update the color palette in src/app/globals.css",
     "how_can_i_contribute": "How can I contribute?",
     "contributions_welcome": "Contributions are welcome! Feel free to open issues, submit pull requests, or help improve the documentation on GitHub. The project follows standard open source contribution guidelines.",
-    "features_title": "Professional Features",
+    "features_title": "Features",
     "features_description": "Comprehensive eCOA scale solutions for clinical research and medical practice",
     "feature_ai_search_title": "AI Intelligent Search",
     "feature_ai_search_description": "Intelligent search based on natural language processing to quickly find the most suitable scale tools",

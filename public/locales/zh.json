@@ -640,7 +640,7 @@
     "optionally_update_color_palette": "可选择更新 src/app/globals.css 中的颜色调色板",
     "how_can_i_contribute": "如何贡献？",
     "contributions_welcome": "欢迎贡献！随时在 GitHub 上开启问题、提交拉取请求或帮助改进文档。项目遵循标准的开源贡献指南。",
-    "features_title": "专业功能特性",
+    "features_title": "特性",
     "features_description": "为临床研究和医疗实践提供全方位的 eCOA 量表解决方案",
     "feature_ai_search_title": "AI 智能检索",
     "feature_ai_search_description": "基于自然语言处理的智能搜索，快速找到最适合的量表工具",
