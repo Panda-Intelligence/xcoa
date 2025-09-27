@@ -10,7 +10,8 @@
       "Bash(pnpm run lint:*)",
       "Bash(tail:*)",
       "Bash(grep:*)",
-      "Bash(pnpm run:*)"
+      "Bash(pnpm run:*)",
+      "Bash(wc:*)"
     ],
     "deny": [],
     "ask": []

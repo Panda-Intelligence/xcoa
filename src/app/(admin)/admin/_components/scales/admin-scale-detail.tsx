@@ -10,6 +10,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { CopyrightHolderSearch } from "@/components/copyright-holder-search";
 import {
   Table,
   TableBody,
@@ -47,6 +48,13 @@ interface EcoaScale {
   ageRange?: string;
   createdAt: string;
   updatedAt: string;
+  // Copyright fields
+  copyrightInfo?: string;
+  copyrightHolderId?: string;
+  copyrightHolderName?: string;
+  licenseType?: string;
+  licenseTerms?: string;
+  usageRestrictions?: string;
 }
 
 interface EcoaItem {
@@ -241,6 +249,45 @@ export function AdminScaleDetail({ scaleId }: AdminScaleDetailProps) {
       isRequired: Boolean(item.isRequired)
     });
     setEditItemOpen(true);
+  };
+
+  // 保存量表信息（包括版权信息）
+  const handleSave = async () => {
+    if (!scale) return;
+
+    try {
+      const response = await fetch(`/api/admin/scales/${scaleId}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: scale.name,
+          nameEn: scale.nameEn,
+          acronym: scale.acronym,
+          description: scale.description,
+          administrationTime: scale.administrationTime,
+          targetPopulation: scale.targetPopulation,
+          ageRange: scale.ageRange,
+          validationStatus: scale.validationStatus,
+          copyrightInfo: scale.copyrightInfo,
+          copyrightHolderId: scale.copyrightHolderId,
+          licenseType: scale.licenseType,
+          licenseTerms: scale.licenseTerms,
+          usageRestrictions: scale.usageRestrictions,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        toast.success("量表信息更新成功");
+        fetchScaleDetails(); // 重新加载数据
+      } else {
+        toast.error(data.error || "更新量表失败");
+      }
+    } catch (error) {
+      console.error("更新量表错误:", error);
+      toast.error("更新量表失败");
+    }
   };
 
   const resetNewItem = () => {
@@ -439,6 +486,7 @@ export function AdminScaleDetail({ scaleId }: AdminScaleDetailProps) {
       <Tabs defaultValue="info" className="w-full">
         <TabsList>
           <TabsTrigger value="info">量表信息</TabsTrigger>
+          <TabsTrigger value="copyright">版权信息</TabsTrigger>
           <TabsTrigger value="items">题目管理</TabsTrigger>
         </TabsList>
 
@@ -512,6 +560,99 @@ export function AdminScaleDetail({ scaleId }: AdminScaleDetailProps) {
                   <p className="text-muted-foreground mt-1">{scale.description}</p>
                 </div>
               )}
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="copyright" className="space-y-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>版权与许可信息</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <CopyrightHolderSearch
+                    value={scale?.copyrightHolderId}
+                    onSelect={(holderId) => {
+                      if (scale) {
+                        setScale({ ...scale, copyrightHolderId: holderId || undefined });
+                      }
+                    }}
+                    label="版权方"
+                    placeholder="搜索并选择版权方..."
+                  />
+                </div>
+                <div>
+                  <Label>许可类型</Label>
+                  <Select 
+                    value={scale?.licenseType || "contact_required"} 
+                    onValueChange={(value) => {
+                      if (scale) {
+                        setScale({ ...scale, licenseType: value });
+                      }
+                    }}
+                  >
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="public_domain">公共领域</SelectItem>
+                      <SelectItem value="academic_free">学术免费</SelectItem>
+                      <SelectItem value="commercial">商业许可</SelectItem>
+                      <SelectItem value="contact_required">需要联系</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+
+              <div>
+                <Label>版权信息</Label>
+                <Textarea
+                  value={scale?.copyrightInfo || ""}
+                  onChange={(e) => {
+                    if (scale) {
+                      setScale({ ...scale, copyrightInfo: e.target.value });
+                    }
+                  }}
+                  placeholder="版权所有 © 2023 患者健康问卷开发团队"
+                  rows={2}
+                />
+              </div>
+
+              <div>
+                <Label>许可条款</Label>
+                <Textarea
+                  value={scale?.licenseTerms || ""}
+                  onChange={(e) => {
+                    if (scale) {
+                      setScale({ ...scale, licenseTerms: e.target.value });
+                    }
+                  }}
+                  placeholder="详细的许可使用条款..."
+                  rows={6}
+                />
+              </div>
+
+              <div>
+                <Label>使用限制</Label>
+                <Textarea
+                  value={scale?.usageRestrictions || ""}
+                  onChange={(e) => {
+                    if (scale) {
+                      setScale({ ...scale, usageRestrictions: e.target.value });
+                    }
+                  }}
+                  placeholder="使用的限制条件和注意事项..."
+                  rows={4}
+                />
+              </div>
+
+              <div className="flex justify-end">
+                <Button onClick={handleSave}>
+                  保存版权信息
+                </Button>
+              </div>
             </CardContent>
           </Card>
         </TabsContent>
