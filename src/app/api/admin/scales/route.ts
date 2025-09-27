@@ -1,6 +1,6 @@
 import { type NextRequest, NextResponse } from 'next/server';
 import { getDB } from '@/db';
-import { ecoaScaleTable, ecoaCategoryTable, userTable, copyrightLicensesTable } from '@/db/schema';
+import { ecoaScaleTable, ecoaCategoryTable, userTable, copyrightLicensesTable, copyrightHolderTable } from '@/db/schema';
 import { eq, like, or, sql, desc } from 'drizzle-orm';
 import { getSessionFromCookie } from '@/utils/auth';
 import { z } from 'zod';
@@ -73,15 +73,25 @@ export async function GET(request: NextRequest) {
         createdAt: ecoaScaleTable.createdAt,
         updatedAt: ecoaScaleTable.updatedAt,
         copyrightInfo: ecoaScaleTable.copyrightInfo,
-        // Copyright license information from separate table
-        copyrightHolderName: copyrightLicensesTable.copyrightHolder,
-        licenseType: copyrightLicensesTable.licenseType,
-        licenseTerms: copyrightLicensesTable.licenseTerms,
-        usageRestrictions: copyrightLicensesTable.usageRestrictions,
+        // Copyright information directly from ecoaScaleTable
+        copyrightHolderId: ecoaScaleTable.copyrightHolderId,
+        licenseType: ecoaScaleTable.licenseType,
+        licenseTerms: ecoaScaleTable.licenseTerms,
+        usageRestrictions: ecoaScaleTable.usageRestrictions,
+        // Complete copyright holder information from join
+        copyrightHolder: {
+          id: copyrightHolderTable.id,
+          name: copyrightHolderTable.name,
+          nameEn: copyrightHolderTable.nameEn,
+          organizationType: copyrightHolderTable.organizationType,
+          contactEmail: copyrightHolderTable.contactEmail,
+          website: copyrightHolderTable.website,
+          isVerified: copyrightHolderTable.isVerified,
+        },
       })
       .from(ecoaScaleTable)
       .leftJoin(ecoaCategoryTable, eq(ecoaScaleTable.categoryId, ecoaCategoryTable.id))
-      .leftJoin(copyrightLicensesTable, eq(ecoaScaleTable.id, copyrightLicensesTable.scaleId));
+      .leftJoin(copyrightHolderTable, eq(ecoaScaleTable.copyrightHolderId, copyrightHolderTable.id));
 
     // 添加状态筛选
     if (status !== 'all') {

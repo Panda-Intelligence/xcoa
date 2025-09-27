@@ -56,7 +56,15 @@ interface EcoaScale {
   updatedAt: string;
   // Copyright fields (from copyright_licenses table)
   copyrightHolderId?: string;
-  copyrightHolderName?: string;
+  copyrightHolder?: {
+    id: string;
+    name: string;
+    nameEn?: string;
+    organizationType: string;
+    contactEmail?: string;
+    website?: string;
+    isVerified: number;
+  };
   licenseType?: string;
   licenseTerms?: string;
   usageRestrictions?: string;
@@ -529,7 +537,40 @@ export function AdminScalesManager() {
                       </Badge>
                     </TableCell>
                     <TableCell>
-                      {scale.copyrightHolderName || "未设置"}
+                      {scale.copyrightHolder ? (
+                        <Button
+                          variant="link"
+                          className="p-0 h-auto text-left justify-start"
+                          onClick={() => router.push(`/admin/copyright-holders/${scale.copyrightHolder?.id}`)}
+                        >
+                          <div>
+                            <div className="font-medium text-blue-600 hover:text-blue-800">
+                              {scale.copyrightHolder.name}
+                            </div>
+                            {scale.copyrightHolder.nameEn && (
+                              <div className="text-xs text-muted-foreground">
+                                {scale.copyrightHolder.nameEn}
+                              </div>
+                            )}
+                            <div className="flex items-center space-x-1 mt-1">
+                              <Badge variant="outline" className="text-xs">
+                                {scale.copyrightHolder.organizationType === 'publisher' ? '出版商' :
+                                 scale.copyrightHolder.organizationType === 'research_institution' ? '研究机构' :
+                                 scale.copyrightHolder.organizationType === 'individual' ? '个人' :
+                                 scale.copyrightHolder.organizationType === 'foundation' ? '基金会' : 
+                                 scale.copyrightHolder.organizationType}
+                              </Badge>
+                              {scale.copyrightHolder.isVerified === 1 && (
+                                <Badge variant="outline" className="text-xs text-green-600">
+                                  已验证
+                                </Badge>
+                              )}
+                            </div>
+                          </div>
+                        </Button>
+                      ) : (
+                        <span className="text-muted-foreground">未设置</span>
+                      )}
                     </TableCell>
                     <TableCell>
                       {scale.licenseType ? (

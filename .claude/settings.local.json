@@ -11,7 +11,8 @@
       "Bash(tail:*)",
       "Bash(grep:*)",
       "Bash(pnpm run:*)",
-      "Bash(wc:*)"
+      "Bash(wc:*)",
+      "Bash(ls:*)"
     ],
     "deny": [],
     "ask": []
