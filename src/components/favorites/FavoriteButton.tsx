@@ -7,6 +7,7 @@ import { useSessionStore } from '@/state/session';
 import { useFavoritesStore } from '@/state/favorites';
 import { useLanguage } from '@/hooks/useLanguage';
 import { cn } from '@/lib/utils';
+import { useToast } from '@/hooks/useToast';
 
 interface FavoriteButtonProps {
   scaleId: string;
@@ -24,6 +25,7 @@ export function FavoriteButton({
   className 
 }: FavoriteButtonProps) {
   const { t } = useLanguage();
+  const toast = useToast();
   const { session } = useSessionStore();
   const { 
     isFavorited, 
@@ -39,7 +41,7 @@ export function FavoriteButton({
 
   const handleToggle = async () => {
     if (!session?.user) {
-      alert('请先登录后再收藏量表');
+      toast.warning('请先登录后再收藏量表');
       return;
     }
 
@@ -49,7 +51,7 @@ export function FavoriteButton({
       await toggleFavorite(scaleId);
     } catch (error) {
       console.error('收藏操作失败:', error);
-      alert('操作失败，请稍后重试');
+      toast.error('操作失败，请稍后重试');
     } finally {
       setLoading(false);
     }

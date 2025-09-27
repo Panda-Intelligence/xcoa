@@ -35,7 +35,7 @@ async function getUserTeamType(userId: string): Promise<{ teamType: string, pric
   const db = getDB();
 
   try {
-    const result = await db.execute(sql`
+    const result = await db.run(sql`
       SELECT teamType, organizationName, organizationSize, currentCredits
       FROM user WHERE id = ${userId}
     `);
@@ -252,7 +252,7 @@ ${userInfo.firstName} ${userInfo.lastName}`,
           const ticketId = `ticket_${createId()}`;
 
           // 插入工单记录
-          await db.execute(sql`
+          await db.run(sql`
             INSERT INTO copyright_ticket (
               id, userId, scaleId, ticketNumber, subject, requestType, priority, status,
               copyrightOrganization, copyrightEmail, intendedUse, projectDescription,

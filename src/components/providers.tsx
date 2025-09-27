@@ -21,20 +21,28 @@ function RouterChecker() {
   const fetchSession = useSessionStore((store) => store.fetchSession)
 
   useEffect(() => {
-    const _push = router.push.bind(router);
-    const _refresh = router.refresh.bind(router);
+    // Store original methods to restore them on cleanup
+    const originalPush = router.push.bind(router);
+    const originalRefresh = router.refresh.bind(router);
 
+    // Override methods with loading indicator
     router.push = (href, options) => {
       start();
-      _push(href, options);
+      originalPush(href, options);
     };
 
     router.refresh = () => {
       start();
       fetchSession?.();
-      _refresh();
+      originalRefresh();
     };
-  }, [])
+
+    // Cleanup function to restore original methods
+    return () => {
+      router.push = originalPush;
+      router.refresh = originalRefresh;
+    };
+  }, [router, start, fetchSession])
 
   useEffect(() => {
     done();

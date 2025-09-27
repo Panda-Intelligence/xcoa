@@ -86,7 +86,7 @@ interface FavoriteButtonProps {
   showCount?: boolean;
 }
 
-<FavoriteButton 
+<FavoriteButton
   scaleId="scale_phq9"
   showCount={true}
   size="md"
@@ -102,7 +102,7 @@ interface FavoriteButtonProps {
     <Collection name="常用量表" count={8} color="green" />
     <Collection name="学习资料" count={5} color="purple" />
   </CollectionList>
-  
+
   <CollectionContent>
     <ScaleCard scale={scale} notes={userNotes} tags={userTags} />
   </CollectionContent>
@@ -178,12 +178,12 @@ interface CreateCollectionRequest {
 ```
 1. 量表详情页 → 点击❤️按钮 → 弹出收藏选项
    ├─ 添加到现有分类
-   ├─ 创建新分类  
+   ├─ 创建新分类
    └─ 添加笔记和标签
 
 2. 收藏成功 → 按钮变为❤️(已收藏) → 显示收藏数量
 
-3. 收藏管理 → /dashboard/favorites → 完整管理界面
+3. 收藏管理 → /scales/favorites → 完整管理界面
    ├─ 分类浏览
    ├─ 搜索收藏
    ├─ 批量操作
@@ -224,11 +224,11 @@ interface PersonalizedRecommendation {
 ## 📱 页面路由设计
 
 ```
-/dashboard/favorites              // 收藏主页
-├── /dashboard/favorites/collections   // 分类管理
-├── /dashboard/favorites/shared        // 分享的收藏
-├── /dashboard/favorites/analytics     // 收藏统计
-└── /dashboard/favorites/settings      // 收藏设置
+/scales/favorites              // 收藏主页
+├── /scales/favorites/collections   // 分类管理
+├── /scales/favorites/shared        // 分享的收藏
+├── /scales/favorites/analytics     // 收藏统计
+└── /scales/favorites/settings      // 收藏设置
 ```
 
 ## 🧪 测试验证
@@ -247,6 +247,6 @@ interface PersonalizedRecommendation {
 
 ---
 
-**📅 开发时间**: 1周内完成完整功能  
-**🎯 目标**: 提供专业级的个人量表管理体验  
+**📅 开发时间**: 1周内完成完整功能
+**🎯 目标**: 提供专业级的个人量表管理体验
 **📈 价值**: 提升用户粘性和平台使用深度

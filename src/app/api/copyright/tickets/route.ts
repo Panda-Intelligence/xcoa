@@ -226,7 +226,7 @@ Platform: xcoa.pro | Support: support@xcoa.pro`
       };
 
       // 执行数据库操作 (插入工单记录)
-      await db.execute(sql`
+      await db.run(sql`
         INSERT INTO copyright_ticket (
           id, userId, scaleId, ticketNumber, subject, requestType, priority, status,
           copyrightOrganization, copyrightEmail, copyrightPhone, copyrightWebsite,
@@ -247,7 +247,7 @@ Platform: xcoa.pro | Support: support@xcoa.pro`
 
       // 插入初始消息记录
       const initialMessageId = `msg_${createId()}`;
-      await db.execute(sql`
+      await db.run(sql`
         INSERT INTO copyright_ticket_message (
           id, ticketId, messageType, sender, subject, content, isRead, isPublic,
           emailSent, createdAt
@@ -353,7 +353,7 @@ export async function GET(request: NextRequest) {
     }
 
     // 获取工单列表
-    const tickets = await db.execute(sql`
+    const tickets = await db.run(sql`
       SELECT
         ct.id, ct.ticketNumber, ct.subject, ct.requestType, ct.priority, ct.status,
         ct.copyrightOrganization, ct.intendedUse, ct.projectDescription,
@@ -371,7 +371,7 @@ export async function GET(request: NextRequest) {
     let latestMessages = [];
 
     if (ticketIds.length > 0) {
-      latestMessages = await db.execute(sql`
+      latestMessages = await db.run(sql`
         SELECT DISTINCT
           ticketId, content, messageType, createdAt,
           ROW_NUMBER() OVER (PARTITION BY ticketId ORDER BY createdAt DESC) as rn

@@ -1,7 +1,7 @@
 'use client';
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Search, Database, BarChart3, Users, Shield, Zap } from "lucide-react";
+import { Search, BookOpen, Stethoscope, Scale, Shield, FileText } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
 
 export function FeaturesSection() {
@@ -12,37 +12,37 @@ export function FeaturesSection() {
       icon: Search,
       title: t('landing.feature_ai_search_title'),
       description: t('landing.feature_ai_search_description'),
-      color: "text-blue-600"
+      color: "text-blue-500 dark:text-blue-400"
     },
     {
-      icon: Database,
+      icon: BookOpen,
+      title: t('landing.feature_interpretation_title'),
+      description: t('landing.feature_interpretation_description'),
+      color: "text-green-500 dark:text-green-400"
+    },
+    {
+      icon: Stethoscope,
+      title: t('landing.feature_cases_title'),
+      description: t('landing.feature_cases_description'),
+      color: "text-purple-500 dark:text-purple-400"
+    },
+    {
+      icon: Scale,
       title: t('landing.feature_rich_library_title'),
       description: t('landing.feature_rich_library_description'),
-      color: "text-green-600"
-    },
-    {
-      icon: BarChart3,
-      title: t('landing.feature_data_analysis_title'),
-      description: t('landing.feature_data_analysis_description'),
-      color: "text-purple-600"
-    },
-    {
-      icon: Users,
-      title: t('landing.feature_collaboration_title'),
-      description: t('landing.feature_collaboration_description'),
-      color: "text-orange-600"
+      color: "text-orange-500 dark:text-orange-400"
     },
     {
       icon: Shield,
-      title: t('landing.feature_security_title'),
-      description: t('landing.feature_security_description'),
-      color: "text-red-600"
+      title: t('landing.feature_copyright_title'),
+      description: t('landing.feature_copyright_description'),
+      color: "text-red-500 dark:text-red-400"
     },
     {
-      icon: Zap,
-      title: t('landing.feature_deployment_title'),
-      description: t('landing.feature_deployment_description'),
-      color: "text-yellow-600"
+      icon: FileText,
+      title: t('landing.feature_support_title'),
+      description: t('landing.feature_support_description'),
+      color: "text-yellow-500 dark:text-yellow-400"
     }
   ];
 
@@ -78,7 +78,7 @@ export function FeaturesSection() {
           ))}
         </div>
 
-        {/* AI Search Demo Section */}
+        {/* Clinical Search Demo Section */}
         <div className="mt-20 rounded-2xl p-8 lg:p-12">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
             <div className="space-y-6">
@@ -92,12 +92,12 @@ export function FeaturesSection() {
               </div>
 
               <div className="space-y-3">
-                <div className="bg-white rounded-lg p-4 border border-border shadow-xs">
+                <div className="bg-card rounded-lg p-4 border border-border shadow-xs">
                   <div className="flex items-start space-x-3">
-                    <div className="w-2 h-2 bg-blue-500 rounded-full mt-2" />
+                    <div className="w-2 h-2 bg-blue-500 dark:bg-blue-400 rounded-full mt-2" />
                     <div>
                       <p className="text-sm text-muted-foreground">{t('landing.user_input')}</p>
-                      <p className="font-medium">&ldquo;{t('landing.cancer_quality_input')}&rdquo;</p>
+                      <p className="font-medium">"{t('landing.cancer_quality_input')}"</p>
                     </div>
                   </div>
                 </div>
@@ -107,7 +107,7 @@ export function FeaturesSection() {
                     <div className="w-2 h-2 bg-primary rounded-full mt-2" />
                     <div>
                       <p className="text-sm text-muted-foreground">{t('landing.ai_recommendation')}</p>
-                      <p className="font-medium">{t('landing.ai_cancer_recommendation')}</p>
+                      <p className="font-medium">推荐EORTC QLQ-C30和FACT-G量表，专门用于肿瘤患者生活质量评估</p>
                     </div>
                   </div>
                 </div>
@@ -115,7 +115,7 @@ export function FeaturesSection() {
             </div>
 
             <div className="relative">
-              <div className="bg-white rounded-xl p-6 shadow-lg border border-border">
+              <div className="bg-card rounded-xl p-6 shadow-lg border border-border">
                 <div className="space-y-4">
                   <div className="flex items-center space-x-2 text-sm text-muted-foreground">
                     <Search className="h-4 w-4" />

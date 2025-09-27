@@ -11,7 +11,7 @@ export default function Home() {
   const router = useRouter();
 
   const handleViewInsights = () => {
-    router.push('/dashboard/scales');
+    router.push('/scales');
   };
 
   return (

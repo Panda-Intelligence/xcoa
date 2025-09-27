@@ -6,7 +6,6 @@ import type { Route } from 'next'
 import {
   Building2,
   Settings2,
-  SquareTerminal,
   CreditCard,
   Users,
   Search,
@@ -85,48 +84,42 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     teams: formattedTeams,
     navMain: [
       {
-        title: t('sidebar.dashboard'),
-        url: "/dashboard",
-        icon: SquareTerminal,
-        isActive: true,
-      },
-      {
         title: t('sidebar.ecoa_scales'),
-        url: "/dashboard/scales#" as Route,
+        url: "/scales#" as Route,
         icon: Search,
         items: [
           {
             title: t('sidebar.scale_search'),
-            url: "/dashboard/scales" as Route,
+            url: "/scales" as Route,
           },
           {
-            title: t('sidebar.my_favorites'),
-            url: "/dashboard/scales/favorites" as Route,
+            title: t('sidebar.favorites'),
+            url: "/scales/favorites" as Route,
           },
           {
-            title: t('sidebar.contact_tickets'),
-            url: "/dashboard/copyright/tickets" as Route,
+            title: t('sidebar.license'),
+            url: "/scales/copyright/tickets" as Route,
           }
         ],
       },
       {
         title: t('sidebar.scale_interpretation'),
-        url: "/dashboard/interpretation#" as Route,
+        url: "/insights/interpretation#" as Route,
         icon: BookOpen,
         items: [
           {
             title: t('sidebar.interpretation_guide'),
-            url: "/dashboard/interpretation" as Route,
+            url: "/insights/interpretation" as Route,
           },
           {
             title: t('sidebar.clinical_cases'),
-            url: "/dashboard/cases" as Route,
+            url: "/insights/cases" as Route,
           },
         ],
       },
       {
         title: t('sidebar.team_management'),
-        url: "/dashboard/teams" as Route,
+        url: "/teams" as Route,
         icon: Users,
       },
     ],
@@ -143,7 +136,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       },
       {
         title: t('sidebar.help'),
-        url: "/dashboard/help" as Route,
+        url: "/help" as Route,
         icon: HelpCircle,
       },
     ],

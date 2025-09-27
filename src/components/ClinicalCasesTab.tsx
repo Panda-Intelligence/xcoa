@@ -94,7 +94,7 @@ export function ClinicalCasesTab({ scaleId, scaleAcronym }: ClinicalCasesTabProp
         <p className="text-muted-foreground mb-4">
           该量表的临床试验案例正在收集中
         </p>
-        <Link href="/dashboard/cases">
+        <Link href="/insights/cases">
           <Button variant="outline">
             <Eye className="w-4 h-4 mr-2" />
             浏览全部案例
@@ -199,7 +199,7 @@ export function ClinicalCasesTab({ scaleId, scaleAcronym }: ClinicalCasesTabProp
                 </div>
               </div>
             </CardHeader>
-            
+
             <CardContent>
               <div className="space-y-3">
                 <div>
@@ -208,7 +208,7 @@ export function ClinicalCasesTab({ scaleId, scaleAcronym }: ClinicalCasesTabProp
                     {clinicalCase.primaryOutcome}
                   </p>
                 </div>
-                
+
                 <div>
                   <h5 className="font-medium text-sm mb-1">关键结果</h5>
                   <p className="text-sm text-muted-foreground bg-green-50 p-2 rounded">
@@ -246,7 +246,7 @@ export function ClinicalCasesTab({ scaleId, scaleAcronym }: ClinicalCasesTabProp
           <p className="text-sm text-muted-foreground mb-4">
             查看更多量表在临床试验中的应用案例
           </p>
-          <Link href="/dashboard/cases">
+          <Link href="/insights/cases">
             <Button>
               <Beaker className="w-4 h-4 mr-2" />
               浏览案例库

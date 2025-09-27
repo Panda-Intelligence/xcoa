@@ -1,10 +1,10 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { type NextRequest, NextResponse } from 'next/server';
 // import { getCloudflareContext } from '@opennextjs/cloudflare';
 import { getDB } from '@/db';
-import { 
-  ecoaScaleTable, 
-  ecoaCategoryTable, 
-  userSearchHistoryTable, 
+import {
+  ecoaScaleTable,
+  ecoaCategoryTable,
+  userSearchHistoryTable,
   scaleUsageTable
 } from '@/db/schema';
 import { and, eq, isNotNull } from 'drizzle-orm';
@@ -22,11 +22,11 @@ const vectorSearchRequestSchema = z.object({
 // 计算向量相似度 (余弦相似度)
 function cosineSimilarity(vecA: number[], vecB: number[]): number {
   if (vecA.length !== vecB.length) return 0;
-  
+
   const dotProduct = vecA.reduce((sum, a, i) => sum + a * vecB[i], 0);
   const magnitudeA = Math.sqrt(vecA.reduce((sum, a) => sum + a * a, 0));
   const magnitudeB = Math.sqrt(vecB.reduce((sum, b) => sum + b * b, 0));
-  
+
   if (magnitudeA === 0 || magnitudeB === 0) return 0;
   return dotProduct / (magnitudeA * magnitudeB);
 }
@@ -42,7 +42,7 @@ async function generateQueryEmbedding(query: string): Promise<number[]> {
     // 在生产环境中才导入和使用 getCloudflareContext
     const { getCloudflareContext } = await import('@opennextjs/cloudflare');
     const { env } = getCloudflareContext();
-    
+
     if (!env.AI) {
       throw new Error('Workers AI not available');
     }
@@ -69,13 +69,13 @@ export async function POST(request: NextRequest) {
       const session = await getSessionFromCookie();
       const user = session?.user;
       const ip = getIP(request);
-      
+
       const body = await request.json();
       const { query, limit, threshold } = vectorSearchRequestSchema.parse(body);
-      
+
       // 生成查询的嵌入向量
       const queryEmbedding = await generateQueryEmbedding(query);
-      
+
       // 获取所有有向量的量表
       const scales = await db
         .select({
@@ -115,7 +115,7 @@ export async function POST(request: NextRequest) {
           try {
             const scaleVector = JSON.parse(scale.searchVector || '[]');
             const similarity = cosineSimilarity(queryEmbedding, scaleVector);
-            
+
             return {
               ...scale,
               vector_similarity: similarity,
@@ -148,7 +148,7 @@ export async function POST(request: NextRequest) {
           console.warn('Failed to save search history:', error);
         }
       }
-      
+
       // 记录量表使用情况
       for (const result of scoredResults.slice(0, 5)) {
         try {
@@ -163,7 +163,7 @@ export async function POST(request: NextRequest) {
           console.warn('Failed to save usage record:', error);
         }
       }
-      
+
       return NextResponse.json({
         results: scoredResults,
         query,
@@ -179,7 +179,7 @@ export async function POST(request: NextRequest) {
 
     } catch (error) {
       console.error('Vector search API error:', error);
-      
+
       if (error instanceof z.ZodError) {
         return NextResponse.json(
           { error: 'Invalid request parameters', details: error.errors },
@@ -190,8 +190,8 @@ export async function POST(request: NextRequest) {
       // 如果 Workers AI 不可用，返回友好的错误信息
       if (error.message.includes('Workers AI not available')) {
         return NextResponse.json(
-          { 
-            error: 'Vector search temporarily unavailable', 
+          {
+            error: 'Vector search temporarily unavailable',
             message: 'Please try the semantic search instead',
             fallbackEndpoint: '/api/search/semantic'
           },

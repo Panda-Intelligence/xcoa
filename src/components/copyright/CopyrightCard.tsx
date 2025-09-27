@@ -23,6 +23,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { useToast } from '@/hooks/useToast';
 
 interface CopyrightInfo {
   scale: {
@@ -64,6 +65,7 @@ interface CopyrightCardProps {
 }
 
 export function CopyrightCard({ scaleId, initialData }: CopyrightCardProps) {
+  const toast = useToast();
   const [copyrightInfo, setCopyrightInfo] = useState<CopyrightInfo | null>(initialData || null);
   const [loading, setLoading] = useState(false);
   const [contactDialogOpen, setContactDialogOpen] = useState(false);
@@ -117,11 +119,11 @@ export function CopyrightCard({ scaleId, initialData }: CopyrightCardProps) {
         window.open(mailtoUrl, '_blank');
         setContactDialogOpen(false);
       } else {
-        alert(`联系请求失败: ${result.error}`);
+        toast.error(`联系请求失败: ${result.error}`);
       }
     } catch (error) {
       console.error('Error submitting contact request:', error);
-      alert('提交联系请求时发生错误');
+      toast.error('提交联系请求时发生错误');
     }
   };
 

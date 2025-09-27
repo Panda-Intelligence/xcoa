@@ -255,8 +255,8 @@
     --sidebar-ring: var(--ring);
   }
   .dark {
-    --background: 217 32% 12%;
-    --foreground: 0 0% 98%;
+    --background: #09090b;
+    --foreground: #fafafa;
     --card: 240 10% 3.9%;
     --card-foreground: 0 0% 98%;
     --popover: 240 10% 3.9%;

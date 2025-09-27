@@ -2,9 +2,8 @@
 
 import {
   BadgeCheck,
-  Bell,
   ChevronsUpDown,
-  CreditCard,
+  ShieldPlus,
   LogOut,
 } from "lucide-react"
 
@@ -31,15 +30,15 @@ import {
 } from "@/components/ui/sidebar"
 import { Skeleton } from "@/components/ui/skeleton"
 import useSignOut from "@/hooks/useSignOut"
-import { useRouter } from "next/navigation"
+import { useRouter, usePathname } from "next/navigation"
 import { useSessionStore } from "@/state/session"
-import ThemeSwitch from "./theme-switch"
 
 export function NavUser() {
   const { session, isLoading } = useSessionStore();
   const { signOut } = useSignOut();
   const { isMobile, setOpenMobile } = useSidebar()
   const router = useRouter()
+  const pathname = usePathname();
 
   if (isLoading) {
     return (
@@ -68,6 +67,8 @@ export function NavUser() {
 
   const { user } = session;
   const displayName = user.firstName && user.lastName ? `${user.firstName} ${user.lastName}` : user.email;
+  const isAdmin = user.role === 'admin';
+  const isAdminRoute = pathname?.startsWith('/admin');
 
   return (
     <SidebarMenu>
@@ -117,10 +118,14 @@ export function NavUser() {
                 <BadgeCheck className="size-4" />
                 Account
               </DropdownMenuItem>
-              <DropdownMenuItem className="cursor-pointer">
-                <Bell className="size-4" />
-                Notifications
+              {isAdmin && <DropdownMenuItem className="cursor-pointer" onClick={() => {
+                setOpenMobile(false)
+                router.push(isAdminRoute ? '/scales' : '/admin/dashboard')
+              }}>
+                <ShieldPlus className="size-4" />
+                {isAdminRoute ? 'Dashboard' : 'Admin Panel'}
               </DropdownMenuItem>
+              }
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuItem

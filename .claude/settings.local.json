@@ -1,18 +1,18 @@
 {
   "permissions": {
     "allow": [
-      "Bash(bun run:*)",
-      "Bash(bun add:*)",
-      "Bash(bun:*)",
-      "Bash(timeout:*)",
-      "Bash(curl:*)",
-      "Bash(wrangler vectorize create:*)",
-      "Bash(wrangler whoami:*)",
-      "Bash(time curl:*)",
-      "Bash(echo:*)",
-      "Bash(cat:*)",
-      "Bash(xargs sed:*)",
-      "Bash(xargs rm:*)"
+      "Bash(xargs:*)",
+      "WebSearch",
+      "Bash(pnpm add:*)",
+      "Bash(pnpm run dev:*)",
+      "Bash(pnpm run lint)",
+      "Bash(pnpm lint:*)",
+      "Bash(pnpm run lint:*)",
+      "Bash(tail:*)",
+      "Bash(grep:*)",
+      "Bash(pnpm run:*)",
+      "Bash(wc:*)",
+      "Bash(ls:*)"
     ],
     "deny": [],
     "ask": []

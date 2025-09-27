@@ -64,7 +64,7 @@ export function CreditPackages() {
 
   return (
     <>
-      <Card>
+      <div>
         <CardHeader>
           <CardTitle>Credits</CardTitle>
         </CardHeader>
@@ -148,7 +148,7 @@ export function CreditPackages() {
             </div>
           </div>
         </CardContent>
-      </Card>
+      </div>
 
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent>

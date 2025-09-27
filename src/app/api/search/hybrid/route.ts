@@ -175,23 +175,20 @@ export async function POST(request: NextRequest) {
 
       // 扩展查询词汇（如果启用语义扩展）
       const expandedTerms = includeSemanticExpansion ? expandQuery(query) : [query];
+      
+      // 限制扩展词汇数量，避免查询过于复杂
+      const limitedTerms = expandedTerms.slice(0, 5);
 
-      // 构建搜索条件
-      const searchConditions = expandedTerms.map(term =>
-        or(
-          like(sql`LOWER(${ecoaScaleTable.name})`, `%${term}%`),
-          like(sql`LOWER(${ecoaScaleTable.nameEn})`, `%${term}%`),
-          like(sql`LOWER(${ecoaScaleTable.acronym})`, `%${term}%`),
-          like(sql`LOWER(${ecoaScaleTable.description})`, `%${term}%`),
-          like(sql`LOWER(${ecoaScaleTable.descriptionEn})`, `%${term}%`),
-          like(sql`LOWER(${ecoaScaleTable.targetPopulation})`, `%${term}%`),
-          like(sql`LOWER(${ecoaScaleTable.domains})`, `%${term}%`)
-        )
+      // 构建搜索条件 - 简化查询以避免复杂度问题
+      const primaryTerm = query.toLowerCase();
+      const searchCondition = or(
+        like(sql`LOWER(${ecoaScaleTable.name})`, `%${primaryTerm}%`),
+        like(sql`LOWER(${ecoaScaleTable.nameEn})`, `%${primaryTerm}%`),
+        like(sql`LOWER(${ecoaScaleTable.acronym})`, `%${primaryTerm}%`),
+        like(sql`LOWER(${ecoaScaleTable.description})`, `%${primaryTerm}%`)
       );
 
-      if (searchConditions.length > 0) {
-        baseConditions.push(or(...searchConditions));
-      }
+      baseConditions.push(searchCondition);
 
       // 添加分类筛选
       if (category && category !== 'all') {
@@ -225,10 +222,10 @@ export async function POST(request: NextRequest) {
         .leftJoin(ecoaCategoryTable, eq(ecoaScaleTable.categoryId, ecoaCategoryTable.id))
         .where(and(...baseConditions));
 
-      // 计算混合评分
+      // 计算混合评分 - 使用限制后的词汇
       const scoredResults = results.map(result => {
         const keywordScore = calculateKeywordScore(result, query);
-        const semanticScore = calculateSemanticScore(result, expandedTerms);
+        const semanticScore = calculateSemanticScore(result, limitedTerms);
 
         // 混合评分：加权平均
         const hybridScore = (keywordScore * keywordWeight) + (semanticScore * semanticWeight);
@@ -321,7 +318,7 @@ export async function POST(request: NextRequest) {
         },
         searchConfig: {
           query,
-          expandedTerms: includeSemanticExpansion ? expandedTerms : [query],
+          expandedTerms: includeSemanticExpansion ? limitedTerms : [query],
           semanticWeight,
           keywordWeight,
           includeSemanticExpansion,

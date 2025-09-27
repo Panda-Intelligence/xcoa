@@ -1,10 +1,16 @@
 "use client"
 
-import { type ComponentType } from "react"
+import type { ComponentType } from "react"
 import type { Route } from 'next'
 import {
   Users,
   Shield,
+  SquareTerminal,
+  FileText,
+  Scale,
+  Beaker,
+  MessageSquare,
+  Copyright,
 } from "lucide-react"
 
 import { NavMain } from "@/components/nav-main"
@@ -19,6 +25,8 @@ import {
   SidebarRail,
   SidebarGroup,
 } from "@/components/ui/sidebar"
+import { useLanguage } from "@/hooks/useLanguage"
+import { useRouter } from "next/navigation"
 
 export type NavItem = {
   title: string
@@ -31,16 +39,54 @@ export type NavMainItem = NavItem & {
   items?: NavItem[]
 }
 
-const adminNavItems: NavMainItem[] = [
-  {
-    title: "Users",
-    url: "/admin",
-    icon: Users,
-    isActive: true,
-  },
-]
-
 export function AdminSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const { t } = useLanguage();
+  const router = useRouter();
+  const adminNavItems: NavMainItem[] = [
+    {
+      title: t('sidebar.dashboard'),
+      url: "/admin/dashboard",
+      icon: SquareTerminal,
+      isActive: true,
+    },
+    {
+      title: "Users",
+      url: "/admin",
+      icon: Users,
+      isActive: true,
+    },
+    {
+      title: "Scales",
+      url: "/admin/scales" as Route,
+      icon: Scale,
+      isActive: true,
+    },
+    {
+      title: "Copyright Holders",
+      url: "/admin/copyright-holders" as Route,
+      icon: Copyright,
+      isActive: true,
+    },
+    {
+      title: "Clinical Cases",
+      url: "/admin/cases" as Route,
+      icon: Beaker,
+      isActive: true,
+    },
+    {
+      title: "Copyright Tickets",
+      url: "/admin/tickets" as Route,
+      icon: MessageSquare,
+      isActive: true,
+    },
+    {
+      title: "Invoices",
+      url: "/admin/invoices" as Route,
+      icon: FileText,
+      isActive: true,
+    },
+  ]
+
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarContent>
@@ -50,6 +96,7 @@ export function AdminSidebar({ ...props }: React.ComponentProps<typeof Sidebar>)
               <SidebarMenuButton
                 className="pointer-events-none"
                 tooltip="Admin Panel"
+                onClick={() => router.push('/dashboard')}
               >
                 <Shield size={24} />
                 <span className="text-lg font-bold">Admin Panel</span>
@@ -57,7 +104,7 @@ export function AdminSidebar({ ...props }: React.ComponentProps<typeof Sidebar>)
             </SidebarMenuItem>
           </SidebarMenu>
         </SidebarGroup>
-        <NavMain items={adminNavItems} />
+        <NavMain title="Admin" items={adminNavItems} />
       </SidebarContent>
       <SidebarFooter>
         <NavUser />

@@ -33,7 +33,7 @@ const DATA_SOURCES = {
       updateFreq: 'weekly'
     },
     'chinecoa.com': {
-      priority: 'high', 
+      priority: 'high',
       type: '中文eCOA平台',
       focus: ['中文量表', '本土化信息', '临床应用'],
       updateFreq: 'weekly'
@@ -291,31 +291,31 @@ export class ScaleDataCollector {
   private scheduler: TaskScheduler;
   private rateLimiter: RateLimiter;
   private parser: ContentParser;
-  
+
   async collectFromSource(source: DataSource): Promise<CollectionResult> {
     // 1. 检查robots.txt和合规性
     const compliance = await this.checkCompliance(source.url);
     if (!compliance.allowed) {
       throw new Error(`收集被禁止: ${compliance.reason}`);
     }
-    
+
     // 2. 获取页面内容
     const content = await this.rateLimiter.fetch(source.url, {
       headers: {
-        'User-Agent': 'xCOA-Academic-Research-Bot/1.0 (+https://xcoa.pandacat.ai/about-crawler)'
+        'User-Agent': 'xCOA-Academic-Research-Bot/1.0 (+https://xcoa.pro/about-crawler)'
       }
     });
-    
+
     // 3. 解析量表信息
     const rawData = await this.parser.extractScaleData(content.html, source.config);
-    
+
     // 4. 数据验证和规范化
     const validatedData = await this.validator.validate(rawData);
     const normalizedData = await this.normalizer.normalize(validatedData);
-    
+
     // 5. 质量评分
     const qualityScore = await this.scorer.calculateQuality(normalizedData);
-    
+
     return {
       source: source.url,
       data: normalizedData,
@@ -338,20 +338,20 @@ export class DataNormalizer {
       acronym: this.standardizeAcronym(rawData.acronym),
       description: this.summarizeDescription(rawData.description),
       descriptionEn: this.translateIfNeeded(rawData.description),
-      
+
       // 分类映射
       categoryId: this.mapCategory(rawData.category),
-      
+
       // 数值规范化
       itemsCount: this.parseNumber(rawData.itemsCount),
       administrationTime: this.parseTime(rawData.administrationTime),
-      
+
       // 语言检测
       languages: this.detectLanguages(rawData),
-      
+
       // 验证状态评估
       validationStatus: this.assessValidation(rawData),
-      
+
       // 元数据
       dataSource: rawData.source,
       collectionDate: new Date(),
@@ -397,7 +397,7 @@ const MonitoringDashboard = () => (
     <MetricsCard title="今日收集" metrics={dailyMetrics} />
     <QualityCard title="数据质量" quality={qualityMetrics} />
     <SourcesCard title="数据源状态" sources={sourceStatus} />
-    
+
     <RecentCollections collections={recentCollections} />
     <ErrorLogs errors={recentErrors} />
     <QualityReview items={reviewQueue} />
@@ -438,7 +438,7 @@ interface SecurityMeasures {
 // Level 1: 自动化检查
 const AutomaticValidation = {
   structuralCheck: '数据结构完整性',
-  formatValidation: '格式规范性检查', 
+  formatValidation: '格式规范性检查',
   duplicateDetection: '重复数据检测',
   sourceVerification: '来源可靠性验证'
 };

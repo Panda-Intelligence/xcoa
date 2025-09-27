@@ -24,7 +24,7 @@ export default function NotFound() {
             </ul>
             <div className="pt-4">
               <Button asChild className="w-full">
-                <Link href="/dashboard">
+                <Link href="/scales">
                   Go to Dashboard
                 </Link>
               </Button>

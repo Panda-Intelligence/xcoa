@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { type NextRequest, NextResponse } from 'next/server';
 import { getDB } from '@/db';
 import { ecoaScaleTable, ecoaCategoryTable } from '@/db/schema';
 import { eq, desc, sql } from 'drizzle-orm';
@@ -6,17 +6,17 @@ import { eq, desc, sql } from 'drizzle-orm';
 export async function GET() {
   try {
     const db = getDB();
-    
+
     // 获取平台统计数据
     const totalScales = await db
       .select({ count: sql`count(*)` })
       .from(ecoaScaleTable);
-      
+
     const freeScales = await db
       .select({ count: sql`count(*)` })
       .from(ecoaScaleTable)
       .where(eq(ecoaScaleTable.isPublic, 1));
-      
+
     // 获取前5个热门量表用于快速访问
     const topScales = await db
       .select({
@@ -62,10 +62,10 @@ function getLicenseIcon(validationStatus: string, isPublic: number): string {
   if (isPublic === 1) {
     return '🆓'; // 免费使用
   }
-  
+
   if (validationStatus === 'validated') {
     return '✅'; // 已验证，需要许可
   }
-  
+
   return '📧'; // 需要联系版权方
 }

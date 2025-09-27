@@ -28,14 +28,6 @@ export default async function SettingsLayout({
             {
               href: "/settings",
               label: "Overview"
-            },
-            {
-              href: "/settings/security",
-              label: "Security"
-            },
-            {
-              href: "/settings/sessions",
-              label: "Sessions"
             }
           ]}
         />

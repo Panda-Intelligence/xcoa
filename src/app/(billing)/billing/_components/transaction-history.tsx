@@ -71,7 +71,7 @@ export function TransactionHistory() {
   }
 
   return (
-    <Card>
+    <div>
       <CardHeader>
         <CardTitle>Transaction History</CardTitle>
       </CardHeader>
@@ -211,6 +211,6 @@ export function TransactionHistory() {
           </div>
         )}
       </CardContent>
-    </Card>
+    </div>
   );
 }

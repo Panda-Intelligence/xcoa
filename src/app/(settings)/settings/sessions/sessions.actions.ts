@@ -6,7 +6,7 @@ import { getAllSessionIdsOfUser, getKVSession, deleteKVSession } from "@/utils/k
 import { z } from "zod";
 import { withRateLimit, RATE_LIMITS } from "@/utils/with-rate-limit";
 import { UAParser } from 'ua-parser-js';
-import { SessionWithMeta } from "@/types";
+import type { SessionWithMeta } from "@/types";
 
 function isValidSession(session: unknown): session is SessionWithMeta {
   if (!session || typeof session !== 'object') return false;

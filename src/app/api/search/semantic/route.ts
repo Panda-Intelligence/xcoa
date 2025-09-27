@@ -1,9 +1,9 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { type NextRequest, NextResponse } from 'next/server';
 import { getDB } from '@/db';
-import { 
-  ecoaScaleTable, 
-  ecoaCategoryTable, 
-  userSearchHistoryTable, 
+import {
+  ecoaScaleTable,
+  ecoaCategoryTable,
+  userSearchHistoryTable,
   scaleUsageTable
 } from '@/db/schema';
 import { and, or, like, desc, eq, sql } from 'drizzle-orm';
@@ -23,27 +23,27 @@ const SEMANTIC_KEYWORDS = {
   '抑郁': ['depression', 'depressive', 'mood', 'phq', 'beck', 'hamilton'],
   '情绪': ['mood', 'emotion', 'feeling', 'affect'],
   '心情': ['mood', 'depression', 'sadness'],
-  
+
   // 焦虑症相关
   '焦虑': ['anxiety', 'gad', 'panic', 'worry', 'stress'],
   '担心': ['worry', 'anxiety', 'concern'],
   '恐慌': ['panic', 'anxiety', 'fear'],
-  
+
   // 认知功能相关
   '认知': ['cognitive', 'memory', 'attention', 'executive', 'mmse', 'moca'],
   '记忆': ['memory', 'cognitive', 'recall', 'recognition'],
   '注意力': ['attention', 'concentration', 'focus'],
   '痴呆': ['dementia', 'alzheimer', 'cognitive', 'mmse'],
-  
+
   // 生活质量相关
   '生活质量': ['quality of life', 'qol', 'functioning', 'wellbeing', 'sf-36', 'eortc'],
   '功能': ['function', 'functioning', 'disability', 'activity'],
   '健康': ['health', 'wellbeing', 'wellness'],
-  
+
   // 疼痛相关
   '疼痛': ['pain', 'ache', 'discomfort', 'neuropathic'],
   '疼': ['pain', 'ache'],
-  
+
   // 症状筛查
   '筛查': ['screening', 'assessment', 'evaluation', 'scale'],
   '评估': ['assessment', 'evaluation', 'measure', 'scale'],
@@ -53,14 +53,14 @@ const SEMANTIC_KEYWORDS = {
 // 扩展查询词汇，添加语义相关词汇
 function expandQuery(query: string): string[] {
   const expandedTerms = [query.toLowerCase()];
-  
+
   // 检查是否包含语义关键词
   for (const [chinese, englishTerms] of Object.entries(SEMANTIC_KEYWORDS)) {
     if (query.includes(chinese)) {
       expandedTerms.push(...englishTerms);
     }
   }
-  
+
   // 处理常见缩写
   const abbreviations: Record<string, string[]> = {
     'phq': ['patient health questionnaire', '患者健康问卷'],
@@ -69,13 +69,13 @@ function expandQuery(query: string): string[] {
     'sf': ['short form', '简明'],
     'eortc': ['european organisation research treatment cancer', '欧洲癌症'],
   };
-  
+
   for (const [abbr, expansions] of Object.entries(abbreviations)) {
     if (query.toLowerCase().includes(abbr)) {
       expandedTerms.push(...expansions);
     }
   }
-  
+
   return [...new Set(expandedTerms)]; // 去重
 }
 
@@ -91,10 +91,10 @@ function calculateSemanticScore(scale: any, queryTerms: string[]): number {
     scale.targetPopulation || '',
     JSON.stringify(scale.domains || [])
   ].join(' ').toLowerCase();
-  
+
   queryTerms.forEach(term => {
     const termLower = term.toLowerCase();
-    
+
     // 精确匹配缩写获得最高分
     if (scale.acronym && scale.acronym.toLowerCase() === termLower) {
       score += 100;
@@ -116,15 +116,15 @@ function calculateSemanticScore(scale: any, queryTerms: string[]): number {
       score += 30;
     }
   });
-  
+
   // 基于使用频率的加权
   score += Math.min((scale.usageCount || 0) * 0.1, 10);
-  
+
   // 基于验证状态的加权
   if (scale.validationStatus === 'validated') {
     score += 5;
   }
-  
+
   return score;
 }
 
@@ -135,15 +135,15 @@ export async function POST(request: NextRequest) {
       const session = await getSessionFromCookie();
       const user = session?.user;
       const ip = getIP(request);
-      
+
       const body = await request.json();
       const { query, limit } = semanticSearchRequestSchema.parse(body);
-      
+
       // 扩展查询词汇
       const expandedTerms = expandQuery(query);
-      
+
       // 构建搜索条件
-      const searchConditions = expandedTerms.map(term => 
+      const searchConditions = expandedTerms.map(term =>
         or(
           like(sql`LOWER(${ecoaScaleTable.name})`, `%${term}%`),
           like(sql`LOWER(${ecoaScaleTable.nameEn})`, `%${term}%`),
@@ -154,7 +154,7 @@ export async function POST(request: NextRequest) {
           like(sql`LOWER(${ecoaScaleTable.domains})`, `%${term}%`)
         )
       );
-      
+
       // 获取所有可能匹配的量表
       const results = await db
         .select({
@@ -186,7 +186,7 @@ export async function POST(request: NextRequest) {
             or(...searchConditions)
           )
         );
-      
+
       // 计算语义匹配分数并排序
       const scoredResults = results
         .map(result => ({
@@ -200,7 +200,7 @@ export async function POST(request: NextRequest) {
         .filter(result => result.semantic_score > 0)
         .sort((a, b) => b.semantic_score - a.semantic_score)
         .slice(0, limit);
-      
+
       // 记录搜索历史
       if (user) {
         try {
@@ -216,7 +216,7 @@ export async function POST(request: NextRequest) {
           console.warn('Failed to save search history:', error);
         }
       }
-      
+
       // 记录量表使用情况
       for (const result of scoredResults.slice(0, 5)) {
         try {
@@ -231,7 +231,7 @@ export async function POST(request: NextRequest) {
           console.warn('Failed to save usage record:', error);
         }
       }
-      
+
       return NextResponse.json({
         results: scoredResults,
         query,
@@ -242,7 +242,7 @@ export async function POST(request: NextRequest) {
 
     } catch (error) {
       console.error('Semantic search API error:', error);
-      
+
       if (error instanceof z.ZodError) {
         return NextResponse.json(
           { error: 'Invalid request parameters', details: error.errors },
