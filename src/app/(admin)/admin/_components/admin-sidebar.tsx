@@ -10,6 +10,7 @@ import {
   Scale,
   Beaker,
   MessageSquare,
+  Copyright,
 } from "lucide-react"
 
 import { NavMain } from "@/components/nav-main"
@@ -58,6 +59,12 @@ export function AdminSidebar({ ...props }: React.ComponentProps<typeof Sidebar>)
       title: "Scales",
       url: "/admin/scales" as Route,
       icon: Scale,
+      isActive: true,
+    },
+    {
+      title: "Copyright Holders",
+      url: "/admin/copyright-holders" as Route,
+      icon: Copyright,
       isActive: true,
     },
     {

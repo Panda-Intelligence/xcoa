@@ -11,6 +11,18 @@ export const ROLES_ENUM = {
 
 const roleTuple = Object.values(ROLES_ENUM) as [string, ...string[]];
 
+// License Types for Scales
+export const LICENSE_TYPE = {
+  PUBLIC_DOMAIN: 'public_domain',
+  OPEN_SOURCE: 'open_source',
+  ACADEMIC_FREE: 'academic_free',
+  COMMERCIAL: 'commercial',
+  RESTRICTED: 'restricted',
+  CONTACT_REQUIRED: 'contact_required',
+} as const;
+
+export const licenseTypeTuple = Object.values(LICENSE_TYPE) as [string, ...string[]];
+
 const commonColumns = {
   createdAt: integer({
     mode: "timestamp",
@@ -403,11 +415,18 @@ export const ecoaScaleTable = sqliteTable("ecoa_scale", {
   description: text({ length: 2000 }),
   descriptionEn: text({ length: 2000 }),
   categoryId: text().references(() => ecoaCategoryTable.id),
+  // Copyright and Licensing
+  copyrightHolderId: text().references(() => copyrightHolderTable.id),
+  licenseType: text({ enum: licenseTypeTuple }).default(LICENSE_TYPE.CONTACT_REQUIRED),
+  copyrightYear: integer(),
+  copyrightInfo: text({ length: 1000 }),
+  licenseTerms: text({ length: 2000 }),
+  usageRestrictions: text({ length: 1000 }),
+  // Scale Information
   itemsCount: integer().default(0),
   dimensionsCount: integer().default(0),
   languages: text({ mode: 'json' }).$type<string[]>().default([]),
   validationStatus: text({ length: 50 }).default('draft'), // draft, validated, published
-  copyrightInfo: text({ length: 1000 }),
   scoringMethod: text({ length: 500 }),
   administrationTime: integer(), // minutes
   targetPopulation: text({ length: 500 }),
@@ -423,6 +442,7 @@ export const ecoaScaleTable = sqliteTable("ecoa_scale", {
   searchVector: text({ length: 1536 }), // OpenAI embedding size
 }, (table) => ([
   index('ecoa_scale_category_id_idx').on(table.categoryId),
+  index('ecoa_scale_copyright_holder_idx').on(table.copyrightHolderId),
   index('ecoa_scale_validation_status_idx').on(table.validationStatus),
   index('ecoa_scale_usage_count_idx').on(table.usageCount),
   index('ecoa_scale_is_public_idx').on(table.isPublic),
@@ -592,18 +612,6 @@ export const copyrightHolderTable = sqliteTable("copyright_holder", {
   index('copyright_holder_org_type_idx').on(table.organizationType),
   index('copyright_holder_active_idx').on(table.isActive),
 ]));
-
-// License Types for Scales
-export const LICENSE_TYPE = {
-  PUBLIC_DOMAIN: 'public_domain',
-  OPEN_SOURCE: 'open_source',
-  ACADEMIC_FREE: 'academic_free',
-  COMMERCIAL: 'commercial',
-  RESTRICTED: 'restricted',
-  CONTACT_REQUIRED: 'contact_required',
-} as const;
-
-export const licenseTypeTuple = Object.values(LICENSE_TYPE) as [string, ...string[]];
 
 // Contact Requests from Users
 export const copyrightContactRequestTable = sqliteTable("copyright_contact_request", {
