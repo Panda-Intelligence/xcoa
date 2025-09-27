@@ -125,8 +125,9 @@ export default function ScaleFavoritesPage() {
         ]}
       />
 
-      <div className="flex-1 overflow-auto">
-        <div className="flex flex-col gap-4 p-4">
+      {/* 固定标题和搜索区域 */}
+      <div className="flex-shrink-0 border-b bg-background">
+        <div className="p-4 space-y-4">
           {/* 页面标题和统计 */}
           <div className="flex items-center justify-between">
             <div>
@@ -193,6 +194,12 @@ export default function ScaleFavoritesPage() {
               </Button>
             </div>
           </div>
+        </div>
+      </div>
+
+      {/* 可滚动的收藏内容区域 */}
+      <div className="flex-1 overflow-auto">
+        <div className="p-4 space-y-6">
 
           {/* 收藏内容 */}
           {filteredFavorites.length === 0 ? (

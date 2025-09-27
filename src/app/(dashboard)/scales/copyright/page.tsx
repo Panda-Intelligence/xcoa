@@ -118,7 +118,7 @@ export default function CopyrightPage() {
   };
 
   return (
-    <>
+    <div className="flex flex-col h-screen">
       <PageHeader
         items={[
           { href: "/scales", label: "Dashboard" },
@@ -126,15 +126,21 @@ export default function CopyrightPage() {
         ]}
       />
 
-      <div className="flex flex-1 flex-col gap-4 p-4">
-        <Tabs defaultValue="batch-check" className="w-full">
-          <TabsList className="grid w-full grid-cols-3">
-            <TabsTrigger value="batch-check">批量许可检查</TabsTrigger>
-            <TabsTrigger value="tickets">我的工单</TabsTrigger>
-            <TabsTrigger value="guidelines">使用指南</TabsTrigger>
-          </TabsList>
+      <div className="flex-1 overflow-hidden">
+        <Tabs defaultValue="batch-check" className="h-full flex flex-col">
+          <div className="flex-shrink-0 border-b bg-background">
+            <div className="p-4">
+              <TabsList className="grid w-full grid-cols-3">
+                <TabsTrigger value="batch-check">批量许可检查</TabsTrigger>
+                <TabsTrigger value="tickets">我的工单</TabsTrigger>
+                <TabsTrigger value="guidelines">使用指南</TabsTrigger>
+              </TabsList>
+            </div>
+          </div>
 
-          <TabsContent value="batch-check" className="space-y-4">
+          <div className="flex-1 overflow-auto">
+            <div className="p-4">
+              <TabsContent value="batch-check" className="space-y-4 m-0">
             {/* 量表选择 */}
             <Card>
               <CardHeader>
@@ -517,8 +523,10 @@ export default function CopyrightPage() {
               </CardContent>
             </Card>
           </TabsContent>
+            </div>
+          </div>
         </Tabs>
       </div>
-    </>
+    </div>
   );
 }

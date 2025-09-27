@@ -7,7 +7,9 @@
       "Bash(pnpm run dev:*)",
       "Bash(pnpm run lint)",
       "Bash(pnpm lint:*)",
-      "Bash(pnpm run lint:*)"
+      "Bash(pnpm run lint:*)",
+      "Bash(tail:*)",
+      "Bash(grep:*)"
     ],
     "deny": [],
     "ask": []

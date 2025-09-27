@@ -90,42 +90,49 @@ export default function InterpretationPage() {
   }
 
   return (
-    <>
+    <div className="flex flex-col h-screen">
       <PageHeader
         items={[
           { href: "/insights/interpretation", label: "量表解读" }
         ]}
       />
 
-      <div className="flex flex-1 flex-col gap-4 p-4">
-        {/* 页面标题 */}
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl font-bold flex items-center space-x-2">
-              <BookOpen className="w-6 h-6 text-blue-600" />
-              <span>量表解读指南</span>
-            </h1>
-            <p className="text-muted-foreground">
-              选择量表查看专业的使用指导和结果解读
-            </p>
+      {/* 固定标题和搜索区域 */}
+      <div className="flex-shrink-0 border-b bg-background">
+        <div className="p-4 space-y-4">
+          {/* 页面标题 */}
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-2xl font-bold flex items-center space-x-2">
+                <BookOpen className="w-6 h-6 text-blue-600" />
+                <span>量表解读指南</span>
+              </h1>
+              <p className="text-muted-foreground">
+                选择量表查看专业的使用指导和结果解读
+              </p>
+            </div>
+          </div>
+
+          {/* 搜索 */}
+          <div className='flex'>
+            <div className="flex-1 relative max-w-md">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+              <Input
+                placeholder="搜索量表名称或缩写..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-10"
+              />
+            </div>
           </div>
         </div>
+      </div>
 
-        {/* 搜索 */}
-        <div className='flex'>
-          <div className="flex-1 relative max-w-md">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-            <Input
-              placeholder="搜索量表名称或缩写..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10"
-            />
-          </div>
-        </div>
-
-        {/* 量表网格 */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      {/* 可滚动的量表网格区域 */}
+      <div className="flex-1 overflow-auto">
+        <div className="p-4">
+          {/* 量表网格 */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {filteredScales.length === 0 ? (
             <div className="col-span-full">
               <Card>
@@ -247,8 +254,9 @@ export default function InterpretationPage() {
               </p>
             </CardContent>
           </Card>
+          </div>
         </div>
       </div>
-    </>
+    </div>
   );
 }

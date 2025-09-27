@@ -146,74 +146,78 @@ export default function ScalesPage() {
         ]}
       />
 
-      <div className="flex-1 overflow-auto">
-        <div className="flex flex-col gap-4 p-4">
-          {/* 搜索区域 */}
-          <div>
-            <CardHeader>
-              <CardTitle className="flex items-center space-x-2">
-                <Search className="w-5 h-5" />
-                <span>{t("scales_page.search_title")}</span>
-              </CardTitle>
-              <CardDescription>
-                {t("scales_page.search_description")}
-              </CardDescription>
-            </CardHeader>
+      {/* 固定搜索区域 */}
+      <div className="flex-shrink-0 border-b bg-background">
+        <div className="p-4">
+          <CardHeader>
+            <CardTitle className="flex items-center space-x-2">
+              <Search className="w-5 h-5" />
+              <span>{t("scales_page.search_title")}</span>
+            </CardTitle>
+            <CardDescription>
+              {t("scales_page.search_description")}
+            </CardDescription>
+          </CardHeader>
 
-            <CardContent className="space-y-4">
-              {/* 搜索输入 */}
-              <div className="flex space-x-2">
-                {/* 搜索选项 */}
-                <div className="flex flex-wrap gap-4">
+          <CardContent className="space-y-4">
+            {/* 搜索输入 */}
+            <div className="flex space-x-2">
+              {/* 搜索选项 */}
+              <div className="flex flex-wrap gap-4">
 
-                  <div className="flex items-center space-x-2">
-                    <span className="text-sm font-medium">{t("scales_page.category")}:</span>
-                    <Select value={filters.category} onValueChange={(value) =>
-                      setFilters(prev => ({ ...prev, category: value }))}>
-                      <SelectTrigger className="w-40">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="all">{t("scales_page.all_categories")}</SelectItem>
-                        {categories.map(cat => (
-                          <SelectItem key={cat.id} value={cat.id}>
-                            {cat.name} ({cat.scaleCount})
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-
-                  <div className="flex items-center space-x-2">
-                    <span className="text-sm font-medium">{t("scales_page.sort_by")}:</span>
-                    <Select value={filters.sortBy} onValueChange={(value) =>
-                      setFilters(prev => ({ ...prev, sortBy: value }))}>
-                      <SelectTrigger className="w-32">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="relevance">{t("scales_page.relevance")}</SelectItem>
-                        <SelectItem value="name">{t("scales_page.name")}</SelectItem>
-                        <SelectItem value="usage">{t("scales_page.usage_frequency")}</SelectItem>
-                        <SelectItem value="recent">{t("scales_page.recent")}</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
+                <div className="flex items-center space-x-2">
+                  <span className="text-sm font-medium">{t("scales_page.category")}:</span>
+                  <Select value={filters.category} onValueChange={(value) =>
+                    setFilters(prev => ({ ...prev, category: value }))}>
+                    <SelectTrigger className="w-40">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">{t("scales_page.all_categories")}</SelectItem>
+                      {categories.map(cat => (
+                        <SelectItem key={cat.id} value={cat.id}>
+                          {cat.name} ({cat.scaleCount})
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
-                <div className="flex-1">
-                  <Input
-                    placeholder={t("scales_page.search_placeholder")}
-                    value={query}
-                    onChange={(e) => setQuery(e.target.value)}
-                    onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
-                  />
+
+                <div className="flex items-center space-x-2">
+                  <span className="text-sm font-medium">{t("scales_page.sort_by")}:</span>
+                  <Select value={filters.sortBy} onValueChange={(value) =>
+                    setFilters(prev => ({ ...prev, sortBy: value }))}>
+                    <SelectTrigger className="w-32">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="relevance">{t("scales_page.relevance")}</SelectItem>
+                      <SelectItem value="name">{t("scales_page.name")}</SelectItem>
+                      <SelectItem value="usage">{t("scales_page.usage_frequency")}</SelectItem>
+                      <SelectItem value="recent">{t("scales_page.recent")}</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
-                <Button onClick={handleSearch} disabled={loading}>
-                  {loading ? t("scales_page.searching") : t("scales_page.search")}
-                </Button>
               </div>
-            </CardContent>
-          </div>
+              <div className="flex-1">
+                <Input
+                  placeholder={t("scales_page.search_placeholder")}
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
+                />
+              </div>
+              <Button onClick={handleSearch} disabled={loading}>
+                {loading ? t("scales_page.searching") : t("scales_page.search")}
+              </Button>
+            </div>
+          </CardContent>
+        </div>
+      </div>
+
+      {/* 可滚动的结果区域 */}
+      <div className="flex-1 overflow-auto">
+        <div className="p-4 space-y-6">
 
           {/* 搜索结果 */}
           {results.length > 0 && (

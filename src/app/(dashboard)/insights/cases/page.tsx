@@ -141,103 +141,116 @@ export default function ClinicalCasesPage() {
         ]}
       />
 
-      <div className="flex-1 overflow-auto">
-        <div className="flex flex-col gap-4 p-4">
-          {/* 页面标题和统计 */}
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-2xl font-bold flex items-center space-x-2">
-                <Beaker className="w-6 h-6 text-blue-600" />
-                <span>临床试验案例库</span>
-              </h1>
-              <p className="text-muted-foreground">
-                探索量表在真实临床试验中的应用，学习最佳实践和研究设计
-              </p>
+      <div className="flex-1 overflow-hidden">
+        <div className="flex flex-col h-full">
+          {/* 固定标题和搜索筛选区域 */}
+          <div className="flex-shrink-0 border-b bg-background">
+            <div className="p-4 space-y-4">
+              {/* 页面标题和统计 */}
+              <div className="flex items-center justify-between">
+                <div>
+                  <h1 className="text-2xl font-bold flex items-center space-x-2">
+                    <Beaker className="w-6 h-6 text-blue-600" />
+                    <span>临床试验案例库</span>
+                  </h1>
+                  <p className="text-muted-foreground">
+                    探索量表在真实临床试验中的应用，学习最佳实践和研究设计
+                  </p>
+                </div>
+              </div>
+
+              {/* 统计面板 */}
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <Card>
+                  <CardContent className="p-4 text-center">
+                    <div className="text-2xl font-bold text-blue-600">{statistics.totalCases || 0}</div>
+                    <div className="text-sm text-muted-foreground">总案例数</div>
+                  </CardContent>
+                </Card>
+                <Card>
+                  <CardContent className="p-4 text-center">
+                    <div className="text-2xl font-bold text-green-600">
+                      {statistics.byDifficultyLevel?.beginner || 0}
+                    </div>
+                    <div className="text-sm text-muted-foreground">初级案例</div>
+                  </CardContent>
+                </Card>
+                <Card>
+                  <CardContent className="p-4 text-center">
+                    <div className="text-2xl font-bold text-purple-600">
+                      {Object.keys(statistics.bySpecialty || {}).length}
+                    </div>
+                    <div className="text-sm text-muted-foreground">专科领域</div>
+                  </CardContent>
+                </Card>
+                <Card>
+                  <CardContent className="p-4 text-center">
+                    <div className="text-2xl font-bold text-orange-600">
+                      {filterOptions.scales?.length || 0}
+                    </div>
+                    <div className="text-sm text-muted-foreground">涉及量表</div>
+                  </CardContent>
+                </Card>
+              </div>
+
+              {/* 搜索和筛选 */}
+              <div className="flex flex-col sm:flex-row gap-4">
+                <div className="flex-1 relative">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                  <Input
+                    placeholder="搜索临床案例..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    onKeyPress={(e) => e.key === 'Enter' && fetchCases()}
+                    className="pl-10"
+                  />
+                </div>
+
+                <div className="flex items-center space-x-2">
+                  <Filter className="h-4 w-4 text-gray-500" />
+                  <Select value={specialtyFilter} onValueChange={setSpecialtyFilter}>
+                    <SelectTrigger className="w-40">
+                      <SelectValue placeholder="专科" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">所有专科</SelectItem>
+                      {filterOptions.specialties.map(specialty => (
+                        <SelectItem key={specialty} value={specialty}>
+                          {specialty}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="flex items-center space-x-2">
+                  <Select value={difficultyFilter} onValueChange={setDifficultyFilter}>
+                    <SelectTrigger className="w-32">
+                      <SelectValue placeholder="难度" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">所有难度</SelectItem>
+                      {filterOptions.difficultyLevels.map(level => (
+                        <SelectItem key={level} value={level}>
+                          {level}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <Button onClick={fetchCases} disabled={loading}>
+                  {loading ? '搜索中...' : '搜索'}
+                </Button>
+              </div>
             </div>
           </div>
 
-          {/* 统计面板 */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <Card>
-              <CardContent className="p-4 text-center">
-                <div className="text-2xl font-bold text-blue-600">{statistics.totalCases || 0}</div>
-                <div className="text-sm text-muted-foreground">总案例数</div>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardContent className="p-4 text-center">
-                <div className="text-2xl font-bold text-green-600">
-                  {statistics.byDifficultyLevel?.beginner || 0}
-                </div>
-                <div className="text-sm text-muted-foreground">初级案例</div>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardContent className="p-4 text-center">
-                <div className="text-2xl font-bold text-purple-600">
-                  {Object.keys(statistics.bySpecialty || {}).length}
-                </div>
-                <div className="text-sm text-muted-foreground">专科领域</div>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardContent className="p-4 text-center">
-                <div className="text-2xl font-bold text-orange-600">
-                  {filterOptions.scales?.length || 0}
-                </div>
-                <div className="text-sm text-muted-foreground">涉及量表</div>
-              </CardContent>
-            </Card>
-          </div>
-
-          {/* 搜索和筛选 */}
-          <div className="flex flex-col sm:flex-row gap-4">
-            <div className="flex-1 relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-              <Input
-                placeholder="搜索案例标题、量表名称、研究者或关键词..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10"
-              />
-            </div>
-
-            <div className="flex items-center space-x-2">
-              <Filter className="h-4 w-4 text-gray-500" />
-              <Select value={specialtyFilter} onValueChange={setSpecialtyFilter}>
-                <SelectTrigger className="w-32">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">所有专科</SelectItem>
-                  {filterOptions.specialties.map(specialty => (
-                    <SelectItem key={specialty} value={specialty}>
-                      {getSpecialtyLabel(specialty)}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div className="flex items-center space-x-2">
-              <Select value={difficultyFilter} onValueChange={setDifficultyFilter}>
-                <SelectTrigger className="w-32">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">所有难度</SelectItem>
-                  {filterOptions.difficultyLevels.map(level => (
-                    <SelectItem key={level} value={level}>
-                      {level}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-
-          {/* 案例列表 */}
-          <div className="grid grid-cols-2 gap-6">
+          {/* 可滚动的案例内容区域 */}
+          <div className="flex-1 overflow-auto">
+            <div className="p-4">
+              {/* 案例列表 */}
+              <div className="grid grid-cols-2 gap-6">
             {cases.length === 0 ? (
               <Card>
                 <CardContent className="text-center py-12">
