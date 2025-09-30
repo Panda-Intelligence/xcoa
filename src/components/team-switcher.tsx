@@ -2,6 +2,7 @@
 
 import * as React from "react"
 import { Building2, ChevronsUpDown, Plus } from "lucide-react"
+import { useLanguage } from "@/hooks/useLanguage"
 
 import {
   DropdownMenu,
@@ -30,6 +31,7 @@ export function TeamSwitcher({
   }[]
 }) {
   const { isMobile, setOpenMobile } = useSidebar()
+  const { t } = useLanguage()
   const [activeTeam, setActiveTeam] = React.useState<typeof teams[0] | null>(null)
 
   // Update activeTeam when teams change or on initial render
@@ -55,9 +57,9 @@ export function TeamSwitcher({
               </div>
               <div className="grid flex-1 text-left text-sm leading-tight">
                 <span className="truncate font-semibold">
-                  {activeTeam?.name || "No Team"}
+                  {activeTeam?.name || t('team.no_team')}
                 </span>
-                <span className="truncate text-xs">{activeTeam?.plan || "Select a team"}</span>
+                <span className="truncate text-xs">{activeTeam?.plan || t('team.select_team')}</span>
               </div>
               <ChevronsUpDown className="ml-auto" />
             </SidebarMenuButton>
@@ -69,7 +71,7 @@ export function TeamSwitcher({
             sideOffset={4}
           >
             <DropdownMenuLabel className="text-xs text-muted-foreground">
-              Teams
+              {t('navigation.teams')}
             </DropdownMenuLabel>
             {teams.length > 0 ? (
               teams.map((team, index) => (
@@ -90,7 +92,7 @@ export function TeamSwitcher({
                 <div className="flex size-6 items-center justify-center rounded-sm border">
                   <Building2 className="size-4 shrink-0" />
                 </div>
-                No teams available
+                {t('team.no_teams_available')}
               </DropdownMenuItem>
             )}
             <DropdownMenuSeparator />
@@ -102,7 +104,7 @@ export function TeamSwitcher({
                 <div className="flex size-6 items-center justify-center rounded-md border bg-background">
                   <Plus className="size-4" />
                 </div>
-                <div className="font-medium text-muted-foreground">Add team</div>
+                <div className="font-medium text-muted-foreground">{t('team.add_team')}</div>
               </Link>
             </DropdownMenuItem>
           </DropdownMenuContent>

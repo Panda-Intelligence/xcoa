@@ -23,6 +23,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { useServerAction } from "zsa-react";
+import { useLanguage } from "@/hooks/useLanguage";
 
 interface RemoveMemberButtonProps {
   teamId: string;
@@ -41,14 +42,15 @@ export function RemoveMemberButton({
 }: RemoveMemberButtonProps) {
   const dialogCloseRef = useRef<HTMLButtonElement>(null);
   const router = useRouter();
+  const { t } = useLanguage();
 
   const { execute: removeMember, isPending } = useServerAction(removeTeamMemberAction, {
     onError: (error) => {
-      toast.error(error.err?.message || "Failed to remove team member");
+      toast.error(error.err?.message || t('team.failed_to_remove_team_member'));
       dialogCloseRef.current?.click();
     },
     onSuccess: () => {
-      toast.success("Team member removed successfully");
+      toast.success(t('team.member_removed'));
       router.refresh();
       dialogCloseRef.current?.click();
     }
@@ -98,14 +100,14 @@ export function RemoveMemberButton({
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Remove team member</DialogTitle>
+          <DialogTitle>{t('team.remove_member_title')}</DialogTitle>
           <DialogDescription>
-            Are you sure you want to remove {memberName} from this team? This action cannot be undone.
+            {t('team.remove_member_confirm').replace('{memberName}', memberName)}
           </DialogDescription>
         </DialogHeader>
         <DialogFooter className="mt-4 flex flex-col gap-4 sm:flex-row">
           <DialogClose ref={dialogCloseRef} asChild>
-            <Button variant="outline" className="sm:w-auto w-full">Cancel</Button>
+            <Button variant="outline" className="sm:w-auto w-full">{t('common.cancel')}</Button>
           </DialogClose>
           <Button
             variant="destructive"
@@ -113,7 +115,7 @@ export function RemoveMemberButton({
             disabled={isPending}
             className="sm:w-auto w-full"
           >
-            {isPending ? "Removing..." : "Remove member"}
+            {isPending ? t('team.removing_member') : t('team.remove_member_title')}
           </Button>
         </DialogFooter>
       </DialogContent>

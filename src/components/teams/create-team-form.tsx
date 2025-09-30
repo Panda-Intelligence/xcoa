@@ -12,29 +12,32 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { useServerAction } from "zsa-react";
 import { createTeamAction } from "@/actions/team-actions";
+import { useLanguage } from "@/hooks/useLanguage";
+import { vm } from "@/lib/validation-messages";
 
 const formSchema = z.object({
-  name: z.string().min(1, "Team name is required").max(100, "Team name is too long"),
-  description: z.string().max(1000, "Description is too long").optional(),
-  avatarUrl: z.string().url("Invalid URL").max(600, "URL is too long").optional().or(z.literal("")),
+  name: z.string().min(1, vm.team_name_required).max(100, vm.team_name_too_long),
+  description: z.string().max(1000, vm.description_too_long).optional(),
+  avatarUrl: z.string().url(vm.invalid_url).max(600, vm.url_too_long).optional().or(z.literal("")),
 });
 
 type FormValues = z.infer<typeof formSchema>;
 
 export function CreateTeamForm() {
   const router = useRouter();
+  const { t } = useLanguage();
 
   const { execute: createTeam } = useServerAction(createTeamAction, {
     onError: (error) => {
       toast.dismiss();
-      toast.error(error.err?.message || "Failed to create team");
+      toast.error(error.err?.message || t('team.failed_to_create_team'));
     },
     onStart: () => {
-      toast.loading("Creating team...");
+      toast.loading(t('team.creating'));
     },
     onSuccess: (result) => {
       toast.dismiss();
-      toast.success("Team created successfully");
+      toast.success(t('team.created_successfully'));
       router.push(`/teams/${result.data.data.slug}` as Route);
       router.refresh();
     }
@@ -67,12 +70,12 @@ export function CreateTeamForm() {
           name="name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Team Name</FormLabel>
+              <FormLabel>{t('team.team_name')}</FormLabel>
               <FormControl>
-                <Input placeholder="Enter team name" {...field} />
+                <Input placeholder={t('team.team_name_placeholder')} {...field} />
               </FormControl>
               <FormDescription>
-                A unique name for your team
+                {t('team.team_name_description')}
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -84,16 +87,16 @@ export function CreateTeamForm() {
           name="description"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Description</FormLabel>
+              <FormLabel>{t('team.description')}</FormLabel>
               <FormControl>
                 <Textarea
-                  placeholder="Enter a brief description of your team"
+                  placeholder={t('team.description_placeholder')}
                   {...field}
                   value={field.value || ""}
                 />
               </FormControl>
               <FormDescription>
-                Optional description of your team&apos;s purpose
+                {t('team.description_helper')}
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -101,7 +104,7 @@ export function CreateTeamForm() {
         />
 
         <Button type="submit" className="w-full">
-          Create Team
+          {t('team.create_team')}
         </Button>
       </form>
     </Form>

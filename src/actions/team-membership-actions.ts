@@ -4,38 +4,39 @@ import { createServerAction, ZSAError } from "zsa";
 import { z } from "zod";
 import { acceptTeamInvitation, cancelTeamInvitation, getTeamInvitations, getTeamMembers, inviteUserToTeam, removeTeamMember, updateTeamMemberRole, getPendingInvitationsForCurrentUser } from "@/server/team-members";
 import { withRateLimit, RATE_LIMITS } from "@/utils/with-rate-limit";
+import { vm } from "@/lib/validation-messages";
 
 // Invite user schema
 const inviteUserSchema = z.object({
-  teamId: z.string().min(1, "Team ID is required"),
-  email: z.string().email("Invalid email").max(255, "Email is too long"),
-  roleId: z.string().min(1, "Role is required"),
+  teamId: z.string().min(1, vm.team_id_required),
+  email: z.string().email(vm.email_invalid).max(255, vm.email_too_long),
+  roleId: z.string().min(1, vm.role_required),
   isSystemRole: z.boolean().optional().default(true),
 });
 
 // Update member role schema
 const updateMemberRoleSchema = z.object({
-  teamId: z.string().min(1, "Team ID is required"),
-  userId: z.string().min(1, "User ID is required"),
-  roleId: z.string().min(1, "Role is required"),
+  teamId: z.string().min(1, vm.team_id_required),
+  userId: z.string().min(1, vm.user_id_required),
+  roleId: z.string().min(1, vm.role_required),
   isSystemRole: z.boolean().optional().default(true),
 });
 
 const teamIdSchema = z.object({
-  teamId: z.string().min(1, "Team ID is required"),
+  teamId: z.string().min(1, vm.team_id_required),
 });
 
 const removeMemberSchema = z.object({
-  teamId: z.string().min(1, "Team ID is required"),
-  userId: z.string().min(1, "User ID is required"),
+  teamId: z.string().min(1, vm.team_id_required),
+  userId: z.string().min(1, vm.user_id_required),
 });
 
 const invitationIdSchema = z.object({
-  invitationId: z.string().min(1, "Invitation ID is required"),
+  invitationId: z.string().min(1, vm.invitation_id_required),
 });
 
 const invitationTokenSchema = z.object({
-  token: z.string().min(1, "Invitation token is required"),
+  token: z.string().min(1, vm.invitation_token_required),
 });
 
 /**

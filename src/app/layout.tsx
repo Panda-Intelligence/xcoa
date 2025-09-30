@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import Script from "next/script";
 import "./globals.css";
 import "server-only";
 
@@ -77,9 +76,9 @@ export default function BaseLayout({
           >
             {children}
           </TooltipProvider>
+          <CookieConsentBanner />
         </ThemeProvider>
         <Toaster richColors closeButton position="top-right" expand duration={7000} />
-        <CookieConsentBanner />
         <ConditionalAnalytics />
       </body>
     </html>

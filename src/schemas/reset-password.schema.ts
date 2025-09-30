@@ -1,11 +1,12 @@
 import { z } from "zod";
+import { vm } from "@/lib/validation-messages";
 
 export const resetPasswordSchema = z.object({
   token: z.string(),
-  password: z.string().min(8, "Password must be at least 8 characters"),
+  password: z.string().min(8, vm.password_too_short),
   confirmPassword: z.string(),
 }).refine((data) => data.password === data.confirmPassword, {
-  message: "Passwords do not match",
+  message: vm.passwords_not_match,
   path: ["confirmPassword"],
 });
 

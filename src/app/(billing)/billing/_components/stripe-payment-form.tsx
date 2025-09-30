@@ -15,6 +15,7 @@ import { useTheme } from "next-themes";
 import { Card, CardContent } from "@/components/ui/card";
 import { getPackageIcon } from "./credit-packages";
 import { CREDITS_EXPIRATION_YEARS } from "@/constants";
+import { useLanguage } from "@/hooks/useLanguage";
 
 interface StripePaymentFormProps {
   packageId: string;
@@ -29,6 +30,7 @@ function PaymentForm({ packageId, clientSecret, onSuccess, onCancel, credits, pr
   const stripe = useStripe();
   const elements = useElements();
   const [isProcessing, setIsProcessing] = useState(false);
+  const { t } = useLanguage();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -46,7 +48,7 @@ function PaymentForm({ packageId, clientSecret, onSuccess, onCancel, credits, pr
       });
 
       if (error) {
-        toast.error(error.message || "Payment failed");
+        toast.error(error.message || t('billing.payment_failed'));
       } else {
         // The payment was successful
         const paymentIntent = await stripe.retrievePaymentIntent(clientSecret);
@@ -57,10 +59,10 @@ function PaymentForm({ packageId, clientSecret, onSuccess, onCancel, credits, pr
           });
 
           if (success) {
-            toast.success("Payment successful!");
+            toast.success(t('billing.payment_successful'));
             onSuccess();
           } else {
-            toast.error("Payment failed");
+            toast.error(t('billing.payment_failed'));
           }
         } else {
           throw new Error("No payment intent found");
@@ -68,7 +70,7 @@ function PaymentForm({ packageId, clientSecret, onSuccess, onCancel, credits, pr
       }
     } catch (error) {
       console.error("Payment error:", error);
-      toast.error("An unexpected error occurred");
+      toast.error(t('billing.unexpected_error'));
     } finally {
       setIsProcessing(false);
     }
@@ -84,7 +86,7 @@ function PaymentForm({ packageId, clientSecret, onSuccess, onCancel, credits, pr
                 {getPackageIcon(credits)}
                 <div>
                   <div className="text-2xl font-bold">
-                    {credits.toLocaleString()} credits
+                    {credits.toLocaleString()} {t('billing.credits')}
                   </div>
                 </div>
               </div>
@@ -117,14 +119,14 @@ function PaymentForm({ packageId, clientSecret, onSuccess, onCancel, credits, pr
             onClick={onCancel}
             disabled={isProcessing}
           >
-            Cancel
+            {t('common.cancel')}
           </Button>
           <Button
             type="submit"
             disabled={isProcessing || !stripe || !elements}
             className="px-8"
           >
-            {isProcessing ? "Processing..." : "Pay Now"}
+            {isProcessing ? t('billing.processing_payment') : 'Pay Now'}
           </Button>
         </div>
       </form>
