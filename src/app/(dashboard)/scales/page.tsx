@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import {
   Search,
   Eye,
@@ -14,12 +15,15 @@ import {
   Users,
   BookOpen,
   Shield,
+  ChevronLeft,
+  ChevronRight,
 } from 'lucide-react';
 import Link from 'next/link';
 import { useLanguage } from '@/hooks/useLanguage';
 import { useFavoritesStore } from '@/state/favorites';
 import { FavoriteButton } from '@/components/favorites/FavoriteButton';
 import { useRouter } from 'next/navigation';
+import type { HotScale } from './_components/types';
 
 interface SearchResult {
   id: string;
@@ -36,37 +40,29 @@ interface SearchResult {
   usageCount: number;
 }
 
-interface HotScale {
-  id: string;
-  name: string;
-  nameEn: string;
-  acronym: string;
-  categoryName: string;
-  itemsCount: number;
-  administrationTime: number;
-  targetPopulation: string;
-  validationStatus: string;
-  usageCount: number;
-  favoriteCount: number;
-  icon: string;
-}
-
 export default function ScalesPage() {
   const router = useRouter();
   const { t } = useLanguage();
   const { fetchUserFavorites } = useFavoritesStore();
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<SearchResult[]>([]);
-  const [hotScales, setHotScales] = useState<HotScale[]>([]);
+  const [allScales, setAllScales] = useState<HotScale[]>([]);
+
   const [loading, setLoading] = useState(false);
-  const [loadingHotScales, setLoadingHotScales] = useState(true);
-  const [searchType, setSearchType] = useState('hybrid');
+
+  const [loadingAllScales, setLoadingAllScales] = useState(false);
+  const [searchType] = useState('hybrid');
   const [filters, setFilters] = useState({
     category: 'all',
     validationStatus: 'all',
     sortBy: 'relevance',
   });
   const [categories, setCategories] = useState<any[]>([]);
+  const [pagination, setPagination] = useState({
+    page: 1,
+    limit: 20,
+    total: 0,
+  });
 
   // 获取分类列表
   useEffect(() => {
@@ -76,18 +72,44 @@ export default function ScalesPage() {
       .catch(err => console.error('Failed to load categories:', err));
   }, []);
 
-  // 获取热门量表数据
+  // 获取所有量表（分页）
+  const fetchAllScales = async (page: number = 1) => {
+    setLoadingAllScales(true);
+    try {
+      const params = new URLSearchParams({
+        page: page.toString(),
+        limit: pagination.limit.toString(),
+        category: filters.category,
+        sortBy: filters.sortBy,
+      });
+
+      const response = await fetch(`/api/scales?${params}`);
+      const data = await response.json();
+
+      if (data.success) {
+        setAllScales(data.scales || []);
+        setPagination(prev => ({
+          ...prev,
+          page,
+          total: data.total || 0,
+        }));
+      }
+    } catch (error) {
+      console.error('Failed to load all scales:', error);
+    } finally {
+      setLoadingAllScales(false);
+    }
+  };
+
+  // 当切换到 "all" tab 时加载数据
   useEffect(() => {
-    fetch('/api/scales/hot')
-      .then(res => res.json())
-      .then(data => {
-        if (data.success) {
-          setHotScales(data.scales || []);
-        }
-      })
-      .catch(err => console.error('Failed to load hot scales:', err))
-      .finally(() => setLoadingHotScales(false));
-  }, []);
+    fetchAllScales(1);
+  }, [filters.category, filters.sortBy]);
+
+  // 翻页
+  const handlePageChange = (newPage: number) => {
+    fetchAllScales(newPage);
+  };
 
   // 批量获取用户收藏状态
   useEffect(() => {
@@ -219,6 +241,118 @@ export default function ScalesPage() {
       <div className="flex-1 overflow-auto">
         <div className="p-4 space-y-6">
 
+
+          {/* 全部量表 Tab */}
+          {loadingAllScales ? (
+            <div className="border rounded-md flex-1">
+              <div className="animate-pulse p-4 space-y-3">
+                {Array.from({ length: 10 }).map((_, index) => (
+                  <div key={`skeleton-${index}`} className="h-12 bg-gray-200 rounded" />
+                ))}
+              </div>
+            </div>
+          ) : (
+            <>
+              {/* 表格容器 - 固定表头和底部 */}
+              <div className="border rounded-md flex-1 flex flex-col overflow-hidden">
+                <Table>
+                  <TableHeader className="sticky top-0 bg-background z-10">
+                    <TableRow>
+                      <TableHead className="w-[40%]">{t("scales.name", "量表名称")}</TableHead>
+                      <TableHead>{t("scales.acronym", "缩写")}</TableHead>
+                      <TableHead>{t("scales.category", "分类")}</TableHead>
+                      <TableHead className="text-center">{t("scales.items", "条目数")}</TableHead>
+                      <TableHead className="text-center">{t("scales.time", "时长")}</TableHead>
+                      <TableHead className="text-right">{t("scales.actions", "操作")}</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                </Table>
+                <div className="flex-1 overflow-y-auto">
+                  <Table>
+                    <TableBody>
+                      {allScales.map((scale) => (
+                        <TableRow key={scale.id} className="cursor-pointer hover:bg-muted/50"
+                          onClick={() => router.push(`/scales/${scale.id}`)}>
+                          <TableCell className="font-medium w-[40%]">
+                            <div>
+                              <div className="font-medium">{scale.name}</div>
+                              {scale.nameEn && (
+                                <div className="text-xs text-muted-foreground">{scale.nameEn}</div>
+                              )}
+                            </div>
+                          </TableCell>
+                          <TableCell>
+                            <Badge variant="outline">{scale.acronym}</Badge>
+                          </TableCell>
+                          <TableCell>
+                            <Badge variant="secondary" className="text-xs">{scale.categoryName}</Badge>
+                          </TableCell>
+                          <TableCell className="text-center">{scale.itemsCount}</TableCell>
+                          <TableCell className="text-center">
+                            {scale.administrationTime ? `${scale.administrationTime} ${t("scales.minutes", "分钟")}` : '-'}
+                          </TableCell>
+                          <TableCell className="text-right">
+                            <div className="flex justify-end gap-1" onClick={(e) => e.stopPropagation()}>
+                              <Link href={`/scales/${scale.id}/preview`}>
+                                <Button size="sm" variant="ghost" className="h-8 w-8 p-0">
+                                  <Eye className="w-4 h-4" />
+                                </Button>
+                              </Link>
+                              <FavoriteButton
+                                scaleId={scale.id}
+                                variant="icon"
+                                size="sm"
+                              />
+                              <Link href={`/scales/copyright/create?scaleId=${scale.id}`}>
+                                <Button size="sm" variant="ghost" className="h-8 w-8 p-0">
+                                  <Shield className="w-4 h-4" />
+                                </Button>
+                              </Link>
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
+              </div>
+
+              {/* 分页控件 - 顶部 */}
+              {pagination.total > pagination.limit && (
+                <div className="flex justify-between items-center px-2">
+                  <span className="text-sm text-muted-foreground">
+                    共 {pagination.total} 条记录
+                  </span>
+                  <div className="flex items-center space-x-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      disabled={pagination.page === 1}
+                      onClick={() => handlePageChange(pagination.page - 1)}
+                    >
+                      <ChevronLeft className="w-4 h-4" />
+                      {t("common.previous", "上一页")}
+                    </Button>
+
+                    <span className="text-sm text-muted-foreground">
+                      {t("common.page_info", `第 ${pagination.page} 页，共 ${Math.ceil(pagination.total / pagination.limit)} 页`)}
+                    </span>
+
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      disabled={pagination.page >= Math.ceil(pagination.total / pagination.limit)}
+                      onClick={() => handlePageChange(pagination.page + 1)}
+                    >
+                      {t("common.next", "下一页")}
+                      <ChevronRight className="w-4 h-4" />
+                    </Button>
+                  </div>
+                </div>
+              )}
+            </>
+          )}
+
           {/* 搜索结果 */}
           {results.length > 0 && (
             <div>
@@ -308,79 +442,6 @@ export default function ScalesPage() {
                 </Button>
               </CardContent>
             </Card>
-          )}
-
-          {/* 默认显示热门量表 */}
-          {!query && results.length === 0 && (
-            <div>
-              <CardHeader>
-                <CardTitle>{t("scales.hot_scales", "Popular Scales")}</CardTitle>
-                <CardDescription>
-                  {t("scales.hot_scales_description", "Most commonly used eCOA assessment tools")}
-                </CardDescription>
-              </CardHeader>
-
-              <CardContent>
-                {loadingHotScales ? (
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {Array.from({ length: 6 }).map((_, index) => (
-                      <Card key={index} className="animate-pulse">
-                        <CardContent className="p-4">
-                          <div className="h-4 bg-gray-200 rounded mb-2" />
-                          <div className="h-3 bg-gray-200 rounded mb-1" />
-                          <div className="h-2 bg-gray-200 rounded" />
-                        </CardContent>
-                      </Card>
-                    ))}
-                  </div>
-                ) : (
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {hotScales.map((scale) => (
-                      <Card key={scale.id} className="hover:shadow-md transition-shadow cursor-pointer group"
-                        onClick={() => router.push(`/scales/${scale.id}`)}>
-                        <CardContent className="p-4">
-                          <div className="flex items-center justify-between mb-2">
-                            <h4 className="font-medium text-sm leading-tight group-hover:text-blue-600 transition-colors">{scale.name}</h4>
-                            <Badge variant="outline">{scale.acronym}</Badge>
-                          </div>
-
-                          <Badge variant="outline" className="text-xs text-muted-foreground mb-2">{scale.categoryName}</Badge>
-                          <div className="text-xs text-muted-foreground mb-3 space-y-1">
-                            <div className="flex items-center space-x-1">
-                              <BookOpen className="w-3 h-3" />
-                              <span>{scale.itemsCount} {t("scales.items", "items")}</span>
-                            </div>
-                            <div className="flex items-center space-x-1">
-                              <Clock className="w-3 h-3" />
-                              <span>{scale.administrationTime} {t("scales.minutes", "minutes")}</span>
-                            </div>
-                          </div>
-
-                          {/* 快速操作区 - 阻止卡片点击事件 */}
-                          <div className="flex gap-1" onClick={(e) => e.stopPropagation()}>
-                            <Link href={`/scales/${scale.id}/preview`}>
-                              <Button size="sm" variant="outline" className="px-2">
-                                <Eye className="w-3 h-3" />
-                              </Button>
-                            </Link>
-                            <FavoriteButton
-                              scaleId={scale.id}
-                              variant="icon"
-                              size="sm"
-                            />
-                            <Link href={`/scales/${scale.id}/copyright`}>
-                              <Button size="sm" variant="outline" className="px-2">
-                                <Shield className="w-3 h-3" />
-                              </Button>
-                            </Link>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    ))}
-                  </div>
-                )}
-              </CardContent>
-            </div>
           )}
         </div>
       </div>
