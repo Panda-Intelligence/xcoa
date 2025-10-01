@@ -18,6 +18,19 @@ export const LICENSE_TYPE = {
 
 export const licenseTypeTuple = Object.values(LICENSE_TYPE) as [string, ...string[]];
 
+export const TREATMENT_AREA = {
+  IMMUNOLOGY: 'immunology',
+  RESPIRATORY: 'respiratory',
+  DIGESTIVE: 'digestive',
+  NEUROLOGY: 'neurology',
+  ONCOLOGY: 'oncology',
+  HEMATOLOGY: 'hematology',
+  DERMATOLOGY: 'dermatology',
+  GENERAL: 'general',
+} as const;
+
+export const treatmentAreaTuple = Object.values(TREATMENT_AREA) as [string, ...string[]];
+
 // eCOA Categories
 export const ecoaCategoryTable = sqliteTable("ecoa_category", {
   ...commonColumns,
@@ -59,6 +72,7 @@ export const ecoaScaleTable = sqliteTable("ecoa_scale", {
   administrationTime: integer(), // minutes
   targetPopulation: text({ length: 500 }),
   ageRange: text({ length: 100 }),
+  treatmentArea: text({ enum: treatmentAreaTuple }),
   domains: text({ mode: 'json' }).$type<string[]>().default([]),
   // biome-ignore lint/suspicious/noExplicitAny: <explanation>
   psychometricProperties: text({ mode: 'json' }).$type<Record<string, any>>(),
@@ -127,6 +141,7 @@ export const ecoaScaleUpdatedTable = sqliteTable("ecoa_scale", {
   administrationTime: integer(),
   targetPopulation: text({ length: 500 }),
   ageRange: text({ length: 100 }),
+  treatmentArea: text({ enum: treatmentAreaTuple }),
   domains: text({ mode: 'json' }).$type<string[]>().default([]),
   // biome-ignore lint/suspicious/noExplicitAny: <explanation>
   psychometricProperties: text({ mode: 'json' }).$type<Record<string, any>>(),

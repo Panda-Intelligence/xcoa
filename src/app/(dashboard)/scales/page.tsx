@@ -60,6 +60,7 @@ export default function ScalesPage() {
   const [searchType] = useState('hybrid');
   const [filters, setFilters] = useState({
     category: 'all',
+    treatmentArea: 'all',
     validationStatus: 'all',
     sortBy: 'relevance',
   });
@@ -169,6 +170,7 @@ export default function ScalesPage() {
         page: page.toString(),
         limit: pagination.limit.toString(),
         category: filters.category,
+        treatmentArea: filters.treatmentArea,
         sortBy: filters.sortBy,
       });
 
@@ -193,7 +195,7 @@ export default function ScalesPage() {
   // 当切换到 "all" tab 时加载数据
   useEffect(() => {
     fetchAllScales(1);
-  }, [filters.category, filters.sortBy]);
+  }, [filters.category, filters.treatmentArea, filters.sortBy]);
 
   // 翻页
   const handlePageChange = (newPage: number) => {
@@ -297,6 +299,27 @@ export default function ScalesPage() {
                           {cat.name} ({cat.scaleCount})
                         </SelectItem>
                       ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="flex items-center space-x-2">
+                  <span className="text-sm font-medium">{t("scales_page.treatment_area", "治疗领域")}:</span>
+                  <Select value={filters.treatmentArea} onValueChange={(value) =>
+                    setFilters(prev => ({ ...prev, treatmentArea: value }))}>
+                    <SelectTrigger className="w-32">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">{t("scales_page.all_treatment_areas", "全部")}</SelectItem>
+                      <SelectItem value="immunology">{t("scales_page.treatment_area.immunology", "免疫")}</SelectItem>
+                      <SelectItem value="respiratory">{t("scales_page.treatment_area.respiratory", "呼吸")}</SelectItem>
+                      <SelectItem value="digestive">{t("scales_page.treatment_area.digestive", "消化")}</SelectItem>
+                      <SelectItem value="neurology">{t("scales_page.treatment_area.neurology", "神内")}</SelectItem>
+                      <SelectItem value="oncology">{t("scales_page.treatment_area.oncology", "肿瘤")}</SelectItem>
+                      <SelectItem value="hematology">{t("scales_page.treatment_area.hematology", "血液")}</SelectItem>
+                      <SelectItem value="dermatology">{t("scales_page.treatment_area.dermatology", "皮肤")}</SelectItem>
+                      <SelectItem value="general">{t("scales_page.treatment_area.general", "通用")}</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>

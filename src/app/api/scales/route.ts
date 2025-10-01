@@ -1,7 +1,7 @@
 import { type NextRequest, NextResponse } from 'next/server';
 import { getDB } from '@/db';
 import { ecoaScaleTable, ecoaCategoryTable } from '@/db/schema';
-import { eq, desc, asc, sql } from 'drizzle-orm';
+import { eq, desc, asc, sql, and } from 'drizzle-orm';
 
 export async function GET(request: NextRequest) {
   try {
@@ -11,6 +11,7 @@ export async function GET(request: NextRequest) {
     const page = parseInt(searchParams.get('page') || '1', 10);
     const limit = parseInt(searchParams.get('limit') || '20', 10);
     const category = searchParams.get('category') || 'all';
+    const treatmentArea = searchParams.get('treatmentArea') || 'all';
     const sortBy = searchParams.get('sortBy') || 'relevance';
 
     const offset = (page - 1) * limit;
@@ -23,6 +24,7 @@ export async function GET(request: NextRequest) {
         acronym: ecoaScaleTable.acronym,
         categoryId: ecoaScaleTable.categoryId,
         categoryName: ecoaCategoryTable.name,
+        treatmentArea: ecoaScaleTable.treatmentArea,
         itemsCount: ecoaScaleTable.itemsCount,
         administrationTime: ecoaScaleTable.administrationTime,
         targetPopulation: ecoaScaleTable.targetPopulation,
@@ -34,8 +36,18 @@ export async function GET(request: NextRequest) {
       .from(ecoaScaleTable)
       .leftJoin(ecoaCategoryTable, eq(ecoaScaleTable.categoryId, ecoaCategoryTable.id));
 
+    const whereConditions = [];
+    
     if (category !== 'all') {
-      query = query.where(eq(ecoaScaleTable.categoryId, category));
+      whereConditions.push(eq(ecoaScaleTable.categoryId, category));
+    }
+    
+    if (treatmentArea !== 'all') {
+      whereConditions.push(eq(ecoaScaleTable.treatmentArea, treatmentArea));
+    }
+    
+    if (whereConditions.length > 0) {
+      query = query.where(and(...whereConditions));
     }
 
     switch (sortBy) {
@@ -56,9 +68,11 @@ export async function GET(request: NextRequest) {
 
     const scales = await query.limit(limit).offset(offset);
 
-    const countQuery = category !== 'all'
-      ? db.select({ count: sql`count(*)` }).from(ecoaScaleTable).where(eq(ecoaScaleTable.categoryId, category))
-      : db.select({ count: sql`count(*)` }).from(ecoaScaleTable);
+    let countQuery = db.select({ count: sql`count(*)` }).from(ecoaScaleTable);
+    
+    if (whereConditions.length > 0) {
+      countQuery = countQuery.where(and(...whereConditions));
+    }
 
     const totalResult = await countQuery;
     const total = Number(totalResult[0]?.count) || 0;

@@ -5,6 +5,7 @@ export interface HotScale {
   nameEn: string;
   acronym: string;
   categoryName: string;
+  treatmentArea?: string | null;
   itemsCount: number;
   administrationTime: number;
   targetPopulation: string;

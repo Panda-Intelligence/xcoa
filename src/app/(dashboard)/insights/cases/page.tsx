@@ -250,135 +250,135 @@ export default function ClinicalCasesPage() {
           <div className="flex-1 overflow-auto">
             <div className="p-4">
               {/* 案例列表 */}
-              <div className="grid grid-cols-2 gap-6">
-                {cases.length === 0 ? (
-                  <Card>
-                    <CardContent className="text-center py-12">
-                      <Beaker className="w-12 h-12 mx-auto mb-4 text-gray-400" />
-                      <h3 className="text-lg font-medium mb-2">{t('insights.cases.no_matching_cases')}</h3>
-                      <p className="text-muted-foreground">
-                        {t('insights.cases.adjust_filters')}
-                      </p>
+
+              {cases.length === 0 ? (
+                <div className='mb-20'>
+                  <CardContent className="text-center py-12">
+                    <Beaker className="w-12 h-12 mx-auto mb-4 text-gray-400" />
+                    <h3 className="text-lg font-medium mb-2">{t('insights.cases.no_matching_cases')}</h3>
+                    <p className="text-muted-foreground">
+                      {t('insights.cases.adjust_filters')}
+                    </p>
+                  </CardContent>
+                </div>
+              ) : (<div className="grid grid-cols-2 gap-6">
+                {cases.map((clinicalCase) => (
+                  <Card key={clinicalCase.id} className="hover:shadow-md transition-shadow cursor-pointer"
+                    onClick={() => window.location.href = `/insights/cases/${clinicalCase.id}`}>
+                    <CardHeader className="pb-3">
+                      <div className="flex items-start justify-between">
+                        <div className="flex-1">
+                          <div className="flex items-center space-x-2 mb-2">
+                            <Badge variant="outline" className="font-mono text-xs">
+                              {clinicalCase.scaleAcronym}
+                            </Badge>
+                            {clinicalCase.difficultyLevel && (
+                              <Badge className={getDifficultyLevelColor(clinicalCase.difficultyLevel)}>
+                                {clinicalCase.difficultyLevel}
+                              </Badge>
+                            )}
+                            {clinicalCase.specialty && (
+                              <Badge variant="outline">
+                                {getSpecialtyLabel(clinicalCase.specialty)}
+                              </Badge>
+                            )}
+                          </div>
+                          <CardTitle className="text-xl leading-tight mb-2">
+                            {clinicalCase.title}
+                          </CardTitle>
+                          <div className="flex items-center space-x-4 text-sm text-muted-foreground">
+                            <span className="flex items-center">
+                              <Target className="w-3 h-3 mr-1" />
+                              {clinicalCase.scaleAcronym}
+                            </span>
+                            {clinicalCase.author && (
+                              <span className="flex items-center">
+                                <Users className="w-3 h-3 mr-1" />
+                                {clinicalCase.author}
+                              </span>
+                            )}
+                            <span className="flex items-center">
+                              <Clock className="w-3 h-3 mr-1" />
+                              {new Date(clinicalCase.createdAt).toLocaleDateString()}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </CardHeader>
+
+                    <CardContent>
+                      <div className="space-y-4">
+                        {/* 患者背景 */}
+                        {clinicalCase.patientBackground && (
+                          <div>
+                            <h5 className="font-medium text-sm mb-1">{t('insights.cases.patient_background')}</h5>
+                            <p className="text-sm text-muted-foreground bg-blue-50 p-2 rounded">
+                              {clinicalCase.patientBackground}
+                            </p>
+                          </div>
+                        )}
+
+                        {/* 结果解读 */}
+                        {clinicalCase.interpretation && (
+                          <div>
+                            <h5 className="font-medium text-sm mb-1">{t('insights.cases.result_interpretation')}</h5>
+                            <p className="text-sm text-muted-foreground bg-green-50 p-2 rounded">
+                              {clinicalCase.interpretation}
+                            </p>
+                          </div>
+                        )}
+
+                        {/* 量表评分 */}
+                        {clinicalCase.scaleScores && Object.keys(clinicalCase.scaleScores).length > 0 && (
+                          <div>
+                            <h5 className="font-medium text-sm mb-1">{t('insights.cases.score_results')}</h5>
+                            <div className="flex flex-wrap gap-2">
+                              {Object.entries(clinicalCase.scaleScores).map(([key, value]) => (
+                                <div key={key} className="text-xs bg-gray-100 px-2 py-1 rounded">
+                                  {key}: {value}
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+
+                        {/* 案例信息 */}
+                        <div className="flex items-center justify-between text-sm text-muted-foreground">
+                          <div className="flex items-center space-x-1">
+                            <Building className="w-3 h-3" />
+                            <span>{getSpecialtyLabel(clinicalCase.specialty)}</span>
+                          </div>
+                          <div className="flex items-center space-x-1">
+                            <BookOpen className="w-3 h-3" />
+                            <span>{clinicalCase.reviewStatus}</span>
+                          </div>
+                        </div>
+
+                        {/* 操作按钮 */}
+                        <div className="flex space-x-2 pt-2">
+                          <Button
+                            size="sm"
+                            className="flex-1"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              router.push(`/insights/cases/${clinicalCase.id}`);
+                            }}
+                          >
+                            <Eye className="w-3 h-3 mr-1" />
+                            {t('insights.cases.view_details')}
+                          </Button>
+                          <Link href={`/scales/${clinicalCase.scaleId}`}>
+                            <Button size="sm" variant="outline">
+                              {t('insights.cases.view_scale')}
+                            </Button>
+                          </Link>
+                        </div>
+                      </div>
                     </CardContent>
                   </Card>
-                ) : (
-                  cases.map((clinicalCase) => (
-                    <Card key={clinicalCase.id} className="hover:shadow-md transition-shadow cursor-pointer"
-                      onClick={() => window.location.href = `/insights/cases/${clinicalCase.id}`}>
-                      <CardHeader className="pb-3">
-                        <div className="flex items-start justify-between">
-                          <div className="flex-1">
-                            <div className="flex items-center space-x-2 mb-2">
-                              <Badge variant="outline" className="font-mono text-xs">
-                                {clinicalCase.scaleAcronym}
-                              </Badge>
-                              {clinicalCase.difficultyLevel && (
-                                <Badge className={getDifficultyLevelColor(clinicalCase.difficultyLevel)}>
-                                  {clinicalCase.difficultyLevel}
-                                </Badge>
-                              )}
-                              {clinicalCase.specialty && (
-                                <Badge variant="outline">
-                                  {getSpecialtyLabel(clinicalCase.specialty)}
-                                </Badge>
-                              )}
-                            </div>
-                            <CardTitle className="text-xl leading-tight mb-2">
-                              {clinicalCase.title}
-                            </CardTitle>
-                            <div className="flex items-center space-x-4 text-sm text-muted-foreground">
-                              <span className="flex items-center">
-                                <Target className="w-3 h-3 mr-1" />
-                                {clinicalCase.scaleAcronym}
-                              </span>
-                              {clinicalCase.author && (
-                                <span className="flex items-center">
-                                  <Users className="w-3 h-3 mr-1" />
-                                  {clinicalCase.author}
-                                </span>
-                              )}
-                              <span className="flex items-center">
-                                <Clock className="w-3 h-3 mr-1" />
-                                {new Date(clinicalCase.createdAt).toLocaleDateString()}
-                              </span>
-                            </div>
-                          </div>
-                        </div>
-                      </CardHeader>
-
-                      <CardContent>
-                        <div className="space-y-4">
-                          {/* 患者背景 */}
-                          {clinicalCase.patientBackground && (
-                            <div>
-                              <h5 className="font-medium text-sm mb-1">{t('insights.cases.patient_background')}</h5>
-                              <p className="text-sm text-muted-foreground bg-blue-50 p-2 rounded">
-                                {clinicalCase.patientBackground}
-                              </p>
-                            </div>
-                          )}
-
-                          {/* 结果解读 */}
-                          {clinicalCase.interpretation && (
-                            <div>
-                              <h5 className="font-medium text-sm mb-1">{t('insights.cases.result_interpretation')}</h5>
-                              <p className="text-sm text-muted-foreground bg-green-50 p-2 rounded">
-                                {clinicalCase.interpretation}
-                              </p>
-                            </div>
-                          )}
-
-                          {/* 量表评分 */}
-                          {clinicalCase.scaleScores && Object.keys(clinicalCase.scaleScores).length > 0 && (
-                            <div>
-                              <h5 className="font-medium text-sm mb-1">{t('insights.cases.score_results')}</h5>
-                              <div className="flex flex-wrap gap-2">
-                                {Object.entries(clinicalCase.scaleScores).map(([key, value]) => (
-                                  <div key={key} className="text-xs bg-gray-100 px-2 py-1 rounded">
-                                    {key}: {value}
-                                  </div>
-                                ))}
-                              </div>
-                            </div>
-                          )}
-
-                          {/* 案例信息 */}
-                          <div className="flex items-center justify-between text-sm text-muted-foreground">
-                            <div className="flex items-center space-x-1">
-                              <Building className="w-3 h-3" />
-                              <span>{getSpecialtyLabel(clinicalCase.specialty)}</span>
-                            </div>
-                            <div className="flex items-center space-x-1">
-                              <BookOpen className="w-3 h-3" />
-                              <span>{clinicalCase.reviewStatus}</span>
-                            </div>
-                          </div>
-
-                          {/* 操作按钮 */}
-                          <div className="flex space-x-2 pt-2">
-                            <Button
-                              size="sm"
-                              className="flex-1"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                router.push(`/insights/cases/${clinicalCase.id}`);
-                              }}
-                            >
-                              <Eye className="w-3 h-3 mr-1" />
-                              {t('insights.cases.view_details')}
-                            </Button>
-                            <Link href={`/scales/${clinicalCase.scaleId}`}>
-                              <Button size="sm" variant="outline">
-                                {t('insights.cases.view_scale')}
-                              </Button>
-                            </Link>
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  ))
-                )}
+                ))}
               </div>
+              )}
 
               {/* 相关资源 */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
