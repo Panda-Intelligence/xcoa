@@ -21,7 +21,10 @@
       "Bash(fi)",
       "Bash(done)",
       "Bash(pnpm exec tsc:*)",
-      "Bash(pnpm build)"
+      "Bash(pnpm build)",
+      "Bash(bun scripts/crawlee/generate-scale-insert.ts:*)",
+      "Bash(node:*)",
+      "Bash(wrangler d1 execute:*)"
     ],
     "deny": [],
     "ask": []
