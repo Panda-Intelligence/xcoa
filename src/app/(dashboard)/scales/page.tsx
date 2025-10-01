@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { PageHeader } from '@/components/page-header';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -24,6 +24,12 @@ import { useFavoritesStore } from '@/state/favorites';
 import { FavoriteButton } from '@/components/favorites/FavoriteButton';
 import { useRouter } from 'next/navigation';
 import type { HotScale } from './_components/types';
+import {
+  useReactTable,
+  getCoreRowModel,
+  flexRender,
+  type ColumnDef,
+} from '@tanstack/react-table';
 
 interface SearchResult {
   id: string;
@@ -38,6 +44,7 @@ interface SearchResult {
   match_score: number;
   languages: string[];
   usageCount: number;
+  licenseType?: string | null;
 }
 
 export default function ScalesPage() {
@@ -49,7 +56,6 @@ export default function ScalesPage() {
   const [allScales, setAllScales] = useState<HotScale[]>([]);
 
   const [loading, setLoading] = useState(false);
-
   const [loadingAllScales, setLoadingAllScales] = useState(false);
   const [searchType] = useState('hybrid');
   const [filters, setFilters] = useState({
@@ -60,9 +66,92 @@ export default function ScalesPage() {
   const [categories, setCategories] = useState<any[]>([]);
   const [pagination, setPagination] = useState({
     page: 1,
-    limit: 20,
+    limit: 10,
     total: 0,
   });
+
+  const columns = useMemo<ColumnDef<HotScale>[]>(
+    () => [
+      {
+        accessorKey: 'name',
+        header: () => t("scales.name", "量表名称"),
+        cell: ({ row }) => (
+          <div>
+            <div className="font-medium">{row.original.name}</div>
+            {row.original.nameEn && (
+              <div className="text-xs text-muted-foreground">{row.original.nameEn}</div>
+            )}
+          </div>
+        ),
+        size: 400,
+      },
+      {
+        accessorKey: 'acronym',
+        header: () => t("scales.acronym", "缩写"),
+        cell: ({ row }) => <Badge variant="outline">{row.original.acronym}</Badge>,
+      },
+      {
+        accessorKey: 'categoryName',
+        header: () => t("scales.category", "分类"),
+        cell: ({ row }) => <Badge variant="secondary" className="text-xs">{row.original.categoryName}</Badge>,
+      },
+      {
+        accessorKey: 'itemsCount',
+        header: () => <div className="text-center">{t("scales.items", "条目数")}</div>,
+        cell: ({ row }) => <div className="text-center">{row.original.itemsCount}</div>,
+      },
+      {
+        accessorKey: 'administrationTime',
+        header: () => <div className="text-center">{t("scales.time", "时长")}</div>,
+        cell: ({ row }) => (
+          <div className="text-center">
+            {row.original.administrationTime ? `${row.original.administrationTime} ${t("scales.minutes", "分钟")}` : '-'}
+          </div>
+        ),
+      },
+      {
+        id: 'actions',
+        header: () => <div className="text-right">{t("scales.actions", "操作")}</div>,
+        cell: ({ row }) => (
+          <div className="flex justify-end gap-1" onClick={(e) => e.stopPropagation()}>
+            <Link href={`/scales/${row.original.id}/preview`}>
+              <Button size="sm" variant="ghost" className="h-8 w-8 p-0">
+                <Eye className="w-4 h-4" />
+              </Button>
+            </Link>
+            <FavoriteButton
+              scaleId={row.original.id}
+              variant="icon"
+              size="sm"
+            />
+            <Link href={`/scales/copyright/create?scaleId=${row.original.id}`}>
+              <Button size="sm" variant="ghost" className="h-8 w-8 p-0">
+                <Shield className="w-4 h-4" />
+              </Button>
+            </Link>
+          </div>
+        ),
+      },
+    ],
+    [t]
+  );
+
+  const table = useReactTable({
+    data: allScales,
+    columns,
+    getCoreRowModel: getCoreRowModel(),
+    manualPagination: true,
+    pageCount: Math.ceil(pagination.total / pagination.limit),
+  });
+
+  const handlePageSizeChange = (newLimit: string) => {
+    setPagination(prev => ({
+      ...prev,
+      limit: Number.parseInt(newLimit, 10),
+      page: 1,
+    }));
+    fetchAllScales(1);
+  };
 
   // 获取分类列表
   useEffect(() => {
@@ -148,16 +237,23 @@ export default function ScalesPage() {
     }
   };
 
-  const getLicenseIcon = (acronym: string) => {
-    // 基于已知的许可信息返回图标
-    const publicDomain = ['HAM-D', 'HAM-A'];
-    const needsContact = ['PHQ-9', 'GAD-7'];
-    const commercial = ['BDI-II', 'MMSE-2'];
-
-    if (publicDomain.includes(acronym)) return '🆓';
-    if (needsContact.includes(acronym)) return '📧';
-    if (commercial.includes(acronym)) return '💼';
-    return '🔍';
+  const getLicenseIcon = (licenseType?: string | null) => {
+    if (!licenseType) return '🔍';
+    
+    switch (licenseType) {
+      case 'public_domain':
+        return '🆓';
+      case 'free_with_attribution':
+        return '📝';
+      case 'contact_required':
+        return '📧';
+      case 'commercial':
+        return '💼';
+      case 'research_only':
+        return '🔬';
+      default:
+        return '🔍';
+    }
   };
 
   return (
@@ -255,61 +351,40 @@ export default function ScalesPage() {
             <>
               {/* 表格容器 - 固定表头和底部 */}
               <div className="border rounded-md flex-1 flex flex-col overflow-hidden">
-                <Table>
-                  <TableHeader className="sticky top-0 bg-background z-10">
-                    <TableRow>
-                      <TableHead className="w-[40%]">{t("scales.name", "量表名称")}</TableHead>
-                      <TableHead>{t("scales.acronym", "缩写")}</TableHead>
-                      <TableHead>{t("scales.category", "分类")}</TableHead>
-                      <TableHead className="text-center">{t("scales.items", "条目数")}</TableHead>
-                      <TableHead className="text-center">{t("scales.time", "时长")}</TableHead>
-                      <TableHead className="text-right">{t("scales.actions", "操作")}</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                </Table>
-                <div className="flex-1 overflow-y-auto">
+                <div className="overflow-y-auto flex-1">
                   <Table>
+                    <TableHeader className="sticky top-0 bg-background z-10 border-b">
+                      {table.getHeaderGroups().map(headerGroup => (
+                        <TableRow key={headerGroup.id}>
+                          {headerGroup.headers.map(header => (
+                            <TableHead
+                              key={header.id}
+                              className="bg-background"
+                              style={{ width: header.getSize() !== 150 ? header.getSize() : undefined }}
+                            >
+                              {header.isPlaceholder
+                                ? null
+                                : flexRender(
+                                    header.column.columnDef.header,
+                                    header.getContext()
+                                  )}
+                            </TableHead>
+                          ))}
+                        </TableRow>
+                      ))}
+                    </TableHeader>
                     <TableBody>
-                      {allScales.map((scale) => (
-                        <TableRow key={scale.id} className="cursor-pointer hover:bg-muted/50"
-                          onClick={() => router.push(`/scales/${scale.id}`)}>
-                          <TableCell className="font-medium w-[40%]">
-                            <div>
-                              <div className="font-medium">{scale.name}</div>
-                              {scale.nameEn && (
-                                <div className="text-xs text-muted-foreground">{scale.nameEn}</div>
-                              )}
-                            </div>
-                          </TableCell>
-                          <TableCell>
-                            <Badge variant="outline">{scale.acronym}</Badge>
-                          </TableCell>
-                          <TableCell>
-                            <Badge variant="secondary" className="text-xs">{scale.categoryName}</Badge>
-                          </TableCell>
-                          <TableCell className="text-center">{scale.itemsCount}</TableCell>
-                          <TableCell className="text-center">
-                            {scale.administrationTime ? `${scale.administrationTime} ${t("scales.minutes", "分钟")}` : '-'}
-                          </TableCell>
-                          <TableCell className="text-right">
-                            <div className="flex justify-end gap-1" onClick={(e) => e.stopPropagation()}>
-                              <Link href={`/scales/${scale.id}/preview`}>
-                                <Button size="sm" variant="ghost" className="h-8 w-8 p-0">
-                                  <Eye className="w-4 h-4" />
-                                </Button>
-                              </Link>
-                              <FavoriteButton
-                                scaleId={scale.id}
-                                variant="icon"
-                                size="sm"
-                              />
-                              <Link href={`/scales/copyright/create?scaleId=${scale.id}`}>
-                                <Button size="sm" variant="ghost" className="h-8 w-8 p-0">
-                                  <Shield className="w-4 h-4" />
-                                </Button>
-                              </Link>
-                            </div>
-                          </TableCell>
+                      {table.getRowModel().rows.map(row => (
+                        <TableRow
+                          key={row.id}
+                          className="cursor-pointer hover:bg-muted/50"
+                          onClick={() => router.push(`/scales/${row.original.id}`)}
+                        >
+                          {row.getVisibleCells().map(cell => (
+                            <TableCell key={cell.id}>
+                              {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                            </TableCell>
+                          ))}
                         </TableRow>
                       ))}
                     </TableBody>
@@ -318,11 +393,28 @@ export default function ScalesPage() {
               </div>
 
               {/* 分页控件 - 顶部 */}
-              {pagination.total > pagination.limit && (
+              {pagination.total > 0 && (
                 <div className="flex justify-between items-center px-2">
-                  <span className="text-sm text-muted-foreground">
-                    共 {pagination.total} 条记录
-                  </span>
+                  <div className="flex items-center space-x-4">
+                    <span className="text-sm text-muted-foreground">
+                      共 {pagination.total} 条记录
+                    </span>
+                    <div className="flex items-center space-x-2">
+                      <span className="text-sm text-muted-foreground">{t("common.page_size", "每页显示")}</span>
+                      <Select value={pagination.limit.toString()} onValueChange={handlePageSizeChange}>
+                        <SelectTrigger className="w-20 h-8">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="10">10</SelectItem>
+                          <SelectItem value="20">20</SelectItem>
+                          <SelectItem value="50">50</SelectItem>
+                          <SelectItem value="100">100</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <span className="text-sm text-muted-foreground">{t("common.items", "条")}</span>
+                    </div>
+                  </div>
                   <div className="flex items-center space-x-2">
                     <Button
                       variant="outline"
@@ -373,7 +465,7 @@ export default function ScalesPage() {
                           <div className="flex items-center space-x-3 mb-2">
                             <h3 className="font-semibold text-lg group-hover:text-blue-600 transition-colors">{result.name}</h3>
                             <Badge variant="outline">{result.acronym}</Badge>
-                            <span className="text-lg">{getLicenseIcon(result.acronym)}</span>
+                            <span className="text-lg">{getLicenseIcon(result.licenseType)}</span>
                           </div>
 
                           {result.nameEn && (

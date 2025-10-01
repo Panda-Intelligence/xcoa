@@ -12,4 +12,5 @@ export interface HotScale {
   usageCount: number;
   favoriteCount: number;
   icon: string;
+  licenseType?: string | null;
 }
