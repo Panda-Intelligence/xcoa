@@ -22,14 +22,12 @@ export default function SSOButtons({
   return (
     <>
       {isGoogleSSOEnabled && (
-        <>
-          <Button className="w-full" asChild size='lg'>
-            <Link href="/sso/google">
-              <Google className="w-[22px] h-[22px] mr-1" />
-              {isSignIn ? t('auth.sso.signInWithGoogle') : t('auth.sso.signUpWithGoogle')}
-            </Link>
-          </Button>
-        </>
+        <Button className="w-full" asChild size='lg'>
+          <Link href="/sso/google">
+            <Google className="w-[22px] h-[22px] mr-1" />
+            {isSignIn ? t('auth.sso.signInWithGoogle') : t('auth.sso.signUpWithGoogle')}
+          </Link>
+        </Button>
       )}
     </>
   )

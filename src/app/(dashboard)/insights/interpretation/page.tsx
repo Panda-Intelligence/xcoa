@@ -49,10 +49,10 @@ export default function InterpretationPage() {
       if (data.success) {
         setScales(data.scales || []);
       } else {
-        console.error('加载解读指南失败:', data.error);
+        console.error(t('insights.interpretation.failed_to_load'), data.error);
       }
     } catch (error) {
-      console.error('加载解读指南失败:', error);
+      console.error(t('insights.interpretation.failed_to_load'), error);
     } finally {
       setLoading(false);
     }
@@ -93,7 +93,7 @@ export default function InterpretationPage() {
     <div className="flex flex-col h-screen">
       <PageHeader
         items={[
-          { href: "/insights/interpretation", label: "量表解读" }
+          { href: "/insights/interpretation", label: t('insights.interpretation.title') }
         ]}
       />
 
@@ -105,10 +105,10 @@ export default function InterpretationPage() {
             <div>
               <h1 className="text-2xl font-bold flex items-center space-x-2">
                 <BookOpen className="w-6 h-6 text-blue-600" />
-                <span>量表解读指南</span>
+                <span>{t('insights.interpretation.guide_title')}</span>
               </h1>
               <p className="text-muted-foreground">
-                选择量表查看专业的使用指导和结果解读
+                {t('insights.interpretation.description')}
               </p>
             </div>
           </div>
@@ -118,7 +118,7 @@ export default function InterpretationPage() {
             <div className="flex-1 relative max-w-md">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
               <Input
-                placeholder="搜索量表名称或缩写..."
+                placeholder={t('insights.interpretation.search_placeholder')}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="pl-10"
@@ -139,10 +139,10 @@ export default function InterpretationPage() {
                 <CardContent className="text-center py-12">
                   <BookOpen className="w-12 h-12 mx-auto mb-4 text-gray-400" />
                   <h3 className="text-lg font-medium mb-2">
-                    {searchQuery ? '没有找到匹配的量表' : '暂无解读指南'}
+                    {searchQuery ? t('insights.interpretation.no_matching_scales') : t('insights.interpretation.no_guides_yet')}
                   </h3>
                   <p className="text-muted-foreground">
-                    {searchQuery ? '尝试调整搜索条件' : '解读指南正在逐步完善中'}
+                    {searchQuery ? t('insights.interpretation.adjust_search') : t('insights.interpretation.guides_coming')}
                   </p>
                 </CardContent>
               </Card>
@@ -179,12 +179,12 @@ export default function InterpretationPage() {
                     <div className="flex items-center space-x-4 text-sm text-muted-foreground">
                       <span className="flex items-center">
                         <BookOpen className="w-3 h-3 mr-1" />
-                        {scale.itemsCount}题
+                        {scale.itemsCount}{t('insights.interpretation.items')}
                       </span>
                       {scale.administrationTime && (
                         <span className="flex items-center">
                           <Clock className="w-3 h-3 mr-1" />
-                          {scale.administrationTime}分钟
+                          {scale.administrationTime}{t('insights.interpretation.minutes')}
                         </span>
                       )}
                     </div>
@@ -207,12 +207,12 @@ export default function InterpretationPage() {
                       <Link href={`/insights/interpretation/${scale.id}`} className="flex-1">
                         <Button size="sm" className="w-full">
                           <Eye className="w-3 h-3 mr-1" />
-                          查看解读
+                          {t('insights.interpretation.view_interpretation')}
                         </Button>
                       </Link>
                       <Link href={`/scales/${scale.id}`}>
                         <Button size="sm" variant="outline">
-                          量表详情
+                          {t('insights.interpretation.scale_details')}
                         </Button>
                       </Link>
                     </div>
@@ -228,9 +228,9 @@ export default function InterpretationPage() {
           <Card>
             <CardContent className="p-4 text-center">
               <TrendingUp className="w-8 h-8 mx-auto mb-2 text-blue-600" />
-              <h4 className="font-medium mb-1">专业解读</h4>
+              <h4 className="font-medium mb-1">{t('insights.interpretation.professional_interpretation')}</h4>
               <p className="text-xs text-muted-foreground">
-                基于循证医学的专业量表解读指导
+                {t('insights.interpretation.evidence_based_guidance')}
               </p>
             </CardContent>
           </Card>
@@ -238,9 +238,9 @@ export default function InterpretationPage() {
           <Card>
             <CardContent className="p-4 text-center">
               <Users className="w-8 h-8 mx-auto mb-2 text-green-600" />
-              <h4 className="font-medium mb-1">临床应用</h4>
+              <h4 className="font-medium mb-1">{t('insights.interpretation.clinical_application')}</h4>
               <p className="text-xs text-muted-foreground">
-                详细的临床使用指导和注意事项
+                {t('insights.interpretation.clinical_guidance')}
               </p>
             </CardContent>
           </Card>
@@ -248,9 +248,9 @@ export default function InterpretationPage() {
           <Card>
             <CardContent className="p-4 text-center">
               <CheckCircle className="w-8 h-8 mx-auto mb-2 text-purple-600" />
-              <h4 className="font-medium mb-1">最佳实践</h4>
+              <h4 className="font-medium mb-1">{t('insights.interpretation.best_practices')}</h4>
               <p className="text-xs text-muted-foreground">
-                实施建议和常见问题解决方案
+                {t('insights.interpretation.implementation_advice')}
               </p>
             </CardContent>
           </Card>

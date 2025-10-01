@@ -88,7 +88,7 @@ export default function ClinicalCasesPage() {
         setStatistics(data.statistics || {});
       }
     } catch (error) {
-      console.error('加载临床案例失败:', error);
+      console.error(t('insights.cases.failed_to_load'), error);
     } finally {
       setLoading(false);
     }
@@ -104,14 +104,14 @@ export default function ClinicalCasesPage() {
   };
 
   const getSpecialtyLabel = (specialty?: string) => {
-    const labels = {
-      psychiatry: '精神科',
-      oncology: '肿瘤学',
-      neurology: '神经科学',
-      cardiology: '心脏病学',
-      general: '全科医学'
+    const labels: Record<string, string> = {
+      psychiatry: t('insights.specialty.psychiatry'),
+      oncology: t('insights.specialty.oncology'),
+      neurology: t('insights.specialty.neurology'),
+      cardiology: t('insights.specialty.cardiology'),
+      general: t('insights.specialty.general')
     };
-    return specialty ? labels[specialty as keyof typeof labels] || specialty : '未知专科';
+    return specialty ? labels[specialty] || specialty : t('insights.specialty.unknown');
   };
 
   if (loading) {
@@ -136,8 +136,8 @@ export default function ClinicalCasesPage() {
     <div className="flex flex-col h-screen">
       <PageHeader
         items={[
-          { href: "/insights/interpretation", label: "量表解读" },
-          { href: "/insights/cases", label: "临床案例" }
+          { href: "/insights/interpretation", label: t('insights.interpretation.title') },
+          { href: "/insights/cases", label: t('insights.cases.title') }
         ]}
       />
 
@@ -151,10 +151,10 @@ export default function ClinicalCasesPage() {
                 <div>
                   <h1 className="text-2xl font-bold flex items-center space-x-2">
                     <Beaker className="w-6 h-6 text-blue-600" />
-                    <span>临床试验案例库</span>
+                    <span>{t('insights.cases.case_library_title')}</span>
                   </h1>
                   <p className="text-muted-foreground">
-                    探索量表在真实临床试验中的应用，学习最佳实践和研究设计
+                    {t('insights.cases.description')}
                   </p>
                 </div>
               </div>
@@ -164,7 +164,7 @@ export default function ClinicalCasesPage() {
                 <Card>
                   <CardContent className="p-4 text-center">
                     <div className="text-2xl font-bold text-blue-600">{statistics.totalCases || 0}</div>
-                    <div className="text-sm text-muted-foreground">总案例数</div>
+                    <div className="text-sm text-muted-foreground">{t('insights.cases.total_cases')}</div>
                   </CardContent>
                 </Card>
                 <Card>
@@ -172,7 +172,7 @@ export default function ClinicalCasesPage() {
                     <div className="text-2xl font-bold text-green-600">
                       {statistics.byDifficultyLevel?.beginner || 0}
                     </div>
-                    <div className="text-sm text-muted-foreground">初级案例</div>
+                    <div className="text-sm text-muted-foreground">{t('insights.cases.beginner_cases')}</div>
                   </CardContent>
                 </Card>
                 <Card>
@@ -180,7 +180,7 @@ export default function ClinicalCasesPage() {
                     <div className="text-2xl font-bold text-purple-600">
                       {Object.keys(statistics.bySpecialty || {}).length}
                     </div>
-                    <div className="text-sm text-muted-foreground">专科领域</div>
+                    <div className="text-sm text-muted-foreground">{t('insights.cases.specialty_areas')}</div>
                   </CardContent>
                 </Card>
                 <Card>
@@ -188,7 +188,7 @@ export default function ClinicalCasesPage() {
                     <div className="text-2xl font-bold text-orange-600">
                       {filterOptions.scales?.length || 0}
                     </div>
-                    <div className="text-sm text-muted-foreground">涉及量表</div>
+                    <div className="text-sm text-muted-foreground">{t('insights.cases.scales_involved')}</div>
                   </CardContent>
                 </Card>
               </div>
@@ -198,7 +198,7 @@ export default function ClinicalCasesPage() {
                 <div className="flex-1 relative">
                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
                   <Input
-                    placeholder="搜索临床案例..."
+                    placeholder={t('insights.cases.search_placeholder')}
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     onKeyPress={(e) => e.key === 'Enter' && fetchCases()}
@@ -210,10 +210,10 @@ export default function ClinicalCasesPage() {
                   <Filter className="h-4 w-4 text-gray-500" />
                   <Select value={specialtyFilter} onValueChange={setSpecialtyFilter}>
                     <SelectTrigger className="w-40">
-                      <SelectValue placeholder="专科" />
+                      <SelectValue placeholder={t('insights.cases.specialty')} />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="all">所有专科</SelectItem>
+                      <SelectItem value="all">{t('insights.cases.all_specialties')}</SelectItem>
                       {filterOptions.specialties.map(specialty => (
                         <SelectItem key={specialty} value={specialty}>
                           {specialty}
@@ -226,10 +226,10 @@ export default function ClinicalCasesPage() {
                 <div className="flex items-center space-x-2">
                   <Select value={difficultyFilter} onValueChange={setDifficultyFilter}>
                     <SelectTrigger className="w-32">
-                      <SelectValue placeholder="难度" />
+                      <SelectValue placeholder={t('insights.cases.difficulty')} />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="all">所有难度</SelectItem>
+                      <SelectItem value="all">{t('insights.cases.all_difficulties')}</SelectItem>
                       {filterOptions.difficultyLevels.map(level => (
                         <SelectItem key={level} value={level}>
                           {level}
@@ -240,7 +240,7 @@ export default function ClinicalCasesPage() {
                 </div>
 
                 <Button onClick={fetchCases} disabled={loading}>
-                  {loading ? '搜索中...' : '搜索'}
+                  {loading ? t('common.searching') : t('common.search')}
                 </Button>
               </div>
             </div>
@@ -255,9 +255,9 @@ export default function ClinicalCasesPage() {
                   <Card>
                     <CardContent className="text-center py-12">
                       <Beaker className="w-12 h-12 mx-auto mb-4 text-gray-400" />
-                      <h3 className="text-lg font-medium mb-2">暂无匹配的临床案例</h3>
+                      <h3 className="text-lg font-medium mb-2">{t('insights.cases.no_matching_cases')}</h3>
                       <p className="text-muted-foreground">
-                        尝试调整搜索条件或筛选器
+                        {t('insights.cases.adjust_filters')}
                       </p>
                     </CardContent>
                   </Card>
@@ -311,7 +311,7 @@ export default function ClinicalCasesPage() {
                           {/* 患者背景 */}
                           {clinicalCase.patientBackground && (
                             <div>
-                              <h5 className="font-medium text-sm mb-1">患者背景</h5>
+                              <h5 className="font-medium text-sm mb-1">{t('insights.cases.patient_background')}</h5>
                               <p className="text-sm text-muted-foreground bg-blue-50 p-2 rounded">
                                 {clinicalCase.patientBackground}
                               </p>
@@ -321,7 +321,7 @@ export default function ClinicalCasesPage() {
                           {/* 结果解读 */}
                           {clinicalCase.interpretation && (
                             <div>
-                              <h5 className="font-medium text-sm mb-1">结果解读</h5>
+                              <h5 className="font-medium text-sm mb-1">{t('insights.cases.result_interpretation')}</h5>
                               <p className="text-sm text-muted-foreground bg-green-50 p-2 rounded">
                                 {clinicalCase.interpretation}
                               </p>
@@ -331,7 +331,7 @@ export default function ClinicalCasesPage() {
                           {/* 量表评分 */}
                           {clinicalCase.scaleScores && Object.keys(clinicalCase.scaleScores).length > 0 && (
                             <div>
-                              <h5 className="font-medium text-sm mb-1">评分结果</h5>
+                              <h5 className="font-medium text-sm mb-1">{t('insights.cases.score_results')}</h5>
                               <div className="flex flex-wrap gap-2">
                                 {Object.entries(clinicalCase.scaleScores).map(([key, value]) => (
                                   <div key={key} className="text-xs bg-gray-100 px-2 py-1 rounded">
@@ -365,11 +365,11 @@ export default function ClinicalCasesPage() {
                               }}
                             >
                               <Eye className="w-3 h-3 mr-1" />
-                              查看详情
+                              {t('insights.cases.view_details')}
                             </Button>
                             <Link href={`/scales/${clinicalCase.scaleId}`}>
                               <Button size="sm" variant="outline">
-                                查看量表
+                                {t('insights.cases.view_scale')}
                               </Button>
                             </Link>
                           </div>
@@ -385,12 +385,12 @@ export default function ClinicalCasesPage() {
                 <Card>
                   <CardContent className="p-4 text-center">
                     <Beaker className="w-8 h-8 mx-auto mb-2 text-blue-600" />
-                    <h4 className="font-medium mb-1">研究设计指南</h4>
+                    <h4 className="font-medium mb-1">{t('insights.cases.research_design_guide')}</h4>
                     <p className="text-xs text-muted-foreground mb-3">
-                      量表在临床试验中的使用指南
+                      {t('insights.cases.scale_usage_guide')}
                     </p>
                     <Button size="sm" variant="outline" className="w-full">
-                      查看指南
+                      {t('insights.cases.view_guide')}
                     </Button>
                   </CardContent>
                 </Card>
@@ -398,12 +398,12 @@ export default function ClinicalCasesPage() {
                 <Card>
                   <CardContent className="p-4 text-center">
                     <BarChart3 className="w-8 h-8 mx-auto mb-2 text-green-600" />
-                    <h4 className="font-medium mb-1">统计分析</h4>
+                    <h4 className="font-medium mb-1">{t('insights.cases.statistical_analysis')}</h4>
                     <p className="text-xs text-muted-foreground mb-3">
-                      量表数据的统计分析方法
+                      {t('insights.cases.analysis_methods')}
                     </p>
                     <Button size="sm" variant="outline" className="w-full">
-                      分析方法
+                      {t('insights.cases.analysis_methods_btn')}
                     </Button>
                   </CardContent>
                 </Card>
@@ -411,12 +411,12 @@ export default function ClinicalCasesPage() {
                 <Card>
                   <CardContent className="p-4 text-center">
                     <Award className="w-8 h-8 mx-auto mb-2 text-purple-600" />
-                    <h4 className="font-medium mb-1">监管指导</h4>
+                    <h4 className="font-medium mb-1">{t('insights.cases.regulatory_guidance')}</h4>
                     <p className="text-xs text-muted-foreground mb-3">
-                      FDA/NMPA量表使用要求
+                      {t('insights.cases.fda_requirements')}
                     </p>
                     <Button size="sm" variant="outline" className="w-full">
-                      监管要求
+                      {t('insights.cases.regulatory_requirements')}
                     </Button>
                   </CardContent>
                 </Card>
