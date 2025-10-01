@@ -53,16 +53,17 @@ interface Ticket {
 
 interface TicketStats {
   total: number;
-  pending: number;
-  sent: number;
-  responded: number;
+  open: number;
+  in_progress: number;
+  waiting_response: number;
   resolved: number;
+  closed: number;
 }
 
 export default function CopyrightTicketsPage() {
   const { t } = useLanguage();
   const [tickets, setTickets] = useState<Ticket[]>([]);
-  const [stats, setStats] = useState<TicketStats>({ total: 0, pending: 0, sent: 0, responded: 0, resolved: 0 });
+  const [stats, setStats] = useState<TicketStats>({ total: 0, open: 0, in_progress: 0, waiting_response: 0, resolved: 0, closed: 0 });
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
@@ -84,7 +85,15 @@ export default function CopyrightTicketsPage() {
       console.warn(999987, data)
       if (data.success) {
         setTickets(data.tickets || []);
-        setStats(data.statistics || {});
+        const apiStats = data.statistics || {};
+        setStats({
+          total: apiStats.total || 0,
+          open: apiStats.open || 0,
+          in_progress: apiStats.in_progress || 0,
+          waiting_response: apiStats.waiting_response || 0,
+          resolved: apiStats.resolved || 0,
+          closed: apiStats.closed || 0,
+        });
       } else {
         console.error(t('copyright.tickets.failed_to_load'), data.error);
       }
@@ -144,11 +153,11 @@ export default function CopyrightTicketsPage() {
       <div className="min-h-screen bg-background">
         <div className="max-w-7xl mx-auto px-4 py-8">
           <div className="animate-pulse space-y-4">
-            <div className="h-8 bg-gray-200 rounded w-1/3"></div>
-            <div className="h-4 bg-gray-200 rounded w-2/3"></div>
+            <div className="h-8 bg-gray-200 rounded w-1/3" />
+            <div className="h-4 bg-gray-200 rounded w-2/3" />
             <div className="space-y-3">
               {Array.from({ length: 5 }).map((_, i) => (
-                <div key={i} className="h-24 bg-gray-200 rounded"></div>
+                <div key={i} className="h-24 bg-gray-200 rounded" />
               ))}
             </div>
           </div>
@@ -192,31 +201,31 @@ export default function CopyrightTicketsPage() {
           <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
             <Card>
               <CardContent className="p-4 text-center">
-                <div className="text-2xl font-bold text-blue-600">{stats.total}</div>
+                <div className="text-2xl font-bold text-blue-600">{stats.total || 0}</div>
                 <div className="text-sm text-muted-foreground">{t('copyright.tickets.total_tickets')}</div>
               </CardContent>
             </Card>
             <Card>
               <CardContent className="p-4 text-center">
-                <div className="text-2xl font-bold text-yellow-600">{stats.pending}</div>
-                <div className="text-sm text-muted-foreground">{t('copyright.tickets.pending')}</div>
+                <div className="text-2xl font-bold text-yellow-600">{stats.open || 0}</div>
+                <div className="text-sm text-muted-foreground">{t('copyright.tickets.open')}</div>
               </CardContent>
             </Card>
             <Card>
               <CardContent className="p-4 text-center">
-                <div className="text-2xl font-bold text-blue-600">{stats.sent}</div>
-                <div className="text-sm text-muted-foreground">{t('copyright.tickets.sent')}</div>
+                <div className="text-2xl font-bold text-blue-600">{stats.in_progress || 0}</div>
+                <div className="text-sm text-muted-foreground">{t('copyright.tickets.in_progress')}</div>
               </CardContent>
             </Card>
             <Card>
               <CardContent className="p-4 text-center">
-                <div className="text-2xl font-bold text-purple-600">{stats.responded}</div>
-                <div className="text-sm text-muted-foreground">{t('copyright.tickets.responded')}</div>
+                <div className="text-2xl font-bold text-orange-600">{stats.waiting_response || 0}</div>
+                <div className="text-sm text-muted-foreground">{t('copyright.tickets.waiting_response')}</div>
               </CardContent>
             </Card>
             <Card>
               <CardContent className="p-4 text-center">
-                <div className="text-2xl font-bold text-green-600">{stats.resolved}</div>
+                <div className="text-2xl font-bold text-green-600">{stats.resolved || 0}</div>
                 <div className="text-sm text-muted-foreground">{t('copyright.tickets.resolved')}</div>
               </CardContent>
             </Card>
@@ -242,9 +251,9 @@ export default function CopyrightTicketsPage() {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">{t('copyright.tickets.all_status')}</SelectItem>
-                  <SelectItem value="pending">{t('copyright.tickets.pending')}</SelectItem>
-                  <SelectItem value="sent">{t('copyright.tickets.sent')}</SelectItem>
-                  <SelectItem value="responded">{t('copyright.tickets.responded')}</SelectItem>
+                  <SelectItem value="open">{t('copyright.tickets.open')}</SelectItem>
+                  <SelectItem value="in_progress">{t('copyright.tickets.in_progress')}</SelectItem>
+                  <SelectItem value="waiting_response">{t('copyright.tickets.waiting_response')}</SelectItem>
                   <SelectItem value="resolved">{t('copyright.tickets.resolved')}</SelectItem>
                   <SelectItem value="closed">{t('copyright.tickets.closed')}</SelectItem>
                 </SelectContent>
@@ -303,7 +312,12 @@ export default function CopyrightTicketsPage() {
 
                       <div className="text-right text-sm text-muted-foreground">
                         <div>{ticket.createdAtFormatted}</div>
-                        <div>{t('copyright.tickets.days_ago', {days: ticket.daysSinceCreated})}</div>
+                        <div>
+                          {ticket.daysSinceCreated === 0
+                            ? t('copyright.tickets.today') || 'Today'
+                            : t('copyright.tickets.days_ago', { days: ticket.daysSinceCreated.toString() })
+                          }
+                        </div>
                       </div>
                     </div>
                   </CardHeader>
@@ -403,50 +417,6 @@ export default function CopyrightTicketsPage() {
                 </Card>
               ))
             )}
-          </div>
-
-          {/* 快速操作 */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <Card>
-              <CardContent className="p-4 text-center">
-                <Search className="w-8 h-8 mx-auto mb-2 text-blue-600" />
-                <h4 className="font-medium mb-1">{t('copyright.tickets.apply_new_license')}</h4>
-                <p className="text-xs text-muted-foreground mb-3">
-                  {t('copyright.tickets.browse_and_apply')}
-                </p>
-                <Link href="/scales">
-                  <Button size="sm" variant="outline" className="w-full">
-                    {t('copyright.tickets.browse_scales')}
-                  </Button>
-                </Link>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardContent className="p-4 text-center">
-                <FileText className="w-8 h-8 mx-auto mb-2 text-green-600" />
-                <h4 className="font-medium mb-1">{t('copyright.tickets.license_documents')}</h4>
-                <p className="text-xs text-muted-foreground mb-3">
-                  {t('copyright.tickets.view_granted_licenses')}
-                </p>
-                <Button size="sm" variant="outline" className="w-full" disabled>
-                  {t('copyright.tickets.coming_soon')}
-                </Button>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardContent className="p-4 text-center">
-                <MessageSquare className="w-8 h-8 mx-auto mb-2 text-purple-600" />
-                <h4 className="font-medium mb-1">{t('copyright.tickets.contact_support')}</h4>
-                <p className="text-xs text-muted-foreground mb-3">
-                  {t('copyright.tickets.ticket_inquiries')}
-                </p>
-                <Button size="sm" variant="outline" className="w-full">
-                  {t('copyright.tickets.contact_service')}
-                </Button>
-              </CardContent>
-            </Card>
           </div>
         </div>
       </div>
