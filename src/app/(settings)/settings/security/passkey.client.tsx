@@ -18,6 +18,7 @@ import { useServerAction } from "zsa-react";
 import { PASSKEY_AUTHENTICATOR_IDS } from "@/utils/passkey-authenticator-ids";
 import { cn } from "@/lib/utils";
 import type { ParsedUserAgent } from "@/types";
+import { useLanguage } from "@/hooks/useLanguage";
 
 interface PasskeyRegistrationButtonProps {
   email: string;
@@ -28,6 +29,7 @@ interface PasskeyRegistrationButtonProps {
 function PasskeyRegistrationButton({ email, className, onSuccess }: PasskeyRegistrationButtonProps) {
   const [isRegistering, setIsRegistering] = useState(false);
   const router = useRouter();
+  const { t } = useLanguage();
 
   const handleRegister = async () => {
     try {
@@ -53,12 +55,12 @@ function PasskeyRegistrationButton({ email, className, onSuccess }: PasskeyRegis
         challenge: (optionsData as { challenge: string }).challenge,
       });
 
-      toast.success("Passkey registered successfully");
+      toast.success(t("settings.passkey_registered_successfully"));
       onSuccess?.();
       router.refresh();
     } catch (error) {
       console.error("Passkey registration error:", error);
-      toast.error("Failed to register passkey");
+      toast.error(t("settings.failed_to_register_passkey"));
     } finally {
       setIsRegistering(false);
     }
@@ -70,7 +72,7 @@ function PasskeyRegistrationButton({ email, className, onSuccess }: PasskeyRegis
       disabled={isRegistering}
       className={className}
     >
-      {isRegistering ? "Registering..." : "Register Passkey"}
+      {isRegistering ? t("settings.registering") : t("settings.register_passkey")}
     </Button>
   );
 }
@@ -94,9 +96,10 @@ interface PasskeysListProps {
 export function PasskeysList({ passkeys, currentPasskeyId, email }: PasskeysListProps) {
   const router = useRouter();
   const dialogCloseRef = useRef<HTMLButtonElement>(null);
+  const { t } = useLanguage();
   const { execute: deletePasskey } = useServerAction(deletePasskeyAction, {
     onSuccess: () => {
-      toast.success("Passkey deleted");
+      toast.success(t("settings.passkey_deleted"));
       dialogCloseRef.current?.click();
       router.refresh();
     }
@@ -109,9 +112,9 @@ export function PasskeysList({ passkeys, currentPasskeyId, email }: PasskeysList
     <div className="space-y-6">
       <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <div className="space-y-1">
-          <h2 className="text-lg font-semibold">Passkeys</h2>
+          <h2 className="text-lg font-semibold">{t("settings.passkeys")}</h2>
           <p className="text-sm text-muted-foreground">
-            Manage your passkeys for passwordless authentication.
+            {t("settings.passkeys_description")}
           </p>
         </div>
         {email && (
@@ -130,16 +133,16 @@ export function PasskeysList({ passkeys, currentPasskeyId, email }: PasskeysList
                 <div className="space-y-2">
                   <div className="flex flex-col sm:flex-row sm:items-center sm:gap-2">
                     <CardTitle className="flex flex-wrap items-center gap-2 text-base">
-                      {passkey.aaguid && (PASSKEY_AUTHENTICATOR_IDS as Record<string, string>)[passkey.aaguid] || "Unknown Authenticator App"}
-                      {isCurrentPasskey(passkey) && <Badge>Current Passkey</Badge>}
+                      {passkey.aaguid && (PASSKEY_AUTHENTICATOR_IDS as Record<string, string>)[passkey.aaguid] || t("settings.unknown_authenticator_app")}
+                      {isCurrentPasskey(passkey) && <Badge>{t("settings.current_passkey")}</Badge>}
                     </CardTitle>
                     <div className="text-sm text-muted-foreground whitespace-nowrap">
-                      · {formatDistanceToNow(passkey.createdAt)} ago
+                      · {formatDistanceToNow(passkey.createdAt)} {t("settings.ago")}
                     </div>
                   </div>
                   {passkey.parsedUserAgent && (
                     <CardDescription className="text-sm">
-                      {passkey.parsedUserAgent.browser.name ?? "Unknown browser"} {passkey.parsedUserAgent.browser.major ?? "Unknown version"} on {passkey.parsedUserAgent.device.vendor ?? "Unknown device"} {passkey.parsedUserAgent.device.model ?? "Unknown model"} {passkey.parsedUserAgent.device.type ?? "Unknown type"} ({passkey.parsedUserAgent.os.name ?? "Unknown OS"} {passkey.parsedUserAgent.os.version ?? "Unknown version"})
+                      {passkey.parsedUserAgent.browser.name ?? t("settings.unknown_browser")} {passkey.parsedUserAgent.browser.major ?? t("settings.unknown_version")} {t("settings.on")} {passkey.parsedUserAgent.device.vendor ?? t("settings.unknown_device")} {passkey.parsedUserAgent.device.model ?? t("settings.unknown_model")} {passkey.parsedUserAgent.device.type ?? t("settings.unknown_type")} ({passkey.parsedUserAgent.os.name ?? t("settings.unknown_os")} {passkey.parsedUserAgent.os.version ?? t("settings.unknown_version")})
                     </CardDescription>
                   )}
                 </div>
@@ -147,25 +150,25 @@ export function PasskeysList({ passkeys, currentPasskeyId, email }: PasskeysList
                   {!isCurrentPasskey(passkey) && (
                     <Dialog>
                       <DialogTrigger asChild>
-                        <Button size="sm" variant="destructive" className="w-full sm:w-auto">Delete passkey</Button>
+                        <Button size="sm" variant="destructive" className="w-full sm:w-auto">{t("settings.delete_passkey")}</Button>
                       </DialogTrigger>
                       <DialogContent>
                         <DialogHeader>
-                          <DialogTitle>Delete passkey?</DialogTitle>
+                          <DialogTitle>{t("settings.delete_passkey_confirm_title")}</DialogTitle>
                           <DialogDescription>
-                            This will remove this passkey from your account. This action cannot be undone.
+                            {t("settings.delete_passkey_confirm_description")}
                           </DialogDescription>
                         </DialogHeader>
                         <DialogFooter className="mt-6 sm:mt-0">
                           <DialogClose ref={dialogCloseRef} asChild>
-                            <Button variant="outline">Cancel</Button>
+                            <Button variant="outline">{t("common.cancel")}</Button>
                           </DialogClose>
                           <Button
                             variant="destructive"
                             className="mb-4 sm:mb-0"
                             onClick={() => deletePasskey({ credentialId: passkey.credentialId })}
                           >
-                            Delete passkey
+                            {t("settings.delete_passkey")}
                           </Button>
                         </DialogFooter>
                       </DialogContent>
@@ -179,7 +182,7 @@ export function PasskeysList({ passkeys, currentPasskeyId, email }: PasskeysList
 
         {passkeys.length === 0 && (
           <div className="text-center text-muted-foreground">
-            No passkeys found. Add a passkey to enable passwordless authentication.
+            {t("settings.no_passkeys_found")}
           </div>
         )}
       </div>

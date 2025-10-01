@@ -13,7 +13,15 @@
       "Bash(pnpm run:*)",
       "Bash(wc:*)",
       "Bash(ls:*)",
-      "Bash(cat:*)"
+      "Bash(cat:*)",
+      "Bash(find:*)",
+      "Bash(while read file)",
+      "Bash(do if ! grep -q \"useLanguage\" \"$file\")",
+      "Bash(then echo \"$file\")",
+      "Bash(fi)",
+      "Bash(done)",
+      "Bash(pnpm exec tsc:*)",
+      "Bash(pnpm build)"
     ],
     "deny": [],
     "ask": []

@@ -420,7 +420,7 @@ export function AdminTicketDetail({ ticketId }: AdminTicketDetailProps) {
                 <Textarea
                   value={updateForm.adminNotes}
                   onChange={(e) => setUpdateForm({ ...updateForm, adminNotes: e.target.value })}
-                  placeholder="记录处理进展或内部备注..."
+                  placeholder={t('admin.internal_notes_placeholder')}
                   rows={3}
                 />
               </div>
@@ -430,7 +430,7 @@ export function AdminTicketDetail({ ticketId }: AdminTicketDetailProps) {
                 <Textarea
                   value={updateForm.responseMessage}
                   onChange={(e) => setUpdateForm({ ...updateForm, responseMessage: e.target.value })}
-                  placeholder="向用户说明进展或需要的行动..."
+                  placeholder={t('admin.user_communication_placeholder')}
                   rows={3}
                 />
               </div>

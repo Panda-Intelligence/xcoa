@@ -2,22 +2,25 @@
 
 import { useEffect } from "react"
 import { DataTable } from "@/components/data-table"
-import { columns, type User } from "./columns"
+import { useColumns, type User } from "./columns"
 import { getUsersAction } from "../../_actions/get-users.action"
 import { useServerAction } from "zsa-react"
 import { toast } from "sonner"
 import { Input } from "@/components/ui/input"
 import { PAGE_SIZE_OPTIONS } from "../../admin-constants"
 import { useQueryState } from "nuqs"
+import { useLanguage } from "@/hooks/useLanguage"
 
 export function UsersTable() {
+  const { t } = useLanguage()
+  const columns = useColumns()
   const [page, setPage] = useQueryState("page", { defaultValue: "1" })
   const [pageSize, setPageSize] = useQueryState("pageSize", { defaultValue: PAGE_SIZE_OPTIONS[0].toString() })
   const [emailFilter, setEmailFilter] = useQueryState("email", { defaultValue: "" })
 
   const { execute: fetchUsers, data, error, status } = useServerAction(getUsersAction, {
     onError: () => {
-      toast.error("Failed to fetch users")
+      toast.error(t('admin.failed_to_fetch_users'))
     },
   })
 
@@ -49,9 +52,9 @@ export function UsersTable() {
   return (
     <div className="p-6 w-full min-w-0 flex flex-col overflow-hidden">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between shrink-0">
-        <h1 className="text-3xl font-bold">Users</h1>
+        <h1 className="text-3xl font-bold">{t('admin.users')}</h1>
         <Input
-          placeholder="Filter emails..."
+          placeholder={t('admin.filter_emails')}
           type="search"
           value={emailFilter}
           onChange={(event) => handleEmailFilterChange(event.target.value)}
@@ -61,11 +64,11 @@ export function UsersTable() {
       <div className="mt-8 flex-1 min-h-0">
         <div className="space-y-4 h-full">
           {status === 'pending' || status === 'idle' ? (
-            <div>Loading...</div>
+            <div>{t('admin.loading')}</div>
           ) : error ? (
-            <div>Error: Failed to fetch users</div>
+            <div>{t('admin.error_failed_to_fetch_users')}</div>
           ) : !usersData?.users ? (
-            <div>No users found</div>
+            <div>{t('admin.no_users_found')}</div>
           ) : (
             <div className="w-full min-w-0">
               <DataTable

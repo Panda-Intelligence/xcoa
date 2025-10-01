@@ -27,6 +27,7 @@ import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import type { SessionWithMeta } from "@/types";
 import { capitalize } from 'remeda'
+import { useLanguage } from "@/hooks/useLanguage";
 
 
 const regionNames = new Intl.DisplayNames(['en'], { type: 'region' });
@@ -34,9 +35,10 @@ const regionNames = new Intl.DisplayNames(['en'], { type: 'region' });
 export function SessionsClient({ sessions }: { sessions: SessionWithMeta[] }) {
   const router = useRouter();
   const dialogCloseRef = React.useRef<HTMLButtonElement>(null);
+  const { t } = useLanguage();
   const { execute: deleteSession } = useServerAction(deleteSessionAction, {
     onSuccess: () => {
-      toast.success("Session deleted");
+      toast.success(t("settings.session_deleted"));
       dialogCloseRef.current?.click();
       router.refresh();
     }
@@ -53,45 +55,45 @@ export function SessionsClient({ sessions }: { sessions: SessionWithMeta[] }) {
                   <CardTitle className="flex flex-wrap items-center gap-2 text-base">
                     {session.city && session.country
                       ? `${session.city}, ${regionNames.of(session.country)}`
-                      : session.country || "Unknown location"}
-                    {session.isCurrentSession && <Badge>Current Session</Badge>}
+                      : session.country || t("settings.unknown_location")}
+                    {session.isCurrentSession && <Badge>{t("settings.current_session")}</Badge>}
                   </CardTitle>
                   {session?.authenticationType && (
                     <Badge variant='outline'>
-                      Authenticated with {capitalize(session?.authenticationType ?? "password")?.replace("-", " ")}
+                      {t("settings.authenticated_with")} {capitalize(session?.authenticationType ?? "password")?.replace("-", " ")}
                     </Badge>
                   )}
                   <div className="text-sm text-muted-foreground whitespace-nowrap">
-                    &nbsp;· &nbsp;{formatDistanceToNow(session.createdAt)} ago
+                    &nbsp;· &nbsp;{formatDistanceToNow(session.createdAt)} {t("settings.ago")}
                   </div>
                 </div>
                 <CardDescription className="text-sm">
-                  {session.parsedUserAgent?.browser.name ?? "Unknown browser"} {session.parsedUserAgent?.browser.major ?? "Unknown version"} on {session.parsedUserAgent?.device.vendor ?? "Unknown device"} {session.parsedUserAgent?.device.model ?? "Unknown model"} {session.parsedUserAgent?.device.type ?? "Unknown type"} ({session.parsedUserAgent?.os.name ?? "Unknown OS"} {session.parsedUserAgent?.os.version ?? "Unknown version"})
+                  {session.parsedUserAgent?.browser.name ?? t("settings.unknown_browser")} {session.parsedUserAgent?.browser.major ?? t("settings.unknown_version")} {t("settings.on")} {session.parsedUserAgent?.device.vendor ?? t("settings.unknown_device")} {session.parsedUserAgent?.device.model ?? t("settings.unknown_model")} {session.parsedUserAgent?.device.type ?? t("settings.unknown_type")} ({session.parsedUserAgent?.os.name ?? t("settings.unknown_os")} {session.parsedUserAgent?.os.version ?? t("settings.unknown_version")})
                 </CardDescription>
               </div>
               <div>
                 {!session?.isCurrentSession && (
                   <Dialog>
                     <DialogTrigger asChild>
-                      <Button size="sm" variant="destructive" className="w-full sm:w-auto">Delete session</Button>
+                      <Button size="sm" variant="destructive" className="w-full sm:w-auto">{t("settings.delete_session")}</Button>
                     </DialogTrigger>
                     <DialogContent>
                       <DialogHeader>
-                        <DialogTitle>Delete session?</DialogTitle>
+                        <DialogTitle>{t("settings.delete_session_confirm_title")}</DialogTitle>
                         <DialogDescription>
-                          This will sign out this device. This action cannot be undone.
+                          {t("settings.delete_session_confirm_description")}
                         </DialogDescription>
                       </DialogHeader>
                       <DialogFooter className="mt-6 sm:mt-0">
                         <DialogClose ref={dialogCloseRef} asChild>
-                          <Button variant="outline">Cancel</Button>
+                          <Button variant="outline">{t("common.cancel")}</Button>
                         </DialogClose>
                         <Button
                           variant="destructive"
                           className="mb-4 sm:mb-0"
                           onClick={() => deleteSession({ sessionId: session.id })}
                         >
-                          Delete session
+                          {t("settings.delete_session")}
                         </Button>
                       </DialogFooter>
                     </DialogContent>

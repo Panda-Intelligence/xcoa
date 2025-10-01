@@ -97,13 +97,13 @@ function PaymentForm({ packageId, clientSecret, onSuccess, onCancel, credits, pr
             <div className="h-px bg-border" />
             <div className="text-xs text-muted-foreground space-y-2">
               <p>
-                Your payment is secure and encrypted. We use Stripe, a trusted global payment provider, to process your payment.
+                {t('billing.payment_secure')}
               </p>
               <p>
-                For your security, your payment details are handled directly by Stripe and never touch our servers.
+                {t('billing.payment_security')}
               </p>
               <p>
-                Credits will be added to your account immediately after successful payment and will be valid for {CREDITS_EXPIRATION_YEARS} years from the purchase date.
+                {t('billing.credits_validity', { years: CREDITS_EXPIRATION_YEARS })}
               </p>
             </div>
           </div>
@@ -126,7 +126,7 @@ function PaymentForm({ packageId, clientSecret, onSuccess, onCancel, credits, pr
             disabled={isProcessing || !stripe || !elements}
             className="px-8"
           >
-            {isProcessing ? t('billing.processing_payment') : 'Pay Now'}
+            {isProcessing ? t('billing.processing_payment') : t('billing.pay_now')}
           </Button>
         </div>
       </form>

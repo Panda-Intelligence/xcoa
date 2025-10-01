@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useLanguage } from "@/hooks/useLanguage";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getTransactions } from "@/actions/credits.action";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -26,6 +27,7 @@ function isTransactionExpired(transaction: TransactionData["transactions"][numbe
 }
 
 export function TransactionHistory() {
+  const { t } = useLanguage();
   const [data, setData] = useState<TransactionData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [page, setPage] = useQueryState("page", { defaultValue: "1" });
@@ -55,7 +57,7 @@ export function TransactionHistory() {
     return (
       <Card>
         <CardHeader>
-          <CardTitle>Transaction History</CardTitle>
+          <CardTitle>{t('billing.transaction_history')}</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
@@ -73,7 +75,7 @@ export function TransactionHistory() {
   return (
     <div>
       <CardHeader>
-        <CardTitle>Transaction History</CardTitle>
+        <CardTitle>{t('billing.transaction_history')}</CardTitle>
       </CardHeader>
       <CardContent>
         {/* Desktop Table View */}
@@ -82,10 +84,10 @@ export function TransactionHistory() {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Date</TableHead>
-                  <TableHead>Type</TableHead>
-                  <TableHead>Amount</TableHead>
-                  <TableHead>Description</TableHead>
+                  <TableHead>{t('billing.date')}</TableHead>
+                  <TableHead>{t('billing.type')}</TableHead>
+                  <TableHead>{t('billing.amount')}</TableHead>
+                  <TableHead>{t('common.description')}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -119,7 +121,7 @@ export function TransactionHistory() {
                             : "bg-muted"
                             }`}
                         >
-                          {isTransactionExpired(transaction) ? "Expired: " : "Expires: "}
+                          {isTransactionExpired(transaction) ? t('billing.expired') : t('billing.expires')}: 
                           {format(new Date(transaction.expirationDate), "MMM d, yyyy")}
                         </Badge>
                       )}
@@ -127,7 +129,7 @@ export function TransactionHistory() {
                   </TableRow>
                 )) : (
                   <TableRow>
-                    <TableCell colSpan={4} className="h-24 text-center">No transactions found</TableCell>
+                    <TableCell colSpan={4} className="h-24 text-center">{t('billing.no_transactions_found')}</TableCell>
                   </TableRow>
                 )}
               </TableBody>
@@ -175,14 +177,14 @@ export function TransactionHistory() {
                     : "bg-muted"
                     }`}
                 >
-                  {isTransactionExpired(transaction) ? "Expired: " : "Expires: "}
+                  {isTransactionExpired(transaction) ? t('billing.expired') : t('billing.expires')}: 
                   {format(new Date(transaction.expirationDate), "MMM d, yyyy")}
                 </Badge>
               )}
             </div>
           )) : (
             <div className="text-center py-8 text-muted-foreground">
-              No transactions found
+              {t('billing.no_transactions_found')}
             </div>
           )}
         </div>
@@ -198,7 +200,7 @@ export function TransactionHistory() {
               <ChevronLeft className="h-4 w-4" />
             </Button>
             <span className="text-sm text-muted-foreground">
-              Page {page} of {data?.pagination.pages ?? 1}
+              {t('billing.page_of', { page, total: data?.pagination.pages ?? 1 })}
             </span>
             <Button
               variant="outline"

@@ -807,7 +807,7 @@ export function AdminScaleDetail({ scaleId }: AdminScaleDetailProps) {
                   )) : (
                     <TableRow>
                       <TableCell colSpan={7} className="h-24 text-center">
-                        暂无题目，点击"添加题目"开始创建
+                        暂无题目，点击&ldquo;添加题目&rdquo;开始创建
                       </TableCell>
                     </TableRow>
                   )}

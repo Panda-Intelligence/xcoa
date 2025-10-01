@@ -3,11 +3,17 @@ import { getSessionFromCookie } from "@/utils/auth";
 import { redirect } from "next/navigation";
 import SignInClientPage from "./sign-in.client";
 import { REDIRECT_AFTER_SIGN_IN } from "@/constants";
+import { getAuthMetadata } from "@/utils/server-i18n";
 
-export const metadata: Metadata = {
-  title: "Sign In",
-  description: "Sign in to your account",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const title = await getAuthMetadata('sign_in_title');
+  const description = await getAuthMetadata('sign_in_description');
+  
+  return {
+    title,
+    description,
+  };
+}
 
 const SignInPage = async ({
   searchParams,

@@ -11,8 +11,8 @@ export default function AdminCopyrightHoldersPage() {
   return (
     <NuqsAdapter>
       <PageHeader items={[
-        { href: "/admin", label: "Admin" },
-        { href: "/admin/copyright-holders", label: "Copyright Holders" }
+        { href: "/admin", label: t('admin.title') },
+        { href: "/admin/copyright-holders", label: t('admin.copyright_holders') }
       ]} />
       <CopyrightHolderManager />
     </NuqsAdapter>

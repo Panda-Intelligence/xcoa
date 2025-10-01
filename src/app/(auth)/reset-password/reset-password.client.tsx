@@ -19,8 +19,10 @@ import { Input } from "@/components/ui/input";
 import { resetPasswordSchema } from "@/schemas/reset-password.schema";
 import type { ResetPasswordSchema } from "@/schemas/reset-password.schema";
 import { useEffect } from "react";
+import { useLanguage } from "@/hooks/useLanguage";
 
 export default function ResetPasswordClientComponent() {
+  const { t } = useLanguage();
   const router = useRouter();
   const searchParams = useSearchParams();
   const token = searchParams.get("token");
@@ -47,11 +49,11 @@ export default function ResetPasswordClientComponent() {
       toast.error(error.err?.message);
     },
     onStart: () => {
-      toast.loading("Resetting password...");
+      toast.loading(t('auth.resetPassword.resettingPassword'));
     },
     onSuccess: () => {
       toast.dismiss();
-      toast.success("Password reset successfully");
+      toast.success(t('auth.resetPassword.passwordResetSuccessfully'));
     },
   });
 
@@ -64,9 +66,9 @@ export default function ResetPasswordClientComponent() {
       <div className="container mx-auto px-4 flex items-center justify-center min-h-screen">
         <Card className="w-full max-w-md">
           <CardHeader>
-            <CardTitle>Password Reset Successfully</CardTitle>
+            <CardTitle>{t('auth.resetPassword.passwordResetSuccessTitle')}</CardTitle>
             <CardDescription>
-              Your password has been reset. You can now log in with your new password.
+              {t('auth.resetPassword.passwordResetSuccessMessage')}
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -75,7 +77,7 @@ export default function ResetPasswordClientComponent() {
               className="w-full"
               onClick={() => router.push("/sign-in")}
             >
-              Go to Login
+              {t('auth.resetPassword.goToLogin')}
             </Button>
           </CardContent>
         </Card>
@@ -87,9 +89,9 @@ export default function ResetPasswordClientComponent() {
     <div className="container mx-auto px-4 flex items-center justify-center min-h-screen">
       <Card className="w-full max-w-md">
         <CardHeader>
-          <CardTitle>Reset Password</CardTitle>
+          <CardTitle>{t('auth.resetPassword.resetPassword')}</CardTitle>
           <CardDescription>
-            Enter your new password below.
+            {t('auth.resetPassword.enterNewPassword')}
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -100,7 +102,7 @@ export default function ResetPasswordClientComponent() {
                 name="password"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>New Password</FormLabel>
+                    <FormLabel>{t('auth.resetPassword.newPassword')}</FormLabel>
                     <FormControl>
                       <Input
                         type="password"
@@ -116,7 +118,7 @@ export default function ResetPasswordClientComponent() {
                 name="confirmPassword"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Confirm Password</FormLabel>
+                    <FormLabel>{t('auth.resetPassword.confirmPassword')}</FormLabel>
                     <FormControl>
                       <Input
                         type="password"
@@ -128,7 +130,7 @@ export default function ResetPasswordClientComponent() {
                 )}
               />
               <Button type="submit" className="w-full">
-                Reset Password
+                {t('auth.resetPassword.resetPassword')}
               </Button>
             </form>
           </Form>

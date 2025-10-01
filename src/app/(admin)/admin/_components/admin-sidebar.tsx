@@ -50,37 +50,37 @@ export function AdminSidebar({ ...props }: React.ComponentProps<typeof Sidebar>)
       isActive: true,
     },
     {
-      title: "Users",
+      title: t('admin.users'),
       url: "/admin",
       icon: Users,
       isActive: true,
     },
     {
-      title: "Scales",
+      title: t('admin.scales'),
       url: "/admin/scales" as Route,
       icon: Scale,
       isActive: true,
     },
     {
-      title: "Copyright Holders",
+      title: t('admin.copyright_holders'),
       url: "/admin/copyright-holders" as Route,
       icon: Copyright,
       isActive: true,
     },
     {
-      title: "Clinical Cases",
+      title: t('admin.clinical_cases'),
       url: "/admin/cases" as Route,
       icon: Beaker,
       isActive: true,
     },
     {
-      title: "Copyright Tickets",
+      title: t('admin.copyright_tickets'),
       url: "/admin/tickets" as Route,
       icon: MessageSquare,
       isActive: true,
     },
     {
-      title: "Invoices",
+      title: t('admin.invoices'),
       url: "/admin/invoices" as Route,
       icon: FileText,
       isActive: true,
@@ -95,16 +95,16 @@ export function AdminSidebar({ ...props }: React.ComponentProps<typeof Sidebar>)
             <SidebarMenuItem>
               <SidebarMenuButton
                 className="pointer-events-none"
-                tooltip="Admin Panel"
+                tooltip={t('admin.panel')}
                 onClick={() => router.push('/dashboard')}
               >
                 <Shield size={24} />
-                <span className="text-lg font-bold">Admin Panel</span>
+                <span className="text-lg font-bold">{t('admin.panel')}</span>
               </SidebarMenuButton>
             </SidebarMenuItem>
           </SidebarMenu>
         </SidebarGroup>
-        <NavMain title="Admin" items={adminNavItems} />
+        <NavMain title={t('admin.title')} items={adminNavItems} />
       </SidebarContent>
       <SidebarFooter>
         <NavUser />

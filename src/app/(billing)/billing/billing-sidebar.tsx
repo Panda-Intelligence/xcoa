@@ -2,16 +2,19 @@
 
 import { User, Shield, Monitor, Lock } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { useLanguage } from "@/hooks/useLanguage"
 import Link from "next/link"
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "@/components/ui/sidebar"
 
-const settingsMenuItems = [
-  { icon: Shield, label: "Credits", href: "/billing/credits" },
-  { icon: Monitor, label: "Transactions", href: "/billing/transactions" },
-  { icon: Lock, label: "Invoice", href: "/billing/invoice" },
-]
-
 export function BillingSidebar() {
+  const { t } = useLanguage();
+
+  const settingsMenuItems = [
+    { icon: Shield, label: t('billing.credits'), href: "/billing/credits" },
+    { icon: Monitor, label: t('billing.transactions'), href: "/billing/transactions" },
+    { icon: Lock, label: t('billing.invoice'), href: "/billing/invoice" },
+  ];
+
   return (
     <SidebarMenu className="space-y-2">
       {settingsMenuItems.map((item) => (

@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "sonner";
+import { useLanguage } from "@/hooks/useLanguage";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useServerAction } from "zsa-react";
@@ -11,6 +12,7 @@ import { teamInviteSchema } from "@/schemas/team-invite.schema";
 import { Spinner } from "@/components/ui/spinner";
 
 export default function TeamInviteClientComponent() {
+  const { t } = useLanguage();
   const router = useRouter();
   const searchParams = useSearchParams();
   const token = searchParams.get("token");
@@ -19,14 +21,14 @@ export default function TeamInviteClientComponent() {
   const { execute: handleAcceptInvite, isPending, error } = useServerAction(acceptTeamInviteAction, {
     onError: ({ err }) => {
       toast.dismiss();
-      toast.error(err.message || "Failed to accept team invitation");
+      toast.error(err.message || t('auth.teamInvite.failedToAccept'));
     },
     onStart: () => {
-      toast.loading("Processing your invitation...");
+      toast.loading(t('auth.teamInvite.processingInvitation'));
     },
     onSuccess: (data) => {
       toast.dismiss();
-      toast.success("You've successfully joined the team!");
+      toast.success(t('auth.teamInvite.successfullyJoined'));
 
       router.refresh();
 
@@ -51,7 +53,7 @@ export default function TeamInviteClientComponent() {
         hasCalledAcceptInvite.current = true;
         handleAcceptInvite(result.data);
       } else {
-        toast.error("Invalid invitation token");
+        toast.error(t('auth.teamInvite.invalidToken'));
         router.push("/sign-in");
       }
     }
@@ -65,9 +67,9 @@ export default function TeamInviteClientComponent() {
           <CardHeader className="text-center">
             <div className="flex flex-col items-center space-y-4">
               <Spinner size="large" />
-              <CardTitle>Accepting Invitation</CardTitle>
+              <CardTitle>{t('auth.teamInvite.acceptingInvitation')}</CardTitle>
               <CardDescription>
-                Please wait while we process your team invitation...
+                {t('auth.teamInvite.pleaseWait')}
               </CardDescription>
             </div>
           </CardHeader>
@@ -81,25 +83,25 @@ export default function TeamInviteClientComponent() {
       <div className="container mx-auto px-4 flex items-center justify-center min-h-screen">
         <Card className="w-full max-w-md">
           <CardHeader>
-            <CardTitle>Invitation Error</CardTitle>
+            <CardTitle>{t('auth.teamInvite.invitationError')}</CardTitle>
             <CardDescription>
-              {error?.message || "Failed to process the invitation"}
+              {error?.message || t('auth.teamInvite.failedToProcess')}
             </CardDescription>
           </CardHeader>
           <CardContent className="flex flex-col gap-4">
             <p className="text-sm text-muted-foreground">
               {error?.code === "CONFLICT"
-                ? "You are already a member of this team."
+                ? t('auth.teamInvite.alreadyMember')
                 : error?.code === "FORBIDDEN" && error?.message.includes("limit")
-                  ? "You've reached the maximum number of teams you can join."
-                  : "The invitation may have expired or been revoked."}
+                  ? t('auth.teamInvite.teamLimitReached')
+                  : t('auth.teamInvite.expiredOrRevoked')}
             </p>
             <Button
               variant="outline"
               className="w-full"
               onClick={() => router.push("/scales")}
             >
-              Go to Dashboard
+              {t('auth.teamInvite.goToDashboard')}
             </Button>
           </CardContent>
         </Card>
@@ -112,9 +114,9 @@ export default function TeamInviteClientComponent() {
       <div className="container mx-auto px-4 flex items-center justify-center min-h-screen">
         <Card className="w-full max-w-md">
           <CardHeader>
-            <CardTitle>Invalid Invitation Link</CardTitle>
+            <CardTitle>{t('auth.teamInvite.invalidLink')}</CardTitle>
             <CardDescription>
-              The invitation link is invalid or has expired.
+              {t('auth.teamInvite.linkInvalidOrExpired')}
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -123,7 +125,7 @@ export default function TeamInviteClientComponent() {
               className="w-full"
               onClick={() => router.push("/scales")}
             >
-              Go to Dashboard
+              {t('auth.teamInvite.goToDashboard')}
             </Button>
           </CardContent>
         </Card>

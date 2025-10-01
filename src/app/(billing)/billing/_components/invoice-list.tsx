@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useLanguage } from "@/hooks/useLanguage";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
@@ -59,6 +60,7 @@ interface InvoiceListData {
 export function InvoiceList() {
   const router = useRouter();
   const toast = useToast();
+  const { t } = useLanguage();
   const [data, setData] = useState<InvoiceListData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [page, setPage] = useState(1);
@@ -103,11 +105,11 @@ export function InvoiceList() {
 
   const getStatusLabel = (status: string) => {
     const labels = {
-      draft: '草稿',
-      sent: '已发送',
-      paid: '已支付',
-      overdue: '逾期',
-      cancelled: '已取消'
+      draft: t('billing.draft'),
+      sent: t('billing.sent'),
+      paid: t('billing.paid'),
+      overdue: t('billing.overdue'),
+      cancelled: t('billing.cancelled')
     };
     return labels[status as keyof typeof labels] || status;
   };
@@ -116,8 +118,8 @@ export function InvoiceList() {
     try {
       await generateInvoicePDF(invoice);
     } catch (error) {
-      console.error("PDF生成失败:", error);
-      toast.error("PDF生成失败，请稍后重试");
+      console.error("PDF generation failed:", error);
+      toast.error(t('billing.pdf_generation_failed'));
     }
   };
 
@@ -125,7 +127,7 @@ export function InvoiceList() {
     return (
       <Card>
         <CardHeader>
-          <CardTitle>我的发票</CardTitle>
+          <CardTitle>{t('billing.my_invoices')}</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
@@ -145,7 +147,7 @@ export function InvoiceList() {
       <CardHeader>
         <CardTitle className="flex items-center space-x-2">
           <FileText className="w-5 h-5" />
-          <span>我的发票</span>
+          <span>{t('billing.my_invoices')}</span>
         </CardTitle>
       </CardHeader>
       <CardContent>
@@ -154,19 +156,19 @@ export function InvoiceList() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
             <div className="text-center p-3 bg-blue-50 rounded-lg">
               <div className="text-2xl font-bold text-blue-600">{data.statistics.total}</div>
-              <div className="text-sm text-blue-700">总计</div>
+              <div className="text-sm text-blue-700">{t('billing.total')}</div>
             </div>
             <div className="text-center p-3 bg-green-50 rounded-lg">
               <div className="text-2xl font-bold text-green-600">{data.statistics.paid}</div>
-              <div className="text-sm text-green-700">已支付</div>
+              <div className="text-sm text-green-700">{t('billing.paid')}</div>
             </div>
             <div className="text-center p-3 bg-orange-50 rounded-lg">
               <div className="text-2xl font-bold text-orange-600">{data.statistics.sent}</div>
-              <div className="text-sm text-orange-700">待支付</div>
+              <div className="text-sm text-orange-700">{t('billing.pending')}</div>
             </div>
             <div className="text-center p-3 bg-gray-50 rounded-lg">
               <div className="text-2xl font-bold text-gray-600">{data.statistics.draft}</div>
-              <div className="text-sm text-gray-700">草稿</div>
+              <div className="text-sm text-gray-700">{t('billing.draft')}</div>
             </div>
           </div>
         )}
@@ -177,11 +179,11 @@ export function InvoiceList() {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>发票号</TableHead>
-                  <TableHead>状态</TableHead>
-                  <TableHead>金额</TableHead>
-                  <TableHead>日期</TableHead>
-                  <TableHead>操作</TableHead>
+                  <TableHead>{t('billing.invoice_number')}</TableHead>
+                  <TableHead>{t('billing.status')}</TableHead>
+                  <TableHead>{t('billing.amount')}</TableHead>
+                  <TableHead>{t('billing.date')}</TableHead>
+                  <TableHead>{t('billing.actions')}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -209,7 +211,7 @@ export function InvoiceList() {
                           onClick={() => router.push(`/billing/invoice/${invoice.id}`)}
                         >
                           <Eye className="w-3 h-3 mr-1" />
-                          查看
+                          {t('billing.view')}
                         </Button>
                         <Button
                           size="sm"
@@ -224,7 +226,7 @@ export function InvoiceList() {
                   </TableRow>
                 )) : (
                   <TableRow>
-                    <TableCell colSpan={7} className="h-24 text-center">暂无发票记录</TableCell>
+                    <TableCell colSpan={7} className="h-24 text-center">{t('billing.no_invoice_records')}</TableCell>
                   </TableRow>
                 )}
               </TableBody>
@@ -262,7 +264,7 @@ export function InvoiceList() {
                     onClick={() => router.push(`/billing/invoice/${invoice.id}`)}
                   >
                     <Eye className="w-3 h-3 mr-1" />
-                    查看
+                    {t('billing.view')}
                   </Button>
                   <Button
                     size="sm"
@@ -277,7 +279,7 @@ export function InvoiceList() {
             </div>
           )) : (
             <div className="text-center py-8 text-muted-foreground">
-              暂无发票记录
+              {t('billing.no_invoice_records')}
             </div>
           )}
         </div>
@@ -294,7 +296,7 @@ export function InvoiceList() {
               <ChevronLeft className="h-4 w-4" />
             </Button>
             <span className="text-sm text-muted-foreground">
-              第 {page} 页，共 {Math.ceil(data.pagination.total / 20)} 页
+              {t('billing.page_of', { page, total: Math.ceil(data.pagination.total / 20) })}
             </span>
             <Button
               variant="outline"

@@ -8,6 +8,6 @@ export default async function BillingPage() {
     redirect("/sign-in");
   }
 
-  // 默认重定向到credits页面
+  // Default redirect to credits page
   redirect("/billing/credits");
 }
