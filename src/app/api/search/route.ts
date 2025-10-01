@@ -9,7 +9,7 @@ import {
 import { and, or, like, desc, eq, sql } from 'drizzle-orm';
 import { getSessionFromCookie } from '@/utils/auth';
 import { getIP } from '@/utils/get-IP';
-import { withRateLimit } from '@/utils/with-rate-limit';
+import { checkRateLimit } from '@/utils/rate-limit';
 import { z } from 'zod';
 
 const searchRequestSchema = z.object({
@@ -28,15 +28,45 @@ const searchRequestSchema = z.object({
 });
 
 export async function POST(request: NextRequest) {
-  return withRateLimit(async () => {
-    try {
-      const db = getDB();
-      const session = await getSessionFromCookie();
-      const user = session?.user;
-      const ip = getIP(request);
+  try {
+    const db = getDB();
+    const session = await getSessionFromCookie();
+    const user = session?.user;
+    const ip = getIP(request);
 
-      const body = await request.json();
-      const { query, category, sortBy, page, limit, filters } = searchRequestSchema.parse(body);
+    const body = await request.json();
+    const { query, category, sortBy, page, limit, filters } = searchRequestSchema.parse(body);
+
+    let actualLimit = limit;
+    let searchesRemaining = -1;
+
+    if (!user) {
+      const rateLimitResult = await checkRateLimit({
+        key: ip,
+        options: {
+          identifier: 'unauthenticated-search',
+          limit: 3,
+          windowInSeconds: 86400,
+        },
+      });
+
+      if (!rateLimitResult.success) {
+        const hoursRemaining = Math.ceil((rateLimitResult.reset - Date.now() / 1000) / 3600);
+        return NextResponse.json(
+          { 
+            error: 'Rate limit exceeded', 
+            message: `You have reached your daily search limit. Please try again in ${hoursRemaining} hours or sign in for unlimited searches.`,
+            searches_remaining: 0,
+            reset: rateLimitResult.reset,
+            requiresAuth: true,
+          },
+          { status: 429 }
+        );
+      }
+
+      actualLimit = Math.min(limit, 5);
+      searchesRemaining = rateLimitResult.remaining;
+    }
 
       // 构建基础查询条件
       const baseConditions = [
@@ -141,7 +171,7 @@ export async function POST(request: NextRequest) {
         .leftJoin(ecoaCategoryTable, eq(ecoaScaleTable.categoryId, ecoaCategoryTable.id))
         .where(and(...baseConditions))
         .orderBy(...orderBy)
-        .limit(limit)
+        .limit(actualLimit)
         .offset(offset);
 
       // 获取总数用于分页
@@ -222,14 +252,23 @@ export async function POST(request: NextRequest) {
       }
 
       // 更新用户剩余搜索次数（如果适用）
-      let searchesRemaining = -1; // -1 表示无限制
-      if (user) {
-        // 这里可以根据用户的订阅状态计算剩余搜索次数
-        // 暂时设为无限制
-        searchesRemaining = -1;
-      } else {
-        // 未登录用户每日限制搜索次数
-        searchesRemaining = 10; // 示例值
+      if (!user) {
+        return NextResponse.json({
+          results: processedResults,
+          pagination: {
+            page,
+            limit: actualLimit,
+            total: count,
+            totalPages: Math.ceil(count / actualLimit),
+          },
+          query,
+          filters,
+          searches_remaining: searchesRemaining,
+          is_authenticated: false,
+          message: searchesRemaining > 0 
+            ? `You have ${searchesRemaining} searches remaining today. Sign in for unlimited searches and full access.`
+            : 'This is your last search for today. Sign in for unlimited searches.',
+        });
       }
 
       return NextResponse.json({
@@ -242,7 +281,8 @@ export async function POST(request: NextRequest) {
         },
         query,
         filters,
-        searches_remaining: searchesRemaining,
+        searches_remaining: -1,
+        is_authenticated: true,
       });
 
     } catch (error) {
@@ -260,9 +300,4 @@ export async function POST(request: NextRequest) {
         { status: 500 }
       );
     }
-  }, {
-    identifier: 'search',
-    limit: 30,
-    windowInSeconds: 60, // 1 minute
-  });
 }
