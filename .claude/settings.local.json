@@ -24,7 +24,8 @@
       "Bash(pnpm build)",
       "Bash(bun scripts/crawlee/generate-scale-insert.ts:*)",
       "Bash(node:*)",
-      "Bash(wrangler d1 execute:*)"
+      "Bash(wrangler d1 execute:*)",
+      "Bash(rg:*)"
     ],
     "deny": [],
     "ask": []

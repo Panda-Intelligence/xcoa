@@ -402,14 +402,18 @@ export default function CopyrightTicketsPage() {
                         </div>
 
                         <div className="flex space-x-2">
-                          <Button size="sm" variant="outline">
-                            <Eye className="w-3 h-3 mr-1" />
-                            {t('copyright.tickets.view_details')}
-                          </Button>
-                          <Button size="sm" variant="outline">
-                            <MessageSquare className="w-3 h-3 mr-1" />
-                            {t('copyright.tickets.send_message')}
-                          </Button>
+                          <Link href={`/scales/copyright/tickets/${ticket.id}`}>
+                            <Button size="sm" variant="outline">
+                              <Eye className="w-3 h-3 mr-1" />
+                              {t('copyright.tickets.view_details')}
+                            </Button>
+                          </Link>
+                          <Link href={`/scales/copyright/tickets/${ticket.id}?action=message`}>
+                            <Button size="sm" variant="outline">
+                              <MessageSquare className="w-3 h-3 mr-1" />
+                              {t('copyright.tickets.send_message')}
+                            </Button>
+                          </Link>
                         </div>
                       </div>
                     </div>
