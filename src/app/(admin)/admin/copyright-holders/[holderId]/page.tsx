@@ -18,9 +18,9 @@ export default function AdminCopyrightHolderDetailPage({ params }: PageProps) {
   return (
     <PageHeader
       items={[
-        { href: "/admin", label: "Admin" },
-        { href: "/admin/copyright-holders", label: "Copyright Holders" },
-        { href: "#", label: "详情" }
+        { href: "/admin", label: t('admin.title') },
+        { href: "/admin/copyright-holders", label: t('admin.copyright_holders') },
+        { href: "#", label: t('common.view') }
       ]}
     />
   );

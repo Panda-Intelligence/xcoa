@@ -24,6 +24,7 @@ import { startRegistration } from "@simplewebauthn/browser";
 import { KeyIcon } from 'lucide-react'
 import { useConfigStore } from "@/state/config";
 import { REDIRECT_AFTER_SIGN_IN } from "@/constants";
+import { useLanguage } from "@/hooks/useLanguage";
 
 interface SignUpClientProps {
   redirectPath: string;
@@ -31,6 +32,7 @@ interface SignUpClientProps {
 
 const SignUpPage = ({ redirectPath }: SignUpClientProps) => {
   const { isTurnstileEnabled } = useConfigStore();
+  const { t } = useLanguage();
   const [isPasskeyModalOpen, setIsPasskeyModalOpen] = useState(false);
   const [isRegistering, setIsRegistering] = useState(false);
 
@@ -40,11 +42,11 @@ const SignUpPage = ({ redirectPath }: SignUpClientProps) => {
       toast.error(error.err?.message)
     },
     onStart: () => {
-      toast.loading("Creating your account...")
+      toast.loading(t('auth.creating'))
     },
     onSuccess: () => {
       toast.dismiss()
-      toast.success("Account created successfully")
+      toast.success(t('auth.signed_up_successfully'))
       window.location.href = redirectPath || REDIRECT_AFTER_SIGN_IN
     }
   })
@@ -57,7 +59,7 @@ const SignUpPage = ({ redirectPath }: SignUpClientProps) => {
     },
     onSuccess: () => {
       toast.dismiss()
-      toast.success("Account created successfully")
+      toast.success(t('auth.signed_up_successfully'))
       window.location.href = redirectPath || REDIRECT_AFTER_SIGN_IN
     }
   })
@@ -69,14 +71,14 @@ const SignUpPage = ({ redirectPath }: SignUpClientProps) => {
       setIsRegistering(false)
     },
     onStart: () => {
-      toast.loading("Starting passkey registration...")
+      toast.loading(t('auth.starting_passkey_registration'))
       setIsRegistering(true)
     },
     onSuccess: async (response) => {
       toast.dismiss()
       const optionsData = response?.data as { optionsJSON?: unknown } | undefined
       if (!optionsData?.optionsJSON) {
-        toast.error("Failed to start passkey registration")
+        toast.error(t('auth.failed_passkey_registration'))
         setIsRegistering(false)
         return;
       }
@@ -90,7 +92,7 @@ const SignUpPage = ({ redirectPath }: SignUpClientProps) => {
         await completePasskeyRegistration({ response: attResp });
       } catch (error: unknown) {
         console.error("Failed to register passkey:", error);
-        toast.error("Failed to register passkey")
+        toast.error(t('auth.failed_passkey_registration'))
         setIsRegistering(false)
       }
     }
@@ -120,12 +122,12 @@ const SignUpPage = ({ redirectPath }: SignUpClientProps) => {
       <div className="w-full max-w-md space-y-8 p-6 md:p-10 bg-card rounded-xl shadow-lg border border-border">
         <div className="text-center">
           <h2 className="mt-6 text-2xl md:text-3xl font-bold tracking-tight text-foreground">
-            Create your account
+            {t('auth.create_your_account')}
           </h2>
           <p className="mt-2 text-muted-foreground">
-            Already have an account?{" "}
+            {t('auth.already_have_account')}{" "}
             <Link href={`/sign-in?redirect=${encodeURIComponent(redirectPath)}`} className="font-medium text-primary hover:text-primary/90 underline">
-              Sign in
+              {t('auth.sign_in')}
             </Link>
           </p>
         </div>
@@ -138,12 +140,12 @@ const SignUpPage = ({ redirectPath }: SignUpClientProps) => {
             onClick={() => setIsPasskeyModalOpen(true)}
           >
             <KeyIcon className="w-5 h-5 mr-2" />
-            Sign up with a Passkey
+            {t('auth.sign_up_with_passkey')}
           </Button>
         </div>
 
         <SeparatorWithText>
-          <span className="uppercase text-muted-foreground">Or</span>
+          <span className="uppercase text-muted-foreground">{t('auth.or_separator')}</span>
         </SeparatorWithText>
 
         <Form {...form}>
@@ -156,7 +158,7 @@ const SignUpPage = ({ redirectPath }: SignUpClientProps) => {
                   <FormControl>
                     <Input
                       type="email"
-                      placeholder="Email address"
+                      placeholder={t('auth.email_placeholder')}
                       className="w-full px-3 py-2"
                       {...field}
                     />
@@ -173,7 +175,7 @@ const SignUpPage = ({ redirectPath }: SignUpClientProps) => {
                 <FormItem>
                   <FormControl>
                     <Input
-                      placeholder="First Name"
+                      placeholder={t('auth.first_name')}
                       className="w-full px-3 py-2"
                       {...field}
                     />
@@ -190,7 +192,7 @@ const SignUpPage = ({ redirectPath }: SignUpClientProps) => {
                 <FormItem>
                   <FormControl>
                     <Input
-                      placeholder="Last Name"
+                      placeholder={t('auth.last_name')}
                       className="w-full px-3 py-2"
                       {...field}
                     />
@@ -208,7 +210,7 @@ const SignUpPage = ({ redirectPath }: SignUpClientProps) => {
                   <FormControl>
                     <Input
                       type="password"
-                      placeholder="Password"
+                      placeholder={t('auth.password_placeholder')}
                       className="w-full px-3 py-2"
                       {...field}
                     />
@@ -229,7 +231,7 @@ const SignUpPage = ({ redirectPath }: SignUpClientProps) => {
                 className="w-full flex justify-center py-2.5 mt-8"
                 disabled={Boolean(isTurnstileEnabled && !captchaToken)}
               >
-                Create Account with Password
+                {t('auth.create_account_with_password')}
               </Button>
             </div>
           </form>
@@ -237,13 +239,13 @@ const SignUpPage = ({ redirectPath }: SignUpClientProps) => {
 
         <div className="mt-6">
           <p className="text-xs text-center text-muted-foreground">
-            By signing up, you agree to our{" "}
+            {t('auth.by_signing_up')}{" "}
             <Link href="/terms" className="font-medium text-primary hover:text-primary/90 underline">
-              Terms of Service
+              {t('legal.terms_of_service')}
             </Link>{" "}
-            and{" "}
+            {t('auth.and')}{" "}
             <Link href="/privacy" className="font-medium text-primary hover:text-primary/90 underline">
-              Privacy Policy
+              {t('legal.privacy_policy')}
             </Link>
           </p>
         </div>
@@ -252,7 +254,7 @@ const SignUpPage = ({ redirectPath }: SignUpClientProps) => {
       <Dialog open={isPasskeyModalOpen} onOpenChange={setIsPasskeyModalOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Sign up with a Passkey</DialogTitle>
+            <DialogTitle>{t('auth.sign_up_with_passkey')}</DialogTitle>
           </DialogHeader>
           <Form {...passkeyForm}>
             <form onSubmit={passkeyForm.handleSubmit(onPasskeySubmit)} className="space-y-6 mt-6">
@@ -264,7 +266,7 @@ const SignUpPage = ({ redirectPath }: SignUpClientProps) => {
                     <FormControl>
                       <Input
                         type="email"
-                        placeholder="Email address"
+                        placeholder={t('auth.email_placeholder')}
                         className="w-full px-3 py-2"
                         disabled={isRegistering}
                         {...field}
@@ -281,7 +283,7 @@ const SignUpPage = ({ redirectPath }: SignUpClientProps) => {
                   <FormItem>
                     <FormControl>
                       <Input
-                        placeholder="First Name"
+                        placeholder={t('auth.first_name')}
                         className="w-full px-3 py-2"
                         disabled={isRegistering}
                         {...field}
@@ -298,7 +300,7 @@ const SignUpPage = ({ redirectPath }: SignUpClientProps) => {
                   <FormItem>
                     <FormControl>
                       <Input
-                        placeholder="Last Name"
+                        placeholder={t('auth.last_name')}
                         className="w-full px-3 py-2"
                         disabled={isRegistering}
                         {...field}
@@ -322,16 +324,16 @@ const SignUpPage = ({ redirectPath }: SignUpClientProps) => {
                   {isRegistering ? (
                     <>
                       <Spinner className="mr-2 h-4 w-4" />
-                      Registering...
+                      {t('auth.registering')}
                     </>
                   ) : (
-                    "Continue"
+                    t('auth.continue')
                   )}
                 </Button>
               </div>
               {!isRegistering && (
                 <p className="text-xs text-muted text-center mt-4">
-                  After clicking continue, your browser will prompt you to create and save your Passkey. This will allow you to sign in securely without a password in the future.
+                  {t('auth.passkey_instruction')}
                 </p>
               )}
             </form>

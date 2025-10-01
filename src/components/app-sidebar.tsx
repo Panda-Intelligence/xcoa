@@ -151,8 +151,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       )}
 
       <SidebarContent>
-        <NavMain title="Platform" items={data.navMain} />
-        <NavMain title="System" collapsible={true} items={data.system} />
+        <NavMain title={t('sidebar.platform')} items={data.navMain} />
+        <NavMain title={t('sidebar.system')} collapsible={true} items={data.system} />
       </SidebarContent>
       <SidebarFooter>
         <div className="flex items-center justify-between px-2 py-1">

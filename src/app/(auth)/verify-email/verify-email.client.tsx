@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "sonner";
+import { useLanguage } from "@/hooks/useLanguage";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useServerAction } from "zsa-react";
@@ -12,6 +13,7 @@ import { Spinner } from "@/components/ui/spinner";
 import { REDIRECT_AFTER_SIGN_IN } from "@/constants";
 
 export default function VerifyEmailClientComponent() {
+  const { t } = useLanguage();
   const router = useRouter();
   const searchParams = useSearchParams();
   const token = searchParams.get("token");
@@ -20,14 +22,14 @@ export default function VerifyEmailClientComponent() {
   const { execute: handleVerification, isPending, error } = useServerAction(verifyEmailAction, {
     onError: ({ err }) => {
       toast.dismiss();
-      toast.error(err.message || "Failed to verify email");
+      toast.error(err.message || t('auth.verifyEmail.failedToVerify'));
     },
     onStart: () => {
-      toast.loading("Verifying your email...");
+      toast.loading(t('auth.verifyEmail.verifyingEmail'));
     },
     onSuccess: () => {
       toast.dismiss();
-      toast.success("Email verified successfully");
+      toast.success(t('auth.verifyEmail.verifiedSuccessfully'));
 
       router.refresh();
 
@@ -44,7 +46,7 @@ export default function VerifyEmailClientComponent() {
         hasCalledVerification.current = true;
         handleVerification(result.data);
       } else {
-        toast.error("Invalid verification token");
+        toast.error(t('auth.verifyEmail.invalidToken'));
         router.push("/sign-in");
       }
     }
@@ -58,9 +60,9 @@ export default function VerifyEmailClientComponent() {
           <CardHeader className="text-center">
             <div className="flex flex-col items-center space-y-4">
               <Spinner size="large" />
-              <CardTitle>Verifying Email</CardTitle>
+              <CardTitle>{t('auth.verifyEmail.verifyingEmail')}</CardTitle>
               <CardDescription>
-                Please wait while we verify your email address...
+                {t('auth.verifyEmail.pleaseWait')}
               </CardDescription>
             </div>
           </CardHeader>
@@ -74,9 +76,9 @@ export default function VerifyEmailClientComponent() {
       <div className="container mx-auto px-4 flex items-center justify-center min-h-screen">
         <Card className="w-full max-w-md">
           <CardHeader>
-            <CardTitle>Verification failed</CardTitle>
+            <CardTitle>{t('auth.verifyEmail.verificationFailed')}</CardTitle>
             <CardDescription>
-              {error?.message || "Failed to verify email"}
+              {error?.message || t('auth.verifyEmail.failedToVerify')}
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -85,7 +87,7 @@ export default function VerifyEmailClientComponent() {
               className="w-full"
               onClick={() => router.push("/sign-in")}
             >
-              Back to sign in
+              {t('auth.verifyEmail.backToSignIn')}
             </Button>
           </CardContent>
         </Card>
@@ -98,9 +100,9 @@ export default function VerifyEmailClientComponent() {
       <div className="container mx-auto px-4 flex items-center justify-center min-h-screen">
         <Card className="w-full max-w-md">
           <CardHeader>
-            <CardTitle>Invalid verification link</CardTitle>
+            <CardTitle>{t('auth.verifyEmail.invalidLink')}</CardTitle>
             <CardDescription>
-              The verification link is invalid. Please request a new verification email.
+              {t('auth.verifyEmail.linkInvalid')}
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -109,7 +111,7 @@ export default function VerifyEmailClientComponent() {
               className="w-full"
               onClick={() => router.push("/sign-in")}
             >
-              Back to sign in
+              {t('auth.verifyEmail.backToSignIn')}
             </Button>
           </CardContent>
         </Card>

@@ -21,10 +21,12 @@ import { useSessionStore } from "@/state/session";
 import { Captcha } from "@/components/captcha";
 import { forgotPasswordSchema } from "@/schemas/forgot-password.schema";
 import { useConfigStore } from "@/state/config";
+import { useLanguage } from "@/hooks/useLanguage";
 
 type ForgotPasswordSchema = z.infer<typeof forgotPasswordSchema>;
 
 export default function ForgotPasswordClientComponent() {
+  const { t } = useLanguage();
   const { session } = useSessionStore()
   const { isTurnstileEnabled } = useConfigStore()
   const router = useRouter();
@@ -41,11 +43,11 @@ export default function ForgotPasswordClientComponent() {
       toast.error(error.err?.message);
     },
     onStart: () => {
-      toast.loading("Sending reset instructions...");
+      toast.loading(t('auth.forgotPassword.sendingInstructions'));
     },
     onSuccess: () => {
       toast.dismiss();
-      toast.success("Reset instructions sent");
+      toast.success(t('auth.forgotPassword.instructionsSent'));
     },
   });
 
@@ -58,9 +60,9 @@ export default function ForgotPasswordClientComponent() {
       <div className="container mx-auto px-4 flex items-center justify-center min-h-screen">
         <Card className="w-full max-w-md">
           <CardHeader>
-            <CardTitle>Check your email</CardTitle>
+            <CardTitle>{t('auth.forgotPassword.checkEmail')}</CardTitle>
             <CardDescription>
-              If an account exists with that email, we&apos;ve sent you instructions to reset your password.
+              {t('auth.forgotPassword.emailSentMessage')}
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -69,7 +71,7 @@ export default function ForgotPasswordClientComponent() {
               className="w-full"
               onClick={() => router.push("/sign-in")}
             >
-              Back to login
+              {t('auth.forgotPassword.backToLogin')}
             </Button>
           </CardContent>
         </Card>
@@ -82,10 +84,10 @@ export default function ForgotPasswordClientComponent() {
       <Card className="w-full max-w-md">
         <CardHeader>
           <CardTitle>
-            {session ? "Change Password" : "Forgot Password"}
+            {session ? t('auth.forgotPassword.changePassword') : t('auth.forgotPassword.forgotPassword')}
           </CardTitle>
           <CardDescription>
-            Enter your email address and we&apos;ll send you instructions to reset your password.
+            {t('auth.forgotPassword.enterEmailInstructions')}
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -98,12 +100,12 @@ export default function ForgotPasswordClientComponent() {
                 defaultValue={session?.user?.email || undefined}
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-sm font-medium">Email</FormLabel>
+                    <FormLabel className="text-sm font-medium">{t('auth.forgotPassword.email')}</FormLabel>
                     <FormControl>
                       <Input
                         type="email"
                         className="w-full px-3 py-2"
-                        placeholder="name@example.com"
+                        placeholder={t('auth.forgotPassword.emailPlaceholder')}
                         {...field}
                       />
                     </FormControl>
@@ -122,7 +124,7 @@ export default function ForgotPasswordClientComponent() {
                   className="mt-8 mb-2"
                   disabled={Boolean(isTurnstileEnabled && !captchaToken)}
                 >
-                  Send Reset Instructions
+                  {t('auth.forgotPassword.sendResetInstructions')}
                 </Button>
               </div>
             </form>
@@ -138,7 +140,7 @@ export default function ForgotPasswordClientComponent() {
             className="w-full"
             onClick={() => router.push("/settings")}
           >
-            Back to settings
+            {t('auth.forgotPassword.backToSettings')}
           </Button>
         ) : (
           <Button
@@ -147,7 +149,7 @@ export default function ForgotPasswordClientComponent() {
             className="w-full"
             onClick={() => router.push("/sign-in")}
           >
-            Back to login
+            {t('auth.forgotPassword.backToLogin')}
           </Button>
         )}
       </div>

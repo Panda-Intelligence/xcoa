@@ -3,31 +3,32 @@
 import { z } from "zod";
 import { createTeam, deleteTeam, getTeam, getUserTeams, updateTeam } from "@/server/teams";
 import { ZSAError, createServerAction } from "zsa";
+import { vm } from "@/lib/validation-messages";
 
 // Update team schema
 const updateTeamSchema = z.object({
-  teamId: z.string().min(1, "Team ID is required"),
+  teamId: z.string().min(1, vm.team_id_required),
   data: z.object({
-    name: z.string().min(1, "Name is required").max(100, "Name is too long").optional(),
-    description: z.string().max(1000, "Description is too long").optional(),
-    avatarUrl: z.string().url("Invalid avatar URL").max(600, "URL is too long").optional(),
-    billingEmail: z.string().email("Invalid email").max(255, "Email is too long").optional(),
-    settings: z.string().max(10000, "Settings are too large").optional(),
+    name: z.string().min(1, vm.name_required).max(100, vm.name_too_long).optional(),
+    description: z.string().max(1000, vm.description_too_long).optional(),
+    avatarUrl: z.string().url(vm.invalid_avatar_url).max(600, vm.url_too_long).optional(),
+    billingEmail: z.string().email(vm.email_invalid).max(255, vm.email_too_long).optional(),
+    settings: z.string().max(10000, vm.settings_too_large).optional(),
   }),
 });
 
 const deleteTeamSchema = z.object({
-  teamId: z.string().min(1, "Team ID is required"),
+  teamId: z.string().min(1, vm.team_id_required),
 });
 
 const getTeamSchema = z.object({
-  teamId: z.string().min(1, "Team ID is required"),
+  teamId: z.string().min(1, vm.team_id_required),
 });
 
 const createTeamSchema = z.object({
-  name: z.string().min(1, "Name is required").max(100, "Name is too long"),
-  description: z.string().max(1000, "Description is too long").optional(),
-  avatarUrl: z.string().url("Invalid avatar URL").max(600, "URL is too long").optional(),
+  name: z.string().min(1, vm.name_required).max(100, vm.name_too_long),
+  description: z.string().max(1000, vm.description_too_long).optional(),
+  avatarUrl: z.string().url(vm.invalid_avatar_url).max(600, vm.url_too_long).optional(),
 });
 
 export const createTeamAction = createServerAction()

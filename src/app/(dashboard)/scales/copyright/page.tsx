@@ -17,6 +17,7 @@ import {
   Plus
 } from 'lucide-react';
 import Link from 'next/link';
+import { useLanguage } from '@/hooks/useLanguage';
 
 interface LicenseResult {
   scale: {
@@ -41,6 +42,7 @@ interface LicenseResult {
 }
 
 export default function CopyrightPage() {
+  const { t } = useLanguage();
   const [scaleIds, setScaleIds] = useState<string[]>([]);
   const [scaleQuery, setScaleQuery] = useState('');
   const [searchResults, setSearchResults] = useState<any[]>([]);

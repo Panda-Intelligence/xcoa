@@ -2,11 +2,17 @@ import { Metadata } from "next";
 import { getSessionFromCookie } from "@/utils/auth";
 import { redirect } from "next/navigation";
 import TeamInviteClientComponent from "./team-invite.client";
+import { getAuthMetadata } from "@/utils/server-i18n";
 
-export const metadata: Metadata = {
-  title: "Accept Team Invitation",
-  description: "Accept an invitation to join a team",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const title = await getAuthMetadata('team_invite_title');
+  const description = await getAuthMetadata('team_invite_description');
+  
+  return {
+    title,
+    description,
+  };
+}
 
 export default async function TeamInvitePage({
   searchParams,

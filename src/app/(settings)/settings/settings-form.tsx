@@ -23,9 +23,11 @@ import { useServerAction } from "zsa-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useRouter } from "next/navigation";
+import { useLanguage } from "@/hooks/useLanguage";
 
 export function SettingsForm() {
   const router = useRouter()
+  const { t } = useLanguage()
 
   const { execute: updateUserProfile } = useServerAction(updateUserProfileAction, {
     onError: (error) => {
@@ -33,11 +35,11 @@ export function SettingsForm() {
       toast.error(error.err?.message)
     },
     onStart: () => {
-      toast.loading("Signing you in...")
+      toast.loading(t("settings.signing_in"))
     },
     onSuccess: () => {
       toast.dismiss()
-      toast.success("Signed in successfully")
+      toast.success(t("settings.signed_in_successfully"))
       router.refresh()
     }
   })
@@ -99,9 +101,9 @@ export function SettingsForm() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Profile Settings</CardTitle>
+        <CardTitle>{t("settings.profile_settings")}</CardTitle>
         <CardDescription>
-          Update your personal information and contact details.
+          {t("settings.profile_settings_description")}
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -113,7 +115,7 @@ export function SettingsForm() {
                 name="firstName"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>First Name</FormLabel>
+                    <FormLabel>{t("settings.first_name")}</FormLabel>
                     <FormControl>
                       <Input {...field} />
                     </FormControl>
@@ -126,7 +128,7 @@ export function SettingsForm() {
                 name="lastName"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Last Name</FormLabel>
+                    <FormLabel>{t("settings.last_name")}</FormLabel>
                     <FormControl>
                       <Input {...field} />
                     </FormControl>
@@ -138,7 +140,7 @@ export function SettingsForm() {
 
 
             <FormItem>
-              <FormLabel>Email</FormLabel>
+              <FormLabel>{t("settings.email")}</FormLabel>
               <FormControl>
                 <Input
                   type="email"
@@ -147,14 +149,14 @@ export function SettingsForm() {
                 />
               </FormControl>
               <FormDescription>
-                This is the email you use to sign in.
+                {t("settings.email_description")}
               </FormDescription>
               <FormMessage />
             </FormItem>
 
             <div className="flex justify-end">
               <Button type="submit">
-                Save changes
+                {t("settings.save_changes")}
               </Button>
             </div>
           </form>

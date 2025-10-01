@@ -4,15 +4,18 @@ import { User, Shield, Monitor, Lock } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "@/components/ui/sidebar"
-
-const settingsMenuItems = [
-  { icon: User, label: "个人资料", href: "/settings" },
-  { icon: Shield, label: "安全设置", href: "/settings/security" },
-  { icon: Monitor, label: "会话管理", href: "/settings/sessions" },
-  { icon: Lock, label: "修改密码", href: "/forgot-password" },
-]
+import { useLanguage } from "@/hooks/useLanguage"
 
 export function SettingsSidebar() {
+  const { t } = useLanguage()
+
+  const settingsMenuItems = [
+    { icon: User, label: t("settings.profile"), href: "/settings" },
+    { icon: Shield, label: t("settings.security_settings"), href: "/settings/security" },
+    { icon: Monitor, label: t("settings.session_management"), href: "/settings/sessions" },
+    { icon: Lock, label: t("settings.change_password"), href: "/forgot-password" },
+  ]
+
   return (
     <SidebarMenu className="space-y-2">
       {settingsMenuItems.map((item) => (

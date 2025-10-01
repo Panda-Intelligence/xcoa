@@ -10,6 +10,8 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { toast } from "sonner";
+import { useLanguage } from "@/hooks/useLanguage";
+import { vm } from "@/lib/validation-messages";
 import {
   Form,
   FormControl,
@@ -20,8 +22,7 @@ import {
 } from "@/components/ui/form";
 
 // Define the form schema with validation
-const formSchema = z.object({
-  email: z.string().email("Please enter a valid email address").min(1, "Email is required")
+const formSchema = z.object({  email: z.string().email(vm.email_invalid).min(1, vm.email_required)
 });
 
 type FormValues = z.infer<typeof formSchema>;
@@ -34,6 +35,7 @@ interface InviteMemberModalProps {
 
 export function InviteMemberModal({ teamId, trigger, onInviteSuccess }: InviteMemberModalProps) {
   const [open, setOpen] = useState(false);
+  const { t } = useLanguage();
 
   // Initialize react-hook-form
   const form = useForm<FormValues>({
@@ -46,15 +48,15 @@ export function InviteMemberModal({ teamId, trigger, onInviteSuccess }: InviteMe
   const { execute } = useServerAction(inviteUserAction, {
     onError: (error) => {
       toast.dismiss();
-      toast.error(error.err?.message || "Failed to invite user");
+      toast.error(error.err?.message || t('team.failed_to_invite_user'));
       console.error("Invite error:", error);
     },
     onStart: () => {
-      toast.loading("Sending invitation...");
+      toast.loading(t('team.sending_invitation'));
     },
     onSuccess: () => {
       toast.dismiss();
-      toast.success("Invitation sent successfully");
+      toast.success(t('team.invitation_sent'));
       form.reset();
 
       if (onInviteSuccess) {
@@ -84,7 +86,7 @@ export function InviteMemberModal({ teamId, trigger, onInviteSuccess }: InviteMe
       </DialogTrigger>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Invite Team Member</DialogTitle>
+          <DialogTitle>{t('team.invite_member_title')}</DialogTitle>
         </DialogHeader>
 
         <Form {...form}>
@@ -94,11 +96,11 @@ export function InviteMemberModal({ teamId, trigger, onInviteSuccess }: InviteMe
               name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Email Address</FormLabel>
+                  <FormLabel>{t('team.email_address')}</FormLabel>
                   <FormControl>
                     <Input
                       type="email"
-                      placeholder="colleague@example.com"
+                      placeholder={t('team.email_placeholder')}
                       {...field}
                     />
                   </FormControl>
@@ -110,12 +112,12 @@ export function InviteMemberModal({ teamId, trigger, onInviteSuccess }: InviteMe
             <div className="flex justify-end gap-2 pt-2">
               <DialogClose asChild>
                 <Button type="button" variant="outline">
-                  Cancel
+                  {t('common.cancel')}
                 </Button>
               </DialogClose>
 
               <Button type="submit">
-                Send Invitation
+                {t('team.send_invitation')}
               </Button>
             </div>
           </form>

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useLanguage } from "@/hooks/useLanguage";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { CREDIT_PACKAGES, FREE_MONTHLY_CREDITS } from "@/constants";
@@ -34,6 +35,7 @@ const calculateSavings = (pkg: CreditPackage) => {
 
 export function CreditPackages() {
   const router = useRouter();
+  const { t } = useLanguage();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [selectedPackage, setSelectedPackage] = useState<CreditPackage | null>(null);
   const [clientSecret, setClientSecret] = useState<string | null>(null);
@@ -66,7 +68,7 @@ export function CreditPackages() {
     <>
       <div>
         <CardHeader>
-          <CardTitle>Credits</CardTitle>
+          <CardTitle>{t('billing.credits')}</CardTitle>
         </CardHeader>
         <CardContent className="space-y-8">
           <div className="space-y-2">
@@ -78,12 +80,12 @@ export function CreditPackages() {
                 </>
               ) : (
                 <div className="text-3xl font-bold">
-                  {session?.session?.user?.currentCredits.toLocaleString()} credits
+                  {session?.session?.user?.currentCredits.toLocaleString()} {t('billing.credits').toLowerCase()}
                 </div>
               )}
             </div>
             <div className="text-sm text-muted-foreground">
-              You get {FREE_MONTHLY_CREDITS} free credits every month.
+              {t('billing.you_get_free_credits', { count: FREE_MONTHLY_CREDITS })}
             </div>
           </div>
 
@@ -91,9 +93,9 @@ export function CreditPackages() {
 
           <div className="space-y-4">
             <div>
-              <h2 className="text-xl sm:text-2xl font-semibold">Top up your credits</h2>
+              <h2 className="text-xl sm:text-2xl font-semibold">{t('billing.top_up_credits')}</h2>
               <p className="text-sm text-muted-foreground mt-2 sm:mt-3">
-                Purchase additional credits to use our services. The more credits you buy, the better the value.
+                {t('billing.purchase_additional_credits')}
               </p>
             </div>
 
@@ -109,7 +111,7 @@ export function CreditPackages() {
                             {pkg.credits.toLocaleString()}
                           </div>
                           <div className="text-xs sm:text-sm text-muted-foreground">
-                            credits
+                            {t('billing.credits').toLowerCase()}
                           </div>
                         </div>
                       </div>
@@ -118,11 +120,11 @@ export function CreditPackages() {
                           ${pkg.price}
                         </div>
                         <div className="text-xs sm:text-sm text-muted-foreground">
-                          one-time payment
+                          {t('billing.one_time_payment')}
                         </div>
                         {index > 0 ? (
                           <Badge variant="secondary" className="mt-1 text-xs sm:text-sm bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300">
-                            Save {calculateSavings(pkg)}%
+                            {t('billing.save_percent', { percent: calculateSavings(pkg) })}
                           </Badge>
                         ) : (
                           <div className="h-[22px] sm:h-[26px]" /> /* Placeholder for badge height */
@@ -135,12 +137,12 @@ export function CreditPackages() {
                         if (process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY) {
                           handlePurchase(pkg)
                         } else {
-                          toast.error("Something went wrong with our payment provider. Please try again later.")
+                          toast.error(t('billing.payment_error'))
                         }
                       }}
                       className="w-full text-sm sm:text-base"
                     >
-                      Purchase Now
+                      {t('billing.purchase_now')}
                     </Button>
                   </CardContent>
                 </Card>
@@ -153,7 +155,7 @@ export function CreditPackages() {
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Purchase Credits</DialogTitle>
+            <DialogTitle>{t('billing.purchase_credits')}</DialogTitle>
           </DialogHeader>
           {(clientSecret && selectedPackage) && (
             <StripePaymentForm

@@ -1,6 +1,7 @@
 import { z } from "zod";
+import { vm } from "@/lib/validation-messages";
 
 export const googleSSOCallbackSchema = z.object({
-  code: z.string().min(1, "Authorization code is required"),
-  state: z.string().min(1, "State parameter is required"),
+  code: z.string().min(1, vm.auth_code_required),
+  state: z.string().min(1, vm.state_required),
 });

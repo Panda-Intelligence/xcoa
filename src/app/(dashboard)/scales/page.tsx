@@ -255,11 +255,11 @@ export default function ScalesPage() {
                           <div className="flex items-center space-x-4 text-xs text-muted-foreground">
                             <span className="flex items-center">
                               <BookOpen className="w-3 h-3 mr-1" />
-                              {result.items_count} 题项
+                              {result.items_count} {t("scales.items", "items")}
                             </span>
                             <span className="flex items-center">
                               <Clock className="w-3 h-3 mr-1" />
-                              {result.administration_time} 分钟
+                              {result.administration_time} {t("scales.minutes", "minutes")}
                             </span>
                             <span className="flex items-center">
                               <Users className="w-3 h-3 mr-1" />
@@ -299,12 +299,12 @@ export default function ScalesPage() {
             <Card>
               <CardContent className="text-center py-8">
                 <Search className="w-12 h-12 mx-auto mb-4 text-muted-foreground opacity-50" />
-                <h3 className="text-lg font-medium mb-2">没有找到匹配的量表</h3>
+                <h3 className="text-lg font-medium mb-2">{t("scales.no_results", "No matching scales found")}</h3>
                 <p className="text-muted-foreground mb-4">
-                  尝试使用不同的关键词或调整筛选条件
+                  {t("scales.no_results_suggestion", "Try different keywords or adjust filter criteria")}
                 </p>
                 <Button variant="outline" onClick={() => setQuery('')}>
-                  清除搜索
+                  {t("scales.clear_search", "Clear Search")}
                 </Button>
               </CardContent>
             </Card>
@@ -314,9 +314,9 @@ export default function ScalesPage() {
           {!query && results.length === 0 && (
             <div>
               <CardHeader>
-                <CardTitle>热门量表</CardTitle>
+                <CardTitle>{t("scales.hot_scales", "Popular Scales")}</CardTitle>
                 <CardDescription>
-                  最常用的 eCOA 评估工具
+                  {t("scales.hot_scales_description", "Most commonly used eCOA assessment tools")}
                 </CardDescription>
               </CardHeader>
 
@@ -348,11 +348,11 @@ export default function ScalesPage() {
                           <div className="text-xs text-muted-foreground mb-3 space-y-1">
                             <div className="flex items-center space-x-1">
                               <BookOpen className="w-3 h-3" />
-                              <span>{scale.itemsCount}题</span>
+                              <span>{scale.itemsCount} {t("scales.items", "items")}</span>
                             </div>
                             <div className="flex items-center space-x-1">
                               <Clock className="w-3 h-3" />
-                              <span>{scale.administrationTime}分钟</span>
+                              <span>{scale.administrationTime} {t("scales.minutes", "minutes")}</span>
                             </div>
                           </div>
 

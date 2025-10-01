@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import CookieConsent, { getCookieConsentValue, resetCookieConsentValue } from "react-cookie-consent";
+import { useLanguage } from "@/hooks/useLanguage";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Switch } from "@/components/ui/switch";
@@ -17,6 +18,7 @@ interface CookiePreferences {
 }
 
 export function CookieConsentBanner() {
+  const { t } = useLanguage();
   const [showPreferences, setShowPreferences] = useState(false);
   const [preferences, setPreferences] = useState<CookiePreferences>({
     necessary: true, // Always true, cannot be disabled
@@ -118,8 +120,8 @@ export function CookieConsentBanner() {
     <>
       <CookieConsent
         location="bottom"
-        buttonText="接受所有 Cookie"
-        declineButtonText="拒绝非必要"
+        buttonText={t('cookie_consent.accept_all')}
+        declineButtonText={t('cookie_consent.reject_non_essential')}
         enableDeclineButton
         onAccept={handleAcceptAll}
         onDecline={handleRejectAll}
@@ -158,14 +160,13 @@ export function CookieConsentBanner() {
         <div className="flex items-start gap-4 max-w-4xl">
           <Cookie className="h-6 w-6 mt-1 text-primary flex-shrink-0" />
           <div className="flex-1">
-            <h3 className="font-semibold text-lg mb-2">我们重视您的隐私</h3>
+            <h3 className="font-semibold text-lg mb-2">{t('cookie_consent.title')}</h3>
             <p className="text-sm text-muted-foreground mb-4 leading-relaxed">
-              我们使用 Cookie 来改善您的浏览体验、提供个性化内容和广告、分析网站流量并了解访客来源。
-              通过点击&quot;接受所有 Cookie&quot;，您同意我们使用所有 Cookie。您可以访问我们的{" "}
+              {t('cookie_consent.description')}{" "}
               <a href="/privacy" className="text-primary hover:underline">
-                隐私政策
+                {t('cookie_consent.privacy_policy')}
               </a>{" "}
-              了解更多信息。
+              {t('cookie_consent.learn_more')}
             </p>
             <div className="flex gap-2">
               <Button
@@ -175,7 +176,7 @@ export function CookieConsentBanner() {
                 className="text-xs"
               >
                 <Settings className="h-3 w-3 mr-1" />
-                Cookie 设置
+                {t('cookie_consent.cookie_settings')}
               </Button>
             </div>
           </div>
@@ -188,10 +189,10 @@ export function CookieConsentBanner() {
             <DialogHeader className="bg-background">
               <DialogTitle className="flex items-center gap-2 bg-background">
                 <Settings className="h-5 w-5" />
-                Cookie 首选项设置
+                {t('cookie_consent.preferences_title')}
               </DialogTitle>
               <DialogDescription className="bg-background">
-                您可以选择接受哪些类型的 Cookie。必要 Cookie 无法禁用，因为它们对网站正常运行至关重要。
+                {t('cookie_consent.preferences_description')}
               </DialogDescription>
             </DialogHeader>
 
@@ -202,9 +203,9 @@ export function CookieConsentBanner() {
                   <div className="flex items-center gap-3">
                     <Shield className="h-5 w-5 text-green-600" />
                     <div>
-                      <Label className="text-base font-medium">必要 Cookie</Label>
+                      <Label className="text-base font-medium">{t('cookie_consent.necessary')}</Label>
                       <p className="text-sm text-muted-foreground">
-                        这些 Cookie 对网站正常运行至关重要，无法禁用
+                        {t('cookie_consent.necessary_description')}
                       </p>
                     </div>
                   </div>
@@ -220,9 +221,9 @@ export function CookieConsentBanner() {
                   <div className="flex items-center gap-3">
                     <Settings className="h-5 w-5 text-blue-600" />
                     <div>
-                      <Label className="text-base font-medium">功能 Cookie</Label>
+                      <Label className="text-base font-medium">{t('cookie_consent.functional')}</Label>
                       <p className="text-sm text-muted-foreground">
-                        用于记住您的偏好设置和个性化体验
+                        {t('cookie_consent.functional_description')}
                       </p>
                     </div>
                   </div>
@@ -241,9 +242,9 @@ export function CookieConsentBanner() {
                   <div className="flex items-center gap-3">
                     <BarChart3 className="h-5 w-5 text-purple-600" />
                     <div>
-                      <Label className="text-base font-medium">分析 Cookie</Label>
+                      <Label className="text-base font-medium">{t('cookie_consent.analytics')}</Label>
                       <p className="text-sm text-muted-foreground">
-                        帮助我们了解访客如何使用网站以改进用户体验
+                        {t('cookie_consent.analytics_description')}
                       </p>
                     </div>
                   </div>
@@ -262,9 +263,9 @@ export function CookieConsentBanner() {
                   <div className="flex items-center gap-3">
                     <Cookie className="h-5 w-5 text-orange-600" />
                     <div>
-                      <Label className="text-base font-medium">营销 Cookie</Label>
+                      <Label className="text-base font-medium">{t('cookie_consent.marketing')}</Label>
                       <p className="text-sm text-muted-foreground">
-                        用于提供个性化广告和衡量广告效果
+                        {t('cookie_consent.marketing_description')}
                       </p>
                     </div>
                   </div>
@@ -278,13 +279,13 @@ export function CookieConsentBanner() {
 
             <div className="flex gap-3 pt-4 bg-background">
               <Button onClick={handleSavePreferences} className="flex-1">
-                保存设置
+                {t('cookie_consent.save_preferences')}
               </Button>
               <Button
                 variant="outline"
                 onClick={() => setShowPreferences(false)}
               >
-                取消
+                {t('cookie_consent.cancel')}
               </Button>
             </div>
           </div>

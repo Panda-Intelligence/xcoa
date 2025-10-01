@@ -1,10 +1,11 @@
 import { z } from "zod";
 import { catchaSchema } from "./catcha.schema";
+import { vm } from "@/lib/validation-messages";
 
 export const passkeyEmailSchema = z.object({
-  email: z.string().email("Please enter a valid email address"),
-  firstName: z.string().min(2, "First name must be at least 2 characters").max(255),
-  lastName: z.string().min(2, "Last name must be at least 2 characters").max(255),
+  email: z.string().email(vm.email_invalid),
+  firstName: z.string().min(2, vm.first_name_min_length(2)).max(255),
+  lastName: z.string().min(2, vm.last_name_min_length(2)).max(255),
   captchaToken: catchaSchema,
 });
 

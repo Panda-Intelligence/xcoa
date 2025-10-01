@@ -3,6 +3,7 @@
 import { ColumnDef } from "@tanstack/react-table"
 import { MoreHorizontal } from "lucide-react"
 import { formatDistanceToNow, format } from "date-fns"
+import { useLanguage } from "@/hooks/useLanguage"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -28,85 +29,89 @@ export type User = {
   createdAt: Date
 }
 
-export const columns: ColumnDef<User>[] = [
-  {
-    accessorKey: "email",
-    header: "Email",
-  },
-  {
-    accessorKey: "name",
-    header: "Name",
-  },
-  {
-    accessorKey: "role",
-    header: "Role",
-    cell: ({ row }) => {
-      const role = row.getValue("role") as string
-      return (
-        <Badge variant={role === "admin" ? "default" : "secondary"}>
-          {role}
-        </Badge>
-      )
-    },
-  },
-  {
-    accessorKey: "status",
-    header: "Status",
-    cell: ({ row }) => {
-      const status = row.getValue("status") as string
-      return (
-        <Badge variant={status === "active" ? "default" : "destructive"}>
-          {status}
-        </Badge>
-      )
-    },
-  },
-  {
-    accessorKey: "createdAt",
-    header: "Created",
-    cell: ({ row }) => {
-      const date = row.getValue("createdAt") as Date
-      const formattedDate = format(new Date(date), "PPpp")
-      return (
-        <Tooltip>
-          <TooltipTrigger>
-            {formatDistanceToNow(new Date(date), { addSuffix: true })}
-          </TooltipTrigger>
-          <TooltipContent>
-            <p>{formattedDate}</p>
-          </TooltipContent>
-        </Tooltip>
-      )
-    },
-  },
-  {
-    id: "actions",
-    cell: ({ row }) => {
-      const user = row.original
+export function useColumns(): ColumnDef<User>[] {
+  const { t } = useLanguage()
 
-      return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(user.id)}
-            >
-              Copy user ID
-            </DropdownMenuItem>
-            <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(user.email || "")}
-            >
-              Copy email
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      )
+  return [
+    {
+      accessorKey: "email",
+      header: t('admin.email'),
     },
-  },
-]
+    {
+      accessorKey: "name",
+      header: t('admin.name'),
+    },
+    {
+      accessorKey: "role",
+      header: t('admin.role'),
+      cell: ({ row }) => {
+        const role = row.getValue("role") as string
+        return (
+          <Badge variant={role === "admin" ? "default" : "secondary"}>
+            {role === "admin" ? t('admin.admin_role') : t('admin.user_role')}
+          </Badge>
+        )
+      },
+    },
+    {
+      accessorKey: "status",
+      header: t('admin.status'),
+      cell: ({ row }) => {
+        const status = row.getValue("status") as string
+        return (
+          <Badge variant={status === "active" ? "default" : "destructive"}>
+            {status === "active" ? t('admin.active') : t('admin.inactive')}
+          </Badge>
+        )
+      },
+    },
+    {
+      accessorKey: "createdAt",
+      header: t('admin.created'),
+      cell: ({ row }) => {
+        const date = row.getValue("createdAt") as Date
+        const formattedDate = format(new Date(date), "PPpp")
+        return (
+          <Tooltip>
+            <TooltipTrigger>
+              {formatDistanceToNow(new Date(date), { addSuffix: true })}
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>{formattedDate}</p>
+            </TooltipContent>
+          </Tooltip>
+        )
+      },
+    },
+    {
+      id: "actions",
+      cell: ({ row }) => {
+        const user = row.original
+
+        return (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" className="h-8 w-8 p-0">
+                <span className="sr-only">{t('admin.open_menu')}</span>
+                <MoreHorizontal className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuLabel>{t('admin.actions')}</DropdownMenuLabel>
+              <DropdownMenuItem
+                onClick={() => navigator.clipboard.writeText(user.id)}
+              >
+                {t('admin.copy_user_id')}
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => navigator.clipboard.writeText(user.email || "")}
+              >
+                {t('admin.copy_email')}
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        )
+      },
+    },
+  ]
+}

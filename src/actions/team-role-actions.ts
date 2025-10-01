@@ -3,35 +3,36 @@
 import { z } from "zod";
 import { createTeamRole, deleteTeamRole, getTeamRoles, updateTeamRole } from "@/server/team-roles";
 import { ZSAError, createServerAction } from "zsa";
+import { vm } from "@/lib/validation-messages";
 
 // Create role schema
 const createRoleSchema = z.object({
-  teamId: z.string().min(1, "Team ID is required"),
-  name: z.string().min(1, "Name is required").max(255, "Name is too long"),
-  description: z.string().max(1000, "Description is too long").optional(),
-  permissions: z.array(z.string()).min(1, "At least one permission is required"),
+  teamId: z.string().min(1, vm.team_id_required),
+  name: z.string().min(1, vm.name_required).max(255, vm.name_too_long),
+  description: z.string().max(1000, vm.description_too_long).optional(),
+  permissions: z.array(z.string()).min(1, vm.at_least_one_permission),
   metadata: z.record(z.unknown()).optional(),
 });
 
 // Update role schema
 const updateRoleSchema = z.object({
-  teamId: z.string().min(1, "Team ID is required"),
-  roleId: z.string().min(1, "Role ID is required"),
+  teamId: z.string().min(1, vm.team_id_required),
+  roleId: z.string().min(1, vm.role_id_required),
   data: z.object({
-    name: z.string().min(1, "Name is required").max(255, "Name is too long").optional(),
-    description: z.string().max(1000, "Description is too long").optional(),
-    permissions: z.array(z.string()).min(1, "At least one permission is required").optional(),
+    name: z.string().min(1, vm.name_required).max(255, vm.name_too_long).optional(),
+    description: z.string().max(1000, vm.description_too_long).optional(),
+    permissions: z.array(z.string()).min(1, vm.at_least_one_permission).optional(),
     metadata: z.record(z.unknown()).optional(),
   }),
 });
 
 const teamIdSchema = z.object({
-  teamId: z.string().min(1, "Team ID is required"),
+  teamId: z.string().min(1, vm.team_id_required),
 });
 
 const deleteRoleSchema = z.object({
-  teamId: z.string().min(1, "Team ID is required"),
-  roleId: z.string().min(1, "Role ID is required"),
+  teamId: z.string().min(1, vm.team_id_required),
+  roleId: z.string().min(1, vm.role_id_required),
 });
 
 /**

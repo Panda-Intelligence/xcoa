@@ -10,6 +10,7 @@ import {
 } from "@/actions/team-membership-actions";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { useLanguage } from "@/hooks/useLanguage";
 
 interface PendingInvitation {
   id: string;
@@ -39,6 +40,7 @@ export function PendingInvitations() {
   const [isLoading, setIsLoading] = useState(true);
   const [isAccepting, setIsAccepting] = useState<Record<string, boolean>>({});
   const router = useRouter();
+  const { t } = useLanguage();
 
   useEffect(() => {
     const fetchPendingInvitations = async () => {
@@ -68,7 +70,7 @@ export function PendingInvitations() {
 
       const typedResult = result as { success?: boolean } | undefined;
       if (typedResult?.success) {
-        toast.success("You have successfully joined the team");
+        toast.success(t("team.invitation_accepted_successfully", "You have successfully joined the team"));
 
         // Remove from pending list
         setPendingInvitations(prev => prev.filter(inv => inv.token !== token));
@@ -77,7 +79,7 @@ export function PendingInvitations() {
         router.refresh();
       }
     } catch {
-      toast.error("Failed to accept invitation");
+      toast.error(t("team.failed_to_accept_invitation", "Failed to accept invitation"));
     } finally {
       setIsAccepting(prev => ({ ...prev, [token]: false }));
     }
@@ -94,9 +96,9 @@ export function PendingInvitations() {
   return (
     <Card className="mb-8 border-orange-200 dark:border-orange-900 bg-orange-50 dark:bg-orange-950/20">
       <CardHeader>
-        <CardTitle className="text-xl">Pending Team Invitations</CardTitle>
+        <CardTitle className="text-xl">{t("team.pending_invitations", "Pending Team Invitations")}</CardTitle>
         <CardDescription>
-          You have been invited to join the following teams
+          {t("team.pending_invitations_description", "You have been invited to join the following teams")}
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
@@ -120,7 +122,7 @@ export function PendingInvitations() {
               <div>
                 <h3 className="font-medium">{invitation.team.name}</h3>
                 <p className="text-sm text-muted-foreground">
-                  Invited by {invitation.invitedBy.firstName || ''} {invitation.invitedBy.lastName || ''}
+                  {t("team.invited_by", "Invited by")} {invitation.invitedBy.firstName || ''} {invitation.invitedBy.lastName || ''}
                 </p>
               </div>
             </div>
@@ -130,11 +132,11 @@ export function PendingInvitations() {
               size="sm"
             >
               {isAccepting[invitation.token] ? (
-                "Accepting..."
+                t("team.accepting", "Accepting...")
               ) : (
                 <>
                   <CheckCircle className="mr-2 h-4 w-4" />
-                  Accept
+                  {t("team.accept", "Accept")}
                 </>
               )}
             </Button>

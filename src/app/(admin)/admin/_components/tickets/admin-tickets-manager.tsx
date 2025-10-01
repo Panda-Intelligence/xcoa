@@ -330,7 +330,7 @@ export function AdminTicketsManager() {
           <div className="flex-1 relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
             <Input
-              placeholder="搜索工单号、用户、量表或版权方..."
+              placeholder={t('admin.search_tickets_placeholder')}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="pl-10"
@@ -546,7 +546,7 @@ export function AdminTicketsManager() {
                   <Textarea
                     value={updateForm.adminNotes}
                     onChange={(e) => setUpdateForm({ ...updateForm, adminNotes: e.target.value })}
-                    placeholder="记录处理进展、联系情况或其他重要信息..."
+                    placeholder={t('admin.progress_notes_placeholder')}
                     rows={3}
                   />
                 </div>
@@ -556,7 +556,7 @@ export function AdminTicketsManager() {
                   <Textarea
                     value={updateForm.responseMessage}
                     onChange={(e) => setUpdateForm({ ...updateForm, responseMessage: e.target.value })}
-                    placeholder="向用户说明当前进展或需要的后续行动..."
+                    placeholder={t('admin.user_message_placeholder')}
                     rows={3}
                   />
                 </div>

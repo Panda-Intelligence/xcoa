@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { useLanguage } from "@/hooks/useLanguage";
 
 interface ClinicalCase {
   id: string;
@@ -40,6 +41,7 @@ interface ClinicalCaseDetailProps {
 
 export function ClinicalCaseDetail({ caseId }: ClinicalCaseDetailProps) {
   const router = useRouter();
+  const { t } = useLanguage();
   const [clinicalCase, setClinicalCase] = useState<ClinicalCase | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -57,11 +59,11 @@ export function ClinicalCaseDetail({ caseId }: ClinicalCaseDetailProps) {
       if (data.success) {
         setClinicalCase(data.case);
       } else {
-        setError(data.error || "加载案例失败");
+        setError(data.error || t("insights.load_case_failed", "Failed to load case"));
       }
     } catch (error) {
-      console.error("加载案例详情失败:", error);
-      setError("网络错误，请稍后重试");
+      console.error("Failed to load case details:", error);
+      setError(t("insights.network_error", "Network error, please try again later"));
     } finally {
       setLoading(false);
     }
@@ -78,13 +80,13 @@ export function ClinicalCaseDetail({ caseId }: ClinicalCaseDetailProps) {
 
   const getSpecialtyLabel = (specialty?: string) => {
     const labels = {
-      psychiatry: '精神科',
-      oncology: '肿瘤学',
-      neurology: '神经科学',
-      cardiology: '心脏病学',
-      general: '全科医学'
+      psychiatry: t("insights.specialty.psychiatry", "Psychiatry"),
+      oncology: t("insights.specialty.oncology", "Oncology"),
+      neurology: t("insights.specialty.neurology", "Neurology"),
+      cardiology: t("insights.specialty.cardiology", "Cardiology"),
+      general: t("insights.specialty.general", "General Medicine")
     };
-    return specialty ? labels[specialty as keyof typeof labels] || specialty : '未知专科';
+    return specialty ? labels[specialty as keyof typeof labels] || specialty : t("insights.specialty.unknown", "Unknown Specialty");
   };
 
   if (loading) {
@@ -93,7 +95,7 @@ export function ClinicalCaseDetail({ caseId }: ClinicalCaseDetailProps) {
         <div className="min-h-[100vh] flex items-center justify-center">
           <div className="text-center">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900 mx-auto"></div>
-            <p className="mt-2 text-sm text-muted-foreground">加载中...</p>
+            <p className="mt-2 text-sm text-muted-foreground">{t("common.loading", "Loading...")}</p>
           </div>
         </div>
       </div>
