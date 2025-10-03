@@ -8,19 +8,6 @@ export const useToast = () => {
     warning: (message: string) => toast.warning(message),
     loading: (message: string) => toast.loading(message),
     dismiss: (toastId: string | number) => toast.dismiss(toastId),
-    confirm: (message: string) => new Promise<boolean>((resolve) => {
-      toast(message, {
-        action: {
-          label: "确认",
-          onClick: () => resolve(true),
-        },
-        cancel: {
-          label: "取消",
-          onClick: () => resolve(false),
-        },
-        duration: Infinity,
-      });
-    }),
   };
 };
 

@@ -41,6 +41,7 @@ import { useLanguage } from "@/hooks/useLanguage";
 import { useRouter } from "next/navigation";
 import { format } from "date-fns";
 import { useToast } from "@/hooks/useToast";
+import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 
 interface CopyrightTicket {
   id: string;
@@ -89,6 +90,8 @@ export function AdminTicketsManager() {
   const [hasMore, setHasMore] = useState(false);
   const [selectedTicket, setSelectedTicket] = useState<CopyrightTicket | null>(null);
   const [updateDialogOpen, setUpdateDialogOpen] = useState(false);
+  const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
+  const [ticketToDelete, setTicketToDelete] = useState<string | null>(null);
   const [updateForm, setUpdateForm] = useState({
     status: "",
     adminNotes: "",
@@ -155,13 +158,11 @@ export function AdminTicketsManager() {
     }
   };
 
-  const deleteTicket = async (ticketId: string) => {
-    const confirmed = await toast.confirm("确定要删除这个版权工单吗？此操作不可逆转。");
-    if (!confirmed) {
-      return;
-    }
+  const deleteTicket = async () => {
+    if (!ticketToDelete) return;
 
     try {
+      const ticketId = ticketToDelete;
       const response = await fetch(`/api/admin/copyright-tickets/${ticketId}`, {
         method: "DELETE"
       });
@@ -169,6 +170,7 @@ export function AdminTicketsManager() {
       const data = await response.json();
 
       if (response.ok) {
+        setTicketToDelete(null);
         fetchTickets();
         toast.success("工单删除成功！");
       } else {

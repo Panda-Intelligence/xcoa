@@ -35,6 +35,7 @@ import { useLanguage } from "@/hooks/useLanguage";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/hooks/useToast";
 import Link from "next/link";
+import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 
 interface EcoaScale {
   id: string;
@@ -90,6 +91,8 @@ export function AdminScalesManager() {
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(false);
+  const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
+  const [scaleToDelete, setScaleToDelete] = useState<string | null>(null);
   const [newScale, setNewScale] = useState({
     name: "",
     nameEn: "",
@@ -165,13 +168,11 @@ export function AdminScalesManager() {
     }
   };
 
-  const deleteScale = async (scaleId: string) => {
-    const confirmed = await toast.confirm("确定要删除这个量表吗？此操作不可逆转，相关的临床案例也会受到影响。");
-    if (!confirmed) {
-      return;
-    }
+  const deleteScale = async () => {
+    if (!scaleToDelete) return;
 
     try {
+      const scaleId = scaleToDelete;
       const response = await fetch(`/api/admin/scales/${scaleId}`, {
         method: "DELETE"
       });
@@ -179,6 +180,7 @@ export function AdminScalesManager() {
       const data = await response.json();
 
       if (response.ok) {
+        setScaleToDelete(null);
         fetchScales();
         toast.success("量表删除成功！");
       } else {
@@ -600,7 +602,10 @@ export function AdminScalesManager() {
                         <Button
                           size="sm"
                           variant="outline"
-                          onClick={() => deleteScale(scale.id)}
+                          onClick={() => {
+                            setScaleToDelete(scale.id);
+                            setDeleteConfirmOpen(true);
+                          }}
                         >
                           <Trash2 className="w-3 h-3 mr-1" />
                         </Button>
@@ -644,6 +649,18 @@ export function AdminScalesManager() {
           </CardContent>
         </Card>
       </div>
+
+      {/* 删除确认对话框 */}
+      <ConfirmDialog
+        open={deleteConfirmOpen}
+        onOpenChange={setDeleteConfirmOpen}
+        title="删除量表"
+        description="确定要删除这个量表吗？此操作不可逆转，相关的临床案例也会受到影响。"
+        confirmText="删除"
+        cancelText="取消"
+        onConfirm={deleteScale}
+        variant="destructive"
+      />
     </>
   );
 }

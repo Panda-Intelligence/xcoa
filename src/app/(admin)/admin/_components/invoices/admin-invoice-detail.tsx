@@ -19,6 +19,7 @@ import {
 import { useRouter } from "next/navigation";
 import { generateInvoicePDF } from "@/utils/pdf-generator";
 import { useToast } from "@/hooks/useToast";
+import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 
 interface Invoice {
   id: string;
@@ -52,6 +53,7 @@ export function AdminInvoiceDetail({ invoiceId }: AdminInvoiceDetailProps) {
   const [invoice, setInvoice] = useState<Invoice | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
 
   useEffect(() => {
     fetchInvoiceDetail();
@@ -102,11 +104,6 @@ export function AdminInvoiceDetail({ invoiceId }: AdminInvoiceDetailProps) {
 
   const deleteInvoice = async () => {
     if (!invoice) return;
-    
-    const confirmed = await toast.confirm("确定要删除这张发票吗？此操作不可逆转。");
-    if (!confirmed) {
-      return;
-    }
 
     try {
       const response = await fetch(`/api/admin/invoices/${invoiceId}`, {
@@ -343,7 +340,7 @@ export function AdminInvoiceDetail({ invoiceId }: AdminInvoiceDetailProps) {
             {invoice.status === "draft" && (
               <Button
                 variant="destructive"
-                onClick={deleteInvoice}
+                onClick={() => setDeleteConfirmOpen(true)}
               >
                 <Trash2 className="w-4 h-4 mr-2" />
                 删除发票
@@ -352,6 +349,18 @@ export function AdminInvoiceDetail({ invoiceId }: AdminInvoiceDetailProps) {
           </div>
         </CardContent>
       </Card>
+
+      {/* 删除确认对话框 */}
+      <ConfirmDialog
+        open={deleteConfirmOpen}
+        onOpenChange={setDeleteConfirmOpen}
+        title="删除发票"
+        description="确定要删除这张发票吗？此操作不可逆转。"
+        confirmText="删除"
+        cancelText="取消"
+        onConfirm={deleteInvoice}
+        variant="destructive"
+      />
     </div>
   );
 }

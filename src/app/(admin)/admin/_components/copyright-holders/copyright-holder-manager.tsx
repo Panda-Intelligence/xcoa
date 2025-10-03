@@ -36,6 +36,7 @@ import {
 } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useToast } from "@/hooks/useToast";
+import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 
 interface CopyrightHolder {
   id: string;
@@ -84,6 +85,8 @@ export function CopyrightHolderManager() {
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [editingHolder, setEditingHolder] = useState<CopyrightHolder | null>(null);
+  const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
+  const [holderToDelete, setHolderToDelete] = useState<string | null>(null);
   const [newHolder, setNewHolder] = useState({
     name: "",
     nameEn: "",
@@ -186,13 +189,11 @@ export function CopyrightHolderManager() {
     }
   };
 
-  const handleDeleteHolder = async (holderId: string) => {
-    const confirmed = await toast.confirm("确定要删除这个版权方吗？这将影响相关的量表。");
-    if (!confirmed) {
-      return;
-    }
+  const handleDeleteHolder = async () => {
+    if (!holderToDelete) return;
 
     try {
+      const holderId = holderToDelete;
       const response = await fetch(`/api/admin/copyright-holders/${holderId}`, {
         method: "DELETE",
       });
@@ -201,6 +202,7 @@ export function CopyrightHolderManager() {
 
       if (data.success) {
         toast.success("版权方删除成功");
+        setHolderToDelete(null);
         fetchHolders();
       } else {
         toast.error(data.error || "删除版权方失败");
@@ -626,7 +628,10 @@ export function CopyrightHolderManager() {
                           <Button
                             variant="outline"
                             size="sm"
-                            onClick={() => handleDeleteHolder(holder.id)}
+                            onClick={() => {
+                              setHolderToDelete(holder.id);
+                              setDeleteConfirmOpen(true);
+                            }}
                             className="text-red-600 hover:text-red-700"
                           >
                             <Trash2 className="w-3 h-3" />
@@ -794,6 +799,18 @@ export function CopyrightHolderManager() {
           </div>
         </DialogContent>
       </Dialog>
+
+      {/* 删除确认对话框 */}
+      <ConfirmDialog
+        open={deleteConfirmOpen}
+        onOpenChange={setDeleteConfirmOpen}
+        title="删除版权方"
+        description="确定要删除这个版权方吗？这将影响相关的量表。此操作不可逆转。"
+        confirmText="删除"
+        cancelText="取消"
+        onConfirm={handleDeleteHolder}
+        variant="destructive"
+      />
     </div>
   );
 }
