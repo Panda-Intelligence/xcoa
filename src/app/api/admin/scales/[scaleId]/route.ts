@@ -134,7 +134,7 @@ export async function PUT(
     if (updateData.ageRange !== undefined) updateFields.ageRange = updateData.ageRange;
     if (updateData.validationStatus) updateFields.validationStatus = updateData.validationStatus;
     if (updateData.copyrightInfo !== undefined) updateFields.copyrightInfo = updateData.copyrightInfo;
-    
+
     // Copyright fields directly in ecoaScaleTable
     if (updateData.copyrightHolderId !== undefined) updateFields.copyrightHolderId = updateData.copyrightHolderId;
     if (updateData.licenseType !== undefined) updateFields.licenseType = updateData.licenseType;
@@ -212,13 +212,6 @@ export async function DELETE(
 
     if (scale.length === 0) {
       return NextResponse.json({ error: 'Scale not found' }, { status: 404 });
-    }
-
-    if (scale[0].validationStatus !== 'draft') {
-      return NextResponse.json(
-        { error: 'Only draft scales can be deleted' },
-        { status: 400 }
-      );
     }
 
     // 删除量表

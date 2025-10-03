@@ -155,7 +155,7 @@
   },
   "scale_detail": {
     "loading": "加载中...",
-    "back_to_search": "返回搜索",
+    "back_to_search": "返回",
     "scale_preview": "量表预览",
     "view_full_details": "查看完整详情",
     "basic_info": "基本信息",
@@ -1106,7 +1106,7 @@
     "validated": "已验证",
     "draft": "草稿",
     "published": "已发布",
-    "back_to_search": "返回搜索",
+    "back_to_search": "返回",
     "scale_details": "量表详情",
     "favorited": "已收藏",
     "favorite": "收藏",

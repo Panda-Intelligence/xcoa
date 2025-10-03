@@ -156,7 +156,7 @@
   },
   "scale_detail": {
     "loading": "Loading...",
-    "back_to_search": "Back to Search",
+    "back_to_search": "Back",
     "scale_preview": "Scale Preview",
     "view_full_details": "View Full Details",
     "basic_info": "Basic Information",
@@ -1108,7 +1108,7 @@
     "validated": "Validated",
     "draft": "Draft",
     "published": "Published",
-    "back_to_search": "Back to Search",
+    "back_to_search": "Back",
     "scale_details": "Scale Details",
     "favorited": "Favorited",
     "favorite": "Favorite",

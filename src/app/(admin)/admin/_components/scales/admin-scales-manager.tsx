@@ -34,6 +34,7 @@ import { PageHeader } from "@/components/page-header";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/hooks/useToast";
+import Link from "next/link";
 
 interface EcoaScale {
   id: string;
@@ -508,7 +509,6 @@ export function AdminScalesManager() {
                   <TableHead>版权方</TableHead>
                   <TableHead>许可类型</TableHead>
                   <TableHead>题目数</TableHead>
-                  <TableHead>使用次数</TableHead>
                   <TableHead>操作</TableHead>
                 </TableRow>
               </TableHeader>
@@ -517,7 +517,9 @@ export function AdminScalesManager() {
                   <TableRow key={scale.id}>
                     <TableCell>
                       <div>
-                        <div className="font-medium">{scale.name}</div>
+                        <div className="font-medium">
+                          <Link href={`/scales/${scale.id}`}>{scale.name}</Link>
+                        </div>
                         {scale.nameEn && (
                           <div className="text-sm text-muted-foreground">{scale.nameEn}</div>
                         )}
@@ -555,10 +557,10 @@ export function AdminScalesManager() {
                             <div className="flex items-center space-x-1 mt-1">
                               <Badge variant="outline" className="text-xs">
                                 {scale.copyrightHolder.organizationType === 'publisher' ? '出版商' :
-                                 scale.copyrightHolder.organizationType === 'research_institution' ? '研究机构' :
-                                 scale.copyrightHolder.organizationType === 'individual' ? '个人' :
-                                 scale.copyrightHolder.organizationType === 'foundation' ? '基金会' : 
-                                 scale.copyrightHolder.organizationType}
+                                  scale.copyrightHolder.organizationType === 'research_institution' ? '研究机构' :
+                                    scale.copyrightHolder.organizationType === 'individual' ? '个人' :
+                                      scale.copyrightHolder.organizationType === 'foundation' ? '基金会' :
+                                        scale.copyrightHolder.organizationType}
                               </Badge>
                               {scale.copyrightHolder.isVerified === 1 && (
                                 <Badge variant="outline" className="text-xs text-green-600">
@@ -585,45 +587,22 @@ export function AdminScalesManager() {
                     <TableCell className="text-center">
                       {scale.itemsCount}
                     </TableCell>
-                    <TableCell className="text-center">
-                      {scale.usageCount}
-                    </TableCell>
                     <TableCell>
                       <div className="flex space-x-2">
                         <Button
                           size="sm"
                           variant="outline"
-                          onClick={() => router.push(`/scales/${scale.id}`)}
+                          onClick={() => router.push(`/admin/scales/${scale.id}`)}
                         >
-                          <Eye className="w-3 h-3 mr-1" />
-                          预览
+                          <Edit className="w-3 h-3 mr-1" />
                         </Button>
                         <Button
                           size="sm"
                           variant="outline"
-                          onClick={() => router.push(`/admin/scales/${scale.id}`)}
+                          onClick={() => deleteScale(scale.id)}
                         >
-                          <Edit className="w-3 h-3 mr-1" />
-                          管理题目
+                          <Trash2 className="w-3 h-3 mr-1" />
                         </Button>
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          onClick={() => router.push(`/admin/scales/${scale.id}`)}
-                        >
-                          <Edit className="w-3 h-3 mr-1" />
-                          编辑
-                        </Button>
-                        {scale.validationStatus === "draft" && (
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            onClick={() => deleteScale(scale.id)}
-                          >
-                            <Trash2 className="w-3 h-3 mr-1" />
-                            删除
-                          </Button>
-                        )}
                       </div>
                     </TableCell>
                   </TableRow>
