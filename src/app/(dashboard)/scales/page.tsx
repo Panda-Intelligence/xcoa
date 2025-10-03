@@ -241,7 +241,7 @@ export default function ScalesPage() {
 
   const getLicenseIcon = (licenseType?: string | null) => {
     if (!licenseType) return '🔍';
-    
+
     switch (licenseType) {
       case 'public_domain':
         return '🆓';
@@ -360,8 +360,6 @@ export default function ScalesPage() {
       <div className="flex-1 overflow-auto">
         <div className="p-4 space-y-6">
 
-
-          {/* 全部量表 Tab */}
           {loadingAllScales ? (
             <div className="border rounded-md flex-1">
               <div className="animate-pulse p-4 space-y-3">
@@ -371,7 +369,7 @@ export default function ScalesPage() {
               </div>
             </div>
           ) : (
-            <>
+            results.length === 0 && <>
               {/* 表格容器 - 固定表头和底部 */}
               <div className="border rounded-md flex-1 flex flex-col overflow-hidden">
                 <div className="overflow-y-auto flex-1">
@@ -388,9 +386,9 @@ export default function ScalesPage() {
                               {header.isPlaceholder
                                 ? null
                                 : flexRender(
-                                    header.column.columnDef.header,
-                                    header.getContext()
-                                  )}
+                                  header.column.columnDef.header,
+                                  header.getContext()
+                                )}
                             </TableHead>
                           ))}
                         </TableRow>

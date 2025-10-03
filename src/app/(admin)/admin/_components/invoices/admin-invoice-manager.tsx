@@ -178,7 +178,8 @@ export function AdminInvoiceManager() {
   };
 
   const deleteInvoice = async (invoiceId: string) => {
-    if (!confirm("确定要删除这张发票吗？此操作不可逆转。")) {
+    const confirmed = await toast.confirm("确定要删除这张发票吗？此操作不可逆转。");
+    if (!confirmed) {
       return;
     }
 

@@ -166,7 +166,8 @@ export function AdminScalesManager() {
   };
 
   const deleteScale = async (scaleId: string) => {
-    if (!confirm("确定要删除这个量表吗？此操作不可逆转，相关的临床案例也会受到影响。")) {
+    const confirmed = await toast.confirm("确定要删除这个量表吗？此操作不可逆转，相关的临床案例也会受到影响。");
+    if (!confirmed) {
       return;
     }
 

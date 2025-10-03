@@ -156,7 +156,8 @@ export function AdminTicketsManager() {
   };
 
   const deleteTicket = async (ticketId: string) => {
-    if (!confirm("确定要删除这个版权工单吗？此操作不可逆转。")) {
+    const confirmed = await toast.confirm("确定要删除这个版权工单吗？此操作不可逆转。");
+    if (!confirmed) {
       return;
     }
 

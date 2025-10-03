@@ -26,6 +26,7 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import { useLanguage } from '@/hooks/useLanguage';
+import { toast } from 'sonner';
 
 interface TicketDetail {
   id: string;
@@ -123,11 +124,11 @@ export default function TicketDetailPage({ params }: TicketDetailPageProps) {
         setUpdateMessageOpen(false);
         await fetchTicketDetails();
       } else {
-        alert(data.error || 'Failed to send message');
+        toast.error(data.error || 'Failed to send message');
       }
     } catch (error) {
       console.error('Send message error:', error);
-      alert('Failed to send message');
+      toast.error('Failed to send message');
     } finally {
       setSending(false);
     }

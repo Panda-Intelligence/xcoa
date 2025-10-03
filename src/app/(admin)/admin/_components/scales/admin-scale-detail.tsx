@@ -192,7 +192,8 @@ export function AdminScaleDetail({ scaleId }: AdminScaleDetailProps) {
   };
 
   const deleteItem = async (itemId: string) => {
-    if (!confirm("确定要删除这个题目吗？此操作不可逆转。")) {
+    const confirmed = await toast.confirm("确定要删除这个题目吗？此操作不可逆转。");
+    if (!confirmed) {
       return;
     }
 

@@ -187,7 +187,8 @@ export function CopyrightHolderManager() {
   };
 
   const handleDeleteHolder = async (holderId: string) => {
-    if (!confirm("确定要删除这个版权方吗？这将影响相关的量表。")) {
+    const confirmed = await toast.confirm("确定要删除这个版权方吗？这将影响相关的量表。");
+    if (!confirmed) {
       return;
     }
 

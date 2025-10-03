@@ -101,7 +101,10 @@ export function AdminInvoiceDetail({ invoiceId }: AdminInvoiceDetailProps) {
   };
 
   const deleteInvoice = async () => {
-    if (!invoice || !confirm("确定要删除这张发票吗？此操作不可逆转。")) {
+    if (!invoice) return;
+    
+    const confirmed = await toast.confirm("确定要删除这张发票吗？此操作不可逆转。");
+    if (!confirmed) {
       return;
     }
 

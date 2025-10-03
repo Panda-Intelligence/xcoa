@@ -190,7 +190,8 @@ export function AdminCasesManager() {
   };
 
   const deleteCase = async (caseId: string) => {
-    if (!confirm("确定要删除这个临床案例吗？此操作不可逆转。")) {
+    const confirmed = await toast.confirm("确定要删除这个临床案例吗？此操作不可逆转。");
+    if (!confirmed) {
       return;
     }
 

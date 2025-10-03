@@ -25,6 +25,7 @@ import Link from 'next/link';
 import { useLanguage } from '@/hooks/useLanguage';
 import { FavoriteButton } from '@/components/favorites/FavoriteButton';
 import { ClinicalCasesTab } from '@/components/ClinicalCasesTab';
+import { useRouter } from 'next/navigation';
 
 interface ScalePageProps {
   params: Promise<{ scaleId: string }>;
@@ -59,6 +60,7 @@ async function getScaleDetails(scaleId: string): Promise<ScaleData | null> {
 
 export default function ScalePage({ params }: ScalePageProps) {
   const { t } = useLanguage();
+  const router = useRouter();
   const [scaleId, setScaleId] = useState<string>('');
   const [data, setData] = useState<ScaleData | null>(null);
   const [loading, setLoading] = useState(true);
