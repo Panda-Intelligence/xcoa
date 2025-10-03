@@ -12,7 +12,7 @@ import { useRouter } from 'next/navigation';
 
 interface PricingPlansProps {
   currentPlan?: SubscriptionPlan | null;
-  onSelectPlan?: (plan: SubscriptionPlan) => void;
+  onSelectPlan?: (plan: SubscriptionPlan, billingInterval: 'monthly' | 'yearly') => void;
 }
 
 export function PricingPlans({ currentPlan, onSelectPlan }: PricingPlansProps) {
@@ -50,10 +50,10 @@ export function PricingPlans({ currentPlan, onSelectPlan }: PricingPlansProps) {
 
   const handleSelectPlan = (plan: SubscriptionPlan) => {
     if (onSelectPlan) {
-      onSelectPlan(plan);
+      onSelectPlan(plan, billingCycle);
     } else {
       // Default: redirect to billing page with plan selection
-      router.push(`/billing?plan=${plan}`);
+      router.push(`/billing?plan=${plan}&interval=${billingCycle}`);
     }
   };
 

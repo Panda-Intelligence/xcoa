@@ -52,6 +52,10 @@ export const teamTable = sqliteTable("team", {
   planId: text({ length: 100 }),
   planExpiresAt: integer({ mode: "timestamp" }),
   creditBalance: integer().default(0).notNull(),
+  
+  // Stripe integration
+  stripeCustomerId: text({ length: 255 }),
+  stripeSubscriptionId: text({ length: 255 }),
 
   // Invoice and legal information
   legalName: text({ length: 255 }), // 法定名称

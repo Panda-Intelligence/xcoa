@@ -59,14 +59,84 @@ export function SubscriptionManager() {
     }
   };
 
-  const handlePlanSelect = async (plan: SubscriptionPlan) => {
+  const handlePlanSelect = async (plan: SubscriptionPlan, billingInterval: 'monthly' | 'yearly' = 'monthly') => {
     if (plan === SUBSCRIPTION_PLANS.FREE) {
       toast.error(isZh ? '暂不支持降级到免费版' : 'Downgrade to Free not supported yet');
       return;
     }
 
-    // TODO: Integrate with payment system (Stripe)
-    toast.info(isZh ? '订阅功能即将上线' : 'Subscription feature coming soon');
+    if (!subscription?.teamId) {
+      toast.error(isZh ? '未找到团队信息' : 'Team information not found');
+      return;
+    }
+
+    try {
+      toast.info(isZh ? '正在创建订阅会话...' : 'Creating checkout session...');
+      
+      const response = await fetch('/api/subscription/checkout', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          planId: plan,
+          billingInterval,
+          teamId: subscription.teamId,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (data.success && data.url) {
+        window.location.href = data.url;
+      } else {
+        toast.error(data.message || (isZh ? '创建订阅会话失败' : 'Failed to create checkout session'));
+      }
+    } catch (error) {
+      console.error('Subscription checkout error:', error);
+      toast.error(isZh ? '订阅失败，请重试' : 'Subscription failed, please retry');
+    }
+  };
+
+  const handleManageSubscription = async () => {
+    if (!subscription?.teamId) {
+      toast.error(isZh ? '未找到团队信息' : 'Team information not found');
+      return;
+    }
+
+    try {
+      toast.info(isZh ? '正在打开订阅管理门户...' : 'Opening subscription portal...');
+      
+      const response = await fetch('/api/subscription/portal', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          teamId: subscription.teamId,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (data.success && data.url) {
+        window.location.href = data.url;
+      } else if (data.error === 'Portal not configured') {
+        toast.error(
+          isZh 
+            ? '客户管理门户未配置。请联系管理员配置 Stripe 客户门户。' 
+            : 'Customer portal not configured. Please contact admin to set up Stripe customer portal.'
+        );
+        if (data.configUrl) {
+          console.log('Configure portal at:', data.configUrl);
+        }
+      } else {
+        toast.error(data.message || (isZh ? '打开管理门户失败' : 'Failed to open portal'));
+      }
+    } catch (error) {
+      console.error('Portal error:', error);
+      toast.error(isZh ? '打开管理门户失败，请重试' : 'Failed to open portal, please retry');
+    }
   };
 
   if (loading) {
@@ -220,10 +290,16 @@ export function SubscriptionManager() {
                     {isZh ? '升级到企业版' : 'Upgrade to Enterprise'}
                   </Button>
                 )}
-                {currentPlan !== SUBSCRIPTION_PLANS.FREE && (
-                  <Button variant="outline" onClick={() => setShowPricing(true)}>
-                    {isZh ? '查看所有计划' : 'View All Plans'}
-                  </Button>
+                {currentPlan !== SUBSCRIPTION_PLANS.FREE && subscription?.isActive && !isExpired && (
+                  <>
+                    <Button variant="outline" onClick={handleManageSubscription}>
+                      <CreditCard className="w-4 h-4 mr-2" />
+                      {isZh ? '管理订阅' : 'Manage Subscription'}
+                    </Button>
+                    <Button variant="outline" onClick={() => setShowPricing(true)}>
+                      {isZh ? '查看所有计划' : 'View All Plans'}
+                    </Button>
+                  </>
                 )}
               </div>
 

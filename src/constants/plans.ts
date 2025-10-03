@@ -6,6 +6,17 @@ export const SUBSCRIPTION_PLANS = {
 
 export type SubscriptionPlan = typeof SUBSCRIPTION_PLANS[keyof typeof SUBSCRIPTION_PLANS];
 
+export const STRIPE_PRICE_IDS = {
+  [SUBSCRIPTION_PLANS.STARTER]: {
+    monthly: process.env.NEXT_PUBLIC_STRIPE_STARTER_MONTHLY_PRICE_ID || '',
+    yearly: process.env.NEXT_PUBLIC_STRIPE_STARTER_YEARLY_PRICE_ID || '',
+  },
+  [SUBSCRIPTION_PLANS.ENTERPRISE]: {
+    monthly: process.env.NEXT_PUBLIC_STRIPE_ENTERPRISE_MONTHLY_PRICE_ID || '',
+    yearly: process.env.NEXT_PUBLIC_STRIPE_ENTERPRISE_YEARLY_PRICE_ID || '',
+  },
+} as const;
+
 export const PLAN_FEATURES = {
   [SUBSCRIPTION_PLANS.FREE]: {
     name: '免费版',

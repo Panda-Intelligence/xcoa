@@ -19,7 +19,8 @@
     "email:dev": "email dev -d src/react-email -p 3001",
     "list:kv": "wrangler kv key list --namespace-id=$(node scripts/get-kv-id.mjs) --remote | jq '[.[].name]' > kv.log",
     "delete:kv": "wrangler kv bulk delete kv.log --namespace-id=$(node scripts/get-kv-id.mjs) --remote",
-    "crawl": "ts-node scripts/crawlee/html.ts"
+    "crawl": "ts-node scripts/crawlee/html.ts",
+    "check:stripe": "node scripts/check-stripe-config.js"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
