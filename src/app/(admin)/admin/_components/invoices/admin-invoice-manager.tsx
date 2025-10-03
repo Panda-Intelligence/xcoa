@@ -37,6 +37,7 @@ import { TeamSelector } from "./team-selector";
 import { generateInvoicePDF } from "@/utils/pdf-generator";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/hooks/useToast";
+import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 
 interface Invoice {
   id: string;
@@ -79,6 +80,8 @@ export function AdminInvoiceManager() {
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(false);
+  const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
+  const [invoiceToDelete, setInvoiceToDelete] = useState<string | null>(null);
   const [newInvoice, setNewInvoice] = useState({
     customerName: "",
     customerEmail: "",
@@ -177,12 +180,11 @@ export function AdminInvoiceManager() {
     setSelectedTeam(null);
   };
 
-  const deleteInvoice = async (invoiceId: string) => {
-    if (!confirm("确定要删除这张发票吗？此操作不可逆转。")) {
-      return;
-    }
+  const deleteInvoice = async () => {
+    if (!invoiceToDelete) return;
 
     try {
+      const invoiceId = invoiceToDelete;
       const response = await fetch(`/api/admin/invoices/${invoiceId}`, {
         method: "DELETE"
       });
@@ -190,6 +192,7 @@ export function AdminInvoiceManager() {
       const data = await response.json();
 
       if (response.ok) {
+        setInvoiceToDelete(null);
         fetchInvoices();
         toast.success("发票删除成功！");
       } else {
@@ -540,7 +543,10 @@ export function AdminInvoiceManager() {
                           <Button
                             size="sm"
                             variant="outline"
-                            onClick={() => deleteInvoice(invoice.id)}
+                            onClick={() => {
+                              setInvoiceToDelete(invoice.id);
+                              setDeleteConfirmOpen(true);
+                            }}
                           >
                             <Trash2 className="w-3 h-3 mr-1" />
                             删除
@@ -586,6 +592,18 @@ export function AdminInvoiceManager() {
           </CardContent>
         </Card>
       </div>
+
+      {/* 删除确认对话框 */}
+      <ConfirmDialog
+        open={deleteConfirmOpen}
+        onOpenChange={setDeleteConfirmOpen}
+        title="删除发票"
+        description="确定要删除这张发票吗？此操作不可逆转。"
+        confirmText="删除"
+        cancelText="取消"
+        onConfirm={deleteInvoice}
+        variant="destructive"
+      />
     </>
   );
 }

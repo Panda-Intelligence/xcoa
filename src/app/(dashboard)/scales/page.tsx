@@ -1,12 +1,13 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { PageHeader } from '@/components/page-header';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import {
   Search,
   Eye,
@@ -14,12 +15,21 @@ import {
   Users,
   BookOpen,
   Shield,
+  ChevronLeft,
+  ChevronRight,
 } from 'lucide-react';
 import Link from 'next/link';
 import { useLanguage } from '@/hooks/useLanguage';
 import { useFavoritesStore } from '@/state/favorites';
 import { FavoriteButton } from '@/components/favorites/FavoriteButton';
 import { useRouter } from 'next/navigation';
+import type { HotScale } from './_components/types';
+import {
+  useReactTable,
+  getCoreRowModel,
+  flexRender,
+  type ColumnDef,
+} from '@tanstack/react-table';
 
 interface SearchResult {
   id: string;
@@ -34,21 +44,7 @@ interface SearchResult {
   match_score: number;
   languages: string[];
   usageCount: number;
-}
-
-interface HotScale {
-  id: string;
-  name: string;
-  nameEn: string;
-  acronym: string;
-  categoryName: string;
-  itemsCount: number;
-  administrationTime: number;
-  targetPopulation: string;
-  validationStatus: string;
-  usageCount: number;
-  favoriteCount: number;
-  icon: string;
+  licenseType?: string | null;
 }
 
 export default function ScalesPage() {
@@ -57,16 +53,106 @@ export default function ScalesPage() {
   const { fetchUserFavorites } = useFavoritesStore();
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<SearchResult[]>([]);
-  const [hotScales, setHotScales] = useState<HotScale[]>([]);
+  const [allScales, setAllScales] = useState<HotScale[]>([]);
+
   const [loading, setLoading] = useState(false);
-  const [loadingHotScales, setLoadingHotScales] = useState(true);
-  const [searchType, setSearchType] = useState('hybrid');
+  const [loadingAllScales, setLoadingAllScales] = useState(false);
+  const [searchType] = useState('hybrid');
   const [filters, setFilters] = useState({
     category: 'all',
+    treatmentArea: 'all',
     validationStatus: 'all',
     sortBy: 'relevance',
   });
   const [categories, setCategories] = useState<any[]>([]);
+  const [pagination, setPagination] = useState({
+    page: 1,
+    limit: 10,
+    total: 0,
+  });
+
+  const columns = useMemo<ColumnDef<HotScale>[]>(
+    () => [
+      {
+        accessorKey: 'name',
+        header: () => t("scales.name", "量表名称"),
+        cell: ({ row }) => (
+          <div>
+            <div className="font-medium">{row.original.name}</div>
+            {row.original.nameEn && (
+              <div className="text-xs text-muted-foreground">{row.original.nameEn}</div>
+            )}
+          </div>
+        ),
+        size: 400,
+      },
+      {
+        accessorKey: 'acronym',
+        header: () => t("scales.acronym", "缩写"),
+        cell: ({ row }) => <Badge variant="outline">{row.original.acronym}</Badge>,
+      },
+      {
+        accessorKey: 'categoryName',
+        header: () => t("scales.category", "分类"),
+        cell: ({ row }) => <Badge variant="secondary" className="text-xs">{row.original.categoryName}</Badge>,
+      },
+      {
+        accessorKey: 'itemsCount',
+        header: () => <div className="text-center">{t("scales.items", "条目数")}</div>,
+        cell: ({ row }) => <div className="text-center">{row.original.itemsCount}</div>,
+      },
+      {
+        accessorKey: 'administrationTime',
+        header: () => <div className="text-center">{t("scales.time", "时长")}</div>,
+        cell: ({ row }) => (
+          <div className="text-center">
+            {row.original.administrationTime ? `${row.original.administrationTime} ${t("scales.minutes", "分钟")}` : '-'}
+          </div>
+        ),
+      },
+      {
+        id: 'actions',
+        header: () => <div className="text-right">{t("scales.actions", "操作")}</div>,
+        cell: ({ row }) => (
+          <div className="flex justify-end gap-1" onClick={(e) => e.stopPropagation()}>
+            <Link href={`/scales/${row.original.id}/preview`}>
+              <Button size="sm" variant="ghost" className="h-8 w-8 p-0">
+                <Eye className="w-4 h-4" />
+              </Button>
+            </Link>
+            <FavoriteButton
+              scaleId={row.original.id}
+              variant="icon"
+              size="sm"
+            />
+            <Link href={`/scales/copyright/create?scaleId=${row.original.id}`}>
+              <Button size="sm" variant="ghost" className="h-8 w-8 p-0">
+                <Shield className="w-4 h-4" />
+              </Button>
+            </Link>
+          </div>
+        ),
+      },
+    ],
+    [t]
+  );
+
+  const table = useReactTable({
+    data: allScales,
+    columns,
+    getCoreRowModel: getCoreRowModel(),
+    manualPagination: true,
+    pageCount: Math.ceil(pagination.total / pagination.limit),
+  });
+
+  const handlePageSizeChange = (newLimit: string) => {
+    setPagination(prev => ({
+      ...prev,
+      limit: Number.parseInt(newLimit, 10),
+      page: 1,
+    }));
+    fetchAllScales(1);
+  };
 
   // 获取分类列表
   useEffect(() => {
@@ -76,18 +162,45 @@ export default function ScalesPage() {
       .catch(err => console.error('Failed to load categories:', err));
   }, []);
 
-  // 获取热门量表数据
+  // 获取所有量表（分页）
+  const fetchAllScales = async (page: number = 1) => {
+    setLoadingAllScales(true);
+    try {
+      const params = new URLSearchParams({
+        page: page.toString(),
+        limit: pagination.limit.toString(),
+        category: filters.category,
+        treatmentArea: filters.treatmentArea,
+        sortBy: filters.sortBy,
+      });
+
+      const response = await fetch(`/api/scales?${params}`);
+      const data = await response.json();
+
+      if (data.success) {
+        setAllScales(data.scales || []);
+        setPagination(prev => ({
+          ...prev,
+          page,
+          total: data.total || 0,
+        }));
+      }
+    } catch (error) {
+      console.error('Failed to load all scales:', error);
+    } finally {
+      setLoadingAllScales(false);
+    }
+  };
+
+  // 当切换到 "all" tab 时加载数据
   useEffect(() => {
-    fetch('/api/scales/hot')
-      .then(res => res.json())
-      .then(data => {
-        if (data.success) {
-          setHotScales(data.scales || []);
-        }
-      })
-      .catch(err => console.error('Failed to load hot scales:', err))
-      .finally(() => setLoadingHotScales(false));
-  }, []);
+    fetchAllScales(1);
+  }, [filters.category, filters.treatmentArea, filters.sortBy]);
+
+  // 翻页
+  const handlePageChange = (newPage: number) => {
+    fetchAllScales(newPage);
+  };
 
   // 批量获取用户收藏状态
   useEffect(() => {
@@ -126,16 +239,23 @@ export default function ScalesPage() {
     }
   };
 
-  const getLicenseIcon = (acronym: string) => {
-    // 基于已知的许可信息返回图标
-    const publicDomain = ['HAM-D', 'HAM-A'];
-    const needsContact = ['PHQ-9', 'GAD-7'];
-    const commercial = ['BDI-II', 'MMSE-2'];
+  const getLicenseIcon = (licenseType?: string | null) => {
+    if (!licenseType) return '🔍';
 
-    if (publicDomain.includes(acronym)) return '🆓';
-    if (needsContact.includes(acronym)) return '📧';
-    if (commercial.includes(acronym)) return '💼';
-    return '🔍';
+    switch (licenseType) {
+      case 'public_domain':
+        return '🆓';
+      case 'free_with_attribution':
+        return '📝';
+      case 'contact_required':
+        return '📧';
+      case 'commercial':
+        return '💼';
+      case 'research_only':
+        return '🔬';
+      default:
+        return '🔍';
+    }
   };
 
   return (
@@ -184,6 +304,27 @@ export default function ScalesPage() {
                 </div>
 
                 <div className="flex items-center space-x-2">
+                  <span className="text-sm font-medium">{t("scales_page.treatment_area", "治疗领域")}:</span>
+                  <Select value={filters.treatmentArea} onValueChange={(value) =>
+                    setFilters(prev => ({ ...prev, treatmentArea: value }))}>
+                    <SelectTrigger className="w-32">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">{t("scales_page.all_treatment_areas", "全部")}</SelectItem>
+                      <SelectItem value="immunology">{t("scales_page.treatment_area.immunology", "免疫")}</SelectItem>
+                      <SelectItem value="respiratory">{t("scales_page.treatment_area.respiratory", "呼吸")}</SelectItem>
+                      <SelectItem value="digestive">{t("scales_page.treatment_area.digestive", "消化")}</SelectItem>
+                      <SelectItem value="neurology">{t("scales_page.treatment_area.neurology", "神内")}</SelectItem>
+                      <SelectItem value="oncology">{t("scales_page.treatment_area.oncology", "肿瘤")}</SelectItem>
+                      <SelectItem value="hematology">{t("scales_page.treatment_area.hematology", "血液")}</SelectItem>
+                      <SelectItem value="dermatology">{t("scales_page.treatment_area.dermatology", "皮肤")}</SelectItem>
+                      <SelectItem value="general">{t("scales_page.treatment_area.general", "通用")}</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="flex items-center space-x-2">
                   <span className="text-sm font-medium">{t("scales_page.sort_by")}:</span>
                   <Select value={filters.sortBy} onValueChange={(value) =>
                     setFilters(prev => ({ ...prev, sortBy: value }))}>
@@ -219,6 +360,112 @@ export default function ScalesPage() {
       <div className="flex-1 overflow-auto">
         <div className="p-4 space-y-6">
 
+          {loadingAllScales ? (
+            <div className="border rounded-md flex-1">
+              <div className="animate-pulse p-4 space-y-3">
+                {Array.from({ length: 10 }).map((_, index) => (
+                  <div key={`skeleton-${index}`} className="h-12 bg-gray-200 rounded" />
+                ))}
+              </div>
+            </div>
+          ) : (
+            results.length === 0 && <>
+              {/* 表格容器 - 固定表头和底部 */}
+              <div className="border rounded-md flex-1 flex flex-col overflow-hidden">
+                <div className="overflow-y-auto flex-1">
+                  <Table>
+                    <TableHeader className="sticky top-0 bg-background z-10 border-b">
+                      {table.getHeaderGroups().map(headerGroup => (
+                        <TableRow key={headerGroup.id}>
+                          {headerGroup.headers.map(header => (
+                            <TableHead
+                              key={header.id}
+                              className="bg-background"
+                              style={{ width: header.getSize() !== 150 ? header.getSize() : undefined }}
+                            >
+                              {header.isPlaceholder
+                                ? null
+                                : flexRender(
+                                  header.column.columnDef.header,
+                                  header.getContext()
+                                )}
+                            </TableHead>
+                          ))}
+                        </TableRow>
+                      ))}
+                    </TableHeader>
+                    <TableBody>
+                      {table.getRowModel().rows.map(row => (
+                        <TableRow
+                          key={row.id}
+                          className="cursor-pointer hover:bg-muted/50"
+                          onClick={() => router.push(`/scales/${row.original.id}`)}
+                        >
+                          {row.getVisibleCells().map(cell => (
+                            <TableCell key={cell.id}>
+                              {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                            </TableCell>
+                          ))}
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
+              </div>
+
+              {/* 分页控件 - 顶部 */}
+              {pagination.total > 0 && (
+                <div className="flex justify-between items-center px-2">
+                  <div className="flex items-center space-x-4">
+                    <span className="text-sm text-muted-foreground">
+                      共 {pagination.total} 条记录
+                    </span>
+                    <div className="flex items-center space-x-2">
+                      <span className="text-sm text-muted-foreground">{t("common.page_size", "每页显示")}</span>
+                      <Select value={pagination.limit.toString()} onValueChange={handlePageSizeChange}>
+                        <SelectTrigger className="w-20 h-8">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="10">10</SelectItem>
+                          <SelectItem value="20">20</SelectItem>
+                          <SelectItem value="50">50</SelectItem>
+                          <SelectItem value="100">100</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <span className="text-sm text-muted-foreground">{t("common.items", "条")}</span>
+                    </div>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      disabled={pagination.page === 1}
+                      onClick={() => handlePageChange(pagination.page - 1)}
+                    >
+                      <ChevronLeft className="w-4 h-4" />
+                      {t("common.previous", "上一页")}
+                    </Button>
+
+                    <span className="text-sm text-muted-foreground">
+                      {t("common.page_info", `第 ${pagination.page} 页，共 ${Math.ceil(pagination.total / pagination.limit)} 页`)}
+                    </span>
+
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      disabled={pagination.page >= Math.ceil(pagination.total / pagination.limit)}
+                      onClick={() => handlePageChange(pagination.page + 1)}
+                    >
+                      {t("common.next", "下一页")}
+                      <ChevronRight className="w-4 h-4" />
+                    </Button>
+                  </div>
+                </div>
+              )}
+            </>
+          )}
+
           {/* 搜索结果 */}
           {results.length > 0 && (
             <div>
@@ -239,7 +486,7 @@ export default function ScalesPage() {
                           <div className="flex items-center space-x-3 mb-2">
                             <h3 className="font-semibold text-lg group-hover:text-blue-600 transition-colors">{result.name}</h3>
                             <Badge variant="outline">{result.acronym}</Badge>
-                            <span className="text-lg">{getLicenseIcon(result.acronym)}</span>
+                            <span className="text-lg">{getLicenseIcon(result.licenseType)}</span>
                           </div>
 
                           {result.nameEn && (
@@ -308,79 +555,6 @@ export default function ScalesPage() {
                 </Button>
               </CardContent>
             </Card>
-          )}
-
-          {/* 默认显示热门量表 */}
-          {!query && results.length === 0 && (
-            <div>
-              <CardHeader>
-                <CardTitle>{t("scales.hot_scales", "Popular Scales")}</CardTitle>
-                <CardDescription>
-                  {t("scales.hot_scales_description", "Most commonly used eCOA assessment tools")}
-                </CardDescription>
-              </CardHeader>
-
-              <CardContent>
-                {loadingHotScales ? (
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {Array.from({ length: 6 }).map((_, index) => (
-                      <Card key={index} className="animate-pulse">
-                        <CardContent className="p-4">
-                          <div className="h-4 bg-gray-200 rounded mb-2" />
-                          <div className="h-3 bg-gray-200 rounded mb-1" />
-                          <div className="h-2 bg-gray-200 rounded" />
-                        </CardContent>
-                      </Card>
-                    ))}
-                  </div>
-                ) : (
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {hotScales.map((scale) => (
-                      <Card key={scale.id} className="hover:shadow-md transition-shadow cursor-pointer group"
-                        onClick={() => router.push(`/scales/${scale.id}`)}>
-                        <CardContent className="p-4">
-                          <div className="flex items-center justify-between mb-2">
-                            <h4 className="font-medium text-sm leading-tight group-hover:text-blue-600 transition-colors">{scale.name}</h4>
-                            <Badge variant="outline">{scale.acronym}</Badge>
-                          </div>
-
-                          <Badge variant="outline" className="text-xs text-muted-foreground mb-2">{scale.categoryName}</Badge>
-                          <div className="text-xs text-muted-foreground mb-3 space-y-1">
-                            <div className="flex items-center space-x-1">
-                              <BookOpen className="w-3 h-3" />
-                              <span>{scale.itemsCount} {t("scales.items", "items")}</span>
-                            </div>
-                            <div className="flex items-center space-x-1">
-                              <Clock className="w-3 h-3" />
-                              <span>{scale.administrationTime} {t("scales.minutes", "minutes")}</span>
-                            </div>
-                          </div>
-
-                          {/* 快速操作区 - 阻止卡片点击事件 */}
-                          <div className="flex gap-1" onClick={(e) => e.stopPropagation()}>
-                            <Link href={`/scales/${scale.id}/preview`}>
-                              <Button size="sm" variant="outline" className="px-2">
-                                <Eye className="w-3 h-3" />
-                              </Button>
-                            </Link>
-                            <FavoriteButton
-                              scaleId={scale.id}
-                              variant="icon"
-                              size="sm"
-                            />
-                            <Link href={`/scales/${scale.id}/copyright`}>
-                              <Button size="sm" variant="outline" className="px-2">
-                                <Shield className="w-3 h-3" />
-                              </Button>
-                            </Link>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    ))}
-                  </div>
-                )}
-              </CardContent>
-            </div>
           )}
         </div>
       </div>

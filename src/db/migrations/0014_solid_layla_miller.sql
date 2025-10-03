@@ -1,0 +1,1 @@
+ALTER TABLE `ecoa_scale` ADD `treatmentArea` text;

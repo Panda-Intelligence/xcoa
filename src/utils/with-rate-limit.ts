@@ -117,4 +117,9 @@ export const RATE_LIMITS = {
     limit: 5,
     windowInSeconds: Math.floor(ms("1 hour") / 1000),
   },
+  UNAUTHENTICATED_SEARCH: {
+    identifier: "unauthenticated-search",
+    limit: 3,
+    windowInSeconds: Math.floor(ms("24 hours") / 1000),
+  },
 } as const;

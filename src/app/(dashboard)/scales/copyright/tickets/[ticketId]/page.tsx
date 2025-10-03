@@ -26,6 +26,7 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import { useLanguage } from '@/hooks/useLanguage';
+import { toast } from 'sonner';
 
 interface TicketDetail {
   id: string;
@@ -64,6 +65,7 @@ export default function TicketDetailPage({ params }: TicketDetailPageProps) {
   const [loading, setLoading] = useState(true);
   const [updateMessageOpen, setUpdateMessageOpen] = useState(false);
   const [message, setMessage] = useState('');
+  const [sending, setSending] = useState(false);
 
   useEffect(() => {
     async function loadParams() {
@@ -76,6 +78,12 @@ export default function TicketDetailPage({ params }: TicketDetailPageProps) {
   useEffect(() => {
     if (!ticketId) return;
     fetchTicketDetails();
+    
+    // Check URL params for auto-open message dialog
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('action') === 'message') {
+      setUpdateMessageOpen(true);
+    }
   }, [ticketId]);
 
   const fetchTicketDetails = async () => {
@@ -95,20 +103,49 @@ export default function TicketDetailPage({ params }: TicketDetailPageProps) {
     }
   };
 
+  const handleSendMessage = async () => {
+    if (!message.trim()) return;
+
+    setSending(true);
+    try {
+      const response = await fetch(`/api/copyright/tickets/${ticketId}/messages`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          content: message,
+          messageType: 'user_message'
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setMessage('');
+        setUpdateMessageOpen(false);
+        await fetchTicketDetails();
+      } else {
+        toast.error(data.error || 'Failed to send message');
+      }
+    } catch (error) {
+      console.error('Send message error:', error);
+      toast.error('Failed to send message');
+    } finally {
+      setSending(false);
+    }
+  };
+
   const getStatusIcon = (status: string) => {
     switch (status) {
-      case 'pending':
-        return <Clock className="w-5 h-5 text-yellow-600" />;
-      case 'sent':
-        return <Mail className="w-5 h-5 text-blue-600" />;
-      case 'responded':
-        return <MessageSquare className="w-5 h-5 text-purple-600" />;
+      case 'open':
+        return <Clock className="w-5 h-5 text-blue-600" />;
+      case 'in_progress':
+        return <Mail className="w-5 h-5 text-yellow-600" />;
+      case 'waiting_response':
+        return <MessageSquare className="w-5 h-5 text-orange-600" />;
       case 'resolved':
         return <CheckCircle className="w-5 h-5 text-green-600" />;
       case 'closed':
         return <XCircle className="w-5 h-5 text-gray-600" />;
-      case 'failed':
-        return <AlertCircle className="w-5 h-5 text-red-600" />;
       default:
         return <Clock className="w-5 h-5 text-gray-600" />;
     }
@@ -116,14 +153,13 @@ export default function TicketDetailPage({ params }: TicketDetailPageProps) {
 
   const getStatusColor = (status: string) => {
     const colorMap = {
-      pending: 'bg-yellow-100 text-yellow-700 border-yellow-200',
-      sent: 'bg-blue-100 text-blue-700 border-blue-200',
-      responded: 'bg-purple-100 text-purple-700 border-purple-200',
+      open: 'bg-blue-100 text-blue-700 border-blue-200',
+      in_progress: 'bg-yellow-100 text-yellow-700 border-yellow-200',
+      waiting_response: 'bg-orange-100 text-orange-700 border-orange-200',
       resolved: 'bg-green-100 text-green-700 border-green-200',
       closed: 'bg-gray-100 text-gray-700 border-gray-200',
-      failed: 'bg-red-100 text-red-700 border-red-200',
     };
-    return colorMap[status as keyof typeof colorMap] || colorMap.pending;
+    return colorMap[status as keyof typeof colorMap] || colorMap.open;
   };
 
   if (loading) {

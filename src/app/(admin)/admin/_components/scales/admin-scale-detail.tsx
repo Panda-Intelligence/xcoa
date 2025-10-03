@@ -33,6 +33,7 @@ import {
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/hooks/useToast";
+import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 
 interface EcoaScale {
   id: string;
@@ -84,6 +85,8 @@ export function AdminScaleDetail({ scaleId }: AdminScaleDetailProps) {
   const [createItemOpen, setCreateItemOpen] = useState(false);
   const [editItemOpen, setEditItemOpen] = useState(false);
   const [editingItem, setEditingItem] = useState<EcoaItem | null>(null);
+  const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
+  const [itemToDelete, setItemToDelete] = useState<string | null>(null);
   const [newItem, setNewItem] = useState({
     question: "",
     questionEn: "",
@@ -191,12 +194,11 @@ export function AdminScaleDetail({ scaleId }: AdminScaleDetailProps) {
     }
   };
 
-  const deleteItem = async (itemId: string) => {
-    if (!confirm("确定要删除这个题目吗？此操作不可逆转。")) {
-      return;
-    }
+  const deleteItem = async () => {
+    if (!itemToDelete) return;
 
     try {
+      const itemId = itemToDelete;
       const response = await fetch(`/api/admin/scales/${scaleId}/items/${itemId}`, {
         method: "DELETE"
       });
@@ -204,8 +206,9 @@ export function AdminScaleDetail({ scaleId }: AdminScaleDetailProps) {
       const data = await response.json();
 
       if (response.ok) {
+        setItemToDelete(null);
         fetchScaleItems();
-        fetchScaleDetails(); // 更新题目数量
+        fetchScaleDetails();
         toast.success("题目删除成功！");
       } else {
         toast.error(data.error || "删除题目失败");
@@ -796,7 +799,10 @@ export function AdminScaleDetail({ scaleId }: AdminScaleDetailProps) {
                           <Button
                             size="sm"
                             variant="outline"
-                            onClick={() => deleteItem(item.id)}
+                            onClick={() => {
+                              setItemToDelete(item.id);
+                              setDeleteConfirmOpen(true);
+                            }}
                           >
                             <Trash2 className="w-3 h-3 mr-1" />
                             删除
@@ -817,6 +823,18 @@ export function AdminScaleDetail({ scaleId }: AdminScaleDetailProps) {
           </Card>
         </TabsContent>
       </Tabs>
+
+      {/* 删除确认对话框 */}
+      <ConfirmDialog
+        open={deleteConfirmOpen}
+        onOpenChange={setDeleteConfirmOpen}
+        title="删除题目"
+        description="确定要删除这个题目吗？此操作不可逆转。"
+        confirmText="删除"
+        cancelText="取消"
+        onConfirm={deleteItem}
+        variant="destructive"
+      />
     </div>
   );
 }

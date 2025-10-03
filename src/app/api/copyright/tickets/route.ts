@@ -124,13 +124,6 @@ export async function POST(request: NextRequest) {
         }
       }
 
-      if (!copyrightContact) {
-        return NextResponse.json(
-          { error: 'No copyright contact information available for this scale' },
-          { status: 400 }
-        );
-      }
-
       // 计算版权联系费用 (根据团队类型)
       const teamType = 'individual_researcher'; // 临时固定，实际应从用户资料获取
       const contactFee = calculateCopyrightContactFee(teamType, ticketData.requestType);
@@ -159,10 +152,10 @@ export async function POST(request: NextRequest) {
         requestType: ticketData.requestType,
         priority: ticketData.priority,
         status: 'open',
-        copyrightOrganization: copyrightContact.organization,
-        copyrightEmail: copyrightContact.email,
-        copyrightPhone: copyrightContact.phone || null,
-        copyrightWebsite: copyrightContact.website || null,
+        copyrightOrganization: copyrightContact?.organization || 'To be determined',
+        copyrightEmail: copyrightContact?.email || null,
+        copyrightPhone: copyrightContact?.phone || null,
+        copyrightWebsite: copyrightContact?.website || null,
         intendedUse: ticketData.intendedUse,
         projectDescription: ticketData.projectDescription,
         expectedStartDate: ticketData.expectedStartDate || null,
@@ -177,9 +170,9 @@ export async function POST(request: NextRequest) {
       };
 
       // 生成专业邮件模板
-      const emailTemplate = {
+      const emailTemplate = copyrightContact ? {
         to: copyrightContact.email,
-        cc: 'support@xcoa.pro', // 抄送平台支持邮箱
+        cc: 'support@xcoa.pro',
         subject: `[xCOA Platform] ${ticketData.requestType.replace('_', ' ')} - ${scale.acronym} (Ticket #${ticketNumber})`,
         body: `Dear ${copyrightContact.organization} Team,
 
@@ -223,7 +216,7 @@ xCOA Platform Team
 ---
 This is an automated message from xCOA Platform
 Platform: xcoa.pro | Support: support@xcoa.pro`
-      };
+      } : null;
 
       // 执行数据库操作 (插入工单记录)
       await db.run(sql`
@@ -297,14 +290,21 @@ Platform: xcoa.pro | Support: support@xcoa.pro`
         workflow: {
           currentStep: 1,
           totalSteps: 4,
-          steps: [
+          steps: copyrightContact ? [
             '✅ 1. 工单已创建',
             '🔄 2. 邮件已发送至版权方',
             '⏳ 3. 等待版权方回复',
             '📋 4. 许可协商和确认',
+          ] : [
+            '✅ 1. 工单已创建',
+            '⏳ 2. 待补充版权联系信息',
+            '🔄 3. 邮件将发送至版权方',
+            '📋 4. 许可协商和确认',
           ],
-          estimatedTime: '3-7个工作日',
-          nextAction: '系统将自动发送邮件给版权方，并为您跟踪回复状态',
+          estimatedTime: copyrightContact ? '3-7个工作日' : '待补充版权信息后开始',
+          nextAction: copyrightContact 
+            ? '系统将自动发送邮件给版权方，并为您跟踪回复状态' 
+            : '工单已创建，请后续补充版权联系信息。您可以通过工单详情页面编辑版权方信息。',
         }
       });
 

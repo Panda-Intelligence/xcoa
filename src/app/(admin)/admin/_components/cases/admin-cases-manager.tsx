@@ -34,6 +34,7 @@ import { PageHeader } from "@/components/page-header";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/hooks/useToast";
+import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 
 interface ClinicalCase {
   id: string;
@@ -77,6 +78,8 @@ export function AdminCasesManager() {
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(false);
   const [editingCase, setEditingCase] = useState<ClinicalCase | null>(null);
+  const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
+  const [caseToDelete, setCaseToDelete] = useState<string | null>(null);
   const [newCase, setNewCase] = useState({
     scaleId: "",
     title: "",
@@ -189,12 +192,11 @@ export function AdminCasesManager() {
     }
   };
 
-  const deleteCase = async (caseId: string) => {
-    if (!confirm("确定要删除这个临床案例吗？此操作不可逆转。")) {
-      return;
-    }
+  const deleteCase = async () => {
+    if (!caseToDelete) return;
 
     try {
+      const caseId = caseToDelete;
       const response = await fetch(`/api/admin/clinical-cases/${caseId}`, {
         method: "DELETE"
       });
@@ -202,6 +204,7 @@ export function AdminCasesManager() {
       const data = await response.json();
 
       if (response.ok) {
+        setCaseToDelete(null);
         fetchCases();
         toast.success("案例删除成功！");
       } else {
@@ -615,7 +618,10 @@ export function AdminCasesManager() {
                           <Button
                             size="sm"
                             variant="outline"
-                            onClick={() => deleteCase(caseItem.id)}
+                            onClick={() => {
+                              setCaseToDelete(caseItem.id);
+                              setDeleteConfirmOpen(true);
+                            }}
                           >
                             <Trash2 className="w-3 h-3 mr-1" />
                             删除
@@ -661,6 +667,18 @@ export function AdminCasesManager() {
           </CardContent>
         </Card>
       </div>
+
+      {/* 删除确认对话框 */}
+      <ConfirmDialog
+        open={deleteConfirmOpen}
+        onOpenChange={setDeleteConfirmOpen}
+        title="删除临床案例"
+        description="确定要删除这个临床案例吗？此操作不可逆转。"
+        confirmText="删除"
+        cancelText="取消"
+        onConfirm={deleteCase}
+        variant="destructive"
+      />
     </>
   );
 }

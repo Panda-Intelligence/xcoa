@@ -139,13 +139,6 @@ export default function ScaleFavoritesPage() {
                 {t('favorites.description', { count: favorites.length })}
               </p>
             </div>
-
-            <Link href="/scales">
-              <Button>
-                <Plus className="w-4 h-4 mr-2" />
-                {t('favorites.add_scale')}
-              </Button>
-            </Link>
           </div>
 
           {/* 搜索和筛选 */}

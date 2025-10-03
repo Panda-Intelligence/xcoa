@@ -25,6 +25,7 @@ import Link from 'next/link';
 import { useLanguage } from '@/hooks/useLanguage';
 import { FavoriteButton } from '@/components/favorites/FavoriteButton';
 import { ClinicalCasesTab } from '@/components/ClinicalCasesTab';
+import { useRouter } from 'next/navigation';
 
 interface ScalePageProps {
   params: Promise<{ scaleId: string }>;
@@ -59,6 +60,7 @@ async function getScaleDetails(scaleId: string): Promise<ScaleData | null> {
 
 export default function ScalePage({ params }: ScalePageProps) {
   const { t } = useLanguage();
+  const router = useRouter();
   const [scaleId, setScaleId] = useState<string>('');
   const [data, setData] = useState<ScaleData | null>(null);
   const [loading, setLoading] = useState(true);
@@ -121,12 +123,10 @@ export default function ScalePage({ params }: ScalePageProps) {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center space-x-4">
-              <Link href="/scales">
-                <Button variant="ghost" size="sm">
-                  <ArrowLeft className="w-4 h-4 mr-2" />
-                  {t('scale.back_to_search')}
-                </Button>
-              </Link>
+              <Button variant="ghost" size="sm" onClick={() => router.back()}>
+                <ArrowLeft className="w-4 h-4 mr-2" />
+                {t('scale.back_to_search')}
+              </Button>
               <Separator orientation="vertical" className="h-6" />
               <div className="flex items-center space-x-2">
                 <span className="text-sm text-muted-foreground">{t('scale.scale_details')}</span>

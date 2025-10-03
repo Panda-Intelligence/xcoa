@@ -1,6 +1,21 @@
 import { type NextRequest, NextResponse } from 'next/server';
 import { getDB } from '@/db';
-import { ecoaScaleTable, userTable, copyrightLicensesTable } from '@/db/schema';
+import { 
+  ecoaScaleTable, 
+  userTable, 
+  copyrightLicensesTable, 
+  ecoaItemTable, 
+  userFavoriteTable,
+  scaleUsageTable,
+  copyrightContactRequestTable,
+  clinicalCasesTable,
+  scaleNormsTable,
+  scaleInterpretationsTable,
+  scaleGuidelinesTable,
+  scaleFavoriteStatsTable,
+  userScaleFavoritesTable,
+  userCollectionsTable
+} from '@/db/schema';
 import { eq } from 'drizzle-orm';
 import { getSessionFromCookie } from '@/utils/auth';
 import { z } from 'zod';
@@ -134,7 +149,7 @@ export async function PUT(
     if (updateData.ageRange !== undefined) updateFields.ageRange = updateData.ageRange;
     if (updateData.validationStatus) updateFields.validationStatus = updateData.validationStatus;
     if (updateData.copyrightInfo !== undefined) updateFields.copyrightInfo = updateData.copyrightInfo;
-    
+
     // Copyright fields directly in ecoaScaleTable
     if (updateData.copyrightHolderId !== undefined) updateFields.copyrightHolderId = updateData.copyrightHolderId;
     if (updateData.licenseType !== undefined) updateFields.licenseType = updateData.licenseType;
@@ -214,14 +229,65 @@ export async function DELETE(
       return NextResponse.json({ error: 'Scale not found' }, { status: 404 });
     }
 
-    if (scale[0].validationStatus !== 'draft') {
-      return NextResponse.json(
-        { error: 'Only draft scales can be deleted' },
-        { status: 400 }
-      );
-    }
+    // 删除所有关联数据，然后删除量表
+    // 注意：D1 不支持 drizzle 的 transaction API，所以按顺序删除
+    
+    // 1. 删除量表题目
+    await db
+      .delete(ecoaItemTable)
+      .where(eq(ecoaItemTable.scaleId, scaleId));
 
-    // 删除量表
+    // 2. 删除用户收藏
+    await db
+      .delete(userFavoriteTable)
+      .where(eq(userFavoriteTable.scaleId, scaleId));
+
+    // 3. 删除用户收藏统计（如果存在）
+    await db
+      .delete(userScaleFavoritesTable)
+      .where(eq(userScaleFavoritesTable.scaleId, scaleId));
+
+    // 4. 删除量表使用记录
+    await db
+      .delete(scaleUsageTable)
+      .where(eq(scaleUsageTable.scaleId, scaleId));
+
+    // 5. 删除版权联系请求
+    await db
+      .delete(copyrightContactRequestTable)
+      .where(eq(copyrightContactRequestTable.scaleId, scaleId));
+
+    // 6. 删除版权许可
+    await db
+      .delete(copyrightLicensesTable)
+      .where(eq(copyrightLicensesTable.scaleId, scaleId));
+
+    // 7. 删除临床案例
+    await db
+      .delete(clinicalCasesTable)
+      .where(eq(clinicalCasesTable.scaleId, scaleId));
+
+    // 8. 删除量表常模
+    await db
+      .delete(scaleNormsTable)
+      .where(eq(scaleNormsTable.scaleId, scaleId));
+
+    // 9. 删除量表解释
+    await db
+      .delete(scaleInterpretationsTable)
+      .where(eq(scaleInterpretationsTable.scaleId, scaleId));
+
+    // 10. 删除量表指导
+    await db
+      .delete(scaleGuidelinesTable)
+      .where(eq(scaleGuidelinesTable.scaleId, scaleId));
+
+    // 11. 删除收藏统计
+    await db
+      .delete(scaleFavoriteStatsTable)
+      .where(eq(scaleFavoriteStatsTable.scaleId, scaleId));
+
+    // 12. 最后删除量表
     await db
       .delete(ecoaScaleTable)
       .where(eq(ecoaScaleTable.id, scaleId));

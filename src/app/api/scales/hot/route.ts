@@ -21,7 +21,8 @@ export async function GET(request: NextRequest) {
         targetPopulation: ecoaScaleTable.targetPopulation,
         validationStatus: ecoaScaleTable.validationStatus,
         usageCount: ecoaScaleTable.usageCount,
-        favoriteCount: ecoaScaleTable.favoriteCount
+        favoriteCount: ecoaScaleTable.favoriteCount,
+        licenseType: ecoaScaleTable.licenseType
       })
       .from(ecoaScaleTable)
       .leftJoin(ecoaCategoryTable, eq(ecoaScaleTable.categoryId, ecoaCategoryTable.id))

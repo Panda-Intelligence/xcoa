@@ -44,6 +44,9 @@ export default function GoogleCallbackClientComponent() {
         router.push("/sign-in");
       }
     }
+    return () => {
+      toast.dismiss();
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [code, state]);
 

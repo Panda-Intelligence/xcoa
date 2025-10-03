@@ -25,6 +25,7 @@ import {
 import { useRouter } from "next/navigation";
 import { format } from "date-fns";
 import { useToast } from "@/hooks/useToast";
+import { useLanguage } from "@/hooks/useLanguage";
 
 interface TicketDetail {
   id: string;
@@ -66,6 +67,7 @@ interface AdminTicketDetailProps {
 }
 
 export function AdminTicketDetail({ ticketId }: AdminTicketDetailProps) {
+  const { t } = useLanguage();
   const router = useRouter();
   const toast = useToast();
   const [ticket, setTicket] = useState<TicketDetail | null>(null);
@@ -267,18 +269,17 @@ export function AdminTicketDetail({ ticketId }: AdminTicketDetailProps) {
             <CardContent>
               <div className="space-y-4">
                 {messages.length > 0 ? messages.map((message) => (
-                  <div key={message.id} className={`p-3 rounded-lg ${
-                    message.messageType === 'admin_note' ? 'bg-blue-50 border-l-4 border-blue-500' :
-                    message.messageType === 'admin_response' ? 'bg-green-50 border-l-4 border-green-500' :
-                    'bg-gray-50 border-l-4 border-gray-500'
-                  }`}>
+                  <div key={message.id} className={`p-3 rounded-lg ${message.messageType === 'admin_note' ? 'bg-blue-50 border-l-4 border-blue-500' :
+                      message.messageType === 'admin_response' ? 'bg-green-50 border-l-4 border-green-500' :
+                        'bg-gray-50 border-l-4 border-gray-500'
+                    }`}>
                     <div className="flex items-center justify-between mb-2">
                       <div className="flex items-center space-x-2">
                         <MessageSquare className="w-4 h-4" />
                         <span className="font-medium text-sm">{message.subject}</span>
                         <Badge variant="outline" className="text-xs">
                           {message.messageType === 'admin_note' ? '管理员备注' :
-                           message.messageType === 'admin_response' ? '管理员回复' : '用户消息'}
+                            message.messageType === 'admin_response' ? '管理员回复' : '用户消息'}
                         </Badge>
                       </div>
                       <span className="text-xs text-muted-foreground">
@@ -370,8 +371,8 @@ export function AdminTicketDetail({ ticketId }: AdminTicketDetailProps) {
               {ticket.copyrightWebsite && (
                 <div>
                   <span className="font-medium">网站:</span>
-                  <a href={ticket.copyrightWebsite} target="_blank" rel="noopener noreferrer" 
-                     className="text-sm text-blue-600 hover:underline">
+                  <a href={ticket.copyrightWebsite} target="_blank" rel="noopener noreferrer"
+                    className="text-sm text-blue-600 hover:underline">
                     {ticket.copyrightWebsite}
                   </a>
                 </div>
@@ -435,7 +436,7 @@ export function AdminTicketDetail({ ticketId }: AdminTicketDetailProps) {
                 />
               </div>
 
-              <Button 
+              <Button
                 className="w-full"
                 onClick={handleUpdateTicket}
                 disabled={!updateForm.status}
