@@ -1,6 +1,6 @@
 "use client"
 
-import { User, Shield, Monitor, Lock } from "lucide-react"
+import { Crown, Shield, Monitor, Lock } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useLanguage } from "@/hooks/useLanguage"
 import Link from "next/link"
@@ -10,6 +10,7 @@ export function BillingSidebar() {
   const { t } = useLanguage();
 
   const settingsMenuItems = [
+    { icon: Crown, label: t('billing.subscription', '订阅管理'), href: "/billing/subscription" },
     { icon: Shield, label: t('billing.credits'), href: "/billing/credits" },
     { icon: Monitor, label: t('billing.transactions'), href: "/billing/transactions" },
     { icon: Lock, label: t('billing.invoice'), href: "/billing/invoice" },
