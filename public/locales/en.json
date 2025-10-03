@@ -36,7 +36,8 @@
     "processing": "Processing...",
     "updating": "Updating...",
     "creating": "Creating...",
-    "sending": "Sending..."
+    "sending": "Sending...",
+    "overview": "Overview"
   },
   "site": {
     "name": "xCOA",
@@ -505,7 +506,6 @@
     "email_generation_note": "We will automatically generate a professional contact email that you can send directly to the copyright holder"
   },
   "dashboard": {
-    "overview": "Overview",
     "quick_actions": "Quick Actions",
     "search_scales": "Search Scales",
     "check_license": "Check License",
@@ -864,8 +864,8 @@
     "team_activity": "Team Activity",
     "settings": "Settings",
     "profile": "Profile",
-    "security_settings": "Security Settings",
-    "session_management": "Session Management",
+    "security_settings": "Security",
+    "sessions": "Sessions",
     "change_password": "Change Password",
     "quick_search": "Quick Search",
     "my_tickets": "My Tickets",
@@ -1385,8 +1385,8 @@
   },
   "settings": {
     "profile": "Profile",
-    "security_settings": "Security Settings",
-    "session_management": "Session Management",
+    "security_settings": "Security",
+    "sessions": "Sessions",
     "change_password": "Change Password",
     "profile_settings": "Profile Settings",
     "profile_settings_description": "Update your personal information and contact details.",

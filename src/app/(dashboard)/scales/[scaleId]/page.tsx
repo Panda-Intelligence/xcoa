@@ -190,7 +190,7 @@ export default function ScalePage({ params }: ScalePageProps) {
             <CardContent>
               <Tabs defaultValue="overview" className="w-full">
                 <TabsList className="grid w-full grid-cols-6">
-                  <TabsTrigger value="overview">{t('scale.overview')}</TabsTrigger>
+                  <TabsTrigger value="overview">{t('common.overview')}</TabsTrigger>
                   <TabsTrigger value="items">{t('scale.items')}</TabsTrigger>
                   <TabsTrigger value="psychometrics">{t('scale.psychometrics')}</TabsTrigger>
                   <TabsTrigger value="cases">临床案例</TabsTrigger>

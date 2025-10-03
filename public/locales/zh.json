@@ -36,7 +36,8 @@
     "processing": "处理中...",
     "updating": "更新中...",
     "creating": "创建中...",
-    "sending": "发送中..."
+    "sending": "发送中...",
+    "overview": "概览"
   },
   "site": {
     "name": "xCOA",
@@ -499,7 +500,6 @@
     "email_generation_note": "我们会自动为您生成专业的联系邮件，您可以直接发送给版权方"
   },
   "dashboard": {
-    "overview": "概览",
     "quick_actions": "快速操作",
     "search_scales": "搜索量表",
     "check_license": "检查许可",
@@ -859,7 +859,7 @@
     "settings": "设置",
     "profile": "个人资料",
     "security_settings": "安全设置",
-    "session_management": "会话管理",
+    "sessions": "会话管理",
     "change_password": "修改密码",
     "quick_search": "快速搜索",
     "my_tickets": "我的工单",
@@ -1380,7 +1380,7 @@
   "settings": {
     "profile": "个人资料",
     "security_settings": "安全设置",
-    "session_management": "会话管理",
+    "sessions": "会话管理",
     "change_password": "修改密码",
     "profile_settings": "个人资料设置",
     "profile_settings_description": "更新您的个人信息和联系方式。",
