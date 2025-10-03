@@ -49,7 +49,7 @@ interface SearchResult {
 
 export default function ScalesPage() {
   const router = useRouter();
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const { fetchUserFavorites } = useFavoritesStore();
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<SearchResult[]>([]);
@@ -78,8 +78,8 @@ export default function ScalesPage() {
         header: () => t("scales.name", "量表名称"),
         cell: ({ row }) => (
           <div>
-            <div className="font-medium">{row.original.name}</div>
-            {row.original.nameEn && (
+            <div className="font-medium">{language === 'zh' ? row.original.name : row.original.nameEn}</div>
+            {language !== 'en' && row.original.nameEn && (
               <div className="text-xs text-muted-foreground">{row.original.nameEn}</div>
             )}
           </div>
@@ -134,7 +134,7 @@ export default function ScalesPage() {
         ),
       },
     ],
-    [t]
+    [t, language]
   );
 
   const table = useReactTable({
@@ -268,7 +268,7 @@ export default function ScalesPage() {
 
       {/* 固定搜索区域 */}
       <div className="flex-shrink-0 border-b bg-background">
-        <div className="p-4">
+        <div className="">
           <CardHeader>
             <CardTitle className="flex items-center space-x-2">
               <Search className="w-5 h-5" />
@@ -304,7 +304,7 @@ export default function ScalesPage() {
                 </div>
 
                 <div className="flex items-center space-x-2">
-                  <span className="text-sm font-medium">{t("scales_page.treatment_area", "治疗领域")}:</span>
+                  <span className="text-sm font-medium">{t("scales_page.treatment_area.label", "治疗领域")}:</span>
                   <Select value={filters.treatmentArea} onValueChange={(value) =>
                     setFilters(prev => ({ ...prev, treatmentArea: value }))}>
                     <SelectTrigger className="w-32">

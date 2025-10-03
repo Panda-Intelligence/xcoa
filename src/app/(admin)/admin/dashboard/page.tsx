@@ -75,7 +75,7 @@ export default function Page() {
           </CardHeader>
           <CardContent>
             <div className="flex flex-wrap gap-2">
-              <Badge variant="secondary">15+ {t("dashboard.total_scales_desc")}</Badge>
+              <Badge variant="secondary">500+ {t("dashboard.total_scales_desc")}</Badge>
               <Badge variant="secondary">8{t("dashboard.search_algorithms")}</Badge>
               <Badge variant="secondary">{t("dashboard.ai_search_engine")}</Badge>
               <Badge variant="secondary">{t("dashboard.copyright_management")}</Badge>

@@ -13,12 +13,14 @@ import {
 import Link from 'next/link';
 import { FavoriteButton } from '@/components/favorites/FavoriteButton';
 import { useRouter } from 'next/navigation';
+import { useLanguage } from '@/hooks/useLanguage';
 import type { HotScale } from './types';
 
 export default function HotScales() {
   const [hotScales, setHotScales] = useState<HotScale[]>([]);
   const [loadingHotScales, setLoadingHotScales] = useState(true);
-  const router = useRouter()
+  const router = useRouter();
+  const { t } = useLanguage();
   // 获取热门量表数据
   useEffect(() => {
     fetch('/api/scales/hot')

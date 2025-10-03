@@ -333,6 +333,18 @@
     "advanced_filter": "高级筛选",
     "category": "分类",
     "all_categories": "所有分类",
+    "treatment_area": {
+      "label": "治疗领域",
+      "immunology": "免疫",
+      "respiratory": "呼吸",
+      "digestive": "消化",
+      "neurology": "神内",
+      "oncology": "肿瘤",
+      "hematology": "血液",
+      "dermatology": "皮肤",
+      "general": "通用"
+    },
+    "all_treatment_areas": "全部",
     "sort_by": "排序",
     "relevance": "相关性",
     "name": "名称",
