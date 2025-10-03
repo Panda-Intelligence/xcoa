@@ -17,6 +17,8 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import { useLanguage } from '@/hooks/useLanguage';
+import { FeatureGate } from '@/components/subscription/feature-gate';
+import { ENTERPRISE_FEATURES } from '@/constants/plans';
 
 interface Scale {
   id: string;
@@ -90,6 +92,11 @@ export default function InterpretationPage() {
   }
 
   return (
+    <FeatureGate
+      feature={ENTERPRISE_FEATURES.SCALE_INTERPRETATION}
+      featureName={t('features.scale_interpretation', '量表专业解读')}
+      featureDescription={t('features.interpretation_desc', '专业的量表解读和案例分析')}
+    >
     <div className="flex flex-col h-screen">
       <PageHeader
         items={[
@@ -258,5 +265,6 @@ export default function InterpretationPage() {
         </div>
       </div>
     </div>
+    </FeatureGate>
   );
 }

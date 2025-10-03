@@ -34,6 +34,8 @@ import { useLanguage } from '@/hooks/useLanguage';
 import Link from 'next/link';
 import { MobileFrame, PadFrame, DesktopFrame } from '@/components/device/Frames';
 import { QuestionRenderer } from '@/components/scale-preview/QuestionRenderer';
+import { FeatureGate } from '@/components/subscription/feature-gate';
+import { ENTERPRISE_FEATURES } from '@/constants/plans';
 
 interface ScalePreviewPageProps {
   params: Promise<{ scaleId: string }>;
@@ -361,6 +363,11 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
     : (deviceMode === 'mobile' ? MobileFrame : PadFrame)
 
   return (
+    <FeatureGate
+      feature={ENTERPRISE_FEATURES.SCALE_PREVIEW}
+      featureName={t('features.scale_preview', '量表预览与交互体验')}
+      featureDescription={t('features.scale_preview_desc', '交互式体验量表，支持多设备预览')}
+    >
     <div className="min-h-screen bg-background">
       {/* 头部导航 */}
       <div className="bg-white border-b sticky top-0 z-10">
@@ -1091,5 +1098,6 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
         </div>
       </div>
     </div>
+    </FeatureGate>
   );
 }

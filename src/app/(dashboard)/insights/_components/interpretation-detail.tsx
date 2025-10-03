@@ -16,6 +16,8 @@ import {
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useLanguage } from "@/hooks/useLanguage";
+import { FeatureGate } from '@/components/subscription/feature-gate';
+import { ENTERPRISE_FEATURES } from '@/constants/plans';
 
 interface InterpretationData {
   scale: {
@@ -122,6 +124,11 @@ export function InterpretationDetail({ scaleId }: InterpretationDetailProps) {
   }
 
   return (
+    <FeatureGate
+      feature={ENTERPRISE_FEATURES.SCALE_INTERPRETATION}
+      featureName={t('features.scale_interpretation', '量表专业解读')}
+      featureDescription={t('features.interpretation_desc', '专业的量表解读和案例分析')}
+    >
     <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
       <div className="flex items-center justify-between">
         <Button variant="ghost" onClick={() => router.push("/insights/interpretation")}>
@@ -321,5 +328,6 @@ export function InterpretationDetail({ scaleId }: InterpretationDetailProps) {
         )}
       </div>
     </div>
+    </FeatureGate>
   );
 }
