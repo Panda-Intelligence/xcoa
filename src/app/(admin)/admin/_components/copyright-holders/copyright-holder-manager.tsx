@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -25,16 +25,10 @@ import {
   Plus,
   Edit,
   Trash2,
-  Eye,
-  Building,
   Mail,
   Phone,
   Globe,
-  User,
-  Users,
-  BookOpen,
 } from "lucide-react";
-import { useLanguage } from "@/hooks/useLanguage";
 import { useToast } from "@/hooks/useToast";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 
@@ -72,7 +66,6 @@ interface CopyrightHolderStats {
 }
 
 export function CopyrightHolderManager() {
-  const { t } = useLanguage();
   const toast = useToast();
   const [holders, setHolders] = useState<CopyrightHolder[]>([]);
   const [stats, setStats] = useState<CopyrightHolderStats>({ 
@@ -105,11 +98,7 @@ export function CopyrightHolderManager() {
     isVerified: false,
   });
 
-  useEffect(() => {
-    fetchHolders();
-  }, [typeFilter, statusFilter]);
-
-  const fetchHolders = async () => {
+  const fetchHolders = useCallback(async () => {
     try {
       setLoading(true);
       const params = new URLSearchParams();
@@ -133,7 +122,11 @@ export function CopyrightHolderManager() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [typeFilter, statusFilter, searchQuery, stats]);
+
+  useEffect(() => {
+    fetchHolders();
+  }, [fetchHolders]);
 
   const handleSearch = () => {
     fetchHolders();

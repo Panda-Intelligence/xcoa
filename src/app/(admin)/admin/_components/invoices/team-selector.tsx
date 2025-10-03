@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -29,13 +29,7 @@ export function TeamSelector({ selectedTeam, onTeamSelect, disabled }: TeamSelec
   const [teams, setTeams] = useState<Team[]>([]);
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    if (open) {
-      fetchTeams();
-    }
-  }, [open, searchQuery]);
-
-  const fetchTeams = async () => {
+  const fetchTeams = useCallback(async () => {
     try {
       setLoading(true);
       const params = new URLSearchParams();
@@ -55,7 +49,13 @@ export function TeamSelector({ selectedTeam, onTeamSelect, disabled }: TeamSelec
     } finally {
       setLoading(false);
     }
-  };
+  }, [searchQuery]);
+
+  useEffect(() => {
+    if (open) {
+      fetchTeams();
+    }
+  }, [open, fetchTeams]);
 
   const handleTeamSelect = (team: Team) => {
     onTeamSelect(team);

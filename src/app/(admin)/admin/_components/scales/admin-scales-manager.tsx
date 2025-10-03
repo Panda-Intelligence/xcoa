@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -26,12 +26,10 @@ import {
   Plus,
   Edit,
   Trash2,
-  Eye,
   ChevronLeft,
   ChevronRight,
 } from "lucide-react";
 import { PageHeader } from "@/components/page-header";
-import { useLanguage } from "@/hooks/useLanguage";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/hooks/useToast";
 import Link from "next/link";
@@ -80,7 +78,6 @@ interface ScaleStats {
 }
 
 export function AdminScalesManager() {
-  const { t } = useLanguage();
   const router = useRouter();
   const toast = useToast();
   const [scales, setScales] = useState<EcoaScale[]>([]);
@@ -111,11 +108,7 @@ export function AdminScalesManager() {
   });
   // 移除 copyrightHolders state，因为现在使用搜索组件
 
-  useEffect(() => {
-    fetchScales();
-  }, [statusFilter, page]);
-
-  const fetchScales = async () => {
+  const fetchScales = useCallback(async () => {
     try {
       setLoading(true);
       const params = new URLSearchParams();
@@ -139,7 +132,11 @@ export function AdminScalesManager() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [statusFilter, page, searchQuery]);
+
+  useEffect(() => {
+    fetchScales();
+  }, [fetchScales]);
 
   const handleCreateScale = async () => {
     try {
