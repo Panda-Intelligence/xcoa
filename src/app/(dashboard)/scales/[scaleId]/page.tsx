@@ -9,7 +9,6 @@ import {
   Eye,
   Heart,
   ArrowLeft,
-  ExternalLink,
   CheckCircle,
   AlertCircle,
   BookOpen,
@@ -29,6 +28,19 @@ import { useRouter } from 'next/navigation';
 
 interface ScalePageProps {
   params: Promise<{ scaleId: string }>;
+}
+
+interface InterpretationData {
+  id: string;
+  overview: string;
+  structure: string;
+  psychometricProperties: string;
+  interpretation: string;
+  usageGuidelines: string;
+  clinicalApplications: string;
+  version: number;
+  viewCount: number;
+  helpfulCount: number;
 }
 
 interface ScaleData {
@@ -59,11 +71,13 @@ async function getScaleDetails(scaleId: string): Promise<ScaleData | null> {
 }
 
 export default function ScalePage({ params }: ScalePageProps) {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const router = useRouter();
   const [scaleId, setScaleId] = useState<string>('');
   const [data, setData] = useState<ScaleData | null>(null);
+  const [interpretation, setInterpretation] = useState<InterpretationData | null>(null);
   const [loading, setLoading] = useState(true);
+  const [helpfulLoading, setHelpfulLoading] = useState(false);
 
   useEffect(() => {
     async function loadParams() {
@@ -80,9 +94,19 @@ export default function ScalePage({ params }: ScalePageProps) {
       const result = await getScaleDetails(scaleId);
       setData(result);
       setLoading(false);
+      
+      if (result?.scale) {
+        const interpResponse = await fetch(`/api/scales/${scaleId}/interpretation?language=${language}`);
+        if (interpResponse.ok) {
+          const interpData = await interpResponse.json();
+          if (interpData.success) {
+            setInterpretation(interpData.interpretation);
+          }
+        }
+      }
     }
     fetchData();
-  }, [scaleId]);
+  }, [scaleId, language]);
 
   if (loading) {
     return <div className="min-h-screen bg-background flex items-center justify-center">
@@ -113,6 +137,29 @@ export default function ScalePage({ params }: ScalePageProps) {
         return <Badge variant="default"><CheckCircle className="w-3 h-3 mr-1" />{t('scale.published')}</Badge>;
       default:
         return <Badge variant="outline">{status}</Badge>;
+    }
+  };
+
+  const handleMarkHelpful = async () => {
+    if (!interpretation || helpfulLoading) return;
+    
+    setHelpfulLoading(true);
+    try {
+      const response = await fetch(`/api/interpretations/${interpretation.id}/helpful`, {
+        method: 'POST',
+      });
+      
+      if (response.ok) {
+        const result = await response.json();
+        setInterpretation({
+          ...interpretation,
+          helpfulCount: result.helpfulCount,
+        });
+      }
+    } catch (error) {
+      console.error('Failed to mark helpful:', error);
+    } finally {
+      setHelpfulLoading(false);
     }
   };
 
@@ -191,10 +238,10 @@ export default function ScalePage({ params }: ScalePageProps) {
               <Tabs defaultValue="overview" className="w-full">
                 <TabsList className="grid w-full grid-cols-6">
                   <TabsTrigger value="overview">{t('common.overview')}</TabsTrigger>
+                  <TabsTrigger value="interpretation">专业解读</TabsTrigger>
                   <TabsTrigger value="items">{t('scale.items')}</TabsTrigger>
                   <TabsTrigger value="psychometrics">{t('scale.psychometrics')}</TabsTrigger>
                   <TabsTrigger value="cases">临床案例</TabsTrigger>
-                  <TabsTrigger value="references">{t('scale.references')}</TabsTrigger>
                   <TabsTrigger value="copyright">版权许可</TabsTrigger>
                 </TabsList>
 
@@ -242,6 +289,122 @@ export default function ScalePage({ params }: ScalePageProps) {
                     <div>
                       <h4 className="font-semibold mb-2">{t('scale.copyright_info')}</h4>
                       <p className="text-sm text-muted-foreground">{scale.copyrightInfo}</p>
+                    </div>
+                  )}
+                </TabsContent>
+
+                <TabsContent value="interpretation" className="space-y-6">
+                  {interpretation ? (
+                    <>
+                      <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                        <div className="flex items-center justify-between mb-2">
+                          <h4 className="font-semibold text-blue-900">AI 生成的专业解读</h4>
+                          <Badge variant="outline" className="text-xs">v{interpretation.version}</Badge>
+                        </div>
+                        <p className="text-sm text-blue-800">
+                          由 AI 辅助生成，经过专家审核。查看次数：{interpretation.viewCount}
+                        </p>
+                      </div>
+
+                      <div className="space-y-6">
+                        {interpretation.overview && (
+                          <div>
+                            <h4 className="font-semibold mb-3 flex items-center text-lg">
+                              <BookOpen className="w-5 h-5 mr-2 text-blue-600" />
+                              量表概述
+                            </h4>
+                            <div className="prose prose-sm max-w-none text-sm leading-relaxed text-muted-foreground">
+                              {interpretation.overview}
+                            </div>
+                          </div>
+                        )}
+
+                        {interpretation.structure && (
+                          <div>
+                            <h4 className="font-semibold mb-3 flex items-center text-lg">
+                              <BarChart3 className="w-5 h-5 mr-2 text-green-600" />
+                              量表结构
+                            </h4>
+                            <div className="prose prose-sm max-w-none text-sm leading-relaxed text-muted-foreground">
+                              {interpretation.structure}
+                            </div>
+                          </div>
+                        )}
+
+                        {interpretation.psychometricProperties && (
+                          <div>
+                            <h4 className="font-semibold mb-3 flex items-center text-lg">
+                              <CheckCircle className="w-5 h-5 mr-2 text-purple-600" />
+                              心理测量学特性
+                            </h4>
+                            <div className="prose prose-sm max-w-none text-sm leading-relaxed text-muted-foreground">
+                              {interpretation.psychometricProperties}
+                            </div>
+                          </div>
+                        )}
+
+                        {interpretation.interpretation && (
+                          <div>
+                            <h4 className="font-semibold mb-3 flex items-center text-lg">
+                              <AlertCircle className="w-5 h-5 mr-2 text-orange-600" />
+                              结果解释
+                            </h4>
+                            <div className="prose prose-sm max-w-none text-sm leading-relaxed text-muted-foreground">
+                              {interpretation.interpretation}
+                            </div>
+                          </div>
+                        )}
+
+                        {interpretation.usageGuidelines && (
+                          <div>
+                            <h4 className="font-semibold mb-3 flex items-center text-lg">
+                              <Users className="w-5 h-5 mr-2 text-indigo-600" />
+                              使用指南
+                            </h4>
+                            <div className="prose prose-sm max-w-none text-sm leading-relaxed text-muted-foreground">
+                              {interpretation.usageGuidelines}
+                            </div>
+                          </div>
+                        )}
+
+                        {interpretation.clinicalApplications && (
+                          <div>
+                            <h4 className="font-semibold mb-3 flex items-center text-lg">
+                              <Heart className="w-5 h-5 mr-2 text-red-600" />
+                              临床应用
+                            </h4>
+                            <div className="prose prose-sm max-w-none text-sm leading-relaxed text-muted-foreground">
+                              {interpretation.clinicalApplications}
+                            </div>
+                          </div>
+                        )}
+                      </div>
+
+                      <Separator />
+
+                      <div className="bg-gray-50 rounded-lg p-4">
+                        <h5 className="font-semibold mb-3">这个解读对您有帮助吗？</h5>
+                        <div className="flex items-center space-x-2">
+                          <Button 
+                            size="sm" 
+                            variant="outline"
+                            onClick={handleMarkHelpful}
+                            disabled={helpfulLoading}
+                          >
+                            <Heart className="w-4 h-4 mr-2" />
+                            有帮助 ({interpretation.helpfulCount})
+                          </Button>
+                          <Button size="sm" variant="outline">
+                            反馈问题
+                          </Button>
+                        </div>
+                      </div>
+                    </>
+                  ) : (
+                    <div className="text-center py-12 text-muted-foreground">
+                      <BookOpen className="w-16 h-16 mx-auto mb-4 opacity-30" />
+                      <p className="text-lg mb-2">暂无专业解读</p>
+                      <p className="text-sm">我们正在为此量表生成专业解读内容</p>
                     </div>
                   )}
                 </TabsContent>
@@ -373,23 +536,6 @@ export default function ScalePage({ params }: ScalePageProps) {
 
                 <TabsContent value="cases" className="space-y-4">
                   <ClinicalCasesTab scaleId={scale.id} scaleAcronym={scale.acronym} />
-                </TabsContent>
-
-                <TabsContent value="references" className="space-y-4">
-                  {scale.references.length > 0 ? (
-                    <div className="space-y-3">
-                      {scale.references.map((reference: string, index: number) => (
-                        <Card key={reference.substring(0, 50) || index} className="p-4">
-                          <p className="text-sm leading-relaxed">{reference}</p>
-                        </Card>
-                      ))}
-                    </div>
-                  ) : (
-                    <div className="text-center py-8 text-muted-foreground">
-                      <ExternalLink className="w-12 h-12 mx-auto mb-4 opacity-50" />
-                      <p>{t('scale.no_references_available')}</p>
-                    </div>
-                  )}
                 </TabsContent>
 
                 <TabsContent value="copyright" className="space-y-4">

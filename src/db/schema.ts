@@ -16,6 +16,7 @@ export * from './schemas/billing'
 export * from './schemas/case'
 export * from './schemas/favorite'
 export * from './schemas/guide'
+export * from './schemas/interpretation'
 
 export type User = InferSelectModel<typeof userTable>;
 export type PassKeyCredential = InferSelectModel<typeof passKeyCredentialTable>;
