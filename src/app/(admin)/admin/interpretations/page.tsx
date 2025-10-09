@@ -7,14 +7,15 @@ import { Badge } from '@/components/ui/badge';
 import { Textarea } from '@/components/ui/textarea';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { 
-  CheckCircle, 
-  AlertCircle, 
-  Eye, 
-  Edit, 
+import {
+  CheckCircle,
+  AlertCircle,
+  Eye,
+  Edit,
   MessageSquare,
   Clock,
-  CheckSquare
+  CheckSquare,
+  Zap
 } from 'lucide-react';
 import { useLanguage } from '@/hooks/useLanguage';
 import { useToast } from '@/hooks/useToast';
@@ -69,6 +70,7 @@ export default function InterpretationReviewPage() {
   const [filter, setFilter] = useState<string>('all');
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [batchAction, setBatchAction] = useState<string>('');
+  const [generating, setGenerating] = useState(false);
 
   const fetchInterpretations = useCallback(async () => {
     try {
@@ -218,6 +220,50 @@ export default function InterpretationReviewPage() {
     }
   };
 
+  const handleBatchGenerate = async () => {
+    if (generating) return;
+
+    try {
+      setGenerating(true);
+      const response = await fetch('/api/admin/interpretations/generate-batch', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          limit: 5,
+          offset: 0,
+          force: false,
+          language: 'zh',
+        }),
+      });
+
+      const result = await response.json() as {
+        success: boolean;
+        results?: { success: number; failed: number; total: number; errors?: Array<{ scale: string; error: string }> };
+        message?: string;
+      };
+
+      if (result.success && result.results) {
+        const { success, failed, total } = result.results;
+        toast.success(
+          isZh
+            ? `批量生成完成：成功 ${success}/${total}，失败 ${failed}`
+            : `Batch generation completed: ${success}/${total} succeeded, ${failed} failed`
+        );
+        if (result.results.errors && result.results.errors.length > 0) {
+          console.error('Generation errors:', result.results.errors);
+        }
+        fetchInterpretations();
+      } else {
+        toast.error(result.message || (isZh ? '批量生成失败' : 'Batch generation failed'));
+      }
+    } catch (error) {
+      console.error('Failed to generate batch:', error);
+      toast.error(isZh ? '批量生成失败' : 'Batch generation failed');
+    } finally {
+      setGenerating(false);
+    }
+  };
+
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'published':
@@ -255,12 +301,18 @@ export default function InterpretationReviewPage() {
             {isZh ? '审核和管理 AI 生成的量表解读内容' : 'Review and manage AI-generated scale interpretations'}
           </p>
         </div>
-        <Link href="/admin/interpretations/create">
-          <Button>
-            <Edit className="w-4 h-4 mr-2" />
-            新建解读
+        <div className="flex gap-2">
+          <Button onClick={handleBatchGenerate} disabled={generating} variant="outline">
+            <Zap className="w-4 h-4 mr-2" />
+            {generating ? (isZh ? '生成中...' : 'Generating...') : (isZh ? 'AI 批量生成' : 'AI Batch Generate')}
           </Button>
-        </Link>
+          <Link href="/admin/interpretations/create">
+            <Button>
+              <Edit className="w-4 h-4 mr-2" />
+              新建解读
+            </Button>
+          </Link>
+        </div>
       </div>
 
       {/* Stats Cards */}

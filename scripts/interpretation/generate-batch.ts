@@ -1,9 +1,9 @@
-#!/usr/bin/env tsx
+#!/usr/bin/env node
 /**
  * 批量生成量表解读内容
  * 
  * Usage:
- *   pnpm tsx scripts/interpretation/generate-batch.ts [options]
+ *   node scripts/interpretation/generate-batch.js [options]
  * 
  * Options:
  *   --limit <number>    限制生成数量（默认: 10）
@@ -14,11 +14,12 @@
  *   --dry-run           预览但不实际生成
  */
 
-import { getDB } from '@/db';
-import { ecoaScaleTable, scaleInterpretationTable, interpretationHistoryTable } from '@/db/schema';
-import { getInterpretationGenerator } from '@/services/interpretation/ai-generator';
-import { eq, isNull, sql } from 'drizzle-orm';
-import type { ScaleDataForInterpretation } from '@/types/interpretation';
+import { getDB } from '../../src/db/index';
+import { ecoaScaleTable } from '../../src/db/schemas/scale';
+import { scaleInterpretationTable, interpretationHistoryTable } from '../../src/db/schemas/interpretation';
+import { getInterpretationGenerator } from '../../src/services/interpretation/ai-generator';
+import { eq, sql } from 'drizzle-orm';
+import type { ScaleDataForInterpretation } from '../../src/types/interpretation';
 
 interface GenerateOptions {
   limit?: number;

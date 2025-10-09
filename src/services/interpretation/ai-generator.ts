@@ -11,7 +11,7 @@ import type {
  */
 export class InterpretationGenerator {
   private anthropic: Anthropic;
-  private defaultModel = 'claude-3-5-sonnet-20241022';
+  private defaultModel = 'claude-sonnet-4-5-20250929';
 
   constructor() {
     const apiKey = process.env.ANTHROPIC_API_KEY;
@@ -20,7 +20,13 @@ export class InterpretationGenerator {
       throw new Error('ANTHROPIC_API_KEY environment variable is required');
     }
 
-    this.anthropic = new Anthropic({ apiKey });
+    const config: { apiKey: string; baseURL?: string } = { apiKey };
+    
+    if (process.env.ANTHROPIC_BASE_URL) {
+      config.baseURL = process.env.ANTHROPIC_BASE_URL;
+    }
+
+    this.anthropic = new Anthropic(config);
   }
 
   /**

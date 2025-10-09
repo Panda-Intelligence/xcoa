@@ -29,7 +29,19 @@
       "mcp__ide__getDiagnostics",
       "Bash(pnpm db:generate:*)",
       "Bash(pnpm db:migrate:dev:*)",
-      "Bash(curl:*)"
+      "Bash(curl:*)",
+      "Bash(if grep -q \"ANTHROPIC_API_KEY\" .env)",
+      "Bash(then echo \"✓ ANTHROPIC_API_KEY found in .env\")",
+      "Bash(else echo \"✗ ANTHROPIC_API_KEY not found in .env\")",
+      "Bash(if grep -q \"ANTHROPIC_API_KEY\" .env.local)",
+      "Bash(then echo \"✓ ANTHROPIC_API_KEY found in .env.local\")",
+      "Bash(else echo \"✗ ANTHROPIC_API_KEY not found in .env.local\")",
+      "Bash(tsx scripts/interpretation/generate-batch.ts:*)",
+      "Bash(pnpm tsx:*)",
+      "Bash(pnpm exec:*)",
+      "Bash(pnpm interpretation:generate:*)",
+      "Bash(if grep -q \"ANTHROPIC_API_KEY\" /Users/isaac/workspace/pdt/xcoa/.env)",
+      "Bash(pnpm dev:*)"
     ],
     "deny": [],
     "ask": []

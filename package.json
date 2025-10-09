@@ -21,9 +21,10 @@
     "delete:kv": "wrangler kv bulk delete kv.log --namespace-id=$(node scripts/get-kv-id.mjs) --remote",
     "crawl": "ts-node scripts/crawlee/html.ts",
     "check:stripe": "node scripts/check-stripe-config.js",
-    "interpretation:generate": "tsx scripts/interpretation/generate-batch.ts"
+    "interpretation:generate": "tsx --tsconfig scripts/tsconfig.json scripts/interpretation/generate-batch.ts"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.65.0",
     "@hookform/resolvers": "^5.2.2",
     "@icons-pack/react-simple-icons": "^13.8.0",
     "@marsidev/react-turnstile": "^1.3.1",
@@ -108,6 +109,8 @@
     "react-email": "3.0.6",
     "tailwindcss": "^4.1.14",
     "ts-node": "^10.9.2",
+    "tsconfig-paths": "^4.2.0",
+    "tsx": "^4.20.6",
     "typescript": "^5.9.3",
     "wrangler": "^4.41.0"
   },
