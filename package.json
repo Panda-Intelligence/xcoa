@@ -75,6 +75,7 @@
     "react-cookie-consent": "^9.0.0",
     "react-dom": "^19.2.0",
     "react-hook-form": "^7.63.0",
+    "recharts": "^3.2.1",
     "remeda": "^2.32.0",
     "slugify": "^1.6.6",
     "sonner": "^2.0.7",
