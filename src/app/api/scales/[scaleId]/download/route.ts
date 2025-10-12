@@ -102,7 +102,7 @@ function generateDownloadContent(scale: any, items: any[], format: string, optio
           JSON.stringify(scale.psychometricProperties, null, 2) : '',
         '',
         `导出时间: ${new Date().toLocaleString('zh-CN')}`,
-        `导出来源: xCOA (xcoa.pro)`,
+        `导出来源: xCOA (openecoa.com)`,
       ].filter(line => line !== '').join('\n');
 
       return {
@@ -195,7 +195,7 @@ function generateDownloadContent(scale: any, items: any[], format: string, optio
 
           <div class="footer">
             <p>导出时间: ${new Date().toLocaleString('zh-CN')}</p>
-            <p>导出来源: xCOA (xcoa.pro)</p>
+            <p>导出来源: xCOA (openecoa.com)</p>
             ${scale.copyrightInfo ? `<p>版权信息: ${scale.copyrightInfo}</p>` : ''}
           </div>
         </body>

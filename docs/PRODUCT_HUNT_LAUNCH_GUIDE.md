@@ -173,7 +173,7 @@ with support for English and Chinese languages.
 Sign up for free and explore our scale database. Upgrade when you need to
 download scales or access premium features.
 
-Visit us at: https://xcoa.pro
+Visit us at: https://openecoa.com
 ```
 
 ---
@@ -220,9 +220,9 @@ Thanks for checking us out! Would love to hear your feedback. 💬
 ---
 
 **Quick Links**:
-🌐 Website: https://xcoa.pro
+🌐 Website: https://openecoa.com
 🐦 Twitter: @xCOA_platform
-📧 Email: hello@xcoa.pro
+📧 Email: hello@openecoa.com
 ```
 
 ---
@@ -348,8 +348,8 @@ Thanks for checking us out! Would love to hear your feedback. 💬
 [75-90秒] CTA (Call to Action)
 画面: 注册界面，突出"免费开始"按钮
 文字: "Start Free Today"
-文字覆盖: "xcoa.pro"
-旁白: "Sign up free at xcoa.pro and discover your perfect scale today."
+文字覆盖: "openecoa.com"
+旁白: "Sign up free at openecoa.com and discover your perfect scale today."
 
 [90秒] 结束
 画面: xCOA Logo + 网址
@@ -452,7 +452,7 @@ With xCOA, just describe what you need:
 
 Our AI understands and recommends the perfect scales.
 
-Try it free: https://xcoa.pro
+Try it free: https://openecoa.com
 
 #ArtificialIntelligence #MentalHealth
 ```
@@ -479,7 +479,7 @@ Streamlined licensing in days, not months.
 
 For researchers who want to focus on research, not paperwork.
 
-https://xcoa.pro
+https://openecoa.com
 ```
 
 **推文 5 - 庆祝里程碑**（根据情况发布）：
@@ -502,7 +502,7 @@ Let's keep the momentum going! 🚀
 🚀 Exciting News: xCOA is Live on Product Hunt!
 
 After months of development, I'm thrilled to announce the launch of xCOA
-(xcoa.pro) - an AI-powered platform that's transforming how researchers and
+(openecoa.com) - an AI-powered platform that's transforming how researchers and
 clinicians discover and access psychological assessment scales.
 
 ## The Challenge
@@ -536,7 +536,7 @@ To celebrate, we're offering 100 FREE credits to the first 100 Product Hunt
 users. Check us out and let me know what you think!
 
 🔗 Product Hunt: [Link]
-🌐 Website: https://xcoa.pro
+🌐 Website: https://openecoa.com
 
 #ProductLaunch #AI #ClinicalResearch #MentalHealth #Innovation
 
@@ -902,7 +902,7 @@ Product Hunt 允许其他用户"Hunt"（发布）你的产品。有影响力的 
 Hi [Name],
 
 I hope this email finds you well. I'm [Your Name], founder of xCOA
-(xcoa.pro).
+(openecoa.com).
 
 ## Quick Pitch
 
@@ -947,7 +947,7 @@ Thanks for considering! Would love to hear from you.
 Best regards,
 [Your Name]
 Founder, xCOA
-[Email] | [Twitter] | xcoa.pro
+[Email] | [Twitter] | openecoa.com
 ```
 
 ---

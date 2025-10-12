@@ -208,7 +208,7 @@ Contact Information:
 
 ${contactRequest.message ? `Message:\n${contactRequest.message}\n` : ''}
 
-This inquiry was submitted through the xCOA platform (xcoa.pro).
+This inquiry was submitted through the xCOA platform (openecoa.com).
 
 Thank you for your consideration.
 

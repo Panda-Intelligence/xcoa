@@ -129,7 +129,7 @@ export class RateLimiter {
       const response = await fetch(url, {
         ...options,
         headers: {
-          'User-Agent': 'xCOA-Academic-Research-Bot/1.0 (+https://xcoa.pro/about-crawler)',
+          'User-Agent': 'xCOA-Academic-Research-Bot/1.0 (+https://openecoa.com/about-crawler)',
           'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
           'Accept-Language': 'en-US,en;q=0.5',
           'Accept-Encoding': 'gzip, deflate',

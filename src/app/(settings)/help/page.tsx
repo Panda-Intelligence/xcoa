@@ -478,15 +478,15 @@ export default function HelpPage() {
                     <div className="space-y-3">
                       <div>
                         <span className="font-medium text-sm">客服邮箱:</span>
-                        <p className="text-blue-600">support@xcoa.pro</p>
+                        <p className="text-blue-600">support@openecoa.com</p>
                       </div>
                       <div>
                         <span className="font-medium text-sm">商务合作:</span>
-                        <p className="text-blue-600">business@xcoa.pro</p>
+                        <p className="text-blue-600">business@openecoa.com</p>
                       </div>
                       <div>
                         <span className="font-medium text-sm">技术支持:</span>
-                        <p className="text-blue-600">tech@xcoa.pro</p>
+                        <p className="text-blue-600">tech@openecoa.com</p>
                       </div>
                       <Button className="w-full">
                         <Mail className="w-4 h-4 mr-2" />

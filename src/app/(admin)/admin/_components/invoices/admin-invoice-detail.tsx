@@ -229,7 +229,7 @@ export function AdminInvoiceDetail({ invoiceId }: AdminInvoiceDetailProps) {
                 Professional eCOA Solutions<br />
                 Unit 13, Freeland Park<br />
                 Wareham Road, Poole, UK BH16 6FH<br />
-                Email: support@xcoa.pro
+                Email: support@openecoa.com
               </p>
             </div>
             <div className="text-right">

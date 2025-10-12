@@ -171,7 +171,7 @@ No hidden fees. Cancel anytime.
 
 Sign up free. Explore the database. Upgrade when you need to download.
 
-👉 **Get started at xcoa.pro**
+👉 **Get started at openecoa.com**
 ```
 
 ### 🔄 优化亮点总结
@@ -241,9 +241,9 @@ Or just roast the product. I can take it. Feedback makes xCOA better.
 ---
 
 **Quick Links**
-🌐 Try it: [https://xcoa.pro](https://xcoa.pro)
+🌐 Try it: [https://openecoa.com](https://openecoa.com)
 🐦 Follow: [@xCOA_platform](https://twitter.com/xCOA_platform)
-📧 Email: hello@xcoa.pro
+📧 Email: hello@openecoa.com
 
 Thanks for checking us out. Let's make research less painful. 🚀
 ```
@@ -321,7 +321,7 @@ With xCOA:
 
 No boolean operators. No filters. Just natural language.
 
-Try free: https://xcoa.pro
+Try free: https://openecoa.com
 
 #AI #MentalHealth
 ```
@@ -362,7 +362,7 @@ Licensing in days, not months.
 
 For researchers who want to focus on research, not paperwork.
 
-https://xcoa.pro
+https://openecoa.com
 
 #AcademicLife
 ```
@@ -456,7 +456,7 @@ I'm spending today on Product Hunt answering questions and gathering feedback. I
 ever struggled with scale discovery or licensing, I'd love to hear your story.
 
 🔗 Product Hunt: [Link]
-🌐 Website: https://xcoa.pro
+🌐 Website: https://openecoa.com
 
 ---
 

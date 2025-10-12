@@ -47,7 +47,7 @@ export const generateInvoicePDF = async (invoice: Invoice): Promise<void> => {
               Professional eCOA Solutions<br/>
               Unit 13, Freeland Park<br/>
               Wareham Road, Poole, UK BH16 6FH<br/>
-              Email: support@xcoa.pro
+              Email: support@openecoa.com
             </p>
           </div>
           <div style="text-align: right;">
@@ -137,7 +137,7 @@ export const generateInvoicePDF = async (invoice: Invoice): Promise<void> => {
           </div>
           <div style="text-align: center; border-top: 1px solid #e5e7eb; padding-top: 15px;">
             <p style="margin: 0 0 5px 0; color: #000;">Thank you for your business with xCOA Platform!</p>
-            <p style="font-size: 10px; margin: 0;">Questions about this invoice? Contact us at billing@xcoa.pro</p>
+            <p style="font-size: 10px; margin: 0;">Questions about this invoice? Contact us at billing@openecoa.com</p>
           </div>
         </div>
       </div>

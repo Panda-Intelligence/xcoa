@@ -40,10 +40,10 @@
     "overview": "Overview"
   },
   "site": {
-    "name": "xCOA",
-    "description": "Professional eCOA Scale Copyright Authorization Platform - AI-powered search, one-stop copyright licensing service for clinical research and medical practice compliance.",
-    "welcome_title": "Welcome to xCOA Copyright Authorization Platform",
-    "welcome_description": "Professional eCOA Scale AI Search and Copyright Licensing Service Platform"
+    "name": "OpeneCOA",
+    "description": "Open eCOA Platform - Search, interpret, authorize, and report on eCOA scales. AI-powered intelligent search providing one-stop eCOA solutions for clinical research and medical practice.",
+    "welcome_title": "Welcome to OpeneCOA Open Platform",
+    "welcome_description": "Open eCOA Scale Search, Interpretation, Authorization, and Reporting Service Platform"
   },
   "navigation": {
     "home": "Home",

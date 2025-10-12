@@ -302,7 +302,7 @@ export class ScaleDataCollector {
     // 2. 获取页面内容
     const content = await this.rateLimiter.fetch(source.url, {
       headers: {
-        'User-Agent': 'xCOA-Academic-Research-Bot/1.0 (+https://xcoa.pro/about-crawler)'
+        'User-Agent': 'xCOA-Academic-Research-Bot/1.0 (+https://openecoa.com/about-crawler)'
       }
     });
 

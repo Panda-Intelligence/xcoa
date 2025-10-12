@@ -40,10 +40,10 @@
     "overview": "概览"
   },
   "site": {
-    "name": "xCOA",
-    "description": "专业的 eCOA 量表版权授权平台 - AI 智能搜索，一站式版权许可服务，为临床研究和医疗实践提供合规的量表使用解决方案。",
-    "welcome_title": "欢迎使用 xCOA 版权授权平台",
-    "welcome_description": "专业的 eCOA 量表 AI 搜索和版权许可服务平台"
+    "name": "OpeneCOA",
+    "description": "开放的 eCOA 量表平台 - 提供量表检索、专业解读、版权授权申请、eCOA 报告服务。AI 智能搜索，为临床研究和医疗实践提供一站式 eCOA 解决方案。",
+    "welcome_title": "欢迎使用 OpeneCOA 开放量表平台",
+    "welcome_description": "开放的 eCOA 量表检索、解读、授权、报告服务平台"
   },
   "navigation": {
     "home": "首页",

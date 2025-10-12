@@ -4,9 +4,9 @@
 declare namespace Cloudflare {
   interface Env {
     NEXT_INC_CACHE_KV: KVNamespace;
-    EMAIL_FROM: "no-reply@notifications.xcoa.pro";
+    EMAIL_FROM: "no-reply@notifications.openecoa.com";
     EMAIL_FROM_NAME: "xCOA";
-    EMAIL_REPLY_TO: "support@xcoa.pro";
+    EMAIL_REPLY_TO: "support@openecoa.com";
     NEXTJS_ENV: string;
     NEXT_CACHE_DO_QUEUE: DurableObjectNamespace<import("./.open-next/worker").DOQueueHandler>;
     NEXT_TAG_CACHE_D1: D1Database;

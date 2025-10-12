@@ -172,11 +172,11 @@ export async function POST(request: NextRequest) {
       // 生成专业邮件模板
       const emailTemplate = copyrightContact ? {
         to: copyrightContact.email,
-        cc: 'support@xcoa.pro',
+        cc: 'support@openecoa.com',
         subject: `[xCOA Platform] ${ticketData.requestType.replace('_', ' ')} - ${scale.acronym} (Ticket #${ticketNumber})`,
         body: `Dear ${copyrightContact.organization} Team,
 
-We are writing from xCOA Platform (xcoa.pro) to facilitate a licensing inquiry for one of your assessment scales.
+We are writing from xCOA Platform (openecoa.com) to facilitate a licensing inquiry for one of your assessment scales.
 
 SCALE INFORMATION:
 - Scale Name: ${scale.name}
@@ -200,9 +200,9 @@ DETAILED MESSAGE:
 ${ticketData.initialMessage}
 
 PLATFORM INFORMATION:
-This request was submitted through xCOA (xcoa.pro), a professional eCOA scale licensing platform that facilitates connections between researchers and scale copyright holders.
+This request was submitted through xCOA (openecoa.com), a professional eCOA scale licensing platform that facilitates connections between researchers and scale copyright holders.
 
-- Platform Support: support@xcoa.pro
+- Platform Support: support@openecoa.com
 - Ticket Number: ${ticketNumber}
 - Request Date: ${new Date().toISOString()}
 
@@ -215,7 +215,7 @@ xCOA Platform Team
 
 ---
 This is an automated message from xCOA Platform
-Platform: xcoa.pro | Support: support@xcoa.pro`
+Platform: openecoa.com | Support: support@openecoa.com`
       } : null;
 
       // 执行数据库操作 (插入工单记录)
