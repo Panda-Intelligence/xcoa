@@ -13,7 +13,8 @@ import {
   AlertCircle,
   BookOpen,
   BarChart3,
-  Plus
+  Plus,
+  Scale
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -25,6 +26,7 @@ import { useLanguage } from '@/hooks/useLanguage';
 import { FavoriteButton } from '@/components/favorites/FavoriteButton';
 import { ClinicalCasesTab } from '@/components/ClinicalCasesTab';
 import { useRouter } from 'next/navigation';
+import type { ScaleDetailPageData, ScaleItem, RelatedScale } from '@/types/scale-detail';
 
 interface ScalePageProps {
   params: Promise<{ scaleId: string }>;
@@ -43,17 +45,8 @@ interface InterpretationData {
   helpfulCount: number;
 }
 
-interface ScaleData {
-  scale: any;
-  items: any[];
-  userInteraction: any;
-  relatedScales: any[];
-  statistics: any;
-  meta: any;
-}
-
 // Client-side function to fetch scale details
-async function getScaleDetails(scaleId: string): Promise<ScaleData | null> {
+async function getScaleDetails(scaleId: string): Promise<ScaleDetailPageData | null> {
   try {
     const response = await fetch(`/api/scales/${scaleId}`, {
       cache: 'no-store' // 确保获取最新数据
@@ -74,7 +67,7 @@ export default function ScalePage({ params }: ScalePageProps) {
   const { t, language } = useLanguage();
   const router = useRouter();
   const [scaleId, setScaleId] = useState<string>('');
-  const [data, setData] = useState<ScaleData | null>(null);
+  const [data, setData] = useState<ScaleDetailPageData | null>(null);
   const [interpretation, setInterpretation] = useState<InterpretationData | null>(null);
   const [loading, setLoading] = useState(true);
   const [helpfulLoading, setHelpfulLoading] = useState(false);
@@ -164,31 +157,31 @@ export default function ScalePage({ params }: ScalePageProps) {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100/50 dark:from-gray-900 dark:to-gray-800/50">
       {/* 头部导航 */}
-      <div className="bg-white border-b sticky top-0 z-10">
+      <div className="bg-white/80 backdrop-blur-lg border-b border-gray-200/80 sticky top-0 z-10 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center space-x-4">
-              <Button variant="ghost" size="sm" onClick={() => router.back()}>
+              <Button variant="ghost" size="sm" onClick={() => router.back()} className="hover:bg-primary/10">
                 <ArrowLeft className="w-4 h-4 mr-2" />
                 {t('scale.back_to_search')}
               </Button>
               <Separator orientation="vertical" className="h-6" />
               <div className="flex items-center space-x-2">
                 <span className="text-sm text-muted-foreground">{t('scale.scale_details')}</span>
-                <span className="text-sm font-medium">{scale.acronym}</span>
+                <span className="text-sm font-semibold text-primary">{scale.acronym}</span>
               </div>
             </div>
 
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center space-x-3">
               <FavoriteButton
                 scaleId={scale.id}
                 size="sm"
                 showCount={true}
               />
               {userInteraction.canDownload && (
-                <Button size="sm">
+                <Button size="sm" className="shadow-sm">
                   <Download className="w-4 h-4 mr-2" />
                   {t('scale.download')}
                 </Button>
@@ -198,36 +191,36 @@ export default function ScalePage({ params }: ScalePageProps) {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* 主要内容区域 */}
           <div className="lg:col-span-2 space-y-6">
             {/* 量表基本信息 */}
-
-            <CardHeader>
+            <Card className="shadow-md hover:shadow-lg transition-all duration-300 overflow-hidden">
+            <CardHeader className="bg-gradient-to-r from-primary/5 to-secondary/5 border-b">
               <div className="flex items-start justify-between">
                 <div className="flex-1">
-                  <div className="flex items-center space-x-3 mb-2">
-                    <CardTitle className="text-2xl">{scale.name}</CardTitle>
+                  <div className="flex items-center space-x-3 mb-3">
+                    <CardTitle className="text-3xl font-bold text-foreground">{scale.name}</CardTitle>
                     {getValidationBadge(scale.validationStatus)}
                   </div>
                   {scale.nameEn && (
-                    <CardDescription className="text-lg text-muted-foreground mb-2">
+                    <CardDescription className="text-lg text-muted-foreground mb-3 font-medium">
                       {scale.nameEn}
                     </CardDescription>
                   )}
-                  <div className="flex items-center space-x-4 text-sm text-muted-foreground">
-                    <span className="flex items-center">
-                      <BookOpen className="w-4 h-4 mr-1" />
-                      {scale.acronym}
+                  <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
+                    <span className="flex items-center gap-2 px-3 py-1.5 bg-white rounded-lg border">
+                      <BookOpen className="w-4 h-4 text-primary" />
+                      <span className="font-medium">{scale.acronym}</span>
                     </span>
-                    <span className="flex items-center">
-                      <Clock className="w-4 h-4 mr-1" />
-                      {scale.administrationTime} {t('scale.minutes')}
+                    <span className="flex items-center gap-2 px-3 py-1.5 bg-white rounded-lg border">
+                      <Clock className="w-4 h-4 text-green-500" />
+                      <span>{scale.administrationTime} {t('scale.minutes')}</span>
                     </span>
-                    <span className="flex items-center">
-                      <Users className="w-4 h-4 mr-1" />
-                      {scale.itemsCount} {t('scale.items')}
+                    <span className="flex items-center gap-2 px-3 py-1.5 bg-white rounded-lg border">
+                      <Users className="w-4 h-4 text-blue-500" />
+                      <span>{scale.itemsCount} {t('scale.items')}</span>
                     </span>
                   </div>
                 </div>
@@ -412,8 +405,8 @@ export default function ScalePage({ params }: ScalePageProps) {
                 <TabsContent value="items" className="space-y-4">
                   {meta.hasItems ? (
                     <div className="space-y-3">
-                      { }
-                      {items.map((item: any) => (
+                      {/* Typed iteration */}
+                      {items.map((item: ScaleItem) => (
                         <Card key={item.id} className="p-4">
                           <div className="flex items-start space-x-3">
                             <Badge variant="outline" className="mt-1">
@@ -599,6 +592,7 @@ export default function ScalePage({ params }: ScalePageProps) {
                 </TabsContent>
               </Tabs>
             </CardContent>
+            </Card>
           </div>
 
           {/* 侧边栏 */}
@@ -679,7 +673,7 @@ export default function ScalePage({ params }: ScalePageProps) {
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-3">
-                    {relatedScales.map((relatedScale: any) => (
+                    {relatedScales.map((relatedScale: RelatedScale) => (
                       <Link
                         key={relatedScale.id}
                         href={`/scales/${relatedScale.id}`}

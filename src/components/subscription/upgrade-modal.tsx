@@ -147,7 +147,7 @@ export function UpgradeModal({
                 </>
               ) : (
                 <>
-                  💡 You'll get immediate access after upgrading.
+                  💡 You&apos;ll get immediate access after upgrading.
                   {requiredPlan === SUBSCRIPTION_PLANS.ENTERPRISE && ' Enterprise also includes team collaboration, custom services, and API access.'}
                 </>
               )}

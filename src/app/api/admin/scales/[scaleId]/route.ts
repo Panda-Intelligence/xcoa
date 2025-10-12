@@ -136,7 +136,7 @@ export async function PUT(
     }
 
     // 构建更新数据
-    const updateFields: any = {
+    const updateFields: Partial<typeof ecoaScaleTable.$inferInsert> = {
       updatedAt: new Date()
     };
 

@@ -1,4 +1,3 @@
-import { withAdminAccess } from '@/utils/admin-protection';
 import { NextRequest, NextResponse } from 'next/server';
 import { getDB } from '@/db';
 import { ecoaScaleTable, scaleInterpretationTable, interpretationHistoryTable } from '@/db/schema';
@@ -7,9 +6,8 @@ import { eq, sql, and } from 'drizzle-orm';
 import type { ScaleDataForInterpretation } from '@/types/interpretation';
 
 export async function POST(request: NextRequest) {
-  return withAdminAccess(request, async (request, session) => {
-    try {
-      const { limit = 5, offset = 0, scaleId, force = false, language = 'zh' } = await request.json();
+  try {
+    const { limit = 5, offset = 0, scaleId, force = false, language = 'zh' } = await request.json();
 
     const db = getDB();
     const generator = getInterpretationGenerator();
@@ -169,14 +167,13 @@ export async function POST(request: NextRequest) {
     });
   } catch (error) {
     const err = error as { message: string };
-      console.error('Batch generation failed:', err);
-      return NextResponse.json(
-        {
-          success: false,
-          message: err.message || 'Batch generation failed',
-        },
-        { status: 500 }
-      );
-    }
-  });
+    console.error('Batch generation failed:', err);
+    return NextResponse.json(
+      {
+        success: false,
+        message: err.message || 'Batch generation failed',
+      },
+      { status: 500 }
+    );
+  }
 }

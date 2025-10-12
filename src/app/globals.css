@@ -56,6 +56,38 @@
   --color-sidebar-border: hsl(var(--sidebar-border));
   --color-sidebar-ring: hsl(var(--sidebar-ring));
 
+  /* Modern Shadow System - David UI Style */
+  --shadow-xs: 0 1px 2px 0 rgb(28 25 23 / 0.05);
+  --shadow-sm: 0 1px 3px 0 rgb(28 25 23 / 0.05), 0 1px 2px -1px rgb(28 25 23 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(28 25 23 / 0.1), 0 2px 4px -2px rgb(28 25 23 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(28 25 23 / 0.1), 0 4px 6px -4px rgb(28 25 23 / 0.1);
+  --shadow-xl: 0 20px 25px -5px rgb(28 25 23 / 0.1), 0 8px 10px -6px rgb(28 25 23 / 0.1);
+  --shadow-2xl: 0 25px 50px -12px rgb(28 25 23 / 0.25);
+  --shadow-inner: inset 0 2px 4px 0 rgb(28 25 23 / 0.05);
+
+  /* Button Inner Shadow (David UI) */
+  --shadow-button-inset: inset 0 1px 0px rgba(255,255,255,0.25), inset 0 -2px 0px rgba(0,0,0,0.35);
+
+  /* Colored Shadows for Brand Elements */
+  --shadow-primary: 0 8px 16px -4px rgb(6 74 203 / 0.3);
+  --shadow-secondary: 0 8px 16px -4px rgb(99 91 255 / 0.3);
+  --shadow-accent: 0 8px 16px -4px rgb(127 0 255 / 0.3);
+
+  /* Enhanced Border Radius */
+  --radius-xs: 4px;
+  --radius-2xl: 20px;
+  --radius-3xl: 24px;
+  --radius-full: 9999px;
+
+  /* Spacing System */
+  --space-xs: 8px;
+  --space-sm: 12px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+  --space-2xl: 48px;
+  --space-3xl: 64px;
+
   --animate-accordion-down: accordion-down 0.2s ease-out;
   --animate-accordion-up: accordion-up 0.2s ease-out;
 
@@ -188,6 +220,76 @@
     var(--theme-color) 0%,
     var(--orange-color) 100%
   );
+}
+
+/* Modern Shadow Utilities */
+@utility shadow-xs {
+  box-shadow: var(--shadow-xs);
+}
+
+@utility shadow-primary {
+  box-shadow: var(--shadow-primary);
+}
+
+@utility shadow-secondary {
+  box-shadow: var(--shadow-secondary);
+}
+
+@utility shadow-accent {
+  box-shadow: var(--shadow-accent);
+}
+
+/* David UI Button Inner Shadow */
+@utility shadow-button-inset {
+  box-shadow: var(--shadow-button-inset);
+}
+
+/* Smooth Transitions */
+@utility transition-smooth {
+  transition: all 200ms ease-in-out;
+}
+
+@utility transition-fast {
+  transition: all 150ms ease-in-out;
+}
+
+@utility transition-slow {
+  transition: all 300ms ease-in-out;
+}
+
+@utility transition-david {
+  transition: all 300ms ease-in;
+}
+
+/* Glassmorphism Effect */
+@utility glass {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+@utility glass-dark {
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Modern Card Hover Effects */
+@utility hover-lift {
+  transition: all 300ms ease-in-out;
+}
+
+@utility hover-lift:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+}
+
+/* Focus Ring */
+@utility focus-ring-primary {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(6, 74, 203, 0.2);
 }
 
 @layer utilities {

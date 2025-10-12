@@ -41,7 +41,12 @@
       "Bash(pnpm exec:*)",
       "Bash(pnpm interpretation:generate:*)",
       "Bash(if grep -q \"ANTHROPIC_API_KEY\" /Users/isaac/workspace/pdt/xcoa/.env)",
-      "Bash(pnpm dev:*)"
+      "Bash(pnpm dev:*)",
+      "Bash(for:*)",
+      "Bash(do echo \"=== $file ===\")",
+      "Bash(head:*)",
+      "WebFetch(domain:www.creative-tim.com)",
+      "WebFetch(domain:github.com)"
     ],
     "deny": [],
     "ask": []

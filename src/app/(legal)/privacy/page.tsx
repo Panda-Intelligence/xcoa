@@ -50,7 +50,7 @@ export default function PrivacyPage() {
           <b>Introduction</b><b />
         </h2>
         <p className="p">
-          Our registered users ("Members") can utilize our Services to manage clinical trials, collect electronic data, and access information, whereas non-members ("Visitors") are restricted to viewing content and data on specific Services.
+          Our registered users (&ldquo;Members&rdquo;) can utilize our Services to manage clinical trials, collect electronic data, and access information, whereas non-members (&ldquo;Visitors&rdquo;) are restricted to viewing content and data on specific Services.
         </p>
         <h3>
           <b>Services</b><b />
@@ -364,7 +364,7 @@ export default function PrivacyPage() {
           · <b>Delete Data:</b> You can <span>request</span> us to erase or delete all or some of your personal data (e.g., if it is no longer necessary to provide Services to you).
         </p>
         <p className="section-normal" style={{ marginLeft: "36pt", textIndent: "-18pt" }}>
-          · <b>Change or Correct Data</b>: You can edit some of your personal data through your account. You can also <span>request</span> us to change, update or fix your data in certain cases, particularly if it's inaccurate.
+          · <b>Change or Correct Data</b>: You can edit some of your personal data through your account. You can also <span>request</span> us to change, update or fix your data in certain cases, particularly if it&apos;s inaccurate.
         </p>
         <p className="section-normal" style={{ marginLeft: "36pt", textIndent: "-18pt" }}>
           · <b>Object to, or Limit or Restrict, Use of Data:</b> You can <span>request</span> us to stop using all or some of your personal data (e.g., if we have no legal right to keep using it) or to limit our use of it (e.g., if your personal data is inaccurate or unlawfully held).

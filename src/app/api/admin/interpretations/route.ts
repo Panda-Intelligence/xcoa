@@ -1,14 +1,30 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getDB } from '@/db';
-import { scaleInterpretationTable, ecoaScaleTable } from '@/db/schema';
+import { scaleInterpretationTable, ecoaScaleTable, userTable } from '@/db/schema';
 import { eq, and, sql } from 'drizzle-orm';
+import { getSessionFromCookie } from '@/utils/auth';
 
 export async function GET(request: NextRequest) {
   try {
-    const { searchParams } = new URL(request.url);
-    const status = searchParams.get('status') || 'all';
+    // 权限检查：必须是管理员
+    const session = await getSessionFromCookie();
+    if (!session?.user) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
 
     const db = getDB();
+    const user = await db
+      .select({ role: userTable.role })
+      .from(userTable)
+      .where(eq(userTable.id, session.user.id))
+      .limit(1);
+
+    if (user.length === 0 || user[0].role !== 'admin') {
+      return NextResponse.json({ error: 'Admin access required' }, { status: 403 });
+    }
+
+    const { searchParams } = new URL(request.url);
+    const status = searchParams.get('status') || 'all';
 
     let query = db
       .select({

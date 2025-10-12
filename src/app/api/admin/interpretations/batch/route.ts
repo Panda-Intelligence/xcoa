@@ -2,9 +2,11 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getDB } from '@/db';
 import { scaleInterpretationTable, interpretationHistoryTable } from '@/db/schema';
 import { inArray } from 'drizzle-orm';
+import { withAdminAccess } from '@/utils/admin-protection';
 
 export async function POST(request: NextRequest) {
-  try {
+  return withAdminAccess(request, async (request, session) => {
+    try {
     const body = await request.json();
     const { ids, action, notes } = body;
 
@@ -119,20 +121,21 @@ export async function POST(request: NextRequest) {
       });
     }
 
-    return NextResponse.json({
-      success: true,
-      affected: ids.length,
-      action,
-    });
-  } catch (error) {
-    const err = error as { message: string };
-    console.error('Failed to perform batch operation:', err);
-    return NextResponse.json(
-      {
-        success: false,
-        message: err.message || 'Failed to perform batch operation',
-      },
-      { status: 500 }
-    );
-  }
+      return NextResponse.json({
+        success: true,
+        affected: ids.length,
+        action,
+      });
+    } catch (error) {
+      const err = error as { message: string };
+      console.error('Failed to perform batch operation:', err);
+      return NextResponse.json(
+        {
+          success: false,
+          message: err.message || 'Failed to perform batch operation',
+        },
+        { status: 500 }
+      );
+    }
+  });
 }

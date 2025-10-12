@@ -1,3 +1,4 @@
+import { withAdminAccess } from '@/utils/admin-protection';
 import { NextRequest, NextResponse } from 'next/server';
 import { getDB } from '@/db';
 import { scaleInterpretationTable, interpretationHistoryTable } from '@/db/schema';
@@ -7,7 +8,8 @@ export async function POST(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  try {
+  return withAdminAccess(request, async (request, session) => {
+    try {
     const { id } = await params;
     const body = await request.json();
     const { notes } = body;
@@ -61,16 +63,17 @@ export async function POST(
       changedBy: 'system',
     });
 
-    return NextResponse.json({ success: true });
-  } catch (error) {
-    const err = error as { message: string };
-    console.error('Failed to request changes:', err);
-    return NextResponse.json(
-      {
-        success: false,
-        message: err.message || 'Failed to request changes',
-      },
-      { status: 500 }
-    );
-  }
+      return NextResponse.json({ success: true });
+    } catch (error) {
+      const err = error as { message: string };
+      console.error('Failed to request changes:', err);
+      return NextResponse.json(
+        {
+          success: false,
+          message: err.message || 'Failed to request changes',
+        },
+        { status: 500 }
+      );
+    }
+  });
 }

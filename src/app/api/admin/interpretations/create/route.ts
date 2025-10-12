@@ -2,9 +2,11 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getDB } from '@/db';
 import { scaleInterpretationTable, interpretationHistoryTable } from '@/db/schema';
 import { eq, and } from 'drizzle-orm';
+import { withAdminAccess } from '@/utils/admin-protection';
 
 export async function POST(request: NextRequest) {
-  try {
+  return withAdminAccess(request, async (request, session) => {
+    try {
     const body = await request.json();
     const {
       scaleId,
@@ -75,19 +77,20 @@ export async function POST(request: NextRequest) {
       changedBy: 'system',
     });
 
-    return NextResponse.json({
-      success: true,
-      interpretation: newInterpretation,
-    });
-  } catch (error) {
-    const err = error as { message: string };
-    console.error('Failed to create interpretation:', err);
-    return NextResponse.json(
-      {
-        success: false,
-        message: err.message || 'Failed to create interpretation',
-      },
-      { status: 500 }
-    );
-  }
+      return NextResponse.json({
+        success: true,
+        interpretation: newInterpretation,
+      });
+    } catch (error) {
+      const err = error as { message: string };
+      console.error('Failed to create interpretation:', err);
+      return NextResponse.json(
+        {
+          success: false,
+          message: err.message || 'Failed to create interpretation',
+        },
+        { status: 500 }
+      );
+    }
+  });
 }

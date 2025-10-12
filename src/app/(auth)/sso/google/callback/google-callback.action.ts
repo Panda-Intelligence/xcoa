@@ -13,6 +13,11 @@ import { userTable } from "@/db/schema";
 import { createAndStoreSession, canSignUp } from "@/utils/auth";
 import { isGoogleSSOEnabled } from "@/flags";
 import { getIP } from "@/utils/get-IP";
+import { sendVerificationEmail } from "@/utils/email";
+import { getVerificationTokenKey } from "@/utils/auth-utils";
+import { createId } from "@paralleldrive/cuid2";
+import { EMAIL_VERIFICATION_TOKEN_EXPIRATION_SECONDS } from "@/constants";
+import { getCloudflareContext } from "@opennextjs/cloudflare";
 
 type GoogleSSOResponse = {
   /**
@@ -147,7 +152,42 @@ export const googleSSOCallbackAction = createServerAction()
           })
           .returning();
 
-        // TODO: If the user is not verified, send a verification email
+        // If the user is not verified by Google, send a verification email
+        if (!claims?.email_verified && user.email) {
+          try {
+            const { env } = getCloudflareContext();
+
+            if (!env?.NEXT_INC_CACHE_KV) {
+              console.error('KV store not available for email verification');
+            } else {
+              // Generate verification token
+              const verificationToken = createId();
+              const expiresAt = new Date(Date.now() + EMAIL_VERIFICATION_TOKEN_EXPIRATION_SECONDS * 1000);
+
+              // Save verification token in KV with expiration
+              await env.NEXT_INC_CACHE_KV.put(
+                getVerificationTokenKey(verificationToken),
+                JSON.stringify({
+                  userId: user.id,
+                  expiresAt: expiresAt.toISOString(),
+                }),
+                {
+                  expirationTtl: Math.floor((expiresAt.getTime() - Date.now()) / 1000),
+                }
+              );
+
+              // Send verification email
+              await sendVerificationEmail({
+                email: user.email,
+                verificationToken,
+                username: user.firstName || user.email,
+              });
+            }
+          } catch (emailError) {
+            // Log error but don't fail the signup process
+            console.error('Failed to send verification email after Google SSO:', emailError);
+          }
+        }
 
         await createAndStoreSession(user.id, "google-oauth");
         return { success: true };

@@ -50,3 +50,4 @@ dist
 !.env*example
 *.log
 storage
+david-ai-main

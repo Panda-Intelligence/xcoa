@@ -2,10 +2,12 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getDB } from '@/db';
 import { scaleInterpretationTable, ecoaScaleTable } from '@/db/schema';
 import { sql, isNull, not } from 'drizzle-orm';
+import { withAdminAccess } from '@/utils/admin-protection';
 
 export async function GET(request: NextRequest) {
-  try {
-    const db = getDB();
+  return withAdminAccess(request, async (request, session) => {
+    try {
+      const db = getDB();
 
     const totalScales = await db
       .select({ count: sql<number>`COUNT(*)` })
@@ -77,52 +79,53 @@ export async function GET(request: NextRequest) {
       ? ((stats.totalInterpretations / totalScales[0].count) * 100).toFixed(1)
       : '0.0';
 
-    return NextResponse.json({
-      success: true,
-      data: {
-        overview: {
-          totalScales: totalScales[0]?.count || 0,
-          totalInterpretations: stats.totalInterpretations,
-          coverage: `${coverage}%`,
-          needsVerification: stats.needsVerification,
+      return NextResponse.json({
+        success: true,
+        data: {
+          overview: {
+            totalScales: totalScales[0]?.count || 0,
+            totalInterpretations: stats.totalInterpretations,
+            coverage: `${coverage}%`,
+            needsVerification: stats.needsVerification,
+          },
+          status: {
+            draft: stats.draft,
+            reviewing: stats.reviewing,
+            approved: stats.approved,
+            published: stats.published,
+          },
+          generation: {
+            aiGenerated: stats.aiGenerated,
+            manualCreated: stats.manualCreated,
+          },
+          engagement: {
+            totalViews: stats.totalViews,
+            totalHelpful: stats.totalHelpful,
+            helpfulRate: stats.totalViews > 0
+              ? ((stats.totalHelpful / stats.totalViews) * 100).toFixed(1) + '%'
+              : '0%',
+          },
+          quality: {
+            avgQualityScore: quality.avgQualityScore,
+            avgCompletenessScore: quality.avgCompletenessScore,
+            avgAccuracyScore: quality.avgAccuracyScore,
+          },
+          recentInterpretations: recentInterpretations.map(item => ({
+            ...item,
+            createdAt: item.createdAt ? new Date(item.createdAt).toISOString() : new Date().toISOString(),
+          })),
         },
-        status: {
-          draft: stats.draft,
-          reviewing: stats.reviewing,
-          approved: stats.approved,
-          published: stats.published,
+      });
+    } catch (error) {
+      const err = error as { message: string };
+      console.error('Failed to fetch dashboard stats:', err);
+      return NextResponse.json(
+        {
+          success: false,
+          message: err.message || 'Failed to fetch dashboard stats',
         },
-        generation: {
-          aiGenerated: stats.aiGenerated,
-          manualCreated: stats.manualCreated,
-        },
-        engagement: {
-          totalViews: stats.totalViews,
-          totalHelpful: stats.totalHelpful,
-          helpfulRate: stats.totalViews > 0 
-            ? ((stats.totalHelpful / stats.totalViews) * 100).toFixed(1) + '%'
-            : '0%',
-        },
-        quality: {
-          avgQualityScore: quality.avgQualityScore,
-          avgCompletenessScore: quality.avgCompletenessScore,
-          avgAccuracyScore: quality.avgAccuracyScore,
-        },
-        recentInterpretations: recentInterpretations.map(item => ({
-          ...item,
-          createdAt: item.createdAt ? new Date(item.createdAt).toISOString() : new Date().toISOString(),
-        })),
-      },
-    });
-  } catch (error) {
-    const err = error as { message: string };
-    console.error('Failed to fetch dashboard stats:', err);
-    return NextResponse.json(
-      {
-        success: false,
-        message: err.message || 'Failed to fetch dashboard stats',
-      },
-      { status: 500 }
-    );
-  }
+        { status: 500 }
+      );
+    }
+  });
 }

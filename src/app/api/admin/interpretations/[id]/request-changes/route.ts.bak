@@ -2,17 +2,22 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getDB } from '@/db';
 import { scaleInterpretationTable, interpretationHistoryTable } from '@/db/schema';
 import { eq } from 'drizzle-orm';
-import { withAdminAccess } from '@/utils/admin-protection';
 
 export async function POST(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  return withAdminAccess(request, async (request, session) => {
-    try {
+  try {
     const { id } = await params;
     const body = await request.json();
     const { notes } = body;
+
+    if (!notes) {
+      return NextResponse.json(
+        { success: false, message: 'Review notes are required' },
+        { status: 400 }
+      );
+    }
 
     const db = getDB();
 
@@ -34,9 +39,10 @@ export async function POST(
     await db
       .update(scaleInterpretationTable)
       .set({
-        status: 'approved',
+        status: 'draft',
         reviewNotes: notes,
         reviewedAt: new Date(),
+        needsVerification: 1,
         version: oldVersion + 1,
         updatedAt: new Date(),
       })
@@ -46,26 +52,25 @@ export async function POST(
       interpretationId: id,
       version: oldVersion + 1,
       changes: JSON.stringify({
-        type: 'approve',
-        status: 'approved',
+        type: 'request_changes',
+        status: 'draft',
         notes,
       }),
       changeType: 'review',
-      changeSummary: '审核通过',
+      changeSummary: '需要修改',
       changedBy: 'system',
     });
 
-      return NextResponse.json({ success: true });
-    } catch (error) {
-      const err = error as { message: string };
-      console.error('Failed to approve:', err);
-      return NextResponse.json(
-        {
-          success: false,
-          message: err.message || 'Failed to approve',
-        },
-        { status: 500 }
-      );
-    }
-  });
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    const err = error as { message: string };
+    console.error('Failed to request changes:', err);
+    return NextResponse.json(
+      {
+        success: false,
+        message: err.message || 'Failed to request changes',
+      },
+      { status: 500 }
+    );
+  }
 }
