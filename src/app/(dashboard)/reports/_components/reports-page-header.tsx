@@ -9,8 +9,9 @@ export function ReportsPageHeader() {
 
   return (
     <PageHeader
-      title={t('reports.title')}
-      description={t('reports.description')}
+      items={[
+        { href: '/reports', label: t('reports.title') },
+      ]}
     />
   );
 }
