@@ -224,7 +224,7 @@ export function AdminInvoiceDetail({ invoiceId }: AdminInvoiceDetailProps) {
           {/* 发票头部 */}
           <div className="flex justify-between items-start mb-8">
             <div>
-              <h1 className="text-3xl font-bold text-blue-600 mb-2">xCOA Platform</h1>
+              <h1 className="text-3xl font-bold text-blue-600 mb-2">Open eCOA Platform</h1>
               <p className="text-sm text-gray-600">
                 Professional eCOA Solutions<br />
                 Unit 13, Freeland Park<br />

@@ -189,7 +189,7 @@ export async function POST(request: NextRequest) {
     // 生成邮件模板
     const emailTemplate = {
       to: copyrightContact.email,
-      subject: `xCOA Platform - ${contactRequest.requestType.replace('_', ' ')} for ${scale.acronym}`,
+      subject: `Open eCOA Platform - ${contactRequest.requestType.replace('_', ' ')} for ${scale.acronym}`,
       body: `Dear ${copyrightContact.organization} Team,
 
 I am writing to inquire about the usage license for the following assessment scale:
@@ -208,7 +208,7 @@ Contact Information:
 
 ${contactRequest.message ? `Message:\n${contactRequest.message}\n` : ''}
 
-This inquiry was submitted through the xCOA platform (openecoa.com).
+This inquiry was submitted through the Open eCOA platform (openecoa.com).
 
 Thank you for your consideration.
 

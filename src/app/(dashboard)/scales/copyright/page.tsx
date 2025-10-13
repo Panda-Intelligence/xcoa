@@ -501,7 +501,7 @@ export default function CopyrightPage() {
                   <h4>版权合规的重要性</h4>
                   <p>
                     使用未经授权的评估量表可能面临法律风险，包括版权侵权诉讼和经济损失。
-                    xCOA 平台帮助您识别许可要求并联系版权方获得合法授权。
+                    Open eCOA 平台帮助您识别许可要求并联系版权方获得合法授权。
                   </p>
 
                   <h4>不同用途的许可要求</h4>
@@ -516,7 +516,7 @@ export default function CopyrightPage() {
                   <ol>
                     <li>确定量表的版权状态和许可类型</li>
                     <li>准备详细的使用说明和项目信息</li>
-                    <li>联系版权方或通过 xCOA 平台发起联系</li>
+                    <li>联系版权方或通过 Open eCOA 平台发起联系</li>
                     <li>等待回复并协商许可条件</li>
                     <li>签署许可协议并支付相关费用</li>
                     <li>在许可范围内合规使用</li>

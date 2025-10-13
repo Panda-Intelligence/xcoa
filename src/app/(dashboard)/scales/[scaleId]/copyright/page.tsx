@@ -303,7 +303,7 @@ export default function ScaleCopyrightPage({ params }: CopyrightPageProps) {
                       <div>
                         <h4 className="font-medium">专业联系服务</h4>
                         <p className="text-sm text-muted-foreground">
-                          通过 xCOA 平台发起专业的许可联系请求
+                          通过 Open eCOA 平台发起专业的许可联系请求
                         </p>
                       </div>
 

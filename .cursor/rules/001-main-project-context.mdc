@@ -3,7 +3,7 @@ description:
 globs:
 alwaysApply: true
 ---
-# Cloudflare Workers Next.js SaaS Project for xCOA (eCOA)
+# Cloudflare Workers Next.js SaaS Project for Open eCOA (eCOA)
 
 This is a comprehensive, production-ready Next.js SaaS project designed to run on Cloudflare Workers with OpenNext. It includes authentication, team management, billing, and other common SaaS features needed to launch a modern web application.
 

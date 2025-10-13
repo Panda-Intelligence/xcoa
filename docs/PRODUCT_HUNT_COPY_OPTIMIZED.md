@@ -1,4 +1,4 @@
-# 🎯 xCOA Product Hunt 文案优化版本
+# 🎯 Open eCOA Product Hunt 文案优化版本
 
 **优化日期**: 2025-10-09
 **优化原则**: Linus's "Good Taste" - 简洁、直接、真实
@@ -47,7 +47,7 @@ AI search for psychological assessment scales
 ### 🏆 最终版本（255 字符）
 
 ```
-xCOA helps researchers and clinicians find validated psychological scales instantly.
+Open eCOA helps researchers and clinicians find validated psychological scales instantly.
 Search with natural language, get professional interpretations, and connect directly
 with copyright holders for licensing—all in one platform.
 ```
@@ -56,7 +56,7 @@ with copyright holders for licensing—all in one platform.
 
 **中文版本**（参考）:
 ```
-xCOA 帮助研究人员和临床医生即时找到经过验证的心理量表。使用自然语言搜索，
+Open eCOA 帮助研究人员和临床医生即时找到经过验证的心理量表。使用自然语言搜索，
 获取专业解读，直接联系版权方办理许可——全部集中在一个平台。
 ```
 
@@ -86,9 +86,9 @@ xCOA 帮助研究人员和临床医生即时找到经过验证的心理量表。
 Researchers waste days searching journals and databases for the right psychological scales.
 Then comes the copyright nightmare—months waiting for permissions.
 
-## What is xCOA?
+## What is Open eCOA?
 
-xCOA eliminates this friction. We're a platform built for researchers and clinicians who
+Open eCOA eliminates this friction. We're a platform built for researchers and clinicians who
 need psychological assessment scales, fast.
 
 ---
@@ -123,7 +123,7 @@ or dead ends.
 - Role-based access control
 - Team-wide favorites and collections
 
-**Why it matters**: Research is collaborative. So is xCOA.
+**Why it matters**: Research is collaborative. So is Open eCOA.
 
 ---
 
@@ -136,7 +136,7 @@ or dead ends.
 
 ---
 
-## Who Uses xCOA?
+## Who Uses Open eCOA?
 
 **Clinical Researchers**: Validated scales for your studies, no endless searching
 
@@ -193,7 +193,7 @@ Sign up free. Explore the database. Upgrade when you need to download.
 ### 🏆 优化版（更真实、更人性化）
 
 ```markdown
-👋 Hi Product Hunt! I'm [Your Name], and I built xCOA.
+👋 Hi Product Hunt! I'm [Your Name], and I built Open eCOA.
 
 ## Why I Built This
 
@@ -203,7 +203,7 @@ journals, only to hit a copyright wall. It felt broken.
 The problem isn't lack of scales—it's finding the RIGHT one, FAST, and getting legal
 permission to use it.
 
-## What xCOA Does
+## What Open eCOA Does
 
 Three things, done well:
 
@@ -236,7 +236,7 @@ Ask me anything about:
 - Building on Cloudflare Workers (spoiler: it's fast)
 - Why licensing is so painful (and how we're fixing it)
 
-Or just roast the product. I can take it. Feedback makes xCOA better.
+Or just roast the product. I can take it. Feedback makes Open eCOA better.
 
 ---
 
@@ -270,7 +270,7 @@ Thanks for checking us out. Let's make research less painful. 🚀
 ```
 🚀 We're live on @ProductHunt!
 
-xCOA helps researchers find psychological scales in seconds, not days.
+Open eCOA helps researchers find psychological scales in seconds, not days.
 
 ✨ Natural language search
 📊 500+ validated scales
@@ -291,7 +291,7 @@ Try it: [Product Hunt Link]
 ```
 🚀 Live on @ProductHunt!
 
-xCOA: Find psychological scales in seconds, not days.
+Open eCOA: Find psychological scales in seconds, not days.
 
 ✨ Natural language search
 📊 500+ validated scales
@@ -314,7 +314,7 @@ First 100 signups → 100 FREE credits
 ```
 🔍 Stop keyword guessing.
 
-With xCOA:
+With Open eCOA:
 "I need a depression screening tool for teenagers"
 
 → Relevant results. Instantly.
@@ -356,7 +356,7 @@ Check us out on @ProductHunt: [Link]
 ```
 📜 Copyright nightmare? Solved.
 
-xCOA connects you directly with scale authors.
+Open eCOA connects you directly with scale authors.
 
 Licensing in days, not months.
 
@@ -378,7 +378,7 @@ https://openecoa.com
 
 Thank you! 🙏
 
-Haven't tried xCOA yet?
+Haven't tried Open eCOA yet?
 → First 100 signups: 100 FREE credits
 → Code: PRODUCTHUNT
 
@@ -396,7 +396,7 @@ Let's keep going! 🚀
 ### 🏆 优化版（长文，更专业）
 
 ```markdown
-🚀 Today, we launched xCOA on Product Hunt.
+🚀 Today, we launched Open eCOA on Product Hunt.
 
 ## The Problem I Saw
 
@@ -412,7 +412,7 @@ This seemed broken.
 
 ## What We Built
 
-xCOA is a platform for researchers and clinicians who work with psychological assessment
+Open eCOA is a platform for researchers and clinicians who work with psychological assessment
 scales.
 
 Three core features:

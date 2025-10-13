@@ -1,4 +1,4 @@
-# xCOA 量表数据收集方案
+# Open eCOA 量表数据收集方案
 
 ## 🎯 项目目标
 
@@ -302,7 +302,7 @@ export class ScaleDataCollector {
     // 2. 获取页面内容
     const content = await this.rateLimiter.fetch(source.url, {
       headers: {
-        'User-Agent': 'xCOA-Academic-Research-Bot/1.0 (+https://openecoa.com/about-crawler)'
+        'User-Agent': 'Open eCOA-Academic-Research-Bot/1.0 (+https://openecoa.com/about-crawler)'
       }
     });
 

@@ -1,11 +1,11 @@
-# xCOA 项目实施执行总结
+# Open eCOA 项目实施执行总结
 
 ## ✅ 已完成的工作
 
 ### 1. Mock数据清理
 - ✅ **已识别所有mock数据位置**：dashboard页面、scales页面
 - ✅ **已替换为真实API**：
-  - `/api/scales/hot` - 热门量表数据  
+  - `/api/scales/hot` - 热门量表数据
   - `/api/dashboard/stats` - 仪表板统计
 - ✅ **已移除硬编码数据**：用真实数据库查询替换
 
@@ -40,7 +40,7 @@ sqlite3 database.db < scripts/enhance-scale-structure.sql
 # 2. 添加GAD-7题项数据
 sqlite3 database.db < scripts/seed-gad7-items.sql
 
-# 3. 添加MMSE-2题项数据  
+# 3. 添加MMSE-2题项数据
 sqlite3 database.db < scripts/seed-mmse2-items.sql
 
 # 4. 扩展量表库
@@ -69,7 +69,7 @@ HAVING s.items_count != actual_items;
 
 -- 检查新增量表
 SELECT acronym, name, items_count, administration_time
-FROM ecoa_scale 
+FROM ecoa_scale
 WHERE created_at >= date('now')
 ORDER BY acronym;
 ```
@@ -91,7 +91,7 @@ ORDER BY acronym;
 ### 本周完成
 3. **扩展量表库到20个**
    - 抑郁症：PHQ-9, BDI-II, HAM-D ✅
-   - 焦虑症：GAD-7, BAI, HAM-A ✅  
+   - 焦虑症：GAD-7, BAI, HAM-A ✅
    - 认知功能：MMSE-2, MoCA ✅
    - 生活质量：EORTC QLQ-C30, SF-36, WHOQOL-BREF ✅
    - 疼痛评估：BPI ✅
@@ -127,7 +127,7 @@ ORDER BY acronym;
 
 **关键指标**:
 - 量表数量: 5个 → 20个 (4倍增长)
-- 题项完整度: 20% → 80% (全面提升)  
+- 题项完整度: 20% → 80% (全面提升)
 - 专业内容: 基础 → 完整 (专业级)
 - 用户体验: 优秀 → 卓越 (行业领先)
 
@@ -135,6 +135,6 @@ ORDER BY acronym;
 
 ---
 
-**📅 执行计划制定**: 2025-09-21  
-**🎯 目标**: 从Demo转向生产级别的专业eCOA平台  
+**📅 执行计划制定**: 2025-09-21
+**🎯 目标**: 从Demo转向生产级别的专业eCOA平台
 **📈 预期成果**: 国内领先的量表数字化解决方案

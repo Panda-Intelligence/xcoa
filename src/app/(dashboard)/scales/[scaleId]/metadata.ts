@@ -4,13 +4,13 @@ import type { Metadata } from 'next';
 export function generateScaleMetadata(scale: any): Metadata {
   if (!scale) {
     return {
-      title: '量表未找到 - xCOA',
+      title: '量表未找到 - Open eCOA',
       description: '您查找的eCOA量表不存在或已被删除。'
     };
   }
 
   return {
-    title: `${scale.name} (${scale.acronym}) - xCOA`,
+    title: `${scale.name} (${scale.acronym}) - Open eCOA`,
     description: scale.description?.substring(0, 160) + '...' || scale.descriptionEn?.substring(0, 160) + '...',
     keywords: [
       scale.acronym,

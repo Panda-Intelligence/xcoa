@@ -1,4 +1,4 @@
-# 🚀 xCOA Product Hunt 发布准备指南
+# 🚀 Open eCOA Product Hunt 发布准备指南
 
 **准备日期**: 2025-10-09
 **目标发布日期**: 建议 2025-10-16 (下周三)
@@ -72,7 +72,7 @@ Find the perfect psychological scales with AI search
 ### 1.2 产品描述（Short Description）- 260 字符以内
 
 ```
-xCOA is an AI-powered platform that helps researchers and clinicians discover,
+Open eCOA is an AI-powered platform that helps researchers and clinicians discover,
 evaluate, and license psychological assessment scales. Our intelligent search
 understands natural language queries and recommends the most suitable scales
 for your research or clinical practice, with comprehensive interpretations and
@@ -81,7 +81,7 @@ clinical case examples.
 
 **中文版本**（参考）：
 ```
-xCOA 是一个 AI 驱动的平台，帮助科研人员和临床医生发现、评估和获取心理
+Open eCOA 是一个 AI 驱动的平台，帮助科研人员和临床医生发现、评估和获取心理
 评估量表的使用许可。我们的智能搜索理解自然语言查询，为您的研究或临床
 实践推荐最合适的量表，并提供全面的专业解读和临床案例。
 ```
@@ -91,9 +91,9 @@ xCOA 是一个 AI 驱动的平台，帮助科研人员和临床医生发现、�
 ### 1.3 详细描述（Detailed Description）
 
 ```markdown
-## 🎯 What is xCOA?
+## 🎯 What is Open eCOA?
 
-xCOA (Clinical Outcome Assessment) is a comprehensive platform designed for
+Open eCOA (Clinical Outcome Assessment) is a comprehensive platform designed for
 researchers, clinicians, and healthcare professionals who work with psychological
 assessment scales. We've built an AI-powered search engine that makes finding
 and understanding the right scales effortless.
@@ -140,7 +140,7 @@ and understanding the right scales effortless.
 - **Psychology Students**: Learn about different assessment instruments
 - **Healthcare Institutions**: Manage scales across your organization
 
-## 🚀 Why xCOA?
+## 🚀 Why Open eCOA?
 
 **Save Time**: Stop spending hours searching through journals and databases.
 Our AI finds what you need in seconds.
@@ -183,7 +183,7 @@ Visit us at: https://openecoa.com
 **时机**: 产品发布后立即发布
 
 ```markdown
-👋 Hi Product Hunt! I'm [Your Name], maker of xCOA.
+👋 Hi Product Hunt! I'm [Your Name], maker of Open eCOA.
 
 I'm excited to share what we've built! 🎉
 
@@ -196,7 +196,7 @@ is a nightmare.
 
 ## 💡 Our Solution
 
-xCOA uses AI to understand what you're looking for and recommends the most
+Open eCOA uses AI to understand what you're looking for and recommends the most
 suitable scales. We've also built a direct connection with copyright holders
 to streamline the licensing process.
 
@@ -235,7 +235,7 @@ Thanks for checking us out! Would love to hear your feedback. 💬
 - **风格建议**:
   - 专业、现代
   - 使用品牌色（蓝色系建议，代表可信、专业）
-  - 可以包含缩写 "xCOA" 或图标
+  - 可以包含缩写 "Open eCOA" 或图标
   - 避免过于复杂的设计
 
 ### 2.2 产品截图（建议 7-10 张）
@@ -312,9 +312,9 @@ Thanks for checking us out! Would love to hear your feedback. 💬
 
 ```
 [0-5秒] 开场
-画面: xCOA Logo 动画
-文字: "Introducing xCOA"
-旁白: "Meet xCOA - the AI-powered platform for psychological scale discovery"
+画面: Open eCOA Logo 动画
+文字: "Introducing Open eCOA"
+旁白: "Meet Open eCOA - the AI-powered platform for psychological scale discovery"
 
 [5-15秒] 问题呈现
 画面: 研究人员在电脑前困惑，堆满文献
@@ -326,7 +326,7 @@ Thanks for checking us out! Would love to hear your feedback. 💬
 画面: 在搜索框输入"depression screening for teenagers"
 画面: 搜索结果快速出现，AI 推荐标记
 文字: "Just ask in natural language"
-旁白: "With xCOA's AI search, just describe what you need. Our intelligent
+旁白: "With Open eCOA's AI search, just describe what you need. Our intelligent
        engine understands context and recommends the perfect scales."
 
 [30-45秒] 功能展示 1 - 专业解读
@@ -352,7 +352,7 @@ Thanks for checking us out! Would love to hear your feedback. 💬
 旁白: "Sign up free at openecoa.com and discover your perfect scale today."
 
 [90秒] 结束
-画面: xCOA Logo + 网址
+画面: Open eCOA Logo + 网址
 ```
 
 #### 视频技术要求：
@@ -386,7 +386,7 @@ Thanks for checking us out! Would love to hear your feedback. 💬
 #### 设计建议：
 ```
 +-----------------------------------+
-|     xCOA Logo                     |
+|     Open eCOA Logo                     |
 |                                   |
 |     [核心功能截图]                |
 |                                   |
@@ -428,7 +428,7 @@ Thanks for checking us out! Would love to hear your feedback. 💬
 ```
 🚀 We're live on @ProductHunt!
 
-Introducing xCOA - AI-powered platform that helps researchers & clinicians
+Introducing Open eCOA - AI-powered platform that helps researchers & clinicians
 find the perfect psychological assessment scales in seconds.
 
 ✨ Natural language search
@@ -447,7 +447,7 @@ Support us: [Product Hunt Link]
 ```
 🔍 Stop keyword guessing!
 
-With xCOA, just describe what you need:
+With Open eCOA, just describe what you need:
 "I need a depression screening tool for teenagers"
 
 Our AI understands and recommends the perfect scales.
@@ -474,7 +474,7 @@ Check us out on @ProductHunt: [Link]
 ```
 📜 Copyright headache? Not anymore!
 
-xCOA connects you directly with scale authors.
+Open eCOA connects you directly with scale authors.
 Streamlined licensing in days, not months.
 
 For researchers who want to focus on research, not paperwork.
@@ -488,7 +488,7 @@ https://openecoa.com
 
 Huge thanks to everyone who supported us today! 🙏
 
-Still haven't tried xCOA?
+Still haven't tried Open eCOA?
 First 100 signups get 100 FREE credits: [Link]
 
 Let's keep the momentum going! 🚀
@@ -499,9 +499,9 @@ Let's keep the momentum going! 🚀
 ### 3.2 LinkedIn 发布文案
 
 ```
-🚀 Exciting News: xCOA is Live on Product Hunt!
+🚀 Exciting News: Open eCOA is Live on Product Hunt!
 
-After months of development, I'm thrilled to announce the launch of xCOA
+After months of development, I'm thrilled to announce the launch of Open eCOA
 (openecoa.com) - an AI-powered platform that's transforming how researchers and
 clinicians discover and access psychological assessment scales.
 
@@ -514,7 +514,7 @@ permissions can take months.
 
 ## Our Solution
 
-xCOA uses advanced AI to understand natural language queries and recommend
+Open eCOA uses advanced AI to understand natural language queries and recommend
 the most suitable scales. We've also built direct connections with copyright
 holders to streamline licensing.
 
@@ -555,7 +555,7 @@ licensing assessment scales? 💬
 ```
 Hi [Name],
 
-Big news! xCOA is officially launching on Product Hunt TODAY! 🎉
+Big news! Open eCOA is officially launching on Product Hunt TODAY! 🎉
 
 As one of our early supporters, I wanted to give you a heads up and ask
 for your support.
@@ -563,7 +563,7 @@ for your support.
 ## 🙏 How You Can Help
 
 1. **Upvote us on Product Hunt**: [Link]
-2. **Leave a comment** sharing your experience with xCOA
+2. **Leave a comment** sharing your experience with Open eCOA
 3. **Share on social media** (optional but appreciated!)
 
 ## 🎁 Launch Day Special
@@ -574,14 +574,14 @@ To celebrate, we're offering:
 
 ## 💙 Thank You
 
-Your early feedback has been invaluable in shaping xCOA. Whatever happens
+Your early feedback has been invaluable in shaping Open eCOA. Whatever happens
 today, I'm grateful for your support!
 
 Feel free to reply to this email with any questions.
 
 Best regards,
 [Your Name]
-Founder, xCOA
+Founder, Open eCOA
 
 P.S. We'll be on Product Hunt all day - stop by and say hi! 👋
 ```
@@ -896,17 +896,17 @@ Product Hunt 允许其他用户"Hunt"（发布）你的产品。有影响力的 
 
 ### 8.2 联系邮件模板
 
-**主题**: 🚀 Launching xCOA - AI-Powered Scale Discovery Platform
+**主题**: 🚀 Launching Open eCOA - AI-Powered Scale Discovery Platform
 
 ```
 Hi [Name],
 
-I hope this email finds you well. I'm [Your Name], founder of xCOA
+I hope this email finds you well. I'm [Your Name], founder of Open eCOA
 (openecoa.com).
 
 ## Quick Pitch
 
-xCOA is an AI-powered platform that helps clinical researchers and
+Open eCOA is an AI-powered platform that helps clinical researchers and
 healthcare professionals discover and license psychological assessment
 scales in seconds, not days.
 
@@ -946,7 +946,7 @@ Thanks for considering! Would love to hear from you.
 
 Best regards,
 [Your Name]
-Founder, xCOA
+Founder, Open eCOA
 [Email] | [Twitter] | openecoa.com
 ```
 
@@ -1063,4 +1063,4 @@ Remember: 即使没有达到预期排名，每一条评论、每一位用户、�
 
 ---
 
-*Let's make xCOA a success on Product Hunt!* 🌟
+*Let's make Open eCOA a success on Product Hunt!* 🌟

@@ -216,7 +216,7 @@ export default function HelpPage() {
           <div className="text-center py-8">
             <h1 className="text-3xl font-bold flex items-center justify-center space-x-3 mb-4">
               <HelpCircle className="w-8 h-8 text-blue-600" />
-              <span>xCOA 帮助中心</span>
+              <span>Open eCOA 帮助中心</span>
             </h1>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
               常见问题解答，使用指南，以及技术支持信息

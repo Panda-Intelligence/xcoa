@@ -1,8 +1,8 @@
-# xCOA AI 驱动的 eCOA 搜索服务开发计划
+# Open eCOA AI 驱动的 eCOA 搜索服务开发计划
 
 ## 项目概览
 
-**项目名称：** xCOA - AI 驱动的 eCOA 搜索服务
+**项目名称：** Open eCOA - AI 驱动的 eCOA 搜索服务
 **技术栈：** Next.js 15 + Cloudflare Workers + D1 + Vectorize + Workers AI
 **开发开始时间：** 2025-09-20
 **当前状态：** 阶段一完成 ✅

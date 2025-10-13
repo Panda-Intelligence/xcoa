@@ -40,7 +40,7 @@
      */
   "vars": {
     "EMAIL_FROM": "no-reply@notifications.openecoa.com",
-    "EMAIL_FROM_NAME": "xCOA",
+    "EMAIL_FROM_NAME": "Open eCOA",
     "EMAIL_REPLY_TO": "support@openecoa.com"
   },
   /**

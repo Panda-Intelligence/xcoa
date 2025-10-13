@@ -50,7 +50,7 @@ export function Navigation() {
           <Link href="/" className="flex items-center">
             <div className="flex items-center">
               <div className="shrink-0">
-                <h1 className="text-xl font-semibold text-primary">xCOA</h1>
+                <h1 className="text-xl font-semibold text-primary">Open eCOA</h1>
               </div>
             </div>
           </Link>

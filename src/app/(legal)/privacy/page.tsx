@@ -59,7 +59,7 @@ export default function PrivacyPage() {
           This Privacy Policy, including our Cookie Policy applies to your use of our Services.
         </p>
         <p className="p">
-          This Privacy Policy applies to <span>xCOA.Pro</span>, <span>Panda Intelligence</span>-branded apps, Slideshare, <span>Panda Intelligence</span> Learning and other <span>Panda Intelligence</span>-related sites, apps, communications and services (“<b>Services</b>”).
+          This Privacy Policy applies to <span>Open eCOA.Pro</span>, <span>Panda Intelligence</span>-branded apps, Slideshare, <span>Panda Intelligence</span> Learning and other <span>Panda Intelligence</span>-related sites, apps, communications and services (“<b>Services</b>”).
         </p>
         <h3>
           <b>Data Controllers and Contracting Parties</b><b />

@@ -129,7 +129,7 @@ export class RateLimiter {
       const response = await fetch(url, {
         ...options,
         headers: {
-          'User-Agent': 'xCOA-Academic-Research-Bot/1.0 (+https://openecoa.com/about-crawler)',
+          'User-Agent': 'Open eCOA-Academic-Research-Bot/1.0 (+https://openecoa.com/about-crawler)',
           'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
           'Accept-Language': 'en-US,en;q=0.5',
           'Accept-Encoding': 'gzip, deflate',
@@ -228,7 +228,7 @@ export const DATA_SOURCES: DataSource[] = [
     priority: 'high',
     rateLimit: 1, // 每秒1次请求
     respectRobots: true,
-    userAgent: 'xCOA-Academic-Research-Bot/1.0',
+    userAgent: 'Open eCOA-Academic-Research-Bot/1.0',
     selectors: {
       name: ['.scale-name', 'h1.title', '[data-scale-name]'],
       acronym: ['.acronym', '.short-name', '[data-acronym]'],
@@ -247,7 +247,7 @@ export const DATA_SOURCES: DataSource[] = [
     priority: 'high',
     rateLimit: 1,
     respectRobots: true,
-    userAgent: 'xCOA-Academic-Research-Bot/1.0',
+    userAgent: 'Open eCOA-Academic-Research-Bot/1.0',
     selectors: {
       name: ['h1', '.scale-title', '.title'],
       acronym: ['.acronym', '.abbr'],
