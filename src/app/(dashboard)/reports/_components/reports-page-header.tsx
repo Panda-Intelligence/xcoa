@@ -1,7 +1,8 @@
 'use client';
 
 import { PageHeader } from '@/components/page-header';
-import { useLanguage } from '@/providers/language-provider';
+// Use the central language hook/provider
+import { useLanguage } from '@/hooks/useLanguage';
 
 export function ReportsPageHeader() {
   const { t } = useLanguage();

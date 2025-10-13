@@ -238,7 +238,7 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
         }
 
         // 确定response值
-        let response = answer.selectedOption ||
+        const response = answer.selectedOption ||
                       answer.selectedOptions ||
                       answer.textValue ||
                       answer.dateValue ||

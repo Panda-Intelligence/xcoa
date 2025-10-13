@@ -2,14 +2,15 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getDB } from '@/db';
 import { interpretationUserFeedbackTable } from '@/db/schema';
 import { eq, and } from 'drizzle-orm';
-import { getServerSession } from '@/lib/auth/session';
+import { getSessionFromCookie } from '@/utils/auth';
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: Promise<{ interpretationId: string }> }
+  { params }: { params: { interpretationId: string } }
 ) {
   try {
-    const session = await getServerSession();
+    // Our auth system exposes sessions via cookie
+    const session = await getSessionFromCookie();
     if (!session?.user) {
       return NextResponse.json(
         { success: false, message: 'Unauthorized' },
@@ -17,7 +18,7 @@ export async function POST(
       );
     }
 
-    const { interpretationId } = await params;
+    const { interpretationId } = params;
     const body = await request.json();
     const { isHelpful, rating, comment, issueType, issueDescription } = body;
 

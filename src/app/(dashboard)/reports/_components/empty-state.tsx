@@ -2,7 +2,8 @@
 
 import { Card, CardContent } from '@/components/ui/card';
 import { FileText } from 'lucide-react';
-import { useLanguage } from '@/providers/language-provider';
+// Use the central language hook/provider
+import { useLanguage } from '@/hooks/useLanguage';
 
 export function EmptyState() {
   const { t } = useLanguage();
