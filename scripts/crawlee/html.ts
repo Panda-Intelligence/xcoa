@@ -17,6 +17,17 @@ const crawler = new CheerioCrawler({
   async requestHandler({ pushData, enqueueLinks, request, $ }) {
     log.debug(`Processing ${request.url}...`);
 
+    // Only process URLs with ?p=number format
+    const url = new URL(request.url);
+    const postId = url.searchParams.get('p');
+    
+    if (!postId || !/^\d+$/.test(postId)) {
+      log.debug(`Skipping ${request.url} - not a valid post URL (expected ?p=number format)`);
+      return;
+    }
+
+    log.info(`Processing post ${postId} from ${request.url}`);
+
     // Extract data from the page using cheerio.
     // const title = $('title').text();
     const cnName = $('figure > table > tbody > tr:nth-child(1) > td:nth-child(2)').text();
@@ -61,6 +72,7 @@ const crawler = new CheerioCrawler({
     // the data will be stored as JSON files in ./storage/datasets/default
     await pushData({
       url: request.url,
+      postId,
       title: enName,
       cnName,
       enName,
@@ -75,7 +87,20 @@ const crawler = new CheerioCrawler({
       assessmentTypes,
     });
 
-    await enqueueLinks();
+    // Only enqueue links that match the ?p=number pattern
+    await enqueueLinks({
+      globs: ['https://www.usecoa.com/?p=*'],
+      transformRequestFunction: (req) => {
+        const reqUrl = new URL(req.url);
+        const pParam = reqUrl.searchParams.get('p');
+        
+        // Only return the request if it has a valid ?p=number format
+        if (pParam && /^\d+$/.test(pParam)) {
+          return req;
+        }
+        return false;
+      },
+    });
   },
 
   // This function is called if the page processing failed more than maxRequestRetries + 1 times.

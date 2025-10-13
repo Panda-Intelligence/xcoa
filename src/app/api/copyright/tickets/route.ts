@@ -172,16 +172,16 @@ export async function POST(request: NextRequest) {
       // 生成专业邮件模板
       const emailTemplate = copyrightContact ? {
         to: copyrightContact.email,
-        cc: 'support@xcoa.pro',
-        subject: `[xCOA Platform] ${ticketData.requestType.replace('_', ' ')} - ${scale.acronym} (Ticket #${ticketNumber})`,
+        cc: 'support@openecoa.com',
+        subject: `[Open eCOA Platform] ${ticketData.requestType.replace('_', ' ')} - ${scale.acronym} (Ticket #${ticketNumber})`,
         body: `Dear ${copyrightContact.organization} Team,
 
-We are writing from xCOA Platform (xcoa.pro) to facilitate a licensing inquiry for one of your assessment scales.
+We are writing from Open eCOA Platform (openecoa.com) to facilitate a licensing inquiry for one of your assessment scales.
 
 SCALE INFORMATION:
 - Scale Name: ${scale.name}
 - Acronym: ${scale.acronym}
-- xCOA Reference: ${scale.id}
+- Open eCOA Reference: ${scale.id}
 
 REQUEST DETAILS:
 - Request Type: ${ticketData.requestType.replace('_', ' ')}
@@ -200,9 +200,9 @@ DETAILED MESSAGE:
 ${ticketData.initialMessage}
 
 PLATFORM INFORMATION:
-This request was submitted through xCOA (xcoa.pro), a professional eCOA scale licensing platform that facilitates connections between researchers and scale copyright holders.
+This request was submitted through Open eCOA (openecoa.com), a professional eCOA scale licensing platform that facilitates connections between researchers and scale copyright holders.
 
-- Platform Support: support@xcoa.pro
+- Platform Support: support@openecoa.com
 - Ticket Number: ${ticketNumber}
 - Request Date: ${new Date().toISOString()}
 
@@ -211,11 +211,11 @@ Please respond to this email or contact the user directly. We will track this in
 Thank you for your time and consideration.
 
 Best regards,
-xCOA Platform Team
+Open eCOA Platform Team
 
 ---
-This is an automated message from xCOA Platform
-Platform: xcoa.pro | Support: support@xcoa.pro`
+This is an automated message from Open eCOA Platform
+Platform: openecoa.com | Support: support@openecoa.com`
       } : null;
 
       // 执行数据库操作 (插入工单记录)
@@ -302,8 +302,8 @@ Platform: xcoa.pro | Support: support@xcoa.pro`
             '📋 4. 许可协商和确认',
           ],
           estimatedTime: copyrightContact ? '3-7个工作日' : '待补充版权信息后开始',
-          nextAction: copyrightContact 
-            ? '系统将自动发送邮件给版权方，并为您跟踪回复状态' 
+          nextAction: copyrightContact
+            ? '系统将自动发送邮件给版权方，并为您跟踪回复状态'
             : '工单已创建，请后续补充版权联系信息。您可以通过工单详情页面编辑版权方信息。',
         }
       });

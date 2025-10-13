@@ -11,6 +11,8 @@ import { getSessionFromCookie } from '@/utils/auth';
 import { getIP } from '@/utils/get-IP';
 import { safeJSONParseArray, safeJSONParseObject } from '@/utils/json-parser';
 import { z } from 'zod';
+import { withFeatureAccess } from '@/utils/api-protection';
+import { ENTERPRISE_FEATURES } from '@/constants/plans';
 
 const previewParamsSchema = z.object({
   scaleId: z.string(),
@@ -20,11 +22,17 @@ export async function GET(
   request: NextRequest,
   context: { params: Promise<{ scaleId: string }> }
 ) {
-  try {
-    const db = getDB();
-    const session = await getSessionFromCookie();
-    const user = session?.user;
-    const ip = await getIP(); // getIP是异步函数
+  return withFeatureAccess(
+    request,
+    { 
+      feature: ENTERPRISE_FEATURES.SCALE_PREVIEW,
+      errorMessage: '量表预览功能需要 Starter 或 Enterprise 订阅'
+    },
+    async (request, session) => {
+      try {
+        const db = getDB();
+        const user = session?.user;
+        const ip = await getIP();
 
     const params = await context.params;
     const { scaleId } = previewParamsSchema.parse(params);
@@ -181,4 +189,6 @@ export async function GET(
       { status: 500 }
     );
   }
+    }
+  );
 }

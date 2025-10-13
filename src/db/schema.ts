@@ -7,6 +7,7 @@ import { creditTransactionTable, purchasedItemsTable } from "./schemas/billing";
 import { type teamInvitationTable, teamMembershipTable, type teamRoleTable, type teamTable } from "./schemas/team";
 import { type scaleUsageTable, userFavoriteTable } from "./schemas/favorite";
 import type { copyrightContactRequestTable, copyrightHolderTable, copyrightLicensesTable } from "./schemas/copyright";
+import type { scaleResponseTable, scaleReportTable, reportTemplateTable } from "./schemas/report";
 
 export * from './schemas/team'
 export * from './schemas/user'
@@ -16,6 +17,8 @@ export * from './schemas/billing'
 export * from './schemas/case'
 export * from './schemas/favorite'
 export * from './schemas/guide'
+export * from './schemas/interpretation'
+export * from './schemas/report'
 
 export type User = InferSelectModel<typeof userTable>;
 export type PassKeyCredential = InferSelectModel<typeof passKeyCredentialTable>;
@@ -35,6 +38,11 @@ export type CopyrightHolder = InferSelectModel<typeof copyrightHolderTable>;
 export type CopyrightContactRequest = InferSelectModel<typeof copyrightContactRequestTable>;
 
 export type CopyrightLicenses = InferSelectModel<typeof copyrightLicensesTable>;
+
+// Report types
+export type ScaleResponse = InferSelectModel<typeof scaleResponseTable>;
+export type ScaleReport = InferSelectModel<typeof scaleReportTable>;
+export type ReportTemplate = InferSelectModel<typeof reportTemplateTable>;
 
 
 // Updated user relations

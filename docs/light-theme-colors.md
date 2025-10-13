@@ -1,4 +1,4 @@
-# xCOA Light Theme 颜色配置指南
+# Open eCOA Light Theme 颜色配置指南
 
 ## 🎨 主色彩方案
 
@@ -83,7 +83,7 @@
 
 // 渐变背景区域
 <div className="gradient-theme-primary p-6 rounded-lg text-white">
-  欢迎使用 xCOA 平台
+  欢迎使用 Open eCOA 平台
 </div>
 ```
 

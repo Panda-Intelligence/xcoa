@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -55,11 +55,7 @@ export function AdminInvoiceDetail({ invoiceId }: AdminInvoiceDetailProps) {
   const [error, setError] = useState<string | null>(null);
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
 
-  useEffect(() => {
-    fetchInvoiceDetail();
-  }, [invoiceId]);
-
-  const fetchInvoiceDetail = async () => {
+  const fetchInvoiceDetail = useCallback(async () => {
     try {
       setLoading(true);
       const response = await fetch(`/api/admin/invoices/${invoiceId}`);
@@ -76,7 +72,11 @@ export function AdminInvoiceDetail({ invoiceId }: AdminInvoiceDetailProps) {
     } finally {
       setLoading(false);
     }
-  };
+  }, [invoiceId]);
+
+  useEffect(() => {
+    fetchInvoiceDetail();
+  }, [fetchInvoiceDetail]);
 
   const updateInvoiceStatus = async (status: string) => {
     if (!invoice) return;
@@ -224,12 +224,12 @@ export function AdminInvoiceDetail({ invoiceId }: AdminInvoiceDetailProps) {
           {/* 发票头部 */}
           <div className="flex justify-between items-start mb-8">
             <div>
-              <h1 className="text-3xl font-bold text-blue-600 mb-2">xCOA Platform</h1>
+              <h1 className="text-3xl font-bold text-blue-600 mb-2">Open eCOA Platform</h1>
               <p className="text-sm text-gray-600">
                 Professional eCOA Solutions<br />
                 Unit 13, Freeland Park<br />
                 Wareham Road, Poole, UK BH16 6FH<br />
-                Email: support@xcoa.pro
+                Email: support@openecoa.com
               </p>
             </div>
             <div className="text-right">

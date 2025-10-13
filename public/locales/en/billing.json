@@ -1,0 +1,156 @@
+{
+  "billing": {
+    "payment_successful": "Payment successful!",
+    "payment_failed": "Payment failed",
+    "processing_payment": "Processing payment...",
+    "unexpected_error": "An unexpected error occurred",
+    "credits": "Credits",
+    "transactions": "Transactions",
+    "invoice": "Invoice",
+    "overview": "Overview",
+    "my_invoices": "My Invoices",
+    "total": "Total",
+    "paid": "Paid",
+    "pending": "Pending",
+    "draft": "Draft",
+    "sent": "Sent",
+    "overdue": "Overdue",
+    "cancelled": "Cancelled",
+    "invoice_number": "Invoice Number",
+    "status": "Status",
+    "amount": "Amount",
+    "date": "Date",
+    "actions": "Actions",
+    "view": "View",
+    "download_pdf": "Download PDF",
+    "no_invoice_records": "No invoice records",
+    "page_of": "Page {page} of {total}",
+    "back_to_invoice_list": "Back to Invoice List",
+    "description": "Description:",
+    "issue_date": "Issue Date:",
+    "due_date": "Due Date:",
+    "customer": "Customer:",
+    "organization": "Organization:",
+    "email": "Email:",
+    "amount_details": "Amount Details",
+    "subtotal": "Subtotal:",
+    "tax": "Tax:",
+    "total_amount": "Total:",
+    "payment_information": "Payment Information",
+    "payment_date": "Payment Date:",
+    "payment_method": "Payment Method:",
+    "loading": "Loading...",
+    "failed_to_load": "Failed to load",
+    "invoice_not_found": "Invoice not found",
+    "network_error": "Network error, please try again later",
+    "pdf_generation_failed": "PDF generation failed, please try again later",
+    "you_get_free_credits": "You get {count} free credits every month.",
+    "top_up_credits": "Top up your credits",
+    "purchase_additional_credits": "Purchase additional credits to use our services. The more credits you buy, the better the value.",
+    "one_time_payment": "one-time payment",
+    "save_percent": "Save {percent}%",
+    "purchase_now": "Purchase Now",
+    "transaction_history": "Transaction History",
+    "type": "Type",
+    "no_transactions_found": "No transactions found",
+    "expired": "Expired",
+    "expires": "Expires",
+    "purchase_credits": "Purchase Credits",
+    "pay_now": "Pay Now",
+    "payment_secure": "Your payment is secure and encrypted. We use Stripe, a trusted global payment provider, to process your payment.",
+    "payment_security": "For your security, your payment details are handled directly by Stripe and never touch our servers.",
+    "credits_validity": "Credits will be added to your account immediately after successful payment and will be valid for {years} years from the purchase date.",
+    "payment_error": "Something went wrong with our payment provider. Please try again later."
+  },
+  "pricing": {
+    "title": "Choose the Right Subscription Plan",
+    "description": "From professional research to enterprise deployment, we offer flexible pricing plans to meet different scale needs",
+    "monthly": "Monthly",
+    "yearly": "Yearly",
+    "save_20": "Save 20%",
+    "recommended": "Recommended",
+    "most_popular": "Most Popular",
+    "plans": {
+      "professional": {
+        "name": "Professional",
+        "price": "$499",
+        "period": "/mo",
+        "description": "Perfect for professional research teams and mid-size institutions",
+        "button": "Subscribe Now",
+        "features": [
+          "Access to complete scale library (500+)",
+          "AI intelligent search & recommendations",
+          "Unlimited searches and downloads",
+          "Advanced data analysis tools",
+          "Team collaboration features (up to 10 users)",
+          "Scale interpretation & guidance",
+          "Copyright contact services",
+          "Priority technical support (48h response)",
+          "Basic API integration",
+          "Data export functionality"
+        ]
+      },
+      "enterprise": {
+        "name": "Enterprise",
+        "price": "$1,299",
+        "period": "/mo",
+        "description": "Perfect for large healthcare institutions and research organizations",
+        "button": "Subscribe Now",
+        "features": [
+          "All Professional features",
+          "Unlimited team members",
+          "Custom scale upload & management",
+          "Advanced API integration support",
+          "Bulk copyright licensing services",
+          "Professional scale interpretation reports",
+          "Priority copyright contact (24h response)",
+          "Enterprise-grade data security",
+          "Dedicated customer success manager",
+          "Custom training services",
+          "99.9% SLA guarantee",
+          "White-label solution options"
+        ]
+      },
+      "custom": {
+        "name": "Custom",
+        "price": "Custom",
+        "description": "Tailored for special requirements and large-scale deployments",
+        "button": "Contact Us",
+        "period": "",
+        "features": [
+          "All Enterprise features",
+          "Private cloud deployment options",
+          "Fully customized development",
+          "Dedicated technical architecture support",
+          "Unlimited copyright licensing",
+          "24/7 dedicated support",
+          "Data localization storage",
+          "Regulatory compliance consulting",
+          "Professional implementation team",
+          "Long-term technical partnership",
+          "Flexible billing models",
+          "Global multi-region deployment"
+        ]
+      }
+    },
+    "faq": {
+      "title": "Frequently Asked Questions",
+      "can_cancel": {
+        "question": "Can I cancel my subscription at any time?",
+        "answer": "Yes, you can cancel your subscription at any time. You'll continue to have access until the end of your current billing period."
+      },
+      "payment_methods": {
+        "question": "What payment methods are supported?",
+        "answer": "We support various payment methods including credit cards, PayPal, bank transfers, and more."
+      },
+      "enterprise_services": {
+        "question": "What custom services are included in the Enterprise plan?",
+        "answer": "Includes private deployment, custom development, dedicated training, and one-on-one services."
+      },
+      "data_security": {
+        "question": "How is data security ensured?",
+        "answer": "We use bank-level encryption technology and comply with GDPR and domestic data protection regulations."
+      }
+    }
+  }
+}

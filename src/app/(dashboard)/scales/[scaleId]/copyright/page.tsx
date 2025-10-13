@@ -28,6 +28,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { useLanguage } from '@/hooks/useLanguage';
 import Link from 'next/link';
 import { useToast } from '@/hooks/useToast';
+import { FeatureGate } from '@/components/subscription/feature-gate';
+import { ENTERPRISE_FEATURES } from '@/constants/plans';
 
 interface CopyrightPageProps {
   params: Promise<{ scaleId: string }>;
@@ -140,6 +142,11 @@ export default function ScaleCopyrightPage({ params }: CopyrightPageProps) {
   const { scale, copyright, actions } = copyrightInfo;
 
   return (
+    <FeatureGate
+      feature={ENTERPRISE_FEATURES.COPYRIGHT_VIEW}
+      featureName={t('features.copyright_info', '版权信息查看')}
+      featureDescription={t('features.copyright_desc', '查看量表版权详情并申请许可')}
+    >
     <div className="min-h-screen bg-background">
       {/* 头部导航 */}
       <div className="bg-white border-b sticky top-0 z-10">
@@ -296,7 +303,7 @@ export default function ScaleCopyrightPage({ params }: CopyrightPageProps) {
                       <div>
                         <h4 className="font-medium">专业联系服务</h4>
                         <p className="text-sm text-muted-foreground">
-                          通过 xCOA 平台发起专业的许可联系请求
+                          通过 Open eCOA 平台发起专业的许可联系请求
                         </p>
                       </div>
 
@@ -526,5 +533,6 @@ export default function ScaleCopyrightPage({ params }: CopyrightPageProps) {
         </div>
       </div>
     </div>
+    </FeatureGate>
   );
 }

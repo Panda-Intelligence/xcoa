@@ -11,6 +11,7 @@ import {
   Beaker,
   MessageSquare,
   Copyright,
+  BookOpen,
 } from "lucide-react"
 
 import { NavMain } from "@/components/nav-main"
@@ -66,6 +67,22 @@ export function AdminSidebar({ ...props }: React.ComponentProps<typeof Sidebar>)
       url: "/admin/copyright-holders" as Route,
       icon: Copyright,
       isActive: true,
+    },
+    {
+      title: '量表解读',
+      url: "/admin/interpretations" as Route,
+      icon: BookOpen,
+      isActive: true,
+      items: [
+        {
+          title: '审核管理',
+          url: "/admin/interpretations" as Route,
+        },
+        {
+          title: '监控仪表板',
+          url: "/admin/interpretations/dashboard" as Route,
+        },
+      ],
     },
     {
       title: t('admin.clinical_cases'),

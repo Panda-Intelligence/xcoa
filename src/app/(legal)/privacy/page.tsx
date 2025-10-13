@@ -50,7 +50,7 @@ export default function PrivacyPage() {
           <b>Introduction</b><b />
         </h2>
         <p className="p">
-          Our registered users ("Members") can utilize our Services to manage clinical trials, collect electronic data, and access information, whereas non-members ("Visitors") are restricted to viewing content and data on specific Services.
+          Our registered users (&ldquo;Members&rdquo;) can utilize our Services to manage clinical trials, collect electronic data, and access information, whereas non-members (&ldquo;Visitors&rdquo;) are restricted to viewing content and data on specific Services.
         </p>
         <h3>
           <b>Services</b><b />
@@ -59,7 +59,7 @@ export default function PrivacyPage() {
           This Privacy Policy, including our Cookie Policy applies to your use of our Services.
         </p>
         <p className="p">
-          This Privacy Policy applies to <span>xCOA.Pro</span>, <span>Panda Intelligence</span>-branded apps, Slideshare, <span>Panda Intelligence</span> Learning and other <span>Panda Intelligence</span>-related sites, apps, communications and services (“<b>Services</b>”).
+          This Privacy Policy applies to <span>Open eCOA.Pro</span>, <span>Panda Intelligence</span>-branded apps, Slideshare, <span>Panda Intelligence</span> Learning and other <span>Panda Intelligence</span>-related sites, apps, communications and services (“<b>Services</b>”).
         </p>
         <h3>
           <b>Data Controllers and Contracting Parties</b><b />
@@ -364,7 +364,7 @@ export default function PrivacyPage() {
           · <b>Delete Data:</b> You can <span>request</span> us to erase or delete all or some of your personal data (e.g., if it is no longer necessary to provide Services to you).
         </p>
         <p className="section-normal" style={{ marginLeft: "36pt", textIndent: "-18pt" }}>
-          · <b>Change or Correct Data</b>: You can edit some of your personal data through your account. You can also <span>request</span> us to change, update or fix your data in certain cases, particularly if it's inaccurate.
+          · <b>Change or Correct Data</b>: You can edit some of your personal data through your account. You can also <span>request</span> us to change, update or fix your data in certain cases, particularly if it&apos;s inaccurate.
         </p>
         <p className="section-normal" style={{ marginLeft: "36pt", textIndent: "-18pt" }}>
           · <b>Object to, or Limit or Restrict, Use of Data:</b> You can <span>request</span> us to stop using all or some of your personal data (e.g., if we have no legal right to keep using it) or to limit our use of it (e.g., if your personal data is inaccurate or unlawfully held).
@@ -428,7 +428,7 @@ export default function PrivacyPage() {
           We will only collect and process personal data about you where we have lawful bases. Lawful bases include <i>consent</i> (where you have given consent), contract (where processing is necessary for the performance of a contract with you (e.g. to deliver the <span>Panda Intelligence</span> Services you have requested)) and “legitimate interests”.
         </p>
         <p className="p">
-          Where we rely on your consent to process personal data, you have the right to withdraw or decline your consent at any time and where we rely on legitimate interests, you have the right to object. If you have any questions about the lawful bases upon which we collect and use your personal data, please contact our Data Protection Mail dataprotection@xcoa.pro.
+          Where we rely on your consent to process personal data, you have the right to withdraw or decline your consent at any time and where we rely on legitimate interests, you have the right to object. If you have any questions about the lawful bases upon which we collect and use your personal data, please contact our Data Protection Mail dataprotection@openecoa.com.
         </p>
         <h3>
           <b>5.</b><b>4</b><b>. Contact Information</b><b />
@@ -437,7 +437,7 @@ export default function PrivacyPage() {
           You can contact us or use other options to resolve any complaints.
         </p>
         <p className="p">
-          If you have questions or complaints regarding this Policy, please first contact <a href="mailto:dataprotection@xcoa.pro"><u>dataprotection@xcoa.pro</u></a>. You can also reach us by <span>postal</span> mail.
+          If you have questions or complaints regarding this Policy, please first contact <a href="mailto:dataprotection@openecoa.com"><u>dataprotection@openecoa.com</u></a>. You can also reach us by <span>postal</span> mail.
         </p>
       </div>
     </div>

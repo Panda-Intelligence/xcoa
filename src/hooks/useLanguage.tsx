@@ -20,18 +20,67 @@ const translations: Record<Language, any> = {
   en: {},
 };
 
-// 加载翻译文件
+// 定义翻译模块列表
+const TRANSLATION_MODULES = [
+  'common',
+  'scales',
+  'copyright',
+  'insights',
+  'auth',
+  'user',
+  'admin',
+  'billing',
+  'reports',
+  'landing',
+  'forms',
+  'errors'
+];
+
+// 加载翻译文件（支持模块化加载）
 async function loadTranslations(lang: Language) {
   if (Object.keys(translations[lang]).length > 0) {
     return translations[lang];
   }
 
   try {
-    const response = await fetch(`/locales/${lang}.json`);
-    translations[lang] = await response.json();
+    // 尝试加载模块化翻译文件
+    const modulePromises = TRANSLATION_MODULES.map(async (module) => {
+      try {
+        const response = await fetch(`/locales/${lang}/${module}.json`);
+        if (response.ok) {
+          return await response.json();
+        }
+        return {};
+      } catch (err) {
+        console.warn(`Failed to load module ${module} for ${lang}:`, err);
+        return {};
+      }
+    });
+
+    const modules = await Promise.all(modulePromises);
+
+    // 合并所有模块
+    translations[lang] = modules.reduce((acc, module) => {
+      return { ...acc, ...module };
+    }, {});
+
+    console.log(`Loaded ${Object.keys(translations[lang]).length} translation keys for ${lang}`);
     return translations[lang];
   } catch (error) {
     console.error(`Failed to load translations for ${lang}:`, error);
+
+    // 降级：尝试加载单一文件（向后兼容）
+    try {
+      const response = await fetch(`/locales/${lang}.json`);
+      if (response.ok) {
+        translations[lang] = await response.json();
+        console.log(`Loaded translations from fallback single file for ${lang}`);
+        return translations[lang];
+      }
+    } catch (fallbackError) {
+      console.error(`Fallback loading also failed for ${lang}:`, fallbackError);
+    }
+
     return {};
   }
 }

@@ -1,8 +1,8 @@
-# xCOA 搜索 API 文档
+# Open eCOA 搜索 API 文档
 
 ## 🔍 API 概览
 
-xCOA 提供8个核心搜索和详情 API，支持精确搜索、语义搜索、向量搜索、混合搜索、高级筛选和量表详情展示。
+Open eCOA 提供8个核心搜索和详情 API，支持精确搜索、语义搜索、向量搜索、混合搜索、高级筛选和量表详情展示。
 
 **Base URL:** `http://localhost:3000` (开发环境)
 
@@ -21,7 +21,7 @@ xCOA 提供8个核心搜索和详情 API，支持精确搜索、语义搜索、�
 
 ## 1. 基础搜索 API
 
-**接口：** `POST /api/search`  
+**接口：** `POST /api/search`
 **功能：** 关键词匹配搜索，支持筛选、排序、分页
 
 ### 请求参数
@@ -49,7 +49,7 @@ xCOA 提供8个核心搜索和详情 API，支持精确搜索、语义搜索、�
     {
       "id": "scale_phq9",
       "name": "患者健康问卷-9",
-      "nameEn": "Patient Health Questionnaire-9", 
+      "nameEn": "Patient Health Questionnaire-9",
       "acronym": "PHQ-9",
       "description": "PHQ-9是一个广泛使用的抑郁症筛查...",
       "category": "抑郁症评估",
@@ -63,7 +63,7 @@ xCOA 提供8个核心搜索和详情 API，支持精确搜索、语义搜索、�
   ],
   "pagination": {
     "page": 1,
-    "limit": 20, 
+    "limit": 20,
     "total": 1,
     "totalPages": 1
   },
@@ -96,7 +96,7 @@ curl -X POST http://localhost:3000/api/search \
 
 ## 2. 语义搜索 API
 
-**接口：** `POST /api/search/semantic`  
+**接口：** `POST /api/search/semantic`
 **功能：** AI 驱动的语义理解搜索，智能扩展查询词汇
 
 ### 请求参数
@@ -114,7 +114,7 @@ curl -X POST http://localhost:3000/api/search \
     {
       "id": "scale_phq9",
       "name": "患者健康问卷-9",
-      "acronym": "PHQ-9", 
+      "acronym": "PHQ-9",
       "semantic_score": 185,
       "match_score": 185,
       "category": "抑郁症评估"
@@ -122,7 +122,7 @@ curl -X POST http://localhost:3000/api/search \
   ],
   "query": "抑郁症筛查",
   "expandedTerms": [
-    "抑郁症筛查", "depression", "depressive", "mood", 
+    "抑郁症筛查", "depression", "depressive", "mood",
     "phq", "beck", "hamilton", "screening", "assessment"
   ],
   "searchType": "semantic",
@@ -134,7 +134,7 @@ curl -X POST http://localhost:3000/api/search \
 ```typescript
 // 中文查询自动扩展英文相关词汇
 "抑郁症" → ["depression", "depressive", "mood", "phq", "beck", "hamilton"]
-"焦虑" → ["anxiety", "gad", "panic", "worry", "stress"]  
+"焦虑" → ["anxiety", "gad", "panic", "worry", "stress"]
 "认知" → ["cognitive", "memory", "attention", "mmse", "moca"]
 "筛查" → ["screening", "assessment", "evaluation", "scale"]
 ```
@@ -160,7 +160,7 @@ curl -X POST http://localhost:3000/api/search/semantic \
 
 ## 3. 搜索建议 API
 
-**接口：** `GET /api/search/suggestions`  
+**接口：** `GET /api/search/suggestions`
 **功能：** 智能搜索补全和建议
 
 ### 请求参数
@@ -176,7 +176,7 @@ limit?: number    // 建议数量 (默认: 5, 最大: 10)
     {
       "id": "scale_phq9",
       "text": "患者健康问卷-9 (PHQ-9)",
-      "acronym": "PHQ-9", 
+      "acronym": "PHQ-9",
       "name": "患者健康问卷-9",
       "nameEn": "Patient Health Questionnaire-9",
       "usageCount": 0
@@ -191,13 +191,13 @@ limit?: number    // 建议数量 (默认: 5, 最大: 10)
 # 获取 PHQ 相关建议
 curl "http://localhost:3000/api/search/suggestions?query=PHQ&limit=5"
 
-# 获取 GAD 相关建议  
+# 获取 GAD 相关建议
 curl "http://localhost:3000/api/search/suggestions?query=GAD"
 ```
 
 ## 4. 筛选选项 API
 
-**接口：** `GET /api/search/filters`  
+**接口：** `GET /api/search/filters`
 **功能：** 获取动态筛选选项和统计信息
 
 ### 响应示例
@@ -207,7 +207,7 @@ curl "http://localhost:3000/api/search/suggestions?query=GAD"
     {
       "id": "cat_01",
       "name": "抑郁症评估",
-      "nameEn": "Depression Assessment", 
+      "nameEn": "Depression Assessment",
       "scaleCount": 1
     }
   ],
@@ -220,12 +220,12 @@ curl "http://localhost:3000/api/search/suggestions?query=GAD"
   ],
   "languages": [
     {
-      "value": "zh-CN", 
+      "value": "zh-CN",
       "label": "中文"
     },
     {
       "value": "en-US",
-      "label": "English" 
+      "label": "English"
     }
   ],
   "ranges": {
@@ -234,7 +234,7 @@ curl "http://localhost:3000/api/search/suggestions?query=GAD"
       "max": 36
     },
     "administrationTime": {
-      "min": 3, 
+      "min": 3,
       "max": 15
     }
   }
@@ -251,7 +251,7 @@ curl "http://localhost:3000/api/search/filters"
 
 ### 基础搜索评分
 - **精确缩写匹配：** 100分 (如 "PHQ-9" 完全匹配)
-- **标题完全匹配：** 95分  
+- **标题完全匹配：** 95分
 - **标题部分匹配：** 80分
 - **描述匹配：** 60分
 - **其他字段匹配：** 40分
@@ -260,7 +260,7 @@ curl "http://localhost:3000/api/search/filters"
 ### 语义搜索评分
 - **精确缩写匹配：** 100分
 - **标题匹配：** 80分
-- **标题部分匹配：** 60分  
+- **标题部分匹配：** 60分
 - **英文标题匹配：** 50分
 - **描述匹配：** 30分
 - **使用频率加权：** +0.1 × 使用次数 (最大+10分)
@@ -278,7 +278,7 @@ curl "http://localhost:3000/api/search/filters"
 ## 🔒 限流规则
 
 - **基础搜索：** 每分钟30次
-- **语义搜索：** 每分钟20次  
+- **语义搜索：** 每分钟20次
 - **搜索建议：** 每分钟60次
 - **筛选选项：** 无限制
 - **未登录用户：** 每日10次搜索限制
@@ -293,7 +293,7 @@ curl "http://localhost:3000/api/search/filters"
   "details": [
     {
       "code": "too_small",
-      "minimum": 1, 
+      "minimum": 1,
       "path": ["query"]
     }
   ]
@@ -304,7 +304,7 @@ curl "http://localhost:3000/api/search/filters"
   "error": "Rate limit exceeded. Try again in 2 minutes."
 }
 
-// 500 - 服务器错误  
+// 500 - 服务器错误
 {
   "error": "Internal server error"
 }
@@ -317,7 +317,7 @@ curl "http://localhost:3000/api/search/filters"
 // ✅ 推荐：使用具体的量表缩写
 { "query": "PHQ-9" }
 
-// ✅ 推荐：使用语义搜索处理自然语言  
+// ✅ 推荐：使用语义搜索处理自然语言
 { "query": "抑郁症筛查工具" } // 使用 /api/search/semantic
 
 // ❌ 避免：过于宽泛的查询
@@ -348,7 +348,7 @@ curl "http://localhost:3000/api/search/filters"
 
 ---
 
-**API 版本：** v1.0  
-**最后更新：** 2025-09-20  
-**支持联系：** 开发团队  
+**API 版本：** v1.0
+**最后更新：** 2025-09-20
+**支持联系：** 开发团队
 **状态：** ✅ 生产就绪

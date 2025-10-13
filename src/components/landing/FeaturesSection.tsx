@@ -60,14 +60,17 @@ export function FeaturesSection() {
         </div>
 
         {/* Features Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
           {features.map((feature) => (
-            <Card key={feature.title} className="border border-border hover:shadow-lg transition-shadow duration-300">
+            <Card
+              key={feature.title}
+              className="border border-border hover:border-primary/50 hover:shadow-lg transition-all duration-300 hover:-translate-y-1 group"
+            >
               <CardHeader>
-                <div className="inline-flex items-center justify-center w-12 h-12 rounded-lg bg-secondary/50 mb-4">
-                  <feature.icon className={`h-6 w-6 ${feature.color}`} />
+                <div className="inline-flex items-center justify-center w-14 h-14 rounded-xl bg-gradient-to-br from-primary/10 to-primary/5 group-hover:from-primary/20 group-hover:to-primary/10 mb-4 transition-all duration-300">
+                  <feature.icon className={`h-7 w-7 ${feature.color}`} />
                 </div>
-                <CardTitle className="text-xl">{feature.title}</CardTitle>
+                <CardTitle className="text-xl font-semibold">{feature.title}</CardTitle>
               </CardHeader>
               <CardContent>
                 <CardDescription className="text-base leading-relaxed">
@@ -79,35 +82,35 @@ export function FeaturesSection() {
         </div>
 
         {/* Clinical Search Demo Section */}
-        <div className="mt-20 rounded-2xl p-8 lg:p-12">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+        <div className="mt-20 rounded-3xl bg-gradient-to-br from-primary/5 via-secondary/5 to-accent/5 p-8 lg:p-12 border border-primary/10">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
             <div className="space-y-6">
               <div className="space-y-4">
-                <h3 className="text-2xl font-bold text-foreground">
+                <h3 className="text-2xl lg:text-3xl font-bold text-foreground">
                   {t('landing.ai_demo_title')}
                 </h3>
-                <p className="text-muted-foreground">
+                <p className="text-base lg:text-lg text-muted-foreground leading-relaxed">
                   {t('landing.ai_demo_description')}
                 </p>
               </div>
 
-              <div className="space-y-3">
-                <div className="bg-card rounded-lg p-4 border border-border shadow-xs">
+              <div className="space-y-4">
+                <div className="bg-white rounded-xl p-5 border border-gray-200 shadow-sm">
                   <div className="flex items-start space-x-3">
-                    <div className="w-2 h-2 bg-blue-500 dark:bg-blue-400 rounded-full mt-2" />
+                    <div className="w-2 h-2 bg-blue-500 dark:bg-blue-400 rounded-full mt-2 flex-shrink-0" />
                     <div>
-                      <p className="text-sm text-muted-foreground">{t('landing.user_input')}</p>
-                      <p className="font-medium">"{t('landing.cancer_quality_input')}"</p>
+                      <p className="text-sm text-muted-foreground mb-1">{t('landing.user_input')}</p>
+                      <p className="font-medium text-foreground">&ldquo;{t('landing.cancer_quality_input')}&rdquo;</p>
                     </div>
                   </div>
                 </div>
 
-                <div className="bg-primary/5 rounded-lg p-4 border border-primary/20">
+                <div className="bg-gradient-to-br from-primary/10 to-primary/5 rounded-xl p-5 border border-primary/20 shadow-sm">
                   <div className="flex items-start space-x-3">
-                    <div className="w-2 h-2 bg-primary rounded-full mt-2" />
+                    <div className="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0" />
                     <div>
-                      <p className="text-sm text-muted-foreground">{t('landing.ai_recommendation')}</p>
-                      <p className="font-medium">推荐EORTC QLQ-C30和FACT-G量表，专门用于肿瘤患者生活质量评估</p>
+                      <p className="text-sm text-primary/80 font-medium mb-1">{t('landing.ai_recommendation')}</p>
+                      <p className="font-medium text-foreground">推荐EORTC QLQ-C30和FACT-G量表，专门用于肿瘤患者生活质量评估</p>
                     </div>
                   </div>
                 </div>
@@ -115,11 +118,11 @@ export function FeaturesSection() {
             </div>
 
             <div className="relative">
-              <div className="bg-card rounded-xl p-6 shadow-lg border border-border">
+              <div className="bg-white rounded-2xl p-6 lg:p-8 shadow-xl border border-gray-200">
                 <div className="space-y-4">
                   <div className="flex items-center space-x-2 text-sm text-muted-foreground">
-                    <Search className="h-4 w-4" />
-                    <span>{t('landing.search_time')}</span>
+                    <Search className="h-4 w-4 text-primary" />
+                    <span className="font-medium">{t('landing.search_time')}</span>
                   </div>
 
                   <div className="space-y-3">
@@ -128,12 +131,17 @@ export function FeaturesSection() {
                       { name: "FACT-G", desc: t('landing.fact_desc'), match: "92%" },
                       { name: "SF-36", desc: t('landing.sf36_desc'), match: "88%" }
                     ].map((item) => (
-                      <div key={item.name} className="flex items-center justify-between border p-3 rounded-lg">
-                        <div>
-                          <p className="font-medium text-sm">{item.name}</p>
-                          <p className="text-xs text-muted-foreground">{item.desc}</p>
+                      <div
+                        key={item.name}
+                        className="flex items-center justify-between border-2 border-gray-200 p-4 rounded-xl hover:border-primary/50 hover:shadow-md transition-all duration-200 group cursor-pointer"
+                      >
+                        <div className="flex-1">
+                          <p className="font-semibold text-sm text-foreground group-hover:text-primary transition-colors">{item.name}</p>
+                          <p className="text-xs text-muted-foreground mt-1">{item.desc}</p>
                         </div>
-                        <div className="text-xs text-primary font-medium">{item.match}</div>
+                        <div className="ml-4 px-3 py-1 bg-primary/10 text-primary rounded-full text-xs font-bold group-hover:bg-primary group-hover:text-white transition-all">
+                          {item.match}
+                        </div>
                       </div>
                     ))}
                   </div>

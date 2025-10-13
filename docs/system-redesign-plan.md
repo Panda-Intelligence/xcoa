@@ -1,4 +1,4 @@
-# xCOA 系统功能重新规划方案
+# Open eCOA 系统功能重新规划方案
 
 ## 🎯 新的核心功能定位
 
@@ -79,7 +79,7 @@ POST {
 // AI解析结果
 {
   "intent": "find_scale",
-  "domain": "oncology", 
+  "domain": "oncology",
   "population": "cancer_patients",
   "scale_type": "quality_of_life",
   "requirements": ["chinese_version", "clinical_trial_validated"]
@@ -154,7 +154,7 @@ CREATE TABLE clinical_cases (
   scale_id TEXT,
   case_title TEXT,
   disease_area TEXT,      -- 疾病领域
-  patient_demographics TEXT, -- 患者特征  
+  patient_demographics TEXT, -- 患者特征
   baseline_scores TEXT,   -- 基线分数
   intervention TEXT,      -- 干预措施
   follow_up_scores TEXT,  -- 随访分数
@@ -213,7 +213,7 @@ interface BatchLicenseRequest {
 2. **量表收藏系统** - 基础用户功能，使用频率高
 3. **治疗领域分类** - 提升搜索精准度
 
-### 🔧 P1 - 近期开发 (下周) 
+### 🔧 P1 - 近期开发 (下周)
 4. **专业解读系统** - 差异化核心功能
 5. **工单状态跟踪** - 完善现有版权功能
 
@@ -233,7 +233,7 @@ interface BatchLicenseRequest {
 /api/search/context      // 上下文理解
 
 // 对话示例处理
-"帮我找适合老年抑郁患者的量表" 
+"帮我找适合老年抑郁患者的量表"
 → 解析: {target: "elderly", condition: "depression", type: "assessment"}
 → 推荐: [GDS, PHQ-9, HAM-D] + 年龄适用性说明
 ```
@@ -273,7 +273,7 @@ CREATE TABLE professional_interpretations (
 
 ### 用户体验提升
 - **研究者**: "找抑郁量表" → AI推荐 → 一键收藏 → 专业解读 → 案例参考
-- **临床医生**: 智能搜索 → 临床级解读 → 真实案例 → 版权快速获取  
+- **临床医生**: 智能搜索 → 临床级解读 → 真实案例 → 版权快速获取
 - **制药企业**: 批量搜索 → 团队收藏 → 试验级解读 → 批量许可
 
 ### 竞争优势建立
@@ -284,6 +284,6 @@ CREATE TABLE professional_interpretations (
 
 ---
 
-**📅 计划制定**: 2025-09-21  
-**🎯 目标**: 从量表搜索平台升级为临床量表专业服务平台  
+**📅 计划制定**: 2025-09-21
+**🎯 目标**: 从量表搜索平台升级为临床量表专业服务平台
 **📈 预期**: 建立行业领先的量表知识和服务生态系统

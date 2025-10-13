@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -28,7 +28,6 @@ import {
   ChevronUp,
   ChevronDown,
   List,
-  Settings,
   AlertTriangle
 } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -97,12 +96,7 @@ export function AdminScaleDetail({ scaleId }: AdminScaleDetailProps) {
     isRequired: true
   });
 
-  useEffect(() => {
-    fetchScaleDetails();
-    fetchScaleItems();
-  }, [scaleId]);
-
-  const fetchScaleDetails = async () => {
+  const fetchScaleDetails = useCallback(async () => {
     try {
       const response = await fetch(`/api/admin/scales/${scaleId}`);
       const data = await response.json();
@@ -116,9 +110,9 @@ export function AdminScaleDetail({ scaleId }: AdminScaleDetailProps) {
       console.error("加载量表详情失败:", error);
       setError("网络错误，请稍后重试");
     }
-  };
+  }, [scaleId]);
 
-  const fetchScaleItems = async () => {
+  const fetchScaleItems = useCallback(async () => {
     try {
       setLoading(true);
       const response = await fetch(`/api/admin/scales/${scaleId}/items`);
@@ -134,7 +128,12 @@ export function AdminScaleDetail({ scaleId }: AdminScaleDetailProps) {
     } finally {
       setLoading(false);
     }
-  };
+  }, [scaleId]);
+
+  useEffect(() => {
+    fetchScaleDetails();
+    fetchScaleItems();
+  }, [fetchScaleDetails, fetchScaleItems]);
 
   const handleCreateItem = async () => {
     try {

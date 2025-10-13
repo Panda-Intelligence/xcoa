@@ -1,0 +1,48 @@
+{
+  "errors": {
+    "failed_to_fetch_users": "获取用户列表失败",
+    "user_not_found": "未找到用户",
+    "unauthorized": "未授权",
+    "invalid_page_or_limit": "页码或限制参数无效",
+    "invalid_package": "无效的套餐",
+    "failed_to_create_payment_intent": "创建支付意图失败",
+    "payment_not_completed": "支付未完成",
+    "invalid_payment_intent": "无效的支付意图",
+    "failed_to_process_payment": "处理支付失败",
+    "server_error": "服务器错误",
+    "page_not_found": "页面未找到",
+    "network_error": "网络错误",
+    "unexpected_error": "发生意外错误"
+  },
+  "cookie_consent": {
+    "accept_all": "接受所有 Cookie",
+    "reject_non_essential": "拒绝非必要",
+    "title": "我们重视您的隐私",
+    "description": "我们使用 Cookie 来改善您的浏览体验、提供个性化内容和广告、分析网站流量并了解访客来源。通过点击\"接受所有 Cookie\"，您同意我们使用所有 Cookie。您可以访问我们的",
+    "privacy_policy": "隐私政策",
+    "learn_more": "了解更多信息。",
+    "cookie_settings": "Cookie 设置",
+    "preferences_title": "Cookie 首选项设置",
+    "preferences_description": "您可以选择接受哪些类型的 Cookie。必要 Cookie 无法禁用，因为它们对网站正常运行至关重要。",
+    "necessary": "必要 Cookie",
+    "necessary_description": "这些 Cookie 对网站的正常运行至关重要。它们支持安全性、网络管理和可访问性等核心功能。您无法选择退出这些 Cookie。",
+    "necessary_always_on": "始终启用",
+    "functional": "功能性 Cookie",
+    "functional_description": "这些 Cookie 使网站能够提供增强的功能和个性化。它们可能由我们或我们添加到页面中的第三方提供商设置。",
+    "analytics": "分析 Cookie",
+    "analytics_description": "这些 Cookie 通过收集和报告信息帮助我们了解访客如何与我们的网站互动。这些 Cookie 收集的所有信息都是汇总的，因此是匿名的。",
+    "marketing": "营销 Cookie",
+    "marketing_description": "这些 Cookie 用于跨网站跟踪访客。目的是展示与个人用户相关且有吸引力的广告，从而对发布商和第三方广告商更有价值。",
+    "save_preferences": "保存偏好",
+    "cancel": "取消"
+  },
+  "faq": {
+    "title": "常见问题",
+    "academic_research_free": "Q: 学术研究使用是否需要付费？",
+    "academic_research_answer": "A: 大多数量表对学术研究提供免费或优惠许可，具体需要联系版权方确认。",
+    "commercial_license_cost": "Q: 商业用途的许可费用大概是多少？",
+    "commercial_license_answer": "A: 费用因量表和使用范围而异，从数百到数万元不等，建议直接咨询版权方。",
+    "license_application_time": "Q: 许可申请通常需要多长时间？",
+    "license_application_answer": "A: 一般1-5个工作日收到回复，复杂的商业许可可能需要2-4周。"
+  }
+}

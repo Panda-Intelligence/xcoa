@@ -2,7 +2,7 @@
 
 ## 概览
 
-本文档详细描述了 xCOA 平台的数据库结构、表关系和字段定义。数据库采用 SQLite 设计，使用 Drizzle ORM 进行管理。
+本文档详细描述了 Open eCOA 平台的数据库结构、表关系和字段定义。数据库采用 SQLite 设计，使用 Drizzle ORM 进行管理。
 
 ## 核心模块
 
@@ -370,14 +370,14 @@ erDiagram
     USER ||--o{ COPYRIGHT_CONTACT_REQUEST : "requests"
     USER ||--o{ CREDIT_TRANSACTION : "transactions"
     USER ||--o{ PASSKEY_CREDENTIAL : "authenticates"
-    
+
     TEAM ||--o{ TEAM_MEMBERSHIP : "has members"
     TEAM ||--o{ TEAM_ROLE : "defines roles"
     TEAM ||--o{ TEAM_INVITATION : "sends invites"
-    
+
     TEAM_ROLE ||--o{ TEAM_MEMBERSHIP : "assigned to"
     TEAM_ROLE ||--o{ TEAM_INVITATION : "invites for"
-    
+
     ECOA_CATEGORY ||--o{ ECOA_SCALE : "categorizes"
     ECOA_SCALE ||--o{ ECOA_ITEM : "contains"
     ECOA_SCALE ||--o{ USER_FAVORITE : "favorited by"
@@ -386,7 +386,7 @@ erDiagram
     ECOA_SCALE ||--o{ CLINICAL_CASES : "has cases"
     ECOA_SCALE ||--o{ COPYRIGHT_CONTACT_REQUEST : "copyright requests"
     ECOA_SCALE ||--o{ COPYRIGHT_LICENSES : "license info"
-    
+
     COPYRIGHT_HOLDER ||--o{ ECOA_SCALE : "owns copyright"
     COPYRIGHT_HOLDER ||--o{ COPYRIGHT_CONTACT_REQUEST : "receives requests"
 ```
@@ -404,7 +404,7 @@ erDiagram
         text usageRestrictions
         text copyrightInfo
     }
-    
+
     COPYRIGHT_HOLDER {
         string id PK
         string name
@@ -412,7 +412,7 @@ erDiagram
         string contactEmail
         text licenseRequirements
     }
-    
+
     COPYRIGHT_LICENSES {
         string id PK
         string scaleId FK
@@ -421,7 +421,7 @@ erDiagram
         text licenseTerms
         text usageRestrictions
     }
-    
+
     COPYRIGHT_CONTACT_REQUEST {
         string id PK
         string userId FK
@@ -430,7 +430,7 @@ erDiagram
         string requestType
         string status
     }
-    
+
     ECOA_SCALE ||--o| COPYRIGHT_HOLDER : "owned by"
     ECOA_SCALE ||--o| COPYRIGHT_LICENSES : "has license"
     COPYRIGHT_HOLDER ||--o{ COPYRIGHT_CONTACT_REQUEST : "receives"
@@ -484,4 +484,4 @@ erDiagram
 
 *文档生成时间: 2025-09-27*
 *数据库版本: SQLite with Drizzle ORM*
-*平台: xCOA eCOA Scale Platform*
+*平台: Open eCOA eCOA Scale Platform*

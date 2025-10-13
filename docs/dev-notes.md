@@ -1,4 +1,4 @@
-# xCOA 开发备忘录
+# Open eCOA 开发备忘录
 
 ## 🚀 快速启动
 
@@ -47,7 +47,7 @@ curl -X POST localhost:3000/api/search \
   -H "Content-Type: application/json" \
   -d '{"query": "PHQ-9"}'
 
-# 测试语义搜索  
+# 测试语义搜索
 curl -X POST localhost:3000/api/search/semantic \
   -H "Content-Type: application/json" \
   -d '{"query": "抑郁症筛查"}'
@@ -93,7 +93,7 @@ pnpm run cf-typegen
 
 ### 量表分类 (5个)
 1. **cat_01** - 抑郁症评估 (1个量表)
-2. **cat_02** - 焦虑症评估 (1个量表)  
+2. **cat_02** - 焦虑症评估 (1个量表)
 3. **cat_03** - 认知功能评估 (1个量表)
 4. **cat_04** - 生活质量评估 (2个量表)
 5. **cat_05** - 疼痛评估 (0个量表)
@@ -101,7 +101,7 @@ pnpm run cf-typegen
 ### 核心量表 (5个)
 1. **scale_phq9** - PHQ-9 (9题项)
 2. **scale_gad7** - GAD-7 (7题项)
-3. **scale_mmse2** - MMSE-2 
+3. **scale_mmse2** - MMSE-2
 4. **scale_eortc** - EORTC QLQ-C30
 5. **scale_sf36** - SF-36
 
@@ -112,7 +112,7 @@ pnpm run cf-typegen
 - [ ] 集成真正的向量搜索
 - [ ] 添加更多量表数据 (目标: 20+)
 
-### 📋 中优先级  
+### 📋 中优先级
 - [ ] 完善前端搜索界面
 - [ ] 添加量表详情页面
 - [ ] 实现搜索历史功能
@@ -150,7 +150,7 @@ STRIPE_SECRET_KEY=xxx
 ### 生产环境 (wrangler secrets)
 ```bash
 wrangler secret put TURNSTILE_SECRET_KEY
-wrangler secret put RESEND_API_KEY  
+wrangler secret put RESEND_API_KEY
 wrangler secret put STRIPE_SECRET_KEY
 ```
 
@@ -164,6 +164,6 @@ wrangler secret put STRIPE_SECRET_KEY
 
 ---
 
-**保存时间：** 2025-09-20  
-**下次更新：** 开发进展时更新  
+**保存时间：** 2025-09-20
+**下次更新：** 开发进展时更新
 **状态：** 📝 开发中

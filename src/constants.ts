@@ -1,10 +1,10 @@
 import type { Route } from "next"
 
-export const SITE_NAME = "xCOA Pro"
-export const COMPANY_NAME = "Panda Inetlligence Software LTD"
-export const SITE_DESCRIPTION = "Professional eCOA scale copyright licensing platform - AI intelligent search, one-stop copyright licensing service, providing compliant scale usage solutions for clinical research and medical practice."
-export const SITE_URL = process.env.NODE_ENV === "development" ? "http://localhost:3000" : "https://xcoa.pro"
-export const GITHUB_REPO_URL = "https://github.com/Panda-Intelligence/xcoa"
+export const SITE_NAME = "OpeneCOA"
+export const COMPANY_NAME = "Panda Intelligence Software LTD"
+export const SITE_DESCRIPTION = "Open eCOA Platform - Search, interpret, authorize, and report on eCOA scales. AI-powered search, professional interpretation services, copyright licensing support, and comprehensive eCOA reporting for clinical research and medical practice."
+export const SITE_URL = process.env.NODE_ENV === "development" ? "http://localhost:3000" : "https://openecoa.com"
+export const GITHUB_REPO_URL = "https://github.com/Panda-Intelligence/openecoa"
 
 export const SITE_DOMAIN = new URL(SITE_URL).hostname
 export const PASSWORD_RESET_TOKEN_EXPIRATION_SECONDS = 24 * 60 * 60 // 24 hours

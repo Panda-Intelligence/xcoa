@@ -27,7 +27,7 @@ export default async function SettingsLayout({
           items={[
             {
               href: "/billing",
-              label: "billing.overview"
+              label: "common.overview"
             }
           ]}
         />

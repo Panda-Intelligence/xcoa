@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -96,11 +96,7 @@ export function AdminInvoiceManager() {
   });
   const [selectedTeam, setSelectedTeam] = useState<{ id: string; name: string; slug: string; description?: string; billingEmail?: string; legalName?: string } | null>(null);
 
-  useEffect(() => {
-    fetchInvoices();
-  }, [statusFilter, page]);
-
-  const fetchInvoices = async () => {
+  const fetchInvoices = useCallback(async () => {
     try {
       setLoading(true);
       const params = new URLSearchParams();
@@ -124,7 +120,11 @@ export function AdminInvoiceManager() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [statusFilter, page, searchQuery]);
+
+  useEffect(() => {
+    fetchInvoices();
+  }, [fetchInvoices]);
 
   const handleCreateInvoice = async () => {
     if (!selectedTeam) {

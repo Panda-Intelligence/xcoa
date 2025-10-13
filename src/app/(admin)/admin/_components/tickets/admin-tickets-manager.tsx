@@ -1,12 +1,12 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import {
@@ -23,7 +23,6 @@ import {
   Filter,
   Eye,
   Edit,
-  MessageSquare,
   ChevronLeft,
   ChevronRight,
   Clock,
@@ -31,17 +30,12 @@ import {
   AlertCircle,
   XCircle,
   Mail,
-  Phone,
-  Globe,
-  User,
-  Building
 } from "lucide-react";
 import { PageHeader } from "@/components/page-header";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useRouter } from "next/navigation";
 import { format } from "date-fns";
 import { useToast } from "@/hooks/useToast";
-import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 
 interface CopyrightTicket {
   id: string;
@@ -90,19 +84,13 @@ export function AdminTicketsManager() {
   const [hasMore, setHasMore] = useState(false);
   const [selectedTicket, setSelectedTicket] = useState<CopyrightTicket | null>(null);
   const [updateDialogOpen, setUpdateDialogOpen] = useState(false);
-  const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
-  const [ticketToDelete, setTicketToDelete] = useState<string | null>(null);
   const [updateForm, setUpdateForm] = useState({
     status: "",
     adminNotes: "",
     responseMessage: ""
   });
 
-  useEffect(() => {
-    fetchTickets();
-  }, [statusFilter, priorityFilter, page]);
-
-  const fetchTickets = async () => {
+  const fetchTickets = useCallback(async () => {
     try {
       setLoading(true);
       const params = new URLSearchParams();
@@ -127,7 +115,11 @@ export function AdminTicketsManager() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [statusFilter, priorityFilter, page, searchQuery]);
+
+  useEffect(() => {
+    fetchTickets();
+  }, [fetchTickets]);
 
   const updateTicketStatus = async (ticketId: string, status: string, adminNotes?: string) => {
     try {
@@ -154,30 +146,6 @@ export function AdminTicketsManager() {
       }
     } catch (error) {
       console.error("更新工单状态错误:", error);
-      toast.error("网络错误，请稍后重试");
-    }
-  };
-
-  const deleteTicket = async () => {
-    if (!ticketToDelete) return;
-
-    try {
-      const ticketId = ticketToDelete;
-      const response = await fetch(`/api/admin/copyright-tickets/${ticketId}`, {
-        method: "DELETE"
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        setTicketToDelete(null);
-        fetchTickets();
-        toast.success("工单删除成功！");
-      } else {
-        toast.error(data.error || "删除工单失败");
-      }
-    } catch (error) {
-      console.error("删除工单错误:", error);
       toast.error("网络错误，请稍后重试");
     }
   };

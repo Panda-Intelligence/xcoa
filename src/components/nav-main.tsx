@@ -44,6 +44,10 @@ export function NavMain({
 
     return false;
   };
+  const isSubPathActive = (url: string) => {
+    if (pathname === url) return false;
+    return pathname.startsWith(url);
+  }
 
   // 检查是否有子项处于活动状态
   const hasActiveChild = (item: NavMainItem) => {
@@ -58,7 +62,7 @@ export function NavMain({
         {items.map((item) => {
           // If there are no child items, render a direct link
           if (!item.items?.length) {
-            const itemIsActive = isActive(item.url);
+            const itemIsActive = isActive(item.url) || isSubPathActive(item.url);
 
             return (
               <SidebarMenuItem key={item.title}>
@@ -77,15 +81,14 @@ export function NavMain({
 
           if (!collapsible) {
             const itemIsActive = isActive(item.url);
-
             return (<SidebarMenuItem key={item.title}>
-              <SidebarMenuButton tooltip={item.title} isActive={itemIsActive}>
+              <SidebarMenuButton tooltip={item.title} isActive={itemIsActive || isSubPathActive(item.url)}>
                 {item.icon && <item.icon />}
                 <span>{item.title}</span>
               </SidebarMenuButton>
               <SidebarMenuSub>
                 {item.items?.map((subItem) => {
-                  const subItemIsActive = isActive(subItem.url);
+                  const subItemIsActive = isActive(subItem.url) || isSubPathActive(subItem.url);
 
                   return (
                     <SidebarMenuSubItem key={subItem.title}>

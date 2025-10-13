@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -14,7 +14,6 @@ import {
   User,
   Mail,
   Phone,
-  Globe,
   Building,
   Clock,
   CheckCircle,
@@ -80,11 +79,7 @@ export function AdminTicketDetail({ ticketId }: AdminTicketDetailProps) {
     responseMessage: ""
   });
 
-  useEffect(() => {
-    fetchTicketDetail();
-  }, [ticketId]);
-
-  const fetchTicketDetail = async () => {
+  const fetchTicketDetail = useCallback(async () => {
     try {
       setLoading(true);
       const response = await fetch(`/api/admin/copyright-tickets/${ticketId}`);
@@ -103,7 +98,11 @@ export function AdminTicketDetail({ ticketId }: AdminTicketDetailProps) {
     } finally {
       setLoading(false);
     }
-  };
+  }, [ticketId]);
+
+  useEffect(() => {
+    fetchTicketDetail();
+  }, [fetchTicketDetail]);
 
   const handleUpdateTicket = async () => {
     if (!ticket) return;

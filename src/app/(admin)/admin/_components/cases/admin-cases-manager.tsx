@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -27,11 +27,8 @@ import {
   Eye,
   ChevronLeft,
   ChevronRight,
-  Users,
-  Clock
 } from "lucide-react";
 import { PageHeader } from "@/components/page-header";
-import { useLanguage } from "@/hooks/useLanguage";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/hooks/useToast";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
@@ -64,7 +61,6 @@ interface CaseStats {
 }
 
 export function AdminCasesManager() {
-  const { t } = useLanguage();
   const router = useRouter();
   const toast = useToast();
   const [cases, setCases] = useState<ClinicalCase[]>([]);
@@ -94,12 +90,7 @@ export function AdminCasesManager() {
     reviewStatus: "draft"
   });
 
-  useEffect(() => {
-    fetchCases();
-    fetchScales();
-  }, [statusFilter, page]);
-
-  const fetchCases = async () => {
+  const fetchCases = useCallback(async () => {
     try {
       setLoading(true);
       const params = new URLSearchParams();
@@ -123,9 +114,9 @@ export function AdminCasesManager() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [statusFilter, searchQuery, page]);
 
-  const fetchScales = async () => {
+  const fetchScales = useCallback(async () => {
     try {
       const response = await fetch("/api/admin/scales?limit=100");
       const data = await response.json();
@@ -139,7 +130,12 @@ export function AdminCasesManager() {
     } catch (error) {
       console.error("加载量表列表失败:", error);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    fetchCases();
+    fetchScales();
+  }, [fetchCases, fetchScales]);
 
   const handleCreateCase = async () => {
     try {

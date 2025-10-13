@@ -11,6 +11,7 @@ import {
   Search,
   BookOpen,
   HelpCircle,
+  FileText,
 } from "lucide-react"
 
 import { NavMain } from "@/components/nav-main"
@@ -52,7 +53,7 @@ type Data = {
   system: NavMainItem[]
 }
 
-// TODO Add a theme switcher
+// Future enhancement: Theme switcher can be added here
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { session } = useSessionStore();
   const { t } = useLanguage();
@@ -65,7 +66,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       const teamData = session.teams.map(team => {
         return {
           name: team.name,
-          // TODO Get the actual logo when we implement team avatars
+          // Placeholder: Using Building2 icon until team avatar system is implemented
           logo: Building2,
           // Default plan - you might want to add plan data to your team structure
           plan: team.role.name || "Member"
@@ -101,6 +102,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             url: "/scales/copyright/tickets" as Route,
           }
         ],
+      },
+      {
+        title: t('sidebar.reports'),
+        url: "/reports" as Route,
+        icon: FileText,
       },
       {
         title: t('sidebar.scale_interpretation'),

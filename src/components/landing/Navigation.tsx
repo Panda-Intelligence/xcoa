@@ -50,7 +50,7 @@ export function Navigation() {
           <Link href="/" className="flex items-center">
             <div className="flex items-center">
               <div className="shrink-0">
-                <h1 className="text-xl font-semibold text-primary">xCOA</h1>
+                <h1 className="text-xl font-semibold text-primary">Open eCOA</h1>
               </div>
             </div>
           </Link>
@@ -58,6 +58,7 @@ export function Navigation() {
           {/* Desktop Navigation */}
           <div className="hidden md:block">
             <div className="ml-10 flex items-baseline space-x-8">
+              {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
               <a href="/#features" className="text-foreground hover:text-primary transition-colors">
                 {t("navigation.features")}
               </a>
@@ -91,6 +92,7 @@ export function Navigation() {
         {isMenuOpen && (
           <div className="md:hidden">
             <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-background border-t border-border">
+              {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
               <a
                 href="/#features"
                 className="block px-3 py-2 text-foreground hover:text-primary transition-colors"

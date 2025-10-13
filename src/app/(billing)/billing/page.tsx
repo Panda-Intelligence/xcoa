@@ -8,6 +8,6 @@ export default async function BillingPage() {
     redirect("/sign-in");
   }
 
-  // Default redirect to credits page
-  redirect("/billing/credits");
+  // Redirect to subscription page
+  redirect("/billing/subscription");
 }
