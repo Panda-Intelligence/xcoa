@@ -23,7 +23,7 @@ import { useLanguage } from '@/hooks/useLanguage';
 import { useFavoritesStore } from '@/state/favorites';
 import { FavoriteButton } from '@/components/favorites/FavoriteButton';
 import { useRouter } from 'next/navigation';
-import type { HotScale } from './_components/types';
+import type { HotScale } from '../_components/types';
 import {
   useReactTable,
   getCoreRowModel,

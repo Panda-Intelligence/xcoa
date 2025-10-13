@@ -59,7 +59,7 @@ export default function Page() {
       <PageHeader
         items={[
           {
-            href: "/scales",
+            href: "/scales/search",
             label: t("common.dashboard")
           }
         ]}

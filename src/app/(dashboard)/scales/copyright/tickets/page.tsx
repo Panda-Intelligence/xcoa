@@ -276,7 +276,7 @@ export default function CopyrightTicketsPage() {
                       : t('copyright.tickets.create_ticket_hint')
                     }
                   </p>
-                  <Link href="/scales">
+                  <Link href="/scales/search">
                     <Button>
                       <Search className="w-4 h-4 mr-2" />
                       {t('copyright.tickets.browse_scales')}

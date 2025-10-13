@@ -208,7 +208,7 @@ export default function ScaleFavoritesPage() {
                     : t('favorites.no_favorites_description')
                   }
                 </p>
-                <Link href="/scales">
+                <Link href="/scales/search">
                   <Button>
                     <Search className="w-4 h-4 mr-2" />
                     {t('favorites.go_search_scales')}

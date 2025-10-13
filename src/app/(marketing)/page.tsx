@@ -11,7 +11,7 @@ export default function Home() {
   const router = useRouter();
 
   const handleViewInsights = () => {
-    router.push('/scales');
+    router.push('/scales/search');
   };
 
   return (

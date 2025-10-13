@@ -91,7 +91,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         items: [
           {
             title: t('sidebar.scale_search'),
-            url: "/scales" as Route,
+            url: "/scales/search" as Route,
           },
           {
             title: t('sidebar.favorites'),

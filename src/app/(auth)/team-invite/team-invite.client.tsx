@@ -40,7 +40,7 @@ export default function TeamInviteClientComponent() {
           router.push(`/teams/${data.data.teamId}`);
         } else {
           // Fallback to dashboard if teamId is not found
-          router.push('/scales');
+          router.push('/scales/search');
         }
       }, 500);
     },
@@ -99,7 +99,7 @@ export default function TeamInviteClientComponent() {
             <Button
               variant="outline"
               className="w-full"
-              onClick={() => router.push("/scales")}
+              onClick={() => router.push("/scales/search")}
             >
               {t('auth.teamInvite.goToDashboard')}
             </Button>
@@ -123,7 +123,7 @@ export default function TeamInviteClientComponent() {
             <Button
               variant="outline"
               className="w-full"
-              onClick={() => router.push("/scales")}
+              onClick={() => router.push("/scales/search")}
             >
               {t('auth.teamInvite.goToDashboard')}
             </Button>

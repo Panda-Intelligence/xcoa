@@ -84,7 +84,7 @@ function LoadingSkeleton() {
 
 export default function ReportsPage() {
   return (
-    <div className="container mx-auto space-y-6 py-8">
+    <div className="container mx-auto space-y-6">
       <ReportsPageHeader />
 
       <Suspense fallback={<LoadingSkeleton />}>
