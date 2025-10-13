@@ -1,5 +1,6 @@
 {
   "billing": {
+    "subscription": "Subscription",
     "payment_successful": "Payment successful!",
     "payment_failed": "Payment failed",
     "processing_payment": "Processing payment...",

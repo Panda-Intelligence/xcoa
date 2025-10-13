@@ -1,0 +1,188 @@
+{
+  "help": {
+    "title": "帮助中心",
+    "page_title": "帮助与支持",
+    "description": "在这里查找常见问题解答、快速上手指南以及联系我们的方式。",
+    "search_placeholder": "搜索帮助内容...",
+    "tabs": {
+      "faq": "常见问题",
+      "guides": "使用指南",
+      "contact": "联系支持"
+    },
+    "categories": {
+      "all": "全部",
+      "basic": "基础",
+      "favorites": "收藏",
+      "copyright": "版权",
+      "tech": "技术支持",
+      "account": "账号",
+      "team": "团队"
+    },
+    "no_results": {
+      "title": "未找到结果",
+      "description": "请尝试其他关键字或选择不同的分类。"
+    },
+    "faq": {
+      "basic_001": {
+        "question": "什么是 OpeneCOA？",
+        "answer": "OpeneCOA 是一个开放的 eCOA 量表平台，提供量表检索、专业解读、版权授权协助和报告服务。",
+        "tags": ["介绍", "平台"]
+      },
+      "basic_002": {
+        "question": "如何创建账户？",
+        "answer": "点击注册并按提示完成信息即可创建账户。",
+        "tags": ["账号", "注册"]
+      },
+      "basic_003": {
+        "question": "如何切换语言？",
+        "answer": "使用顶部的语言切换按钮即可在中文和英文之间切换。",
+        "tags": ["语言", "设置"]
+      },
+      "favorites_001": {
+        "question": "如何收藏量表？",
+        "answer": "打开量表详情页，点击收藏按钮即可快速保存。",
+        "tags": ["收藏", "量表"]
+      },
+      "favorites_002": {
+        "question": "在哪里查看我的收藏？",
+        "answer": "进入仪表盘 → 收藏，即可查看所有已收藏的量表。",
+        "tags": ["收藏", "仪表盘"]
+      },
+      "copyright_001": {
+        "question": "如何申请版权授权？",
+        "answer": "在版权服务中提交工单，我们将协助联系版权方。",
+        "tags": ["版权", "授权"]
+      },
+      "copyright_002": {
+        "question": "授权申请需要提供哪些信息？",
+        "answer": "建议提供项目背景、用途、语言、目标人群和时间安排，以便更高效地审核。",
+        "tags": ["版权", "提示"]
+      },
+      "copyright_003": {
+        "question": "是否支持自定义量表上传？",
+        "answer": "企业版支持自定义量表的上传与管理。",
+        "tags": ["企业版", "自定义"]
+      },
+      "tech_001": {
+        "question": "无法登录怎么办？",
+        "answer": "请确认邮箱和密码是否正确，或尝试使用通行密钥/SSO 登录。",
+        "tags": ["登录", "排查"]
+      },
+      "tech_002": {
+        "question": "页面无法加载怎么办？",
+        "answer": "请检查网络连接后重试刷新页面。",
+        "tags": ["网络", "加载"]
+      },
+      "tech_003": {
+        "question": "如何反馈 BUG？",
+        "answer": "可提交支持工单或发送邮件至 support@openecoa.com 并附上详细信息与截图。",
+        "tags": ["BUG", "支持"]
+      },
+      "account_001": {
+        "question": "如何重置密码？",
+        "answer": "在登录页面点击忘记密码，按照提示获取重置链接。",
+        "tags": ["账号", "密码"]
+      },
+      "account_002": {
+        "question": "如何验证邮箱？",
+        "answer": "请在邮箱中查收验证邮件并点击链接完成验证。",
+        "tags": ["账号", "邮箱"]
+      },
+      "team_001": {
+        "question": "如何邀请团队成员？",
+        "answer": "进入团队设置，使用邮箱发送邀请。",
+        "tags": ["团队", "邀请"]
+      },
+      "team_002": {
+        "question": "有哪些团队角色？",
+        "answer": "包含所有者、管理员、成员和访客，不同角色拥有不同权限。",
+        "tags": ["团队", "角色"]
+      }
+    },
+    "guides": {
+      "quick_start": {
+        "title": "快速上手",
+        "description": "几分钟内完成检索、解读和报告。",
+        "items": [
+          "创建账户并登录",
+          "搜索量表并打开详情",
+          "预览答题并保存答案",
+          "生成并下载报告"
+        ]
+      },
+      "copyright": {
+        "title": "版权指南",
+        "description": "了解如何申请使用许可并跟进工单。",
+        "items": [
+          "进入版权服务页面",
+          "描述项目及用途",
+          "提交并跟踪工单进度",
+          "与版权方沟通并回复"
+        ]
+      },
+      "team": {
+        "title": "团队协作",
+        "description": "邀请成员并管理权限。",
+        "items": [
+          "创建团队并设置名称",
+          "通过邮箱邀请成员",
+          "分配角色与权限",
+          "管理成员与活动"
+        ]
+      },
+      "billing": {
+        "title": "订阅与积分",
+        "description": "了解订阅、发票与积分使用。",
+        "items": [
+          "选择合适的订阅方案",
+          "查看发票与交易记录",
+          "需要时充值积分",
+          "账单问题请联系支持"
+        ]
+      }
+    },
+    "feedback": {
+      "question": "此答案是否有帮助？",
+      "helpful": "有帮助",
+      "not_helpful": "没帮助"
+    },
+    "contact": {
+      "email": {
+        "title": "邮件联系",
+        "description": "我们会尽快回复您的问题。",
+        "customer_service": "客户服务",
+        "business": "商务合作",
+        "technical": "技术支持",
+        "send_email": "发送邮件"
+      },
+      "chat": {
+        "title": "在线咨询",
+        "description": "在服务时间内与我们联系。",
+        "service_hours": "服务时间",
+        "service_hours_value": "周一至周五 9:00–18:00 (UTC+8)",
+        "response_time": "平均响应时间",
+        "response_time_value": "< 1 个工作日",
+        "languages": "支持语言",
+        "languages_value": "中文、英文"
+      },
+      "resources": {
+        "manual": {
+          "title": "用户手册",
+          "description": "分步文档与示例。",
+          "action": "查看手册"
+        },
+        "api_docs": {
+          "title": "API 文档",
+          "description": "通过 API 实现高级工作流。",
+          "action": "查看文档"
+        },
+        "forum": {
+          "title": "社区论坛",
+          "description": "提问与分享经验。",
+          "action": "前往论坛"
+        }
+      }
+    }
+  }
+}
+

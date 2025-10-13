@@ -37,7 +37,7 @@ interface FAQItem {
 }
 
 export default function HelpPage() {
-  const { t } = useLanguage();
+  const { t, tArray } = useLanguage();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [expandedItems, setExpandedItems] = useState<Set<string>>(new Set());
@@ -58,7 +58,7 @@ export default function HelpPage() {
       category: t(`help.categories.${key.split('_')[0]}`),
       question: t(`help.faq.${key}.question`),
       answer: t(`help.faq.${key}.answer`),
-      tags: t(`help.faq.${key}.tags`) as unknown as string[],
+      tags: tArray(`help.faq.${key}.tags`, []),
       helpful: true
     }));
   }, [t]);
@@ -69,7 +69,7 @@ export default function HelpPage() {
     'basic',
     'favorites',
     'copyright',
-    'tech_support',
+    'tech',
     'account',
     'team'
   ], []);
@@ -240,7 +240,7 @@ export default function HelpPage() {
                   </CardHeader>
                   <CardContent>
                     <ul className="space-y-2 text-sm">
-                      {(t('help.guides.quick_start.items') as unknown as string[]).map((item, index) => (
+                      {tArray('help.guides.quick_start.items', []).map((item, index) => (
                         <li key={index} className="flex items-start space-x-2">
                           <CheckCircle className="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0" />
                           <span>{item}</span>
@@ -262,7 +262,7 @@ export default function HelpPage() {
                   </CardHeader>
                   <CardContent>
                     <ul className="space-y-2 text-sm">
-                      {(t('help.guides.copyright.items') as unknown as string[]).map((item, index) => (
+                      {tArray('help.guides.copyright.items', []).map((item, index) => (
                         <li key={index} className="flex items-start space-x-2">
                           <AlertCircle className="w-4 h-4 text-orange-600 mt-0.5 flex-shrink-0" />
                           <span>{item}</span>
@@ -284,7 +284,7 @@ export default function HelpPage() {
                   </CardHeader>
                   <CardContent>
                     <ul className="space-y-2 text-sm">
-                      {(t('help.guides.team.items') as unknown as string[]).map((item, index) => (
+                      {tArray('help.guides.team.items', []).map((item, index) => (
                         <li key={index} className="flex items-start space-x-2">
                           <Info className="w-4 h-4 text-purple-600 mt-0.5 flex-shrink-0" />
                           <span>{item}</span>
@@ -306,7 +306,7 @@ export default function HelpPage() {
                   </CardHeader>
                   <CardContent>
                     <ul className="space-y-2 text-sm">
-                      {(t('help.guides.billing.items') as unknown as string[]).map((item, index) => (
+                      {tArray('help.guides.billing.items', []).map((item, index) => (
                         <li key={index} className="flex items-start space-x-2">
                           <CheckCircle className="w-4 h-4 text-orange-600 mt-0.5 flex-shrink-0" />
                           <span>{item}</span>

@@ -1,5 +1,6 @@
 {
   "billing": {
+    "subscription": "订阅管理",
     "payment_successful": "支付成功！",
     "payment_failed": "支付失败",
     "processing_payment": "处理支付中...",
