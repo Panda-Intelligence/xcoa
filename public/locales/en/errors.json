@@ -1,0 +1,48 @@
+{
+  "errors": {
+    "failed_to_fetch_users": "Failed to fetch users",
+    "user_not_found": "User not found",
+    "unauthorized": "Unauthorized",
+    "invalid_page_or_limit": "Invalid page or limit",
+    "invalid_package": "Invalid package",
+    "failed_to_create_payment_intent": "Failed to create payment intent",
+    "payment_not_completed": "Payment not completed",
+    "invalid_payment_intent": "Invalid payment intent",
+    "failed_to_process_payment": "Failed to process payment",
+    "server_error": "Server Error",
+    "page_not_found": "Page Not Found",
+    "network_error": "Network Error",
+    "unexpected_error": "An unexpected error occurred"
+  },
+  "cookie_consent": {
+    "accept_all": "Accept All Cookies",
+    "reject_non_essential": "Reject Non-Essential",
+    "title": "We Value Your Privacy",
+    "description": "We use cookies to improve your browsing experience, provide personalized content and advertisements, analyze site traffic, and understand where our visitors come from. By clicking \"Accept All Cookies\", you agree to our use of all cookies. You can visit our",
+    "privacy_policy": "Privacy Policy",
+    "learn_more": "to learn more.",
+    "cookie_settings": "Cookie Settings",
+    "preferences_title": "Cookie Preferences",
+    "preferences_description": "You can choose which types of cookies to accept. Essential cookies cannot be disabled as they are critical for the website to function properly.",
+    "necessary": "Essential Cookies",
+    "necessary_description": "These cookies are essential for the website to function properly. They enable core functionality such as security, network management, and accessibility. You cannot opt-out of these cookies.",
+    "necessary_always_on": "Always Active",
+    "functional": "Functional Cookies",
+    "functional_description": "These cookies enable the website to provide enhanced functionality and personalization. They may be set by us or by third party providers whose services we have added to our pages.",
+    "analytics": "Analytics Cookies",
+    "analytics_description": "These cookies help us understand how visitors interact with our website by collecting and reporting information. All information these cookies collect is aggregated and therefore anonymous.",
+    "marketing": "Marketing Cookies",
+    "marketing_description": "These cookies are used to track visitors across websites. The intention is to display ads that are relevant and engaging for the individual user and thereby more valuable for publishers and third party advertisers.",
+    "save_preferences": "Save Preferences",
+    "cancel": "Cancel"
+  },
+  "faq": {
+    "title": "Frequently Asked Questions",
+    "academic_research_free": "Q: Is academic research use free?",
+    "academic_research_answer": "A: Most scales provide free or discounted licenses for academic research, please contact copyright holders to confirm.",
+    "commercial_license_cost": "Q: What is the typical cost for commercial use licenses?",
+    "commercial_license_answer": "A: Costs vary by scale and usage scope, ranging from hundreds to tens of thousands of yuan. Please consult copyright holders directly.",
+    "license_application_time": "Q: How long does license application typically take?",
+    "license_application_answer": "A: Generally 1-5 business days for response, complex commercial licenses may take 2-4 weeks."
+  }
+}

@@ -1,0 +1,156 @@
+{
+  "billing": {
+    "payment_successful": "支付成功！",
+    "payment_failed": "支付失败",
+    "processing_payment": "处理支付中...",
+    "unexpected_error": "发生意外错误",
+    "credits": "积分",
+    "transactions": "交易记录",
+    "invoice": "发票",
+    "overview": "概览",
+    "my_invoices": "我的发票",
+    "total": "总计",
+    "paid": "已支付",
+    "pending": "待支付",
+    "draft": "草稿",
+    "sent": "已发送",
+    "overdue": "逾期",
+    "cancelled": "已取消",
+    "invoice_number": "发票号",
+    "status": "状态",
+    "amount": "金额",
+    "date": "日期",
+    "actions": "操作",
+    "view": "查看",
+    "download_pdf": "下载PDF",
+    "no_invoice_records": "暂无发票记录",
+    "page_of": "第 {page} 页，共 {total} 页",
+    "back_to_invoice_list": "返回发票列表",
+    "description": "描述:",
+    "issue_date": "开具日期:",
+    "due_date": "到期日期:",
+    "customer": "客户:",
+    "organization": "机构:",
+    "email": "邮箱:",
+    "amount_details": "金额详情",
+    "subtotal": "小计:",
+    "tax": "税费:",
+    "total_amount": "总计:",
+    "payment_information": "支付信息",
+    "payment_date": "支付日期:",
+    "payment_method": "支付方式:",
+    "loading": "加载中...",
+    "failed_to_load": "加载失败",
+    "invoice_not_found": "发票不存在",
+    "network_error": "网络错误，请稍后重试",
+    "pdf_generation_failed": "PDF生成失败，请稍后重试",
+    "you_get_free_credits": "您每月可获得 {count} 个免费积分。",
+    "top_up_credits": "充值积分",
+    "purchase_additional_credits": "购买额外积分以使用我们的服务。购买的积分越多，价值越优惠。",
+    "one_time_payment": "一次性付款",
+    "save_percent": "节省 {percent}%",
+    "purchase_now": "立即购买",
+    "transaction_history": "交易历史",
+    "type": "类型",
+    "no_transactions_found": "暂无交易记录",
+    "expired": "已过期",
+    "expires": "过期时间",
+    "purchase_credits": "购买积分",
+    "pay_now": "立即支付",
+    "payment_secure": "您的支付是安全和加密的。我们使用 Stripe（可信的全球支付提供商）来处理您的支付。",
+    "payment_security": "为了您的安全，您的支付详情由 Stripe 直接处理，不会接触我们的服务器。",
+    "credits_validity": "积分将在支付成功后立即添加到您的账户，有效期为购买日期起 {years} 年。",
+    "payment_error": "支付提供商出现问题，请稍后重试。"
+  },
+  "pricing": {
+    "title": "选择适合的订阅方案",
+    "description": "从专业研究到企业级部署，我们提供灵活的定价方案满足不同规模需求",
+    "monthly": "月付",
+    "yearly": "年付",
+    "save_20": "节省 20%",
+    "recommended": "推荐",
+    "most_popular": "最受欢迎",
+    "plans": {
+      "professional": {
+        "name": "专业版",
+        "price": "$499",
+        "period": "/月",
+        "description": "适合专业研究团队和中型机构",
+        "button": "立即订阅",
+        "features": [
+          "访问完整量表库 (500+)",
+          "AI 智能检索与推荐",
+          "无限次搜索和下载",
+          "高级数据分析工具",
+          "团队协作功能 (最多10人)",
+          "量表解读与指导",
+          "版权联系服务",
+          "优先技术支持 (48小时内响应)",
+          "基础 API 集成",
+          "数据导出功能"
+        ]
+      },
+      "enterprise": {
+        "name": "企业版",
+        "price": "$1,299",
+        "period": "/月",
+        "description": "适合大型医疗机构和研究组织",
+        "button": "立即订阅",
+        "features": [
+          "专业版所有功能",
+          "无限团队成员",
+          "自定义量表上传与管理",
+          "高级 API 集成支持",
+          "批量版权授权服务",
+          "专业量表解读报告",
+          "优先级版权联系 (24小时内)",
+          "企业级数据安全",
+          "专属客户成功经理",
+          "定制化培训服务",
+          "99.9% SLA 保障",
+          "白标解决方案选项"
+        ]
+      },
+      "custom": {
+        "name": "定制版",
+        "price": "咨询定价",
+        "description": "专为特殊需求和大规模部署定制",
+        "button": "联系我们",
+        "period": "",
+        "features": [
+          "企业版所有功能",
+          "私有云部署选项",
+          "完全定制化开发",
+          "专属技术架构支持",
+          "无限制版权授权",
+          "7×24小时专属支持",
+          "数据本地化存储",
+          "法规合规咨询",
+          "专业实施团队",
+          "长期技术合作",
+          "灵活的计费模式",
+          "全球多地区部署"
+        ]
+      }
+    },
+    "faq": {
+      "title": "常见问题",
+      "can_cancel": {
+        "question": "可以随时取消订阅吗？",
+        "answer": "是的，您可以随时取消订阅，取消后仍可使用至当前计费周期结束。"
+      },
+      "payment_methods": {
+        "question": "支持哪些支付方式？",
+        "answer": "支持支付宝、微信支付、银行卡等多种支付方式。"
+      },
+      "enterprise_services": {
+        "question": "企业版包含哪些定制服务？",
+        "answer": "包含私有部署、定制开发、专属培训等一对一服务。"
+      },
+      "data_security": {
+        "question": "数据安全如何保障？",
+        "answer": "采用银行级加密技术，符合 GDPR 和国内数据保护法规要求。"
+      }
+    }
+  }
+}

@@ -5,13 +5,15 @@ import { getDB } from '@/db';
 import { scaleReportTable, ecoaScaleTable } from '@/db/schema';
 import { eq, desc } from 'drizzle-orm';
 import { ReportCard } from '@/components/reports';
-import { PageHeader } from '@/components/page-header';
 import { Card, CardContent } from '@/components/ui/card';
-import { FileText, Loader2 } from 'lucide-react';
+import { Loader2 } from 'lucide-react';
+import type { Metadata } from 'next';
+import { EmptyState } from './_components/empty-state';
+import { ReportsPageHeader } from './_components/reports-page-header';
 
-export const metadata = {
-  title: '我的报告 - OpeneCOA',
-  description: '查看和管理您的量表评估报告',
+export const metadata: Metadata = {
+  title: 'My Reports - OpeneCOA',
+  description: 'View and manage your scale assessment reports',
 };
 
 async function getReports(userId: string) {
@@ -31,7 +33,7 @@ async function getReports(userId: string) {
   return reports.map(({ report, scale }) => ({
     id: report.id,
     scaleId: report.scaleId,
-    scaleName: scale?.name || '未知量表',
+    scaleName: scale?.name || 'Unknown Scale',
     sessionId: report.sessionId,
     reportType: report.reportType,
     status: report.status,
@@ -54,17 +56,7 @@ async function ReportsList() {
   const reports = await getReports(session.user.id);
 
   if (reports.length === 0) {
-    return (
-      <Card className="border-dashed">
-        <CardContent className="flex flex-col items-center justify-center py-16">
-          <FileText className="mb-4 h-12 w-12 text-muted-foreground" />
-          <h3 className="mb-2 text-lg font-semibold">还没有评估报告</h3>
-          <p className="mb-4 text-center text-sm text-muted-foreground">
-            完成量表评估后，系统会自动生成专业的评估报告
-          </p>
-        </CardContent>
-      </Card>
-    );
+    return <EmptyState />;
   }
 
   return (
@@ -93,10 +85,7 @@ function LoadingSkeleton() {
 export default function ReportsPage() {
   return (
     <div className="container mx-auto space-y-6 py-8">
-      <PageHeader
-        title="我的报告"
-        description="查看和管理您的量表评估报告"
-      />
+      <ReportsPageHeader />
 
       <Suspense fallback={<LoadingSkeleton />}>
         <ReportsList />

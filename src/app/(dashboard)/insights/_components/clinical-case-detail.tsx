@@ -108,10 +108,10 @@ export function ClinicalCaseDetail({ caseId }: ClinicalCaseDetailProps) {
         <div className="min-h-[100vh] flex items-center justify-center">
           <div className="text-center">
             <AlertTriangle className="w-12 h-12 mx-auto mb-4 text-red-500" />
-            <p className="text-lg font-medium mb-2">加载失败</p>
-            <p className="text-muted-foreground mb-4">{error || "案例不存在"}</p>
+            <p className="text-lg font-medium mb-2">{t("insights.cases.load_failed")}</p>
+            <p className="text-muted-foreground mb-4">{error || t("insights.cases.case_not_found")}</p>
             <Button onClick={() => router.push("/insights/cases")}>
-              返回案例列表
+              {t("insights.cases.back_to_case_list")}
             </Button>
           </div>
         </div>
@@ -128,7 +128,7 @@ export function ClinicalCaseDetail({ caseId }: ClinicalCaseDetailProps) {
           className="mb-6"
         >
           <ChevronLeft className="w-4 h-4 mr-2" />
-          返回案例列表
+          {t("insights.cases.back_to_case_list")}
         </Button>
 
         <div className="space-y-6">
@@ -138,7 +138,7 @@ export function ClinicalCaseDetail({ caseId }: ClinicalCaseDetailProps) {
             <div className="flex flex-wrap gap-2 mb-4">
               {clinicalCase.difficultyLevel && (
                 <Badge className={getDifficultyLevelColor(clinicalCase.difficultyLevel)}>
-                  难度等级: {clinicalCase.difficultyLevel}
+                  {t("insights.cases.difficulty_level")}: {clinicalCase.difficultyLevel}
                 </Badge>
               )}
               {clinicalCase.specialty && (
@@ -151,27 +151,27 @@ export function ClinicalCaseDetail({ caseId }: ClinicalCaseDetailProps) {
           {/* 案例基本信息 */}
           <Card>
             <CardHeader>
-              <CardTitle>案例基本信息</CardTitle>
+              <CardTitle>{t("insights.cases.case_basic_info")}</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-2 gap-4 text-sm">
                 <div>
-                  <span className="font-medium">使用量表:</span>
+                  <span className="font-medium">{t("insights.cases.scale_used")}:</span>
                   <p className="text-muted-foreground">
                     {clinicalCase.scaleName} ({clinicalCase.scaleAcronym})
                   </p>
                 </div>
                 <div>
-                  <span className="font-medium">专科领域:</span>
+                  <span className="font-medium">{t("insights.cases.specialty_field")}:</span>
                   <p className="text-muted-foreground">{getSpecialtyLabel(clinicalCase.specialty)}</p>
                 </div>
                 <div>
-                  <span className="font-medium">难度等级:</span>
-                  <p className="text-muted-foreground">{clinicalCase.difficultyLevel || "未设定"}</p>
+                  <span className="font-medium">{t("insights.cases.difficulty_level")}:</span>
+                  <p className="text-muted-foreground">{clinicalCase.difficultyLevel || t("insights.cases.not_set")}</p>
                 </div>
                 <div>
-                  <span className="font-medium">作者:</span>
-                  <p className="text-muted-foreground">{clinicalCase.author || "未知"}</p>
+                  <span className="font-medium">{t("insights.cases.author")}:</span>
+                  <p className="text-muted-foreground">{clinicalCase.author || t("insights.cases.unknown")}</p>
                 </div>
               </div>
             </CardContent>
@@ -181,7 +181,7 @@ export function ClinicalCaseDetail({ caseId }: ClinicalCaseDetailProps) {
           {clinicalCase.patientBackground && (
             <Card>
               <CardHeader>
-                <CardTitle>患者背景</CardTitle>
+                <CardTitle>{t("insights.cases.patient_background")}</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-sm text-muted-foreground bg-gray-50 p-3 rounded">
@@ -195,7 +195,7 @@ export function ClinicalCaseDetail({ caseId }: ClinicalCaseDetailProps) {
           {clinicalCase.scaleScores && Object.keys(clinicalCase.scaleScores).length > 0 && (
             <Card>
               <CardHeader>
-                <CardTitle>量表评分结果</CardTitle>
+                <CardTitle>{t("insights.cases.score_results")}</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-2 gap-4">
@@ -214,7 +214,7 @@ export function ClinicalCaseDetail({ caseId }: ClinicalCaseDetailProps) {
           {clinicalCase.interpretation && (
             <Card>
               <CardHeader>
-                <CardTitle>结果解读</CardTitle>
+                <CardTitle>{t("insights.cases.result_interpretation")}</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-sm text-muted-foreground bg-blue-50 p-3 rounded">
@@ -228,7 +228,7 @@ export function ClinicalCaseDetail({ caseId }: ClinicalCaseDetailProps) {
           {clinicalCase.clinicalDecision && (
             <Card>
               <CardHeader>
-                <CardTitle>临床决策</CardTitle>
+                <CardTitle>{t("insights.cases.clinical_decision")}</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-sm text-muted-foreground bg-green-50 p-3 rounded">
@@ -242,7 +242,7 @@ export function ClinicalCaseDetail({ caseId }: ClinicalCaseDetailProps) {
           {clinicalCase.outcome && (
             <Card>
               <CardHeader>
-                <CardTitle>治疗结果</CardTitle>
+                <CardTitle>{t("insights.cases.treatment_outcome")}</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-sm text-muted-foreground bg-yellow-50 p-3 rounded">
@@ -256,7 +256,7 @@ export function ClinicalCaseDetail({ caseId }: ClinicalCaseDetailProps) {
           {clinicalCase.learningPoints && (
             <Card>
               <CardHeader>
-                <CardTitle>学习要点</CardTitle>
+                <CardTitle>{t("insights.cases.learning_points")}</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="text-sm text-muted-foreground space-y-2">
@@ -274,18 +274,18 @@ export function ClinicalCaseDetail({ caseId }: ClinicalCaseDetailProps) {
           {/* 相关链接 */}
           <Card>
             <CardHeader>
-              <CardTitle>相关资源</CardTitle>
+              <CardTitle>{t("insights.cases.related_resources")}</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="flex space-x-2">
                 <Link href={`/scales/${clinicalCase.scaleId}`}>
                   <Button variant="outline">
-                    查看量表详情
+                    {t("insights.cases.view_scale_details")}
                   </Button>
                 </Link>
                 <Link href={`/scales/${clinicalCase.scaleId}/preview`}>
                   <Button variant="outline">
-                    预览量表
+                    {t("insights.cases.preview_scale")}
                   </Button>
                 </Link>
               </div>

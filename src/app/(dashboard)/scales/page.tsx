@@ -418,7 +418,7 @@ export default function ScalesPage() {
                 <div className="flex justify-between items-center px-2">
                   <div className="flex items-center space-x-4">
                     <span className="text-sm text-muted-foreground">
-                      共 {pagination.total} 条记录
+                      {t("common.total_records", "Total {{total}} records", { total: pagination.total })}
                     </span>
                     <div className="flex items-center space-x-2">
                       <span className="text-sm text-muted-foreground">{t("common.page_size", "每页显示")}</span>

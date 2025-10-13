@@ -1,0 +1,51 @@
+{
+  "reports": {
+    "title": "我的报告",
+    "page_title": "评估报告",
+    "description": "查看和管理您的量表评估报告",
+    "back_to_list": "返回报告列表",
+    "no_reports_title": "还没有评估报告",
+    "no_reports_description": "完成量表评估后，系统会自动生成专业的评估报告",
+    "view_details": "查看详情",
+    "share": "分享",
+    "download_pdf": "下载PDF",
+    "generating_pdf": "正在生成PDF报告...",
+    "pdf_generated": "PDF报告已生成！",
+    "pdf_failed": "PDF生成失败，请重试",
+    "status": {
+      "completed": "已完成",
+      "generating": "生成中",
+      "failed": "失败"
+    },
+    "sections": {
+      "score_analysis": "总分分析",
+      "score_description": "整体评估得分",
+      "dimension_analysis": "维度分析",
+      "dimension_description": "各维度得分分布",
+      "interpretation": "结果解读",
+      "recommendations": "专业建议",
+      "report_info": "报告信息"
+    },
+    "fields": {
+      "report_id": "报告ID",
+      "session_id": "Session ID",
+      "scale_name": "量表名称",
+      "generated_at": "生成时间",
+      "report_type": "报告类型",
+      "scoring_method": "计分方法",
+      "total_score": "总分",
+      "max_score": "满分",
+      "completion_rate": "完成率",
+      "interpretation": "评估结果",
+      "no_dimensions": "该量表无多维度评分"
+    },
+    "severity": {
+      "normal": "正常",
+      "minimal": "轻微",
+      "mild": "轻度",
+      "moderate": "中度",
+      "severe": "重度"
+    },
+    "disclaimer": "本报告由 OpeneCOA 系统自动生成，仅供参考。具体诊断和治疗方案请咨询专业医师。"
+  }
+}

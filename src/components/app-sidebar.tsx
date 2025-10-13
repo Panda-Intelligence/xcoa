@@ -11,6 +11,7 @@ import {
   Search,
   BookOpen,
   HelpCircle,
+  FileText,
 } from "lucide-react"
 
 import { NavMain } from "@/components/nav-main"
@@ -101,6 +102,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             url: "/scales/copyright/tickets" as Route,
           }
         ],
+      },
+      {
+        title: t('sidebar.reports'),
+        url: "/reports" as Route,
+        icon: FileText,
       },
       {
         title: t('sidebar.scale_interpretation'),

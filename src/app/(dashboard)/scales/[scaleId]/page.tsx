@@ -14,7 +14,8 @@ import {
   BookOpen,
   BarChart3,
   Plus,
-  Scale
+  Scale,
+  ClipboardCheck
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -175,6 +176,12 @@ export default function ScalePage({ params }: ScalePageProps) {
             </div>
 
             <div className="flex items-center space-x-3">
+              <Link href={`/scales/${scale.id}/preview`}>
+                <Button size="sm" className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white shadow-md">
+                  <ClipboardCheck className="w-4 h-4 mr-2" />
+                  {t('scale.start_assessment')}
+                </Button>
+              </Link>
               <FavoriteButton
                 scaleId={scale.id}
                 size="sm"
@@ -231,11 +238,11 @@ export default function ScalePage({ params }: ScalePageProps) {
               <Tabs defaultValue="overview" className="w-full">
                 <TabsList className="grid w-full grid-cols-6">
                   <TabsTrigger value="overview">{t('common.overview')}</TabsTrigger>
-                  <TabsTrigger value="interpretation">专业解读</TabsTrigger>
+                  <TabsTrigger value="interpretation">{t('scale.professional_interpretation_tab')}</TabsTrigger>
                   <TabsTrigger value="items">{t('scale.items')}</TabsTrigger>
                   <TabsTrigger value="psychometrics">{t('scale.psychometrics')}</TabsTrigger>
-                  <TabsTrigger value="cases">临床案例</TabsTrigger>
-                  <TabsTrigger value="copyright">版权许可</TabsTrigger>
+                  <TabsTrigger value="cases">{t('scale.clinical_cases_tab')}</TabsTrigger>
+                  <TabsTrigger value="copyright">{t('scale.copyright_tab')}</TabsTrigger>
                 </TabsList>
 
                 <TabsContent value="overview" className="space-y-4">
@@ -291,11 +298,11 @@ export default function ScalePage({ params }: ScalePageProps) {
                     <>
                       <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
                         <div className="flex items-center justify-between mb-2">
-                          <h4 className="font-semibold text-blue-900">AI 生成的专业解读</h4>
+                          <h4 className="font-semibold text-blue-900">{t('scale.ai_generated_interpretation')}</h4>
                           <Badge variant="outline" className="text-xs">v{interpretation.version}</Badge>
                         </div>
                         <p className="text-sm text-blue-800">
-                          由 AI 辅助生成，经过专家审核。查看次数：{interpretation.viewCount}
+                          {t('scale.ai_generated_note')}{interpretation.viewCount}
                         </p>
                       </div>
 
@@ -304,7 +311,7 @@ export default function ScalePage({ params }: ScalePageProps) {
                           <div>
                             <h4 className="font-semibold mb-3 flex items-center text-lg">
                               <BookOpen className="w-5 h-5 mr-2 text-blue-600" />
-                              量表概述
+                              {t('scale.scale_overview_heading')}
                             </h4>
                             <div className="prose prose-sm max-w-none text-sm leading-relaxed text-muted-foreground">
                               {interpretation.overview}
@@ -316,7 +323,7 @@ export default function ScalePage({ params }: ScalePageProps) {
                           <div>
                             <h4 className="font-semibold mb-3 flex items-center text-lg">
                               <BarChart3 className="w-5 h-5 mr-2 text-green-600" />
-                              量表结构
+                              {t('scale.scale_structure_heading')}
                             </h4>
                             <div className="prose prose-sm max-w-none text-sm leading-relaxed text-muted-foreground">
                               {interpretation.structure}
@@ -328,7 +335,7 @@ export default function ScalePage({ params }: ScalePageProps) {
                           <div>
                             <h4 className="font-semibold mb-3 flex items-center text-lg">
                               <CheckCircle className="w-5 h-5 mr-2 text-purple-600" />
-                              心理测量学特性
+                              {t('scale.psychometric_properties_heading')}
                             </h4>
                             <div className="prose prose-sm max-w-none text-sm leading-relaxed text-muted-foreground">
                               {interpretation.psychometricProperties}
@@ -340,7 +347,7 @@ export default function ScalePage({ params }: ScalePageProps) {
                           <div>
                             <h4 className="font-semibold mb-3 flex items-center text-lg">
                               <AlertCircle className="w-5 h-5 mr-2 text-orange-600" />
-                              结果解释
+                              {t('scale.result_interpretation_heading')}
                             </h4>
                             <div className="prose prose-sm max-w-none text-sm leading-relaxed text-muted-foreground">
                               {interpretation.interpretation}
@@ -352,7 +359,7 @@ export default function ScalePage({ params }: ScalePageProps) {
                           <div>
                             <h4 className="font-semibold mb-3 flex items-center text-lg">
                               <Users className="w-5 h-5 mr-2 text-indigo-600" />
-                              使用指南
+                              {t('scale.usage_guidelines_heading')}
                             </h4>
                             <div className="prose prose-sm max-w-none text-sm leading-relaxed text-muted-foreground">
                               {interpretation.usageGuidelines}
@@ -364,7 +371,7 @@ export default function ScalePage({ params }: ScalePageProps) {
                           <div>
                             <h4 className="font-semibold mb-3 flex items-center text-lg">
                               <Heart className="w-5 h-5 mr-2 text-red-600" />
-                              临床应用
+                              {t('scale.clinical_applications_heading')}
                             </h4>
                             <div className="prose prose-sm max-w-none text-sm leading-relaxed text-muted-foreground">
                               {interpretation.clinicalApplications}
@@ -376,19 +383,19 @@ export default function ScalePage({ params }: ScalePageProps) {
                       <Separator />
 
                       <div className="bg-gray-50 rounded-lg p-4">
-                        <h5 className="font-semibold mb-3">这个解读对您有帮助吗？</h5>
+                        <h5 className="font-semibold mb-3">{t('scale.helpful_question')}</h5>
                         <div className="flex items-center space-x-2">
-                          <Button 
-                            size="sm" 
+                          <Button
+                            size="sm"
                             variant="outline"
                             onClick={handleMarkHelpful}
                             disabled={helpfulLoading}
                           >
                             <Heart className="w-4 h-4 mr-2" />
-                            有帮助 ({interpretation.helpfulCount})
+                            {t('scale.mark_helpful')} ({interpretation.helpfulCount})
                           </Button>
                           <Button size="sm" variant="outline">
-                            反馈问题
+                            {t('scale.feedback_issue')}
                           </Button>
                         </div>
                       </div>
@@ -396,8 +403,8 @@ export default function ScalePage({ params }: ScalePageProps) {
                   ) : (
                     <div className="text-center py-12 text-muted-foreground">
                       <BookOpen className="w-16 h-16 mx-auto mb-4 opacity-30" />
-                      <p className="text-lg mb-2">暂无专业解读</p>
-                      <p className="text-sm">我们正在为此量表生成专业解读内容</p>
+                      <p className="text-lg mb-2">{t('scale.no_interpretation_title')}</p>
+                      <p className="text-sm">{t('scale.no_interpretation_desc')}</p>
                     </div>
                   )}
                 </TabsContent>
@@ -537,13 +544,13 @@ export default function ScalePage({ params }: ScalePageProps) {
                     <CardHeader>
                       <CardTitle className="flex items-center space-x-2">
                         <CheckCircle className="w-5 h-5 text-blue-600" />
-                        <span>版权和许可信息</span>
+                        <span>{t('scale.copyright_license_info')}</span>
                       </CardTitle>
                     </CardHeader>
                     <CardContent className="space-y-4">
                       {scale.copyrightInfo && (
                         <div>
-                          <h4 className="font-semibold mb-2">版权声明</h4>
+                          <h4 className="font-semibold mb-2">{t('scale.copyright_statement_heading')}</h4>
                           <p className="text-sm text-muted-foreground bg-gray-50 p-3 rounded">
                             {scale.copyrightInfo}
                           </p>
@@ -552,39 +559,39 @@ export default function ScalePage({ params }: ScalePageProps) {
 
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <Card className="p-4 bg-blue-50 border-blue-200">
-                          <h4 className="font-semibold mb-2 text-blue-900">需要使用许可？</h4>
+                          <h4 className="font-semibold mb-2 text-blue-900">{t('scale.need_license_question')}</h4>
                           <p className="text-sm text-blue-800 mb-3">
-                            如果您需要使用此量表，我们可以帮助您联系版权方获取使用许可。
+                            {t('scale.need_license_desc')}
                           </p>
                           <Link href={`/scales/copyright/create?scaleId=${scale.id}`}>
                             <Button size="sm" className="w-full">
                               <Plus className="w-3 h-3 mr-2" />
-                              创建版权工单
+                              {t('scale.create_copyright_ticket')}
                             </Button>
                           </Link>
                         </Card>
 
                         <Card className="p-4 bg-green-50 border-green-200">
-                          <h4 className="font-semibold mb-2 text-green-900">查看现有工单</h4>
+                          <h4 className="font-semibold mb-2 text-green-900">{t('scale.view_existing_tickets')}</h4>
                           <p className="text-sm text-green-800 mb-3">
-                            查看您已提交的版权申请和联系工单状态。
+                            {t('scale.view_tickets_desc')}
                           </p>
                           <Link href="/scales/copyright/tickets">
                             <Button size="sm" variant="outline" className="w-full">
                               <Eye className="w-3 h-3 mr-2" />
-                              我的工单
+                              {t('scale.my_tickets')}
                             </Button>
                           </Link>
                         </Card>
                       </div>
 
                       <div className="bg-yellow-50 border border-yellow-200 p-4 rounded-lg">
-                        <h5 className="font-semibold mb-2 text-yellow-900">重要提醒</h5>
+                        <h5 className="font-semibold mb-2 text-yellow-900">{t('scale.important_reminder')}</h5>
                         <ul className="text-sm text-yellow-800 space-y-1">
-                          <li>• 商业用途通常需要付费许可</li>
-                          <li>• 学术研究可能享有免费或优惠许可</li>
-                          <li>• 建议在使用前确认具体的许可要求</li>
-                          <li>• 我们的团队将协助您与版权方建立联系</li>
+                          <li>{t('scale.commercial_license_note')}</li>
+                          <li>{t('scale.academic_license_note')}</li>
+                          <li>{t('scale.confirm_requirements_note')}</li>
+                          <li>{t('scale.team_assist_note')}</li>
                         </ul>
                       </div>
                     </CardContent>

@@ -94,10 +94,10 @@ export default function TicketDetailPage({ params }: TicketDetailPageProps) {
       if (data.success) {
         setTicket(data.ticket);
       } else {
-        console.error('加载工单详情失败:', data.error);
+        console.error(t('copyright.tickets.failed_to_load_details'), data.error);
       }
     } catch (error) {
-      console.error('加载工单详情失败:', error);
+      console.error(t('copyright.tickets.failed_to_load_details'), error);
     } finally {
       setLoading(false);
     }
@@ -181,13 +181,13 @@ export default function TicketDetailPage({ params }: TicketDetailPageProps) {
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center">
           <AlertCircle className="w-12 h-12 mx-auto mb-4 text-red-500" />
-          <h2 className="text-xl font-semibold mb-2">工单不存在</h2>
+          <h2 className="text-xl font-semibold mb-2">{t('copyright.tickets.ticket_not_found')}</h2>
           <p className="text-muted-foreground mb-4">
-            请检查工单号或联系客服获取帮助
+            {t('copyright.tickets.ticket_not_found_desc')}
           </p>
           <Button onClick={() => router.back()}>
             <ArrowLeft className="w-4 h-4 mr-2" />
-            返回工单列表
+            {t('copyright.tickets.back_to_ticket_list')}
           </Button>
         </div>
       </div>
@@ -198,7 +198,7 @@ export default function TicketDetailPage({ params }: TicketDetailPageProps) {
     <>
       <PageHeader
         items={[
-          { href: "/scales/copyright/tickets", label: "我的工单" },
+          { href: "/scales/copyright/tickets", label: t('copyright.tickets.my_tickets') },
           { href: `/scales/copyright/tickets/${ticketId}`, label: ticket.ticketNumber }
         ]}
       />
@@ -215,33 +215,33 @@ export default function TicketDetailPage({ params }: TicketDetailPageProps) {
               </Badge>
             </div>
             <p className="text-muted-foreground">
-              工单号: {ticket.ticketNumber} • 创建于 {new Date(ticket.createdAt * 1000).toLocaleString()}
+              {t('copyright.tickets.ticket_number')}: {ticket.ticketNumber} • {t('copyright.tickets.created_at')} {new Date(ticket.createdAt * 1000).toLocaleString()}
             </p>
           </div>
 
           <div className="flex space-x-2">
             <Button variant="outline">
               <Download className="w-4 h-4 mr-2" />
-              导出工单
+              {t('copyright.tickets.export_ticket')}
             </Button>
             <Dialog open={updateMessageOpen} onOpenChange={setUpdateMessageOpen}>
               <DialogTrigger asChild>
                 <Button>
                   <Send className="w-4 h-4 mr-2" />
-                  发送消息
+                  {t('copyright.tickets.send_message')}
                 </Button>
               </DialogTrigger>
               <DialogContent>
                 <DialogHeader>
-                  <DialogTitle>发送消息</DialogTitle>
+                  <DialogTitle>{t('copyright.tickets.send_message_title')}</DialogTitle>
                   <DialogDescription>
-                    向版权方发送补充信息或跟进消息
+                    {t('copyright.tickets.send_message_desc')}
                   </DialogDescription>
                 </DialogHeader>
 
                 <div className="space-y-4">
                   <Textarea
-                    placeholder="输入您要发送的消息..."
+                    placeholder={t('copyright.tickets.message_placeholder')}
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
                     className="min-h-[100px]"
@@ -249,10 +249,10 @@ export default function TicketDetailPage({ params }: TicketDetailPageProps) {
 
                   <div className="flex justify-end space-x-2">
                     <Button variant="outline" onClick={() => setUpdateMessageOpen(false)}>
-                      取消
+                      {t('common.cancel')}
                     </Button>
                     <Button disabled={!message.trim()}>
-                      发送消息
+                      {t('copyright.tickets.send_message')}
                     </Button>
                   </div>
                 </div>
@@ -267,37 +267,37 @@ export default function TicketDetailPage({ params }: TicketDetailPageProps) {
             {/* 申请详情 */}
             <Card>
               <CardHeader>
-                <CardTitle>申请详情</CardTitle>
+                <CardTitle>{t('copyright.tickets.application_details')}</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <span className="font-medium text-sm">申请类型:</span>
+                    <span className="font-medium text-sm">{t('copyright.tickets.request_type')}:</span>
                     <p className="text-sm text-muted-foreground">{ticket.requestType.replace('_', ' ')}</p>
                   </div>
                   <div>
-                    <span className="font-medium text-sm">预期用途:</span>
+                    <span className="font-medium text-sm">{t('copyright.tickets.intended_use')}:</span>
                     <p className="text-sm text-muted-foreground">{ticket.intendedUse}</p>
                   </div>
                   <div>
-                    <span className="font-medium text-sm">优先级:</span>
+                    <span className="font-medium text-sm">{t('copyright.tickets.priority')}:</span>
                     <p className="text-sm text-muted-foreground">{ticket.priority}</p>
                   </div>
                   <div>
-                    <span className="font-medium text-sm">预算范围:</span>
-                    <p className="text-sm text-muted-foreground">{ticket.budgetRange || '待讨论'}</p>
+                    <span className="font-medium text-sm">{t('copyright.tickets.budget_range')}:</span>
+                    <p className="text-sm text-muted-foreground">{ticket.budgetRange || t('copyright.tickets.to_be_discussed')}</p>
                   </div>
                 </div>
 
                 <div>
-                  <span className="font-medium text-sm">项目描述:</span>
+                  <span className="font-medium text-sm">{t('copyright.tickets.project_description')}:</span>
                   <p className="text-sm text-muted-foreground bg-gray-50 p-3 rounded mt-1">
                     {ticket.projectDescription}
                   </p>
                 </div>
 
                 <div>
-                  <span className="font-medium text-sm">初始消息:</span>
+                  <span className="font-medium text-sm">{t('copyright.tickets.initial_message')}:</span>
                   <p className="text-sm text-muted-foreground bg-gray-50 p-3 rounded mt-1">
                     {ticket.initialMessage}
                   </p>
@@ -308,7 +308,7 @@ export default function TicketDetailPage({ params }: TicketDetailPageProps) {
             {/* 工单时间线 */}
             <Card>
               <CardHeader>
-                <CardTitle>工单时间线</CardTitle>
+                <CardTitle>{t('copyright.tickets.ticket_timeline')}</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
@@ -317,7 +317,7 @@ export default function TicketDetailPage({ params }: TicketDetailPageProps) {
                       <User className="w-4 h-4 text-blue-600" />
                     </div>
                     <div className="flex-1">
-                      <p className="font-medium text-sm">工单创建</p>
+                      <p className="font-medium text-sm">{t('copyright.tickets.ticket_created')}</p>
                       <p className="text-xs text-muted-foreground">
                         {new Date(ticket.createdAt * 1000).toLocaleString()}
                       </p>
@@ -330,9 +330,9 @@ export default function TicketDetailPage({ params }: TicketDetailPageProps) {
                         <Mail className="w-4 h-4 text-green-600" />
                       </div>
                       <div className="flex-1">
-                        <p className="font-medium text-sm">邮件已发送</p>
+                        <p className="font-medium text-sm">{t('copyright.tickets.email_sent')}</p>
                         <p className="text-xs text-muted-foreground">
-                          已发送至 {ticket.copyrightEmail}
+                          {t('copyright.tickets.sent_to')} {ticket.copyrightEmail}
                         </p>
                       </div>
                     </div>
@@ -344,9 +344,9 @@ export default function TicketDetailPage({ params }: TicketDetailPageProps) {
                         <MessageSquare className="w-4 h-4 text-purple-600" />
                       </div>
                       <div className="flex-1">
-                        <p className="font-medium text-sm">收到回复</p>
+                        <p className="font-medium text-sm">{t('copyright.tickets.response_received')}</p>
                         <p className="text-xs text-muted-foreground">
-                          版权方已回复您的申请
+                          {t('copyright.tickets.response_received_desc')}
                         </p>
                       </div>
                     </div>
@@ -358,9 +358,9 @@ export default function TicketDetailPage({ params }: TicketDetailPageProps) {
                         <CheckCircle className="w-4 h-4 text-green-600" />
                       </div>
                       <div className="flex-1">
-                        <p className="font-medium text-sm">许可已授予</p>
+                        <p className="font-medium text-sm">{t('copyright.tickets.license_granted')}</p>
                         <p className="text-xs text-muted-foreground">
-                          您已获得使用许可
+                          {t('copyright.tickets.license_granted_desc')}
                         </p>
                       </div>
                     </div>
@@ -375,7 +375,7 @@ export default function TicketDetailPage({ params }: TicketDetailPageProps) {
             {/* 版权方信息 */}
             <Card>
               <CardHeader>
-                <CardTitle className="text-lg">版权方信息</CardTitle>
+                <CardTitle className="text-lg">{t('copyright.tickets.copyright_holder_info')}</CardTitle>
               </CardHeader>
               <CardContent className="space-y-3">
                 <div className="flex items-center space-x-2">
@@ -400,7 +400,7 @@ export default function TicketDetailPage({ params }: TicketDetailPageProps) {
                   <div className="flex items-center space-x-2">
                     <Globe className="w-4 h-4 text-gray-500" />
                     <a href={ticket.copyrightWebsite} target="_blank" rel="noopener noreferrer" className="text-sm text-blue-600 hover:underline">
-                      官方网站
+                      {t('copyright.tickets.official_website')}
                     </a>
                   </div>
                 )}
@@ -410,41 +410,41 @@ export default function TicketDetailPage({ params }: TicketDetailPageProps) {
             {/* 工单状态 */}
             <Card>
               <CardHeader>
-                <CardTitle className="text-lg">当前状态</CardTitle>
+                <CardTitle className="text-lg">{t('copyright.tickets.current_status_title')}</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
-                    <span className="text-sm">工单状态</span>
+                    <span className="text-sm">{t('copyright.tickets.ticket_status')}</span>
                     <Badge className={getStatusColor(ticket.status)}>
                       {ticket.status}
                     </Badge>
                   </div>
 
                   <div className="flex items-center justify-between">
-                    <span className="text-sm">回复状态</span>
+                    <span className="text-sm">{t('copyright.tickets.response_status')}</span>
                     {ticket.responseReceived ? (
-                      <Badge className="bg-green-100 text-green-700">已回复</Badge>
+                      <Badge className="bg-green-100 text-green-700">{t('copyright.tickets.responded_status')}</Badge>
                     ) : (
-                      <Badge className="bg-gray-100 text-gray-700">待回复</Badge>
+                      <Badge className="bg-gray-100 text-gray-700">{t('copyright.tickets.waiting_for_response')}</Badge>
                     )}
                   </div>
 
                   <div className="flex items-center justify-between">
-                    <span className="text-sm">许可状态</span>
+                    <span className="text-sm">{t('copyright.tickets.license_status')}</span>
                     {ticket.licenseGranted ? (
-                      <Badge className="bg-green-100 text-green-700">已授权</Badge>
+                      <Badge className="bg-green-100 text-green-700">{t('copyright.tickets.authorized')}</Badge>
                     ) : (
-                      <Badge className="bg-gray-100 text-gray-700">待授权</Badge>
+                      <Badge className="bg-gray-100 text-gray-700">{t('copyright.tickets.pending_authorization')}</Badge>
                     )}
                   </div>
                 </div>
 
                 <div className="pt-3 border-t">
                   <div className="text-xs text-muted-foreground space-y-1">
-                    <div>创建时间: {new Date(ticket.createdAt * 1000).toLocaleString()}</div>
-                    <div>最后更新: {new Date(ticket.updatedAt * 1000).toLocaleString()}</div>
-                    <div>最后联系: {new Date(ticket.lastContactAt * 1000).toLocaleString()}</div>
+                    <div>{t('copyright.tickets.created_time')}: {new Date(ticket.createdAt * 1000).toLocaleString()}</div>
+                    <div>{t('copyright.tickets.last_updated')}: {new Date(ticket.updatedAt * 1000).toLocaleString()}</div>
+                    <div>{t('copyright.tickets.last_contact')}: {new Date(ticket.lastContactAt * 1000).toLocaleString()}</div>
                   </div>
                 </div>
               </CardContent>
@@ -453,20 +453,20 @@ export default function TicketDetailPage({ params }: TicketDetailPageProps) {
             {/* 快速操作 */}
             <Card>
               <CardHeader>
-                <CardTitle className="text-lg">快速操作</CardTitle>
+                <CardTitle className="text-lg">{t('copyright.tickets.quick_actions_title')}</CardTitle>
               </CardHeader>
               <CardContent className="space-y-3">
                 <Button className="w-full" size="sm">
                   <Mail className="w-4 h-4 mr-2" />
-                  发送邮件给版权方
+                  {t('copyright.tickets.send_email_to_holder')}
                 </Button>
                 <Button variant="outline" className="w-full" size="sm">
                   <Calendar className="w-4 h-4 mr-2" />
-                  设置跟进提醒
+                  {t('copyright.tickets.set_follow_up_reminder')}
                 </Button>
                 <Button variant="outline" className="w-full" size="sm">
                   <Download className="w-4 h-4 mr-2" />
-                  下载工单PDF
+                  {t('copyright.tickets.download_ticket_pdf')}
                 </Button>
               </CardContent>
             </Card>

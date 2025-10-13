@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { notFound } from 'next/navigation';
+import { notFound, useRouter } from 'next/navigation';
 import {
   ArrowLeft,
   Eye,
@@ -23,7 +23,8 @@ import {
   Check,
   Timer,
   Target,
-  TrendingUp
+  TrendingUp,
+  Loader2
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -36,6 +37,8 @@ import { MobileFrame, PadFrame, DesktopFrame } from '@/components/device/Frames'
 import { QuestionRenderer } from '@/components/scale-preview/QuestionRenderer';
 import { FeatureGate } from '@/components/subscription/feature-gate';
 import { ENTERPRISE_FEATURES } from '@/constants/plans';
+import { toast } from 'sonner';
+import { createId } from '@paralleldrive/cuid2';
 
 interface ScalePreviewPageProps {
   params: Promise<{ scaleId: string }>;
@@ -57,6 +60,7 @@ interface Answer {
 
 export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
   const { t } = useLanguage();
+  const router = useRouter();
   const [scaleId, setScaleId] = useState<string>('');
   const [previewData, setPreviewData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
@@ -69,6 +73,11 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
   const [completedItems, setCompletedItems] = useState<number[]>([]);
   const [showResults, setShowResults] = useState(false);
   const [startTime, setStartTime] = useState<Date | null>(null);
+
+  // 报告相关状态
+  const [sessionId, setSessionId] = useState<string>('');
+  const [isSaving, setIsSaving] = useState(false);
+  const [isGeneratingReport, setIsGeneratingReport] = useState(false);
 
   const [isTransitioning, setIsTransitioning] = useState(false);
 
@@ -179,6 +188,8 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
     setAnswers([]);
     setCompletedItems([]);
     setShowResults(false);
+    // 生成新的 sessionId
+    setSessionId(`session_${createId()}`);
 
     // 如果当前数据不是完整模式，重新获取完整数据
     if (!previewData?.preview?.isFullMode) {
@@ -204,17 +215,157 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
     }
   };
 
+  // 保存结果到后端
+  const handleSaveResults = async () => {
+    if (answers.length === 0) {
+      toast.error(t('scale_preview.no_answers_to_save', 'No answers to save'));
+      return;
+    }
+
+    setIsSaving(true);
+
+    try {
+      // 将答案转换为 API 所需的格式
+      const responses = answers.map(answer => {
+        // 找到对应的题目以获取 itemId
+        const item = previewData?.preview?.items?.find(
+          (i: any) => i.itemNumber === answer.itemNumber
+        );
+
+        if (!item) {
+          console.warn(`找不到题目 ${answer.itemNumber} 的 itemId`);
+          return null;
+        }
+
+        // 确定response值
+        let response = answer.selectedOption ||
+                      answer.selectedOptions ||
+                      answer.textValue ||
+                      answer.dateValue ||
+                      answer.drawingValue;
+
+        // 计算responseValue (用于评分)
+        let responseValue: number | undefined = undefined;
+        if (answer.selectedOption && item.responseOptions) {
+          responseValue = item.responseOptions.indexOf(answer.selectedOption);
+        } else if (answer.selectedOptions && item.responseOptions) {
+          responseValue = answer.selectedOptions.reduce((sum: number, option: string) => {
+            return sum + item.responseOptions.indexOf(option);
+          }, 0);
+        }
+
+        return {
+          itemId: item.id,
+          itemNumber: answer.itemNumber,
+          response,
+          responseValue,
+          completedAt: answer.timestamp,
+        };
+      }).filter(Boolean); // 过滤掉 null 值
+
+      if (responses.length === 0) {
+        toast.error(t('scale_preview.no_valid_items', 'Unable to find valid item data'));
+        setIsSaving(false);
+        return;
+      }
+
+      const requestBody = {
+        sessionId: sessionId || `session_${createId()}`,
+        responses,
+      };
+
+      const response = await fetch(`/api/scales/${scaleId}/responses`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(requestBody),
+      });
+
+      const data = await response.json() as any;
+
+      if (!response.ok) {
+        throw new Error(data.error || t('scale_preview.save_failed', 'Save failed'));
+      }
+
+      // 更新 sessionId
+      setSessionId(data.sessionId);
+      toast.success(t('scale_preview.save_success', 'Results saved successfully'));
+
+      return data.sessionId;
+    } catch (error) {
+      console.error('保存结果失败:', error);
+      toast.error(error instanceof Error ? error.message : t('scale_preview.save_failed', 'Failed to save results'));
+      throw error;
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  // 导出报告
+  const handleExportReport = async () => {
+    try {
+      setIsGeneratingReport(true);
+
+      // 如果还没有保存，先保存结果
+      let currentSessionId = sessionId;
+      if (!currentSessionId) {
+        try {
+          currentSessionId = await handleSaveResults();
+          if (!currentSessionId) {
+            return; // 保存失败，不继续生成报告
+          }
+        } catch (error) {
+          return; // 保存失败，不继续生成报告
+        }
+      }
+
+      // 生成报告
+      const response = await fetch(`/api/scales/${scaleId}/reports`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          sessionId: currentSessionId,
+          reportType: 'pdf',
+          includeCharts: true,
+          includeInterpretation: true,
+          includeRecommendations: true,
+        }),
+      });
+
+      const data = await response.json() as any;
+
+      if (!response.ok) {
+        throw new Error(data.error || t('scale_preview.report_generation_failed', 'Failed to generate report'));
+      }
+
+      toast.success(t('scale_preview.report_generated', 'Report generated successfully'));
+
+      // 跳转到报告详情页
+      if (data.report?.reportUrl) {
+        router.push(data.report.reportUrl);
+      }
+    } catch (error) {
+      console.error('生成报告失败:', error);
+      toast.error(error instanceof Error ? error.message : t('scale_preview.report_generation_failed', 'Failed to generate report'));
+    } finally {
+      setIsGeneratingReport(false);
+    }
+  };
+
   // 计算总分和专业解读
   const calculateScore = useCallback(() => {
 
     if (!previewData?.preview?.items) {
       console.log('没有预览数据或题目数据');
-      return { total: 0, interpretation: '无数据' };
+      return { total: 0, interpretation: t('scale_preview.no_data', 'No data') };
     }
 
     if (answers.length === 0) {
       console.log('没有任何答案');
-      return { total: 0, interpretation: '尚未开始答题' };
+      return { total: 0, interpretation: t('scale_preview.not_started', 'Not yet started') };
     }
 
     const total = answers.reduce((sum, answer, index) => {
@@ -257,18 +408,18 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
     let interpretation = '';
 
     if (previewData.scale.acronym === 'PHQ-9') {
-      if (total <= 4) interpretation = '最小抑郁症状';
-      else if (total <= 9) interpretation = '轻度抑郁症状';
-      else if (total <= 14) interpretation = '中度抑郁症状';
-      else if (total <= 19) interpretation = '中重度抑郁症状';
-      else interpretation = '重度抑郁症状';
+      if (total <= 4) interpretation = t('scale_preview.phq9_minimal', 'Minimal depression');
+      else if (total <= 9) interpretation = t('scale_preview.phq9_mild', 'Mild depression');
+      else if (total <= 14) interpretation = t('scale_preview.phq9_moderate', 'Moderate depression');
+      else if (total <= 19) interpretation = t('scale_preview.phq9_moderately_severe', 'Moderately severe depression');
+      else interpretation = t('scale_preview.phq9_severe', 'Severe depression');
     } else if (previewData.scale.acronym === 'GAD-7') {
-      if (total <= 4) interpretation = '最小焦虑症状';
-      else if (total <= 9) interpretation = '轻度焦虑症状';
-      else if (total <= 14) interpretation = '中度焦虑症状';
-      else interpretation = '重度焦虑症状';
+      if (total <= 4) interpretation = t('scale_preview.gad7_minimal', 'Minimal anxiety');
+      else if (total <= 9) interpretation = t('scale_preview.gad7_mild', 'Mild anxiety');
+      else if (total <= 14) interpretation = t('scale_preview.gad7_moderate', 'Moderate anxiety');
+      else interpretation = t('scale_preview.gad7_severe', 'Severe anxiety');
     } else {
-      interpretation = `总分: ${total}分`;
+      interpretation = t('scale_preview.total_score_format', 'Total score: {{score}} points', { score: total });
     }
 
     console.log('最终解读:', interpretation);
@@ -365,8 +516,8 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
   return (
     <FeatureGate
       feature={ENTERPRISE_FEATURES.SCALE_PREVIEW}
-      featureName={t('features.scale_preview', '量表预览与交互体验')}
-      featureDescription={t('features.scale_preview_desc', '交互式体验量表，支持多设备预览')}
+      featureName={t('features.scale_preview')}
+      featureDescription={t('features.scale_preview_desc')}
     >
     <div className="min-h-screen bg-background">
       {/* 头部导航 */}
@@ -377,7 +528,7 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
               <Link href="/scales">
                 <Button variant="ghost" size="sm">
                   <ArrowLeft className="w-4 h-4 mr-2" />
-                  {t('common.back', '返回')}
+                  {t('common.back')}
                 </Button>
               </Link>
               <Separator orientation="vertical" className="h-6" />
@@ -546,13 +697,13 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
                 <div className="flex items-center space-x-2">
                   <BookOpen className="w-4 h-4 text-blue-600" />
                   <span className={deviceStyles.fontSize}>
-                    {scale.itemsCount} {t("common.items", "个题项")}
+                    {scale.itemsCount} {t("common.items")}
                   </span>
                 </div>
                 <div className="flex items-center space-x-2">
                   <Clock className="w-4 h-4 text-green-600" />
                   <span className={deviceStyles.fontSize}>
-                    {t("common.about", "约")} {scale.administrationTime} {t("scale_preview.minutes")}
+                    {scale.administrationTime} {t("scale_preview.minutes")}
                   </span>
                 </div>
                 <div className="flex items-center space-x-2">
@@ -571,17 +722,17 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
               {/* 调试信息卡片 */}
               <Card className="bg-yellow-50 border-yellow-200">
                 <CardHeader>
-                  <CardTitle className="text-yellow-800">调试信息</CardTitle>
+                  <CardTitle className="text-yellow-800">{t('scale_preview.debug_info')}</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="text-sm space-y-1">
                     <div>Scale ID: {scaleId}</div>
-                    <div>预览数据存在: {previewData ? '是' : '否'}</div>
-                    <div>预览模式: {preview?.isFullMode ? '完整模式' : '预览模式'}</div>
-                    <div>题项数量: {preview?.items?.length || 0}</div>
-                    <div>当前题目索引: {currentItemIndex}</div>
-                    <div>当前题目存在: {currentItem ? '是' : '否'}</div>
-                    {currentItem && <div>当前题目: {currentItem.question}</div>}
+                    <div>{t('scale_preview.preview_data_exists')}: {previewData ? t('scale_preview.yes') : t('scale_preview.no')}</div>
+                    <div>{t('scale_preview.preview_mode_status')}: {preview?.isFullMode ? t('scale_preview.full_mode_status') : t('scale_preview.preview_mode_status')}</div>
+                    <div>{t('scale_preview.items_count')}: {preview?.items?.length || 0}</div>
+                    <div>{t('scale_preview.current_question_index')}: {currentItemIndex}</div>
+                    <div>{t('scale_preview.current_question_exists')}: {currentItem ? t('scale_preview.yes') : t('scale_preview.no')}</div>
+                    {currentItem && <div>{t('scale_preview.current_question')}: {currentItem.question}</div>}
                   </div>
                 </CardContent>
               </Card>
@@ -717,14 +868,14 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
                 <Card className="bg-red-50 border-red-200">
                   <CardContent className="p-4 text-center">
                     <AlertCircle className="w-8 h-8 mx-auto mb-2 text-red-500" />
-                    <h3 className="font-medium text-red-800 mb-2">无法加载题目</h3>
+                    <h3 className="font-medium text-red-800 mb-2">{t('scale_preview.cannot_load_questions')}</h3>
                     <p className="text-sm text-red-600 mb-4">
-                      题目数据加载失败或不存在。请检查网络连接或联系技术支持。
+                      {t('scale_preview.question_load_failed')}
                     </p>
                     <div className="space-y-2 text-xs text-red-500">
-                      <div>预览数据: {previewData ? '存在' : '不存在'}</div>
-                      <div>题目数量: {preview?.items?.length || 0}</div>
-                      <div>当前索引: {currentItemIndex}</div>
+                      <div>{t('scale_preview.preview_data')}: {previewData ? t('scale_preview.exists') : t('scale_preview.not_exists')}</div>
+                      <div>{t('scale_preview.question_count')}: {preview?.items?.length || 0}</div>
+                      <div>{t('scale_preview.current_index')}: {currentItemIndex}</div>
                     </div>
                     <Button
                       variant="outline"
@@ -735,7 +886,7 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
                       }}
                       className="mt-4"
                     >
-                      返回预览模式
+                      {t('scale_preview.return_to_preview')}
                     </Button>
                   </CardContent>
                 </Card>
@@ -761,7 +912,7 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
                 <div className="bg-white rounded-lg p-4 mb-4 border border-green-200">
                   <div className="text-center mb-4">
                     <div className="text-3xl font-bold text-green-600 mb-2">
-                      {scoreResult.total} 分
+                      {scoreResult.total} {t('scale_preview.points')}
                     </div>
                     <div className="text-lg font-medium text-green-800">
                       {scoreResult.interpretation}
@@ -816,7 +967,7 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
                 {/* 专业建议 */}
                 {previewInfo?.scoringInfo && (
                   <div className="bg-blue-50 p-4 rounded-lg mb-4">
-                    <h4 className="font-medium text-blue-900 mb-2">评分说明</h4>
+                    <h4 className="font-medium text-blue-900 mb-2">{t('scale_preview.score_explanation')}</h4>
                     <p className="text-sm text-blue-800">
                       {previewInfo.scoringInfo}
                     </p>
@@ -824,13 +975,42 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
                 )}
 
                 <div className={`${deviceMode === 'mobile' ? 'grid grid-cols-2 gap-2' : 'flex space-x-2'} pt-4 border-t`}>
-                  <Button size="sm" className={deviceMode === 'mobile' ? 'justify-center' : ''}>
-                    <Save className="w-4 h-4 mr-1" />
-                    {t("scale_preview.save_results")}
+                  <Button
+                    size="sm"
+                    className={deviceMode === 'mobile' ? 'justify-center' : ''}
+                    onClick={handleSaveResults}
+                    disabled={isSaving || answers.length === 0}
+                  >
+                    {isSaving ? (
+                      <>
+                        <Loader2 className="w-4 h-4 mr-1 animate-spin" />
+                        {t("common.saving")}
+                      </>
+                    ) : (
+                      <>
+                        <Save className="w-4 h-4 mr-1" />
+                        {t("scale_preview.save_results")}
+                      </>
+                    )}
                   </Button>
-                  <Button variant="outline" size="sm" className={deviceMode === 'mobile' ? 'justify-center' : ''}>
-                    <Download className="w-4 h-4 mr-1" />
-                    {t("scale_preview.export_report")}
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className={deviceMode === 'mobile' ? 'justify-center' : ''}
+                    onClick={handleExportReport}
+                    disabled={isGeneratingReport || answers.length === 0}
+                  >
+                    {isGeneratingReport ? (
+                      <>
+                        <Loader2 className="w-4 h-4 mr-1 animate-spin" />
+                        {t("reports.generating_pdf")}
+                      </>
+                    ) : (
+                      <>
+                        <Download className="w-4 h-4 mr-1" />
+                        {t("scale_preview.export_report")}
+                      </>
+                    )}
                   </Button>
                   <Button variant="outline" size="sm" className={deviceMode === 'mobile' ? 'justify-center' : ''}>
                     <Share className="w-4 h-4 mr-1" />
@@ -845,6 +1025,7 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
                       setCurrentItemIndex(0);
                       setShowResults(false);
                       setStartTime(new Date());
+                      setSessionId(`session_${createId()}`);
                     }}
                     className={deviceMode === 'mobile' ? 'justify-center col-span-2' : ''}
                   >
@@ -867,7 +1048,7 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
                     <span>{t("scale_preview.scale_preview_title")}</span>
                   </CardTitle>
                   <CardDescription className="text-blue-700">
-                    这是该量表的部分题项预览，点击&ldquo;开始交互式体验&rdquo;进行完整量表填写
+                    {t("scale_preview.preview_description")}
                   </CardDescription>
                 </CardHeader>
 
@@ -883,11 +1064,11 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
                     </div>
                     <div>
                       <span className="font-medium">{t("scale_preview.assessment_time")}:</span>
-                      <span className="ml-1">{previewInfo.estimatedCompletionTime} 分钟</span>
+                      <span className="ml-1">{previewInfo.estimatedCompletionTime} {t("scale_preview.minutes")}</span>
                     </div>
                     <div>
                       <span className="font-medium">{t("scale_preview.dimensions_count")}:</span>
-                      <span className="ml-1">{preview.dimensions.length} 个</span>
+                      <span className="ml-1">{preview.dimensions.length}</span>
                     </div>
                   </div>
 
@@ -904,7 +1085,7 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
               {/* 量表描述 */}
               <Card>
                 <CardHeader>
-                  <CardTitle>量表描述</CardTitle>
+                  <CardTitle>{t('scale_preview.scale_description')}</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <p className={`${deviceStyles.fontSize} leading-relaxed mb-3`}>
@@ -923,15 +1104,15 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
                 <Card>
                   <CardHeader>
                     <CardTitle className="flex items-center justify-between">
-                      <span>题项预览 ({preview.previewCount} / {preview.totalItems})</span>
+                      <span>{t('scale_preview.items_preview')} ({preview.previewCount} / {preview.totalItems})</span>
                       {preview.hasMoreItems && (
                         <Badge variant="secondary">
-                          还有 {preview.totalItems - preview.previewCount} 个题项
+                          {t('scale_preview.more_items_remaining', 'More {{count}} items remaining', { count: preview.totalItems - preview.previewCount })}
                         </Badge>
                       )}
                     </CardTitle>
                     <CardDescription>
-                      以下是该量表的前 {preview.previewCount} 个题项，完整体验请使用交互模式
+                      {t('scale_preview.items_preview_note', 'The following are the first {{count}} items of this scale, use interactive mode for complete experience', { count: preview.previewCount })}
                     </CardDescription>
                   </CardHeader>
 
@@ -953,7 +1134,7 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
 
                               {item.responseOptions.length > 0 && (
                                 <div className="text-sm">
-                                  <span className="font-medium text-muted-foreground">回答选项: </span>
+                                  <span className="font-medium text-muted-foreground">{t('scale_preview.response_options')}: </span>
                                   <span className="text-muted-foreground">
                                     {deviceMode === 'mobile' ?
                                       item.responseOptions.slice(0, 2).join(' / ') + (item.responseOptions.length > 2 ? '...' : '') :
@@ -983,10 +1164,10 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
                   <CardHeader>
                     <CardTitle className="flex items-center space-x-2">
                       <Play className="w-5 h-5" />
-                      <span>答题示例</span>
+                      <span>{t('scale_preview.sample_answers')}</span>
                     </CardTitle>
                     <CardDescription>
-                      以下是一些题项的示例回答，仅供参考
+                      {t('scale_preview.sample_description')}
                     </CardDescription>
                   </CardHeader>
 
@@ -995,11 +1176,11 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
                       {preview.sampleAnswers.map((sample: any, index: number) => (
                         <div key={sample.itemNumber} className="p-3 bg-yellow-50 rounded border border-yellow-200">
                           <div className="text-sm">
-                            <span className="font-medium">题项 {sample.itemNumber}: </span>
+                            <span className="font-medium">{t('scale_preview.question_number')} {sample.itemNumber}: </span>
                             <span>{sample.question}</span>
                           </div>
                           <div className="text-sm mt-1">
-                            <span className="font-medium text-green-700">示例答案: </span>
+                            <span className="font-medium text-green-700">{t('scale_preview.sample_answer')}: </span>
                             <span className="text-green-700">{sample.selectedOption}</span>
                           </div>
                         </div>
@@ -1014,27 +1195,27 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
                 <CardHeader>
                   <CardTitle className="flex items-center space-x-2">
                     <Info className="w-5 h-5" />
-                    <span>使用指导</span>
+                    <span>{t('scale_preview.usage_guide')}</span>
                   </CardTitle>
                 </CardHeader>
 
                 <CardContent className="space-y-4">
                   <div>
-                    <h4 className="font-medium mb-2">推荐环境</h4>
+                    <h4 className="font-medium mb-2">{t('scale_preview.recommended_environment')}</h4>
                     <p className={`${deviceStyles.fontSize} text-muted-foreground`}>
                       {previewInfo.recommendedEnvironment}
                     </p>
                   </div>
 
                   <div>
-                    <h4 className="font-medium mb-2">填写说明</h4>
+                    <h4 className="font-medium mb-2">{t('scale_preview.instructions')}</h4>
                     <p className={`${deviceStyles.fontSize} text-muted-foreground`}>
                       {previewInfo.instructions}
                     </p>
                   </div>
 
                   <div>
-                    <h4 className="font-medium mb-2">评估维度</h4>
+                    <h4 className="font-medium mb-2">{t('scale_preview.assessment_dimensions')}</h4>
                     <div className="flex flex-wrap gap-2">
                       {preview.dimensions.map((dimension: string, index: number) => (
                         <Badge key={index} variant="outline">
@@ -1051,7 +1232,7 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
           {/* 下一步操作 */}
           <Card>
             <CardHeader>
-              <CardTitle>下一步操作</CardTitle>
+              <CardTitle>{t('scale_preview.next_actions')}</CardTitle>
             </CardHeader>
 
             <CardContent>
@@ -1059,21 +1240,21 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
                 <Link href={`/scales/${scale.id}`}>
                   <Button className="w-full justify-start">
                     <BookOpen className="w-4 h-4 mr-2" />
-                    查看完整详情
+                    {t('scale_preview.view_full_details')}
                   </Button>
                 </Link>
 
                 <Link href={`/scales/${scale.id}/copyright`}>
                   <Button variant="outline" className="w-full justify-start">
                     <AlertCircle className="w-4 h-4 mr-2" />
-                    检查版权许可
+                    {t('scale_preview.check_copyright')}
                   </Button>
                 </Link>
 
                 <Link href={`/scales/${scale.id}/interpretation`}>
                   <Button variant="outline" className="w-full justify-start">
                     <Info className="w-4 h-4 mr-2" />
-                    查看解读指南
+                    {t('scale_preview.view_interpretation')}
                   </Button>
                 </Link>
               </div>
@@ -1086,11 +1267,10 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
               <CardContent className="p-4">
                 <div className="flex items-center space-x-2 text-orange-800">
                   <AlertCircle className="w-4 h-4" />
-                  <span className="font-medium">预览限制</span>
+                  <span className="font-medium">{t('scale_preview.preview_limitation')}</span>
                 </div>
                 <p className={`${deviceStyles.fontSize} text-orange-700 mt-1`}>
-                  这只是部分题项预览 ({preview.previewCount} / {preview.totalItems})。
-                  要体验完整量表填写流程，请点击&ldquo;开始交互式体验&rdquo;。
+                  {t('scale_preview.preview_limitation_description', 'This is only a partial preview ({{previewCount}} / {{totalItems}}). To experience the complete scale assessment, please click "Start Interactive Experience".', { previewCount: preview.previewCount, totalItems: preview.totalItems })}
                 </p>
               </CardContent>
             </Card>
