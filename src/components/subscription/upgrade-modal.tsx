@@ -166,7 +166,7 @@ export function UpgradeModal({
           <Button
             onClick={handleUpgrade}
             disabled={isLoading}
-            className={getPlanColor(requiredPlan)}
+            className={`${getPlanColor(requiredPlan)} text-white border-0 after:shadow-none`}
           >
             {isLoading ? (
               isZh ? '正在跳转...' : 'Redirecting...'

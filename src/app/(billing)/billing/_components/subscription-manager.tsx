@@ -279,13 +279,13 @@ export function SubscriptionManager() {
               {/* Action Buttons */}
               <div className="flex gap-3">
                 {currentPlan === SUBSCRIPTION_PLANS.FREE && (
-                  <Button onClick={() => setShowPricing(true)} className="bg-gradient-to-r from-blue-500 to-cyan-500">
+                  <Button onClick={() => setShowPricing(true)} className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white border-0 after:shadow-none">
                     <TrendingUp className="w-4 h-4 mr-2" />
                     {isZh ? '升级订阅' : 'Upgrade Now'}
                   </Button>
                 )}
                 {currentPlan === SUBSCRIPTION_PLANS.STARTER && (
-                  <Button onClick={() => setShowPricing(true)} className="bg-gradient-to-r from-purple-500 to-pink-500">
+                  <Button onClick={() => setShowPricing(true)} className="bg-gradient-to-r from-purple-500 to-pink-500 text-white border-0 after:shadow-none">
                     <Crown className="w-4 h-4 mr-2" />
                     {isZh ? '升级到企业版' : 'Upgrade to Enterprise'}
                   </Button>
@@ -336,7 +336,7 @@ export function SubscriptionManager() {
                     </p>
                   </div>
                 </div>
-                <Button onClick={() => setShowPricing(true)} className="bg-gradient-to-r from-purple-500 to-pink-500">
+                <Button onClick={() => setShowPricing(true)} className="bg-gradient-to-r from-purple-500 to-pink-500 text-white border-0 after:shadow-none">
                   {isZh ? '了解更多' : 'Learn More'}
                   <ArrowRight className="w-4 h-4 ml-2" />
                 </Button>

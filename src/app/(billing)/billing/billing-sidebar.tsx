@@ -1,7 +1,6 @@
 "use client"
 
 import { Crown, Shield, Monitor, Lock } from "lucide-react"
-import { Button } from "@/components/ui/button"
 import { useLanguage } from "@/hooks/useLanguage"
 import Link from "next/link"
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "@/components/ui/sidebar"
@@ -22,11 +21,9 @@ export function BillingSidebar() {
       {settingsMenuItems.map((item) => (
         <SidebarMenuItem key={item.href}>
           <SidebarMenuButton asChild isActive={item.href === pathname}>
-            <Link href={item.href}>
-              <Button variant="ghost" className="w-full justify-start">
-                <item.icon className="mr-2 h-4 w-4" />
-                {item.label}
-              </Button>
+            <Link href={item.href} className="flex items-center">
+              <item.icon className="mr-2 h-4 w-4" />
+              <span>{item.label}</span>
             </Link>
           </SidebarMenuButton>
         </SidebarMenuItem>

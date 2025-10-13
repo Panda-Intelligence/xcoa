@@ -177,7 +177,7 @@ export default function ScalePage({ params }: ScalePageProps) {
 
             <div className="flex items-center space-x-3">
               <Link href={`/scales/${scale.id}/preview`}>
-                <Button size="sm" className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white shadow-md">
+                <Button size="sm" className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white shadow-md border-0 after:shadow-none">
                   <ClipboardCheck className="w-4 h-4 mr-2" />
                   {t('scale.start_assessment')}
                 </Button>

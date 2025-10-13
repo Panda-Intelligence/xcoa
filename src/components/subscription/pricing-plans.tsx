@@ -177,7 +177,7 @@ export function PricingPlans({ currentPlan, onSelectPlan }: PricingPlansProps) {
                 <Button
                   className={`w-full ${
                     isRecommended
-                      ? `bg-gradient-to-r ${getPlanColor(plan)} hover:opacity-90`
+                      ? `bg-gradient-to-r ${getPlanColor(plan)} hover:opacity-90 text-white border-0 after:shadow-none`
                       : ''
                   }`}
                   variant={isRecommended ? 'default' : isCurrent ? 'outline' : 'default'}

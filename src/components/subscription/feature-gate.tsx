@@ -101,7 +101,7 @@ export function FeatureGate({
           <Button
             size="lg"
             onClick={() => setUpgradeModalOpen(true)}
-            className="bg-gradient-to-r from-purple-500 to-pink-500"
+            className="bg-gradient-to-r from-purple-500 to-pink-500 text-white border-0 after:shadow-none"
           >
             {isZh ? '查看升级选项' : 'View Upgrade Options'}
           </Button>
