@@ -52,9 +52,8 @@ interface ReviewStats {
 }
 
 export default function InterpretationReviewPage() {
-  const { language } = useLanguage();
+  const { t } = useLanguage();
   const toast = useToast();
-  const isZh = language === 'zh';
 
   const [loading, setLoading] = useState(true);
   const [interpretations, setInterpretations] = useState<InterpretationData[]>([]);
@@ -106,7 +105,7 @@ export default function InterpretationReviewPage() {
       const result = await response.json() as { success: boolean; message?: string };
 
       if (result.success) {
-        toast.success(isZh ? '审核通过' : 'Approved');
+        toast.success(t('admin.interpretations.review.toast_approved'));
         fetchInterpretations();
         setSelectedInterpretation(null);
         setReviewNotes('');
@@ -115,13 +114,13 @@ export default function InterpretationReviewPage() {
       }
     } catch (error) {
       console.error('Failed to approve:', error);
-      toast.error(isZh ? '操作失败' : 'Failed');
+      toast.error(t('admin.interpretations.review.toast_operation_failed'));
     }
   };
 
   const handleRequestChanges = async () => {
     if (!selectedInterpretation || !reviewNotes) {
-      toast.error(isZh ? '请填写审核意见' : 'Please provide review notes');
+      toast.error(t('admin.interpretations.review.toast_provide_review_notes'));
       return;
     }
 
@@ -135,7 +134,7 @@ export default function InterpretationReviewPage() {
       const result = await response.json() as { success: boolean; message?: string };
 
       if (result.success) {
-        toast.success(isZh ? '已要求修改' : 'Changes requested');
+        toast.success(t('admin.interpretations.review.toast_changes_requested'));
         fetchInterpretations();
         setSelectedInterpretation(null);
         setReviewNotes('');
@@ -144,7 +143,7 @@ export default function InterpretationReviewPage() {
       }
     } catch (error) {
       console.error('Failed to request changes:', error);
-      toast.error(isZh ? '操作失败' : 'Failed');
+      toast.error(t('admin.interpretations.review.toast_operation_failed'));
     }
   };
 
@@ -160,7 +159,7 @@ export default function InterpretationReviewPage() {
       const result = await response.json() as { success: boolean; message?: string };
 
       if (result.success) {
-        toast.success(isZh ? '已发布' : 'Published');
+        toast.success(t('admin.interpretations.review.toast_published'));
         fetchInterpretations();
         setSelectedInterpretation(null);
       } else {
@@ -168,7 +167,7 @@ export default function InterpretationReviewPage() {
       }
     } catch (error) {
       console.error('Failed to publish:', error);
-      toast.error(isZh ? '操作失败' : 'Failed');
+      toast.error(t('admin.interpretations.review.toast_operation_failed'));
     }
   };
 
@@ -188,7 +187,7 @@ export default function InterpretationReviewPage() {
 
   const handleBatchAction = async () => {
     if (selectedIds.length === 0 || !batchAction) {
-      toast.error(isZh ? '请选择项目和操作' : 'Please select items and action');
+      toast.error(t('admin.interpretations.review.toast_select_items_and_action'));
       return;
     }
 
@@ -206,7 +205,7 @@ export default function InterpretationReviewPage() {
       const result = await response.json() as { success: boolean; affected?: number; message?: string };
 
       if (result.success) {
-        toast.success(isZh ? `成功处理 ${result.affected} 项` : `Successfully processed ${result.affected} items`);
+        toast.success(t('admin.interpretations.review.toast_batch_success').replace('{count}', String(result.affected)));
         setSelectedIds([]);
         setBatchAction('');
         setReviewNotes('');
@@ -216,7 +215,7 @@ export default function InterpretationReviewPage() {
       }
     } catch (error) {
       console.error('Failed to perform batch action:', error);
-      toast.error(isZh ? '批量操作失败' : 'Batch operation failed');
+      toast.error(t('admin.interpretations.review.toast_batch_failed'));
     }
   };
 
@@ -245,20 +244,18 @@ export default function InterpretationReviewPage() {
       if (result.success && result.results) {
         const { success, failed, total } = result.results;
         toast.success(
-          isZh
-            ? `批量生成完成：成功 ${success}/${total}，失败 ${failed}`
-            : `Batch generation completed: ${success}/${total} succeeded, ${failed} failed`
+          t('admin.interpretations.review.toast_batch_success').replace('{count}', `${success}/${total}`)
         );
         if (result.results.errors && result.results.errors.length > 0) {
           console.error('Generation errors:', result.results.errors);
         }
         fetchInterpretations();
       } else {
-        toast.error(result.message || (isZh ? '批量生成失败' : 'Batch generation failed'));
+        toast.error(result.message || t('admin.interpretations.review.toast_generation_failed'));
       }
     } catch (error) {
       console.error('Failed to generate batch:', error);
-      toast.error(isZh ? '批量生成失败' : 'Batch generation failed');
+      toast.error(t('admin.interpretations.review.toast_generation_failed'));
     } finally {
       setGenerating(false);
     }
@@ -267,13 +264,13 @@ export default function InterpretationReviewPage() {
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'published':
-        return <Badge className="bg-green-500 text-white"><CheckCircle className="w-3 h-3 mr-1" />已发布</Badge>;
+        return <Badge className="bg-green-500 text-white"><CheckCircle className="w-3 h-3 mr-1" />{t('admin.interpretations.review.badge_published')}</Badge>;
       case 'approved':
-        return <Badge className="bg-blue-500 text-white"><CheckCircle className="w-3 h-3 mr-1" />已审核</Badge>;
+        return <Badge className="bg-blue-500 text-white"><CheckCircle className="w-3 h-3 mr-1" />{t('admin.interpretations.review.badge_approved')}</Badge>;
       case 'reviewing':
-        return <Badge className="bg-yellow-500 text-white"><Clock className="w-3 h-3 mr-1" />审核中</Badge>;
+        return <Badge className="bg-yellow-500 text-white"><Clock className="w-3 h-3 mr-1" />{t('admin.interpretations.review.badge_reviewing')}</Badge>;
       case 'draft':
-        return <Badge variant="secondary"><Edit className="w-3 h-3 mr-1" />草稿</Badge>;
+        return <Badge variant="secondary"><Edit className="w-3 h-3 mr-1" />{t('admin.interpretations.review.badge_draft')}</Badge>;
       default:
         return <Badge variant="outline">{status}</Badge>;
     }
@@ -283,7 +280,7 @@ export default function InterpretationReviewPage() {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
         <div className="animate-pulse text-muted-foreground">
-          {isZh ? '加载中...' : 'Loading...'}
+          {t('admin.interpretations.review.loading')}
         </div>
       </div>
     );
@@ -295,21 +292,21 @@ export default function InterpretationReviewPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold">
-            {isZh ? '量表解读审核' : 'Interpretation Review'}
+            {t('admin.interpretations.review.title')}
           </h1>
           <p className="text-muted-foreground mt-1">
-            {isZh ? '审核和管理 AI 生成的量表解读内容' : 'Review and manage AI-generated scale interpretations'}
+            {t('admin.interpretations.review.description')}
           </p>
         </div>
         <div className="flex gap-2">
           <Button onClick={handleBatchGenerate} disabled={generating} variant="outline">
             <Zap className="w-4 h-4 mr-2" />
-            {generating ? (isZh ? '生成中...' : 'Generating...') : (isZh ? 'AI 批量生成' : 'AI Batch Generate')}
+            {generating ? t('admin.interpretations.review.generating') : t('admin.interpretations.review.ai_batch_generate')}
           </Button>
           <Link href="/admin/interpretations/create">
             <Button>
               <Edit className="w-4 h-4 mr-2" />
-              新建解读
+              {t('admin.interpretations.review.create_new')}
             </Button>
           </Link>
         </div>
@@ -319,7 +316,7 @@ export default function InterpretationReviewPage() {
       <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
         <Card>
           <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-medium">总数</CardTitle>
+            <CardTitle className="text-sm font-medium">{t('admin.interpretations.review.stats_total')}</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{stats.total}</div>
@@ -327,7 +324,7 @@ export default function InterpretationReviewPage() {
         </Card>
         <Card>
           <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-medium">草稿</CardTitle>
+            <CardTitle className="text-sm font-medium">{t('admin.interpretations.review.stats_draft')}</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-gray-600">{stats.draft}</div>
@@ -335,7 +332,7 @@ export default function InterpretationReviewPage() {
         </Card>
         <Card>
           <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-medium">审核中</CardTitle>
+            <CardTitle className="text-sm font-medium">{t('admin.interpretations.review.stats_reviewing')}</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-yellow-600">{stats.reviewing}</div>
@@ -343,7 +340,7 @@ export default function InterpretationReviewPage() {
         </Card>
         <Card>
           <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-medium">已审核</CardTitle>
+            <CardTitle className="text-sm font-medium">{t('admin.interpretations.review.stats_approved')}</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-blue-600">{stats.approved}</div>
@@ -351,7 +348,7 @@ export default function InterpretationReviewPage() {
         </Card>
         <Card>
           <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-medium">已发布</CardTitle>
+            <CardTitle className="text-sm font-medium">{t('admin.interpretations.review.stats_published')}</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-green-600">{stats.published}</div>
@@ -362,11 +359,11 @@ export default function InterpretationReviewPage() {
       {/* Filters */}
       <Tabs value={filter} onValueChange={setFilter}>
         <TabsList>
-          <TabsTrigger value="all">全部</TabsTrigger>
-          <TabsTrigger value="draft">草稿</TabsTrigger>
-          <TabsTrigger value="reviewing">审核中</TabsTrigger>
-          <TabsTrigger value="approved">已审核</TabsTrigger>
-          <TabsTrigger value="published">已发布</TabsTrigger>
+          <TabsTrigger value="all">{t('admin.interpretations.review.filter_all')}</TabsTrigger>
+          <TabsTrigger value="draft">{t('admin.interpretations.review.filter_draft')}</TabsTrigger>
+          <TabsTrigger value="reviewing">{t('admin.interpretations.review.filter_reviewing')}</TabsTrigger>
+          <TabsTrigger value="approved">{t('admin.interpretations.review.filter_approved')}</TabsTrigger>
+          <TabsTrigger value="published">{t('admin.interpretations.review.filter_published')}</TabsTrigger>
         </TabsList>
       </Tabs>
 
@@ -376,25 +373,25 @@ export default function InterpretationReviewPage() {
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-4">
-                <span className="font-semibold">已选择 {selectedIds.length} 项</span>
+                <span className="font-semibold">{t('admin.interpretations.review.selected_items').replace('{count}', String(selectedIds.length))}</span>
                 <select
                   value={batchAction}
                   onChange={(e) => setBatchAction(e.target.value)}
                   className="border rounded px-3 py-2"
                 >
-                  <option value="">选择操作</option>
-                  <option value="approve">批量审核通过</option>
-                  <option value="publish">批量发布</option>
-                  <option value="request-changes">批量要求修改</option>
-                  <option value="delete">批量删除</option>
+                  <option value="">{t('admin.interpretations.review.batch_action_select')}</option>
+                  <option value="approve">{t('admin.interpretations.review.batch_action_approve')}</option>
+                  <option value="publish">{t('admin.interpretations.review.batch_action_publish')}</option>
+                  <option value="request-changes">{t('admin.interpretations.review.batch_action_request_changes')}</option>
+                  <option value="delete">{t('admin.interpretations.review.batch_action_delete')}</option>
                 </select>
               </div>
               <div className="flex items-center space-x-2">
                 <Button variant="outline" onClick={() => setSelectedIds([])}>
-                  取消选择
+                  {t('admin.interpretations.review.cancel_selection')}
                 </Button>
                 <Button onClick={handleBatchAction} disabled={!batchAction}>
-                  执行操作
+                  {t('admin.interpretations.review.execute_action')}
                 </Button>
               </div>
             </div>
@@ -415,11 +412,11 @@ export default function InterpretationReviewPage() {
                 className="flex items-center"
               >
                 <CheckSquare className="w-4 h-4 mr-2" />
-                {selectedIds.length === interpretations.length ? '取消全选' : '全选'}
+                {selectedIds.length === interpretations.length ? t('admin.interpretations.review.deselect_all') : t('admin.interpretations.review.select_all')}
               </Button>
               {selectedIds.length > 0 && (
                 <span className="text-sm text-muted-foreground">
-                  已选 {selectedIds.length} 项
+                  {t('admin.interpretations.review.selected_count').replace('{count}', String(selectedIds.length))}
                 </span>
               )}
             </div>
@@ -428,7 +425,7 @@ export default function InterpretationReviewPage() {
           {interpretations.length === 0 ? (
             <Card>
               <CardContent className="p-6 text-center text-muted-foreground">
-                {isZh ? '暂无数据' : 'No data'}
+                {t('admin.interpretations.review.no_data')}
               </CardContent>
             </Card>
           ) : (
@@ -489,7 +486,7 @@ export default function InterpretationReviewPage() {
                   <div className="flex gap-2">
                     {getStatusBadge(selectedInterpretation.status)}
                     {selectedInterpretation.needsVerification && (
-                      <Badge variant="destructive">需要验证</Badge>
+                      <Badge variant="destructive">{t('admin.interpretations.review.needs_verification')}</Badge>
                     )}
                   </div>
                 </div>
@@ -516,9 +513,9 @@ export default function InterpretationReviewPage() {
                 {selectedInterpretation.status !== 'published' && (
                   <div className="space-y-4">
                     <div>
-                      <label className="text-sm font-medium">审核意见</label>
+                      <label className="text-sm font-medium">{t('admin.interpretations.review.review_notes_label')}</label>
                       <Textarea
-                        placeholder="请填写审核意见、修改建议或需要补充的内容..."
+                        placeholder={t('admin.interpretations.review.review_notes_placeholder')}
                         value={reviewNotes}
                         onChange={(e) => setReviewNotes(e.target.value)}
                         rows={4}
@@ -529,16 +526,16 @@ export default function InterpretationReviewPage() {
                     <div className="flex gap-2">
                       <Button onClick={handleApprove} className="bg-green-600">
                         <CheckCircle className="w-4 h-4 mr-2" />
-                        通过审核
+                        {t('admin.interpretations.review.approve_button')}
                       </Button>
                       <Button onClick={handleRequestChanges} variant="outline">
                         <MessageSquare className="w-4 h-4 mr-2" />
-                        需要修改
+                        {t('admin.interpretations.review.request_changes_button')}
                       </Button>
                       {selectedInterpretation.status === 'approved' && (
                         <Button onClick={handlePublish} className="bg-blue-600">
                           <Eye className="w-4 h-4 mr-2" />
-                          发布
+                          {t('admin.interpretations.review.publish_button')}
                         </Button>
                       )}
                     </div>
@@ -550,7 +547,7 @@ export default function InterpretationReviewPage() {
                   <Alert>
                     <AlertCircle className="h-4 w-4" />
                     <AlertDescription>
-                      <strong>之前的审核意见：</strong>
+                      <strong>{t('admin.interpretations.review.previous_review_notes')}</strong>
                       <p className="mt-1">{selectedInterpretation.reviewNotes}</p>
                     </AlertDescription>
                   </Alert>
@@ -560,7 +557,7 @@ export default function InterpretationReviewPage() {
           ) : (
             <Card>
               <CardContent className="p-12 text-center text-muted-foreground">
-                {isZh ? '请选择一个解读进行审核' : 'Select an interpretation to review'}
+                {t('admin.interpretations.review.select_to_review')}
               </CardContent>
             </Card>
           )}

@@ -90,11 +90,11 @@ export function AdminTicketDetail({ ticketId }: AdminTicketDetailProps) {
         setMessages(data.messages || []);
         setUpdateForm(prev => ({ ...prev, status: data.ticket.status }));
       } else {
-        setError(data.error || "加载工单失败");
+        setError(data.error || t('admin.tickets.load_failed'));
       }
     } catch (error) {
-      console.error("加载工单详情失败:", error);
-      setError("网络错误，请稍后重试");
+      console.error("Failed to load ticket details:", error);
+      setError(t('admin.tickets.network_error_retry'));
     } finally {
       setLoading(false);
     }
@@ -125,13 +125,13 @@ export function AdminTicketDetail({ ticketId }: AdminTicketDetailProps) {
       if (response.ok) {
         fetchTicketDetail();
         setUpdateForm(prev => ({ ...prev, adminNotes: "", responseMessage: "" }));
-        toast.success("工单更新成功！");
+        toast.success(t('admin.tickets.ticket_updated_successfully'));
       } else {
-        toast.error(data.error || "更新工单失败");
+        toast.error(data.error || t('admin.tickets.update_failed'));
       }
     } catch (error) {
-      console.error("更新工单错误:", error);
-      toast.error("网络错误，请稍后重试");
+      console.error("Error updating ticket:", error);
+      toast.error(t('admin.tickets.network_error_retry'));
     }
   };
 
@@ -148,11 +148,11 @@ export function AdminTicketDetail({ ticketId }: AdminTicketDetailProps) {
 
   const getStatusLabel = (status: string) => {
     const labels = {
-      open: "待处理",
-      in_progress: "处理中",
-      waiting_response: "等待回复",
-      resolved: "已解决",
-      closed: "已关闭"
+      open: t('admin.tickets.status_open'),
+      in_progress: t('admin.tickets.status_in_progress'),
+      waiting_response: t('admin.tickets.status_waiting_response'),
+      resolved: t('admin.tickets.status_resolved'),
+      closed: t('admin.tickets.status_closed')
     };
     return labels[status as keyof typeof labels] || status;
   };
@@ -173,7 +173,7 @@ export function AdminTicketDetail({ ticketId }: AdminTicketDetailProps) {
         <div className="min-h-[100vh] flex items-center justify-center">
           <div className="text-center">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900 mx-auto"></div>
-            <p className="mt-2 text-sm text-muted-foreground">加载中...</p>
+            <p className="mt-2 text-sm text-muted-foreground">{t('admin.loading')}</p>
           </div>
         </div>
       </div>
@@ -186,10 +186,10 @@ export function AdminTicketDetail({ ticketId }: AdminTicketDetailProps) {
         <div className="min-h-[100vh] flex items-center justify-center">
           <div className="text-center">
             <AlertTriangle className="w-12 h-12 mx-auto mb-4 text-red-500" />
-            <p className="text-lg font-medium mb-2">加载失败</p>
-            <p className="text-muted-foreground mb-4">{error || "工单不存在"}</p>
+            <p className="text-lg font-medium mb-2">{t('admin.tickets.load_failed')}</p>
+            <p className="text-muted-foreground mb-4">{error || t('admin.tickets.ticket_not_exist')}</p>
             <Button onClick={() => router.push("/admin/tickets")}>
-              返回工单列表
+              {t('admin.tickets.back_to_list')}
             </Button>
           </div>
         </div>
@@ -202,7 +202,7 @@ export function AdminTicketDetail({ ticketId }: AdminTicketDetailProps) {
       <div className="flex items-center justify-between">
         <Button variant="ghost" onClick={() => router.push("/admin/tickets")}>
           <ChevronLeft className="w-4 h-4 mr-2" />
-          返回工单列表
+          {t('admin.tickets.back_to_list')}
         </Button>
       </div>
 
@@ -214,7 +214,7 @@ export function AdminTicketDetail({ ticketId }: AdminTicketDetailProps) {
             <CardHeader>
               <CardTitle className="flex items-center space-x-2">
                 <Shield className="w-5 h-5" />
-                <span>工单 #{ticket.ticketNumber}</span>
+                <span>{t('admin.tickets.ticket_id', { ticketNumber: ticket.ticketNumber })}</span>
                 <Badge className={getStatusColor(ticket.status)}>
                   {getStatusLabel(ticket.status)}
                 </Badge>
@@ -225,23 +225,23 @@ export function AdminTicketDetail({ ticketId }: AdminTicketDetailProps) {
             </CardHeader>
             <CardContent className="space-y-4">
               <div>
-                <h4 className="font-semibold mb-2">工单主题</h4>
+                <h4 className="font-semibold mb-2">{t('admin.tickets.ticket_subject')}</h4>
                 <p className="text-sm">{ticket.subject}</p>
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <h4 className="font-semibold mb-2">请求类型</h4>
+                  <h4 className="font-semibold mb-2">{t('admin.tickets.request_type')}</h4>
                   <p className="text-sm text-muted-foreground">{ticket.requestType.replace('_', ' ')}</p>
                 </div>
                 <div>
-                  <h4 className="font-semibold mb-2">预期用途</h4>
+                  <h4 className="font-semibold mb-2">{t('admin.tickets.intended_use')}</h4>
                   <p className="text-sm text-muted-foreground">{ticket.intendedUse}</p>
                 </div>
               </div>
 
               <div>
-                <h4 className="font-semibold mb-2">项目描述</h4>
+                <h4 className="font-semibold mb-2">{t('admin.tickets.project_description')}</h4>
                 <p className="text-sm text-muted-foreground bg-gray-50 p-3 rounded">
                   {ticket.projectDescription}
                 </p>
@@ -249,11 +249,11 @@ export function AdminTicketDetail({ ticketId }: AdminTicketDetailProps) {
 
               <div className="grid grid-cols-2 gap-4 text-sm">
                 <div>
-                  <span className="font-medium">创建时间:</span>
+                  <span className="font-medium">{t('admin.tickets.created_time')}</span>
                   <p className="text-muted-foreground">{format(new Date(ticket.createdAt), "yyyy年MM月dd日 HH:mm")}</p>
                 </div>
                 <div>
-                  <span className="font-medium">最后更新:</span>
+                  <span className="font-medium">{t('admin.tickets.last_updated')}</span>
                   <p className="text-muted-foreground">{format(new Date(ticket.updatedAt), "yyyy年MM月dd日 HH:mm")}</p>
                 </div>
               </div>
@@ -263,7 +263,7 @@ export function AdminTicketDetail({ ticketId }: AdminTicketDetailProps) {
           {/* 消息历史 */}
           <Card>
             <CardHeader>
-              <CardTitle>消息历史</CardTitle>
+              <CardTitle>{t('admin.tickets.message_history')}</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
@@ -277,8 +277,8 @@ export function AdminTicketDetail({ ticketId }: AdminTicketDetailProps) {
                         <MessageSquare className="w-4 h-4" />
                         <span className="font-medium text-sm">{message.subject}</span>
                         <Badge variant="outline" className="text-xs">
-                          {message.messageType === 'admin_note' ? '管理员备注' :
-                            message.messageType === 'admin_response' ? '管理员回复' : '用户消息'}
+                          {message.messageType === 'admin_note' ? t('admin.tickets.message_admin_note') :
+                            message.messageType === 'admin_response' ? t('admin.tickets.message_admin_response') : t('admin.tickets.message_user_message')}
                         </Badge>
                       </div>
                       <span className="text-xs text-muted-foreground">
@@ -290,7 +290,7 @@ export function AdminTicketDetail({ ticketId }: AdminTicketDetailProps) {
                 )) : (
                   <div className="text-center py-8 text-muted-foreground">
                     <MessageSquare className="w-12 h-12 mx-auto mb-4 opacity-50" />
-                    <p>暂无消息记录</p>
+                    <p>{t('admin.tickets.no_messages')}</p>
                   </div>
                 )}
               </div>
@@ -305,21 +305,21 @@ export function AdminTicketDetail({ ticketId }: AdminTicketDetailProps) {
             <CardHeader>
               <CardTitle className="flex items-center space-x-2">
                 <User className="w-4 h-4" />
-                <span>申请用户</span>
+                <span>{t('admin.tickets.applicant_user')}</span>
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
               <div>
-                <span className="font-medium">姓名:</span>
+                <span className="font-medium">{t('admin.tickets.label_name')}</span>
                 <p className="text-sm text-muted-foreground">{ticket.userName}</p>
               </div>
               <div>
-                <span className="font-medium">邮箱:</span>
+                <span className="font-medium">{t('admin.tickets.label_email')}</span>
                 <p className="text-sm text-muted-foreground">{ticket.userEmail}</p>
               </div>
               <Button size="sm" variant="outline" className="w-full">
                 <Mail className="w-3 h-3 mr-2" />
-                联系用户
+                {t('admin.tickets.button_contact_user')}
               </Button>
             </CardContent>
           </Card>
@@ -327,19 +327,19 @@ export function AdminTicketDetail({ ticketId }: AdminTicketDetailProps) {
           {/* 量表信息 */}
           <Card>
             <CardHeader>
-              <CardTitle>相关量表</CardTitle>
+              <CardTitle>{t('admin.tickets.related_scale')}</CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
               <div>
-                <span className="font-medium">量表名称:</span>
+                <span className="font-medium">{t('admin.tickets.label_scale_name')}</span>
                 <p className="text-sm text-muted-foreground">{ticket.scaleName}</p>
               </div>
               <div>
-                <span className="font-medium">缩写:</span>
+                <span className="font-medium">{t('admin.tickets.label_abbreviation')}</span>
                 <p className="text-sm text-muted-foreground">{ticket.scaleAcronym}</p>
               </div>
               <Button size="sm" variant="outline" className="w-full">
-                查看量表详情
+                {t('admin.tickets.button_view_scale_details')}
               </Button>
             </CardContent>
           </Card>
@@ -349,27 +349,27 @@ export function AdminTicketDetail({ ticketId }: AdminTicketDetailProps) {
             <CardHeader>
               <CardTitle className="flex items-center space-x-2">
                 <Building className="w-4 h-4" />
-                <span>版权方</span>
+                <span>{t('admin.tickets.copyright_holder')}</span>
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
               <div>
-                <span className="font-medium">机构:</span>
+                <span className="font-medium">{t('admin.tickets.label_organization')}</span>
                 <p className="text-sm text-muted-foreground">{ticket.copyrightOrganization}</p>
               </div>
               <div>
-                <span className="font-medium">邮箱:</span>
+                <span className="font-medium">{t('admin.tickets.label_email')}</span>
                 <p className="text-sm text-muted-foreground">{ticket.copyrightEmail}</p>
               </div>
               {ticket.copyrightPhone && (
                 <div>
-                  <span className="font-medium">电话:</span>
+                  <span className="font-medium">{t('admin.tickets.label_phone')}</span>
                   <p className="text-sm text-muted-foreground">{ticket.copyrightPhone}</p>
                 </div>
               )}
               {ticket.copyrightWebsite && (
                 <div>
-                  <span className="font-medium">网站:</span>
+                  <span className="font-medium">{t('admin.tickets.label_website')}</span>
                   <a href={ticket.copyrightWebsite} target="_blank" rel="noopener noreferrer"
                     className="text-sm text-blue-600 hover:underline">
                     {ticket.copyrightWebsite}
@@ -380,12 +380,12 @@ export function AdminTicketDetail({ ticketId }: AdminTicketDetailProps) {
               <div className="flex space-x-2">
                 <Button size="sm" variant="outline" className="flex-1">
                   <Mail className="w-3 h-3 mr-1" />
-                  邮件
+                  {t('admin.tickets.button_email')}
                 </Button>
                 {ticket.copyrightPhone && (
                   <Button size="sm" variant="outline" className="flex-1">
                     <Phone className="w-3 h-3 mr-1" />
-                    电话
+                    {t('admin.tickets.button_phone')}
                   </Button>
                 )}
               </div>
@@ -395,28 +395,28 @@ export function AdminTicketDetail({ ticketId }: AdminTicketDetailProps) {
           {/* 工单管理 */}
           <Card>
             <CardHeader>
-              <CardTitle>工单管理</CardTitle>
+              <CardTitle>{t('admin.tickets.ticket_management')}</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div>
-                <Label>状态更新</Label>
+                <Label>{t('admin.tickets.label_status_update')}</Label>
                 <Select value={updateForm.status} onValueChange={(value) =>
                   setUpdateForm({ ...updateForm, status: value })}>
                   <SelectTrigger>
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="open">待处理</SelectItem>
-                    <SelectItem value="in_progress">处理中</SelectItem>
-                    <SelectItem value="waiting_response">等待回复</SelectItem>
-                    <SelectItem value="resolved">已解决</SelectItem>
-                    <SelectItem value="closed">已关闭</SelectItem>
+                    <SelectItem value="open">{t('admin.tickets.status_open')}</SelectItem>
+                    <SelectItem value="in_progress">{t('admin.tickets.status_in_progress')}</SelectItem>
+                    <SelectItem value="waiting_response">{t('admin.tickets.status_waiting_response')}</SelectItem>
+                    <SelectItem value="resolved">{t('admin.tickets.status_resolved')}</SelectItem>
+                    <SelectItem value="closed">{t('admin.tickets.status_closed')}</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
 
               <div>
-                <Label>管理员备注</Label>
+                <Label>{t('admin.tickets.label_admin_notes')}</Label>
                 <Textarea
                   value={updateForm.adminNotes}
                   onChange={(e) => setUpdateForm({ ...updateForm, adminNotes: e.target.value })}
@@ -426,7 +426,7 @@ export function AdminTicketDetail({ ticketId }: AdminTicketDetailProps) {
               </div>
 
               <div>
-                <Label>用户回复消息</Label>
+                <Label>{t('admin.tickets.label_user_reply_message')}</Label>
                 <Textarea
                   value={updateForm.responseMessage}
                   onChange={(e) => setUpdateForm({ ...updateForm, responseMessage: e.target.value })}
@@ -441,7 +441,7 @@ export function AdminTicketDetail({ ticketId }: AdminTicketDetailProps) {
                 disabled={!updateForm.status}
               >
                 <Send className="w-4 h-4 mr-2" />
-                更新工单
+                {t('admin.tickets.button_update_ticket')}
               </Button>
 
               <Separator />
@@ -453,7 +453,7 @@ export function AdminTicketDetail({ ticketId }: AdminTicketDetailProps) {
                   ) : (
                     <Clock className="w-4 h-4 text-gray-500" />
                   )}
-                  <span>版权方回复: {ticket.responseReceived ? "已收到" : "未收到"}</span>
+                  <span>{t('admin.tickets.copyright_response')} {ticket.responseReceived ? t('admin.tickets.response_received') : t('admin.tickets.response_not_received')}</span>
                 </div>
 
                 <div className="flex items-center space-x-2 text-sm">
@@ -462,7 +462,7 @@ export function AdminTicketDetail({ ticketId }: AdminTicketDetailProps) {
                   ) : (
                     <Clock className="w-4 h-4 text-gray-500" />
                   )}
-                  <span>许可授予: {ticket.licenseGranted ? "已授予" : "待授予"}</span>
+                  <span>{t('admin.tickets.license_granted')} {ticket.licenseGranted ? t('admin.tickets.license_granted_yes') : t('admin.tickets.license_pending')}</span>
                 </div>
               </div>
             </CardContent>

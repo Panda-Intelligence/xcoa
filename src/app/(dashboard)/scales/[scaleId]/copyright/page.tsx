@@ -99,13 +99,13 @@ export default function ScaleCopyrightPage({ params }: CopyrightPageProps) {
         window.open(mailtoUrl, '_blank');
         setContactDialogOpen(false);
 
-        toast.success('邮件模板已生成，请查看您的邮件客户端');
+        toast.success(t('copyright.email_template_generated'));
       } else {
-        toast.error(`联系请求失败: ${result.error}`);
+        toast.error(t('copyright.contact_request_failed') + `: ${result.error}`);
       }
     } catch (error) {
       console.error('Error submitting contact request:', error);
-      toast.error('提交联系请求时发生错误');
+      toast.error(t('copyright.submit_error'));
     }
   };
 
@@ -170,12 +170,12 @@ export default function ScaleCopyrightPage({ params }: CopyrightPageProps) {
               <Link href={`/scales/${scale.id}`}>
                 <Button variant="outline" size="sm">
                   <FileText className="w-4 h-4 mr-2" />
-                  查看量表详情
+                  {t('copyright.view_scale_details')}
                 </Button>
               </Link>
               <Link href={`/scales/${scale.id}/preview`}>
                 <Button variant="outline" size="sm">
-                  {t("scale_copyright.preview_scale")}
+                  {t('copyright.preview_scale')}
                 </Button>
               </Link>
             </div>
@@ -220,21 +220,21 @@ export default function ScaleCopyrightPage({ params }: CopyrightPageProps) {
                     <AlertCircle className="w-4 h-4 text-orange-600" />
                   )}
                   <span className="text-sm">
-                    {actions.canUseDirectly ? t("scale_copyright.can_use_directly") : t("scale_copyright.requires_permission")}
+                    {actions.canUseDirectly ? t('copyright.can_use_directly') : t('copyright.requires_permission')}
                   </span>
                 </div>
 
                 <div className="flex items-center space-x-2">
                   <DollarSign className="w-4 h-4 text-blue-600" />
                   <span className="text-sm">
-                    {copyright.license.typicalCost === 'FREE' ? t("scale_copyright.free") :
-                      copyright.license.typicalCost === 'PAID' ? t("scale_copyright.paid") : t("scale_copyright.consult_pricing")}
+                    {copyright.license.typicalCost === 'FREE' ? t('copyright.free') :
+                      copyright.license.typicalCost === 'PAID' ? t('copyright.paid') : t('copyright.consult_pricing')}
                   </span>
                 </div>
               </div>
 
               <div className="bg-blue-50 p-4 rounded-lg">
-                <h4 className="font-medium mb-2 text-blue-900">{t("scale_copyright.usage_guidelines")}</h4>
+                <h4 className="font-medium mb-2 text-blue-900">{t('copyright.usage_guidelines')}</h4>
                 <p className="text-sm text-blue-800">
                   {copyright.license.usageGuidelines}
                 </p>
@@ -245,7 +245,7 @@ export default function ScaleCopyrightPage({ params }: CopyrightPageProps) {
           {/* 版权声明 */}
           <Card>
             <CardHeader>
-              <CardTitle>版权声明</CardTitle>
+              <CardTitle>{t('copyright.copyright_statement')}</CardTitle>
             </CardHeader>
             <CardContent>
               <p className="text-sm bg-gray-50 p-4 rounded border-l-4 border-gray-300">
@@ -260,7 +260,7 @@ export default function ScaleCopyrightPage({ params }: CopyrightPageProps) {
               <CardHeader>
                 <CardTitle className="flex items-center space-x-2">
                   <Building className="w-5 h-5" />
-                  <span>版权方联系信息</span>
+                  <span>{t('copyright.copyright_contact_info_title')}</span>
                 </CardTitle>
                 <CardDescription>
                   {copyright.contact.organization}
@@ -273,7 +273,7 @@ export default function ScaleCopyrightPage({ params }: CopyrightPageProps) {
                     <Button variant="outline" asChild className="justify-start">
                       <a href={`mailto:${copyright.contact.email}`}>
                         <Mail className="w-4 h-4 mr-2" />
-                        邮箱联系
+                        {t('copyright.email_contact')}
                       </a>
                     </Button>
                   )}
@@ -282,7 +282,7 @@ export default function ScaleCopyrightPage({ params }: CopyrightPageProps) {
                     <Button variant="outline" asChild className="justify-start">
                       <a href={`tel:${copyright.contact.phone}`}>
                         <Phone className="w-4 h-4 mr-2" />
-                        电话联系
+                        {t('copyright.phone_contact')}
                       </a>
                     </Button>
                   )}
@@ -291,7 +291,7 @@ export default function ScaleCopyrightPage({ params }: CopyrightPageProps) {
                     <Button variant="outline" asChild className="justify-start">
                       <a href={copyright.contact.website} target="_blank" rel="noopener noreferrer">
                         <Globe className="w-4 h-4 mr-2" />
-                        官方网站
+                        {t('copyright.official_website')}
                         <ExternalLink className="w-3 h-3 ml-2" />
                       </a>
                     </Button>
@@ -303,9 +303,9 @@ export default function ScaleCopyrightPage({ params }: CopyrightPageProps) {
                   <div className="border-t pt-4">
                     <div className="flex items-center justify-between">
                       <div>
-                        <h4 className="font-medium">专业联系服务</h4>
+                        <h4 className="font-medium">{t('copyright.professional_contact_service')}</h4>
                         <p className="text-sm text-muted-foreground">
-                          通过 Open eCOA 平台发起专业的许可联系请求
+                          {t('copyright.professional_contact_desc')}
                         </p>
                       </div>
 
@@ -313,50 +313,50 @@ export default function ScaleCopyrightPage({ params }: CopyrightPageProps) {
                         <DialogTrigger asChild>
                           <Button>
                             <Send className="w-4 h-4 mr-2" />
-                            发起联系
+                            {t('copyright.initiate_contact')}
                           </Button>
                         </DialogTrigger>
 
                         <DialogContent className="max-w-2xl">
                           <DialogHeader>
-                            <DialogTitle>联系版权方</DialogTitle>
+                            <DialogTitle>{t('copyright.contact_copyright_holder')}</DialogTitle>
                             <DialogDescription>
-                              为 {scale.name} ({scale.acronym}) 申请使用许可
+                              {t('copyright.contact_copyright_for', { scaleName: scale.name, scaleAcronym: scale.acronym })}
                             </DialogDescription>
                           </DialogHeader>
 
                           <div className="space-y-4">
                             <div className="grid grid-cols-2 gap-4">
                               <div>
-                                <Label>请求类型</Label>
+                                <Label>{t('copyright.request_type_label')}</Label>
                                 <Select value={contactForm.requestType} onValueChange={(value) =>
                                   setContactForm(prev => ({ ...prev, requestType: value }))}>
                                   <SelectTrigger>
                                     <SelectValue />
                                   </SelectTrigger>
                                   <SelectContent>
-                                    <SelectItem value="license_inquiry">许可咨询</SelectItem>
-                                    <SelectItem value="usage_request">使用申请</SelectItem>
-                                    <SelectItem value="pricing_info">价格咨询</SelectItem>
-                                    <SelectItem value="support">技术支持</SelectItem>
-                                    <SelectItem value="other">其他</SelectItem>
+                                    <SelectItem value="license_inquiry">{t('copyright.license_inquiry')}</SelectItem>
+                                    <SelectItem value="usage_request">{t('copyright.usage_request')}</SelectItem>
+                                    <SelectItem value="pricing_info">{t('copyright.pricing_info')}</SelectItem>
+                                    <SelectItem value="support">{t('copyright.technical_support')}</SelectItem>
+                                    <SelectItem value="other">{t('copyright.other')}</SelectItem>
                                   </SelectContent>
                                 </Select>
                               </div>
 
                               <div>
-                                <Label>预期用途</Label>
+                                <Label>{t('copyright.intended_use_label')}</Label>
                                 <Select value={contactForm.intendedUse} onValueChange={(value) =>
                                   setContactForm(prev => ({ ...prev, intendedUse: value }))}>
                                   <SelectTrigger>
                                     <SelectValue />
                                   </SelectTrigger>
                                   <SelectContent>
-                                    <SelectItem value="clinical">临床使用</SelectItem>
-                                    <SelectItem value="research">科研用途</SelectItem>
-                                    <SelectItem value="education">教育培训</SelectItem>
-                                    <SelectItem value="commercial">商业用途</SelectItem>
-                                    <SelectItem value="personal">个人使用</SelectItem>
+                                    <SelectItem value="clinical">{t('copyright.clinical_use')}</SelectItem>
+                                    <SelectItem value="research">{t('copyright.research_use')}</SelectItem>
+                                    <SelectItem value="education">{t('copyright.education_use')}</SelectItem>
+                                    <SelectItem value="commercial">{t('copyright.commercial_use')}</SelectItem>
+                                    <SelectItem value="personal">{t('copyright.personal_use')}</SelectItem>
                                   </SelectContent>
                                 </Select>
                               </div>
@@ -364,17 +364,17 @@ export default function ScaleCopyrightPage({ params }: CopyrightPageProps) {
 
                             <div className="grid grid-cols-2 gap-4">
                               <div>
-                                <Label>联系人姓名 *</Label>
+                                <Label>{t('copyright.contact_name_label')}</Label>
                                 <Input
                                   value={contactForm.contactName}
                                   onChange={(e) => setContactForm(prev => ({ ...prev, contactName: e.target.value }))}
-                                  placeholder="您的姓名"
+                                  placeholder={t('copyright.your_name')}
                                   required
                                 />
                               </div>
 
                               <div>
-                                <Label>联系邮箱 *</Label>
+                                <Label>{t('copyright.contact_email_label')}</Label>
                                 <Input
                                   type="email"
                                   value={contactForm.contactEmail}
@@ -387,16 +387,16 @@ export default function ScaleCopyrightPage({ params }: CopyrightPageProps) {
 
                             <div className="grid grid-cols-2 gap-4">
                               <div>
-                                <Label>机构名称</Label>
+                                <Label>{t('copyright.organization_name_label')}</Label>
                                 <Input
                                   value={contactForm.organizationName}
                                   onChange={(e) => setContactForm(prev => ({ ...prev, organizationName: e.target.value }))}
-                                  placeholder="您的机构名称"
+                                  placeholder={t('copyright.your_organization')}
                                 />
                               </div>
 
                               <div>
-                                <Label>联系电话 (可选)</Label>
+                                <Label>{t('copyright.contact_phone_label')}</Label>
                                 <Input
                                   value={contactForm.contactPhone}
                                   onChange={(e) => setContactForm(prev => ({ ...prev, contactPhone: e.target.value }))}
@@ -406,11 +406,11 @@ export default function ScaleCopyrightPage({ params }: CopyrightPageProps) {
                             </div>
 
                             <div>
-                              <Label>详细说明</Label>
+                              <Label>{t('copyright.detailed_description_label')}</Label>
                               <Textarea
                                 value={contactForm.message}
                                 onChange={(e) => setContactForm(prev => ({ ...prev, message: e.target.value }))}
-                                placeholder="请详细说明您的使用需求、项目背景和其他相关信息..."
+                                placeholder={t('copyright.detailed_description_placeholder')}
                                 className="min-h-[100px]"
                               />
                             </div>
@@ -418,23 +418,23 @@ export default function ScaleCopyrightPage({ params }: CopyrightPageProps) {
                             <div className="bg-yellow-50 p-3 rounded border border-yellow-200">
                               <div className="flex items-center space-x-2 text-yellow-800">
                                 <Clock className="w-4 h-4" />
-                                <span className="text-sm font-medium">预期回复时间: 1-5个工作日</span>
+                                <span className="text-sm font-medium">{t('copyright.expected_response_time_label')}</span>
                               </div>
                               <p className="text-xs text-yellow-700 mt-1">
-                                我们会自动为您生成专业的联系邮件，您可以直接发送给版权方
+                                {t('copyright.email_template_notice')}
                               </p>
                             </div>
 
                             <div className="flex justify-end space-x-2">
                               <Button variant="outline" onClick={() => setContactDialogOpen(false)}>
-                                取消
+                                {t('copyright.cancel')}
                               </Button>
                               <Button
                                 onClick={handleContactSubmit}
                                 disabled={!contactForm.contactName || !contactForm.contactEmail}
                               >
                                 <Send className="w-4 h-4 mr-2" />
-                                生成联系邮件
+                                {t('copyright.generate_contact_email')}
                               </Button>
                             </div>
                           </div>
@@ -450,7 +450,7 @@ export default function ScaleCopyrightPage({ params }: CopyrightPageProps) {
           {/* 行动建议 */}
           <Card>
             <CardHeader>
-              <CardTitle>下一步行动</CardTitle>
+              <CardTitle>{t('copyright.next_actions')}</CardTitle>
             </CardHeader>
 
             <CardContent>
@@ -458,21 +458,21 @@ export default function ScaleCopyrightPage({ params }: CopyrightPageProps) {
                 <div className="space-y-3">
                   <div className="flex items-center space-x-2 text-green-600">
                     <CheckCircle className="w-5 h-5" />
-                    <span className="font-medium">该量表可以直接使用</span>
+                    <span className="font-medium">{t('copyright.can_use_directly_msg')}</span>
                   </div>
                   <p className="text-sm text-muted-foreground">
-                    您可以在遵守版权声明的前提下直接使用该量表，无需额外许可。
+                    {t('copyright.can_use_directly_desc')}
                   </p>
                   <div className="flex space-x-2">
                     <Link href={`/scales/${scale.id}`}>
                       <Button>
                         <FileText className="w-4 h-4 mr-2" />
-                        查看量表详情
+                        {t('copyright.view_scale_details')}
                       </Button>
                     </Link>
                     <Link href={`/scales/${scale.id}/download`}>
                       <Button variant="outline">
-                        下载量表
+                        {t('copyright.download_scale')}
                       </Button>
                     </Link>
                   </div>
@@ -481,19 +481,19 @@ export default function ScaleCopyrightPage({ params }: CopyrightPageProps) {
                 <div className="space-y-3">
                   <div className="flex items-center space-x-2 text-orange-600">
                     <AlertCircle className="w-5 h-5" />
-                    <span className="font-medium">使用前需要获得许可</span>
+                    <span className="font-medium">{t('copyright.needs_permission_msg')}</span>
                   </div>
                   <p className="text-sm text-muted-foreground">
-                    请联系版权方获得使用许可，我们建议您详细说明使用目的和项目背景。
+                    {t('copyright.needs_permission_desc')}
                   </p>
 
                   <div className="bg-blue-50 p-4 rounded-lg">
-                    <h4 className="font-medium text-blue-900 mb-2">联系建议</h4>
+                    <h4 className="font-medium text-blue-900 mb-2">{t('copyright.contact_suggestions')}</h4>
                     <ul className="text-sm text-blue-800 space-y-1">
-                      <li>• 详细说明您的使用目的和项目背景</li>
-                      <li>• 提供您的专业机构信息和联系方式</li>
-                      <li>• 询问具体的许可要求和可能的费用</li>
-                      <li>• 了解许可的有效期和使用范围限制</li>
+                      <li>• {t('copyright.contact_tips_list.0')}</li>
+                      <li>• {t('copyright.contact_tips_list.1')}</li>
+                      <li>• {t('copyright.contact_tips_list.2')}</li>
+                      <li>• {t('copyright.contact_tips_list.3')}</li>
                     </ul>
                   </div>
                 </div>
@@ -504,29 +504,29 @@ export default function ScaleCopyrightPage({ params }: CopyrightPageProps) {
           {/* 常见问题 */}
           <Card>
             <CardHeader>
-              <CardTitle>常见问题</CardTitle>
+              <CardTitle>{t('copyright.faq_title')}</CardTitle>
             </CardHeader>
 
             <CardContent>
               <div className="space-y-4">
                 <div>
-                  <h4 className="font-medium mb-1">Q: 学术研究使用是否需要付费？</h4>
+                  <h4 className="font-medium mb-1">{t('copyright.faq_academic_q')}</h4>
                   <p className="text-sm text-muted-foreground">
-                    A: 大多数量表对学术研究提供免费或优惠许可，具体需要联系版权方确认。
+                    {t('copyright.faq_academic_a')}
                   </p>
                 </div>
 
                 <div>
-                  <h4 className="font-medium mb-1">Q: 商业用途的许可费用大概是多少？</h4>
+                  <h4 className="font-medium mb-1">{t('copyright.faq_commercial_q')}</h4>
                   <p className="text-sm text-muted-foreground">
-                    A: 费用因量表和使用范围而异，从数百到数万元不等，建议直接咨询版权方。
+                    {t('copyright.faq_commercial_a')}
                   </p>
                 </div>
 
                 <div>
-                  <h4 className="font-medium mb-1">Q: 许可申请通常需要多长时间？</h4>
+                  <h4 className="font-medium mb-1">{t('copyright.faq_timeline_q')}</h4>
                   <p className="text-sm text-muted-foreground">
-                    A: 一般1-5个工作日收到回复，复杂的商业许可可能需要2-4周。
+                    {t('copyright.faq_timeline_a')}
                   </p>
                 </div>
               </div>

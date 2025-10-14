@@ -20,6 +20,7 @@ import { useRouter } from "next/navigation";
 import { generateInvoicePDF } from "@/utils/pdf-generator";
 import { useToast } from "@/hooks/useToast";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
+import { useLanguage } from "@/hooks/useLanguage";
 
 interface Invoice {
   id: string;
@@ -48,6 +49,7 @@ interface AdminInvoiceDetailProps {
 }
 
 export function AdminInvoiceDetail({ invoiceId }: AdminInvoiceDetailProps) {
+  const { t } = useLanguage();
   const router = useRouter();
   const toast = useToast();
   const [invoice, setInvoice] = useState<Invoice | null>(null);
@@ -64,15 +66,15 @@ export function AdminInvoiceDetail({ invoiceId }: AdminInvoiceDetailProps) {
       if (data.success) {
         setInvoice(data.invoice);
       } else {
-        setError(data.error || "加载发票失败");
+        setError(data.error || t('admin.invoices.detail.load_failed'));
       }
     } catch (error) {
-      console.error("加载发票详情失败:", error);
-      setError("网络错误，请稍后重试");
+      console.error("Failed to load invoice:", error);
+      setError(t('admin.invoices.detail.network_error'));
     } finally {
       setLoading(false);
     }
-  }, [invoiceId]);
+  }, [invoiceId, t]);
 
   useEffect(() => {
     fetchInvoiceDetail();
@@ -92,13 +94,13 @@ export function AdminInvoiceDetail({ invoiceId }: AdminInvoiceDetailProps) {
 
       if (response.ok) {
         setInvoice({ ...invoice, status });
-        toast.success("发票状态更新成功！");
+        toast.success(t('admin.invoices.detail.status_updated'));
       } else {
-        toast.error(data.error || "更新发票状态失败");
+        toast.error(data.error || t('admin.invoices.detail.status_update_failed'));
       }
     } catch (error) {
-      console.error("更新发票状态错误:", error);
-      toast.error("网络错误，请稍后重试");
+      console.error("Error updating invoice status:", error);
+      toast.error(t('admin.invoices.detail.network_error'));
     }
   };
 
@@ -113,14 +115,14 @@ export function AdminInvoiceDetail({ invoiceId }: AdminInvoiceDetailProps) {
       const data = await response.json();
 
       if (response.ok) {
-        toast.success("发票删除成功！");
+        toast.success(t('admin.invoices.detail.deleted'));
         router.push("/admin/invoices");
       } else {
-        toast.error(data.error || "删除发票失败");
+        toast.error(data.error || t('admin.invoices.detail.delete_failed'));
       }
     } catch (error) {
-      console.error("删除发票错误:", error);
-      toast.error("网络错误，请稍后重试");
+      console.error("Error deleting invoice:", error);
+      toast.error(t('admin.invoices.detail.network_error'));
     }
   };
 
@@ -130,8 +132,8 @@ export function AdminInvoiceDetail({ invoiceId }: AdminInvoiceDetailProps) {
     try {
       await generateInvoicePDF(invoice);
     } catch (error) {
-      console.error("PDF生成失败:", error);
-      toast.error("PDF生成失败，请稍后重试");
+      console.error("PDF generation failed:", error);
+      toast.error(t('admin.invoices.detail.pdf_failed'));
     }
   };
 
@@ -148,11 +150,11 @@ export function AdminInvoiceDetail({ invoiceId }: AdminInvoiceDetailProps) {
 
   const getStatusLabel = (status: string) => {
     const labels = {
-      draft: "草稿",
-      sent: "已发送",
-      paid: "已支付",
-      overdue: "逾期",
-      cancelled: "已取消"
+      draft: t('admin.invoices.status_draft'),
+      sent: t('admin.invoices.status_sent'),
+      paid: t('admin.invoices.status_paid'),
+      overdue: t('admin.invoices.status_overdue'),
+      cancelled: t('admin.invoices.status_cancelled')
     };
     return labels[status as keyof typeof labels] || status;
   };
@@ -176,7 +178,7 @@ export function AdminInvoiceDetail({ invoiceId }: AdminInvoiceDetailProps) {
         <div className="min-h-[100vh] flex items-center justify-center">
           <div className="text-center">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900 mx-auto"></div>
-            <p className="mt-2 text-sm text-muted-foreground">加载中...</p>
+            <p className="mt-2 text-sm text-muted-foreground">{t('admin.invoices.detail.loading')}</p>
           </div>
         </div>
       </div>
@@ -189,10 +191,10 @@ export function AdminInvoiceDetail({ invoiceId }: AdminInvoiceDetailProps) {
         <div className="min-h-[100vh] flex items-center justify-center">
           <div className="text-center">
             <AlertCircle className="w-12 h-12 mx-auto mb-4 text-red-500" />
-            <p className="text-lg font-medium mb-2">加载失败</p>
-            <p className="text-muted-foreground mb-4">{error || "发票不存在"}</p>
+            <p className="text-lg font-medium mb-2">{t('admin.invoices.detail.load_error_title')}</p>
+            <p className="text-muted-foreground mb-4">{error || t('admin.invoices.detail.not_found')}</p>
             <Button onClick={() => router.push("/admin/invoices")}>
-              返回发票列表
+              {t('admin.invoices.detail.back_to_list')}
             </Button>
           </div>
         </div>
@@ -205,16 +207,16 @@ export function AdminInvoiceDetail({ invoiceId }: AdminInvoiceDetailProps) {
       <div className="flex items-center justify-between">
         <Button variant="ghost" onClick={() => router.push("/admin/invoices")}>
           <ChevronLeft className="w-4 h-4 mr-2" />
-          返回发票列表
+          {t('admin.invoices.detail.back_to_list')}
         </Button>
         <div className="flex space-x-2">
           <Button variant="outline" onClick={handleDownloadPDF}>
             <Printer className="w-4 h-4 mr-2" />
-            打印发票
+            {t('admin.invoices.detail.print')}
           </Button>
           <Button onClick={handleDownloadPDF}>
             <Download className="w-4 h-4 mr-2" />
-            下载PDF
+            {t('admin.invoices.detail.download_pdf')}
           </Button>
         </div>
       </div>
@@ -261,7 +263,7 @@ export function AdminInvoiceDetail({ invoiceId }: AdminInvoiceDetailProps) {
               </div>
             </div>
             <div>
-              <h3 className="font-semibold mb-2">Invoice Status:</h3>
+              <h3 className="font-semibold mb-2">{t('admin.invoices.detail.invoice_status_label')}</h3>
               <div className="flex items-center space-x-2 mb-4">
                 <Badge className={getStatusColor(invoice.status)}>
                   {getStatusIcon(invoice.status)}
@@ -271,7 +273,7 @@ export function AdminInvoiceDetail({ invoiceId }: AdminInvoiceDetailProps) {
 
               {/* Admin状态控制 */}
               <div className="space-y-2">
-                <Label>更改状态:</Label>
+                <Label>{t('admin.invoices.detail.change_status_label')}</Label>
                 <Select
                   value={invoice.status}
                   onValueChange={updateInvoiceStatus}
@@ -280,11 +282,11 @@ export function AdminInvoiceDetail({ invoiceId }: AdminInvoiceDetailProps) {
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="draft">草稿</SelectItem>
-                    <SelectItem value="sent">已发送</SelectItem>
-                    <SelectItem value="paid">已支付</SelectItem>
-                    <SelectItem value="overdue">逾期</SelectItem>
-                    <SelectItem value="cancelled">已取消</SelectItem>
+                    <SelectItem value="draft">{t('admin.invoices.status_draft')}</SelectItem>
+                    <SelectItem value="sent">{t('admin.invoices.status_sent')}</SelectItem>
+                    <SelectItem value="paid">{t('admin.invoices.status_paid')}</SelectItem>
+                    <SelectItem value="overdue">{t('admin.invoices.status_overdue')}</SelectItem>
+                    <SelectItem value="cancelled">{t('admin.invoices.status_cancelled')}</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -343,7 +345,7 @@ export function AdminInvoiceDetail({ invoiceId }: AdminInvoiceDetailProps) {
                 onClick={() => setDeleteConfirmOpen(true)}
               >
                 <Trash2 className="w-4 h-4 mr-2" />
-                删除发票
+                {t('admin.invoices.detail.delete_invoice')}
               </Button>
             )}
           </div>
@@ -354,10 +356,10 @@ export function AdminInvoiceDetail({ invoiceId }: AdminInvoiceDetailProps) {
       <ConfirmDialog
         open={deleteConfirmOpen}
         onOpenChange={setDeleteConfirmOpen}
-        title="删除发票"
-        description="确定要删除这张发票吗？此操作不可逆转。"
-        confirmText="删除"
-        cancelText="取消"
+        title={t('admin.invoices.detail.delete_confirm_title')}
+        description={t('admin.invoices.detail.delete_confirm_description')}
+        confirmText={t('admin.invoices.button_delete')}
+        cancelText={t('common.cancel')}
         onConfirm={deleteInvoice}
         variant="destructive"
       />

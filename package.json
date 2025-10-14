@@ -22,7 +22,8 @@
     "crawl": "ts-node scripts/crawlee/html.ts",
     "crawl:4at": "ts-node scripts/crawlee/4at.ts",
     "check:stripe": "node scripts/check-stripe-config.js",
-    "interpretation:generate": "tsx --tsconfig scripts/tsconfig.json scripts/interpretation/generate-batch.ts"
+    "interpretation:generate": "tsx --tsconfig scripts/tsconfig.json scripts/interpretation/generate-batch.ts",
+    "i18n:check": "tsx scripts/i18n-check.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.65.0",

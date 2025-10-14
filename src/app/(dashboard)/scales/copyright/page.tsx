@@ -124,7 +124,7 @@ export default function CopyrightPage() {
       <PageHeader
         items={[
           { href: "/scales", label: "Dashboard" },
-          { href: "/scales/copyright", label: "版权服务" }
+          { href: "/scales/copyright", label: t('copyright.service_title') }
         ]}
       />
 
@@ -133,9 +133,9 @@ export default function CopyrightPage() {
           <div className="flex-shrink-0 border-b bg-background">
             <div className="p-4">
               <TabsList className="grid w-full grid-cols-3">
-                <TabsTrigger value="batch-check">批量许可检查</TabsTrigger>
-                <TabsTrigger value="tickets">我的工单</TabsTrigger>
-                <TabsTrigger value="guidelines">使用指南</TabsTrigger>
+                <TabsTrigger value="batch-check">{t('copyright.batch_check')}</TabsTrigger>
+                <TabsTrigger value="tickets">{t('copyright.my_contact_tickets')}</TabsTrigger>
+                <TabsTrigger value="guidelines">{t('copyright.guidelines_tab')}</TabsTrigger>
               </TabsList>
             </div>
           </div>
@@ -148,10 +148,10 @@ export default function CopyrightPage() {
               <CardHeader>
                 <CardTitle className="flex items-center space-x-2">
                   <Shield className="w-5 h-5" />
-                  <span>批量许可检查</span>
+                  <span>{t('copyright.batch_check')}</span>
                 </CardTitle>
                 <CardDescription>
-                  一次性检查多个量表的使用许可状态
+                  {t('copyright.batch_check_description')}
                 </CardDescription>
               </CardHeader>
 
@@ -159,21 +159,21 @@ export default function CopyrightPage() {
                 {/* 添加量表 */}
                 <div className="flex space-x-2">
                   <Input
-                    placeholder="搜索要检查的量表..."
+                    placeholder={t('copyright.search_scales_placeholder')}
                     value={scaleQuery}
                     onChange={(e) => setScaleQuery(e.target.value)}
                     onKeyPress={(e) => e.key === 'Enter' && searchScales()}
                   />
                   <Button onClick={searchScales}>
                     <Search className="w-4 h-4 mr-2" />
-                    搜索
+                    {t('copyright.search')}
                   </Button>
                 </div>
 
                 {/* 搜索结果 */}
                 {searchResults.length > 0 && (
                   <div className="border rounded-lg p-3">
-                    <div className="text-sm font-medium mb-2">搜索结果 (点击添加):</div>
+                    <div className="text-sm font-medium mb-2">{t('copyright.search_results_click')}</div>
                     <div className="space-y-1">
                       {searchResults.map((result) => (
                         <button
@@ -186,7 +186,7 @@ export default function CopyrightPage() {
                           <span className="font-medium">{result.name}</span>
                           <span className="text-muted-foreground ml-2">({result.acronym})</span>
                           {scaleIds.includes(result.id) && (
-                            <Badge variant="secondary" className="ml-2">已添加</Badge>
+                            <Badge variant="secondary" className="ml-2">{t('copyright.added')}</Badge>
                           )}
                         </button>
                       ))}
@@ -197,7 +197,7 @@ export default function CopyrightPage() {
                 {/* 已选择的量表 */}
                 {scaleIds.length > 0 && (
                   <div className="space-y-2">
-                    <div className="text-sm font-medium">已选择的量表 ({scaleIds.length}):</div>
+                    <div className="text-sm font-medium">{t('copyright.selected_scales', { count: scaleIds.length })}</div>
                     <div className="flex flex-wrap gap-2">
                       {scaleIds.map((scaleId) => (
                         <Badge key={scaleId} variant="outline" className="pr-1">
@@ -218,35 +218,35 @@ export default function CopyrightPage() {
                 {/* 检查参数 */}
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label htmlFor="intended-use" className="text-sm font-medium">预期用途</label>
+                    <label htmlFor="intended-use" className="text-sm font-medium">{t('copyright.intended_use_label')}</label>
                     <select
                       id="intended-use"
                       value={checkParams.intendedUse}
                       onChange={(e) => setCheckParams(prev => ({ ...prev, intendedUse: e.target.value }))}
                       className="w-full mt-1 px-3 py-2 border rounded-md text-sm"
                     >
-                      <option value="clinical">临床使用</option>
-                      <option value="research">科研用途</option>
-                      <option value="education">教育培训</option>
-                      <option value="commercial">商业用途</option>
-                      <option value="personal">个人使用</option>
+                      <option value="clinical">{t('copyright.clinical_use')}</option>
+                      <option value="research">{t('copyright.research_use')}</option>
+                      <option value="education">{t('copyright.education_use')}</option>
+                      <option value="commercial">{t('copyright.commercial_use')}</option>
+                      <option value="personal">{t('copyright.personal_use')}</option>
                     </select>
                   </div>
 
                   <div>
-                    <label htmlFor="organization-type" className="text-sm font-medium">机构类型</label>
+                    <label htmlFor="organization-type" className="text-sm font-medium">{t('copyright.organization_type_label')}</label>
                     <select
                       id="organization-type"
                       value={checkParams.organizationType}
                       onChange={(e) => setCheckParams(prev => ({ ...prev, organizationType: e.target.value }))}
                       className="w-full mt-1 px-3 py-2 border rounded-md text-sm"
                     >
-                      <option value="hospital">医院</option>
-                      <option value="clinic">诊所</option>
-                      <option value="university">大学</option>
-                      <option value="research_institute">研究机构</option>
-                      <option value="pharmaceutical">制药公司</option>
-                      <option value="individual">个人</option>
+                      <option value="hospital">{t('copyright.hospital')}</option>
+                      <option value="clinic">{t('copyright.clinic')}</option>
+                      <option value="university">{t('copyright.university')}</option>
+                      <option value="research_institute">{t('copyright.research_institute')}</option>
+                      <option value="pharmaceutical">{t('copyright.pharmaceutical_company')}</option>
+                      <option value="individual">{t('copyright.individual')}</option>
                     </select>
                   </div>
                 </div>
@@ -257,7 +257,7 @@ export default function CopyrightPage() {
                   disabled={scaleIds.length === 0 || loading}
                   className="w-full"
                 >
-                  {loading ? '检查中...' : `检查 ${scaleIds.length} 个量表的许可状态`}
+                  {loading ? t('copyright.checking') : t('copyright.check_licenses_button', { count: scaleIds.length })}
                 </Button>
               </CardContent>
             </Card>
@@ -266,7 +266,7 @@ export default function CopyrightPage() {
             {summary && (
               <Card>
                 <CardHeader>
-                  <CardTitle>许可检查结果</CardTitle>
+                  <CardTitle>{t('copyright.license_check_results')}</CardTitle>
                 </CardHeader>
 
                 <CardContent className="space-y-4">
@@ -277,7 +277,7 @@ export default function CopyrightPage() {
                         <CheckCircle className="w-4 h-4 text-green-600" />
                         <div>
                           <div className="font-semibold">{summary.canUseDirectly}</div>
-                          <div className="text-xs text-muted-foreground">可直接使用</div>
+                          <div className="text-xs text-muted-foreground">{t('copyright.can_use_directly_count')}</div>
                         </div>
                       </div>
                     </Card>
@@ -287,7 +287,7 @@ export default function CopyrightPage() {
                         <AlertCircle className="w-4 h-4 text-orange-600" />
                         <div>
                           <div className="font-semibold">{summary.needsContact}</div>
-                          <div className="text-xs text-muted-foreground">需要联系</div>
+                          <div className="text-xs text-muted-foreground">{t('copyright.needs_contact_count')}</div>
                         </div>
                       </div>
                     </Card>
@@ -297,7 +297,7 @@ export default function CopyrightPage() {
                         <DollarSign className="w-4 h-4 text-blue-600" />
                         <div>
                           <div className="font-semibold">{summary.estimatedCost?.free || 0}</div>
-                          <div className="text-xs text-muted-foreground">免费使用</div>
+                          <div className="text-xs text-muted-foreground">{t('copyright.free_use_count')}</div>
                         </div>
                       </div>
                     </Card>
@@ -323,13 +323,13 @@ export default function CopyrightPage() {
                           <div className="flex space-x-2">
                             {result.license.canUseDirectly ? (
                               <Badge variant="default" className="bg-green-100 text-green-800">
-                                可直接使用
+                                {t('copyright.can_use_directly')}
                               </Badge>
                             ) : (
                               <Link href={`/scales/${result.scale.id}/copyright`}>
                                 <Button size="sm" variant="outline">
                                   <Shield className="w-3 h-3 mr-1" />
-                                  联系版权方
+                                  {t('copyright.contact_copyright_holder')}
                                 </Button>
                               </Link>
                             )}
@@ -349,25 +349,25 @@ export default function CopyrightPage() {
                 <CardTitle className="flex items-center justify-between">
                   <span className="flex items-center space-x-2">
                     <MessageSquare className="w-5 h-5" />
-                    <span>我的联系工单</span>
+                    <span>{t('copyright.my_contact_tickets')}</span>
                   </span>
                   <Link href="/scales/copyright/create">
                     <Button size="sm">
                       <Plus className="w-4 h-4 mr-2" />
-                      创建新工单
+                      {t('copyright.create_new_ticket')}
                     </Button>
                   </Link>
                 </CardTitle>
                 <CardDescription>
-                  跟踪您的版权联系请求状态
+                  {t('copyright.track_requests')}
                 </CardDescription>
               </CardHeader>
 
               <CardContent>
                 <div className="text-center py-8 text-muted-foreground">
                   <MessageSquare className="w-12 h-12 mx-auto mb-4 opacity-50" />
-                  <p>您还没有创建任何工单</p>
-                  <p className="text-sm">搜索量表并检查许可状态以开始</p>
+                  <p>{t('copyright.no_tickets_created')}</p>
+                  <p className="text-sm">{t('copyright.search_and_check')}</p>
                 </div>
               </CardContent>
             </Card>
@@ -376,9 +376,9 @@ export default function CopyrightPage() {
           <TabsContent value="guidelines" className="space-y-4">
             <Card>
               <CardHeader>
-                <CardTitle>版权使用指南</CardTitle>
+                <CardTitle>{t('copyright.guidelines_title')}</CardTitle>
                 <CardDescription>
-                  了解不同许可类型和使用要求
+                  {t('copyright.guidelines_description')}
                 </CardDescription>
               </CardHeader>
 
@@ -387,83 +387,83 @@ export default function CopyrightPage() {
                   <Card className="p-4 bg-green-50 border-green-200">
                     <div className="flex items-center space-x-2 mb-2">
                       <span className="text-xl">🆓</span>
-                      <h4 className="font-semibold text-green-800">公共领域</h4>
+                      <h4 className="font-semibold text-green-800">{t('copyright.public_domain_title')}</h4>
                     </div>
                     <p className="text-sm text-green-700 mb-2">
-                      可自由使用，无需特殊许可
+                      {t('copyright.public_domain_desc')}
                     </p>
                     <ul className="text-xs text-green-600 space-y-1">
-                      <li>• 适用于所有用途</li>
-                      <li>• 建议保留原始版权声明</li>
-                      <li>• 示例: HAM-D, HAM-A</li>
+                      <li>• {t('copyright.public_domain_item_1')}</li>
+                      <li>• {t('copyright.public_domain_item_2')}</li>
+                      <li>• {t('copyright.public_domain_item_3')}</li>
                     </ul>
                   </Card>
 
                   <Card className="p-4 bg-yellow-50 border-yellow-200">
                     <div className="flex items-center space-x-2 mb-2">
                       <span className="text-xl">🎓</span>
-                      <h4 className="font-semibold text-yellow-800">学术免费</h4>
+                      <h4 className="font-semibold text-yellow-800">{t('copyright.academic_free_title')}</h4>
                     </div>
                     <p className="text-sm text-yellow-700 mb-2">
-                      学术研究免费，商业需要许可
+                      {t('copyright.academic_free_desc')}
                     </p>
                     <ul className="text-xs text-yellow-600 space-y-1">
-                      <li>• 教育和研究用途免费</li>
-                      <li>• 商业用途需要联系</li>
-                      <li>• 示例: MoCA, EORTC QLQ-C30</li>
+                      <li>• {t('copyright.academic_free_item_1')}</li>
+                      <li>• {t('copyright.academic_free_item_2')}</li>
+                      <li>• {t('copyright.academic_free_item_3')}</li>
                     </ul>
                   </Card>
 
                   <Card className="p-4 bg-orange-50 border-orange-200">
                     <div className="flex items-center space-x-2 mb-2">
                       <span className="text-xl">💼</span>
-                      <h4 className="font-semibold text-orange-800">商业许可</h4>
+                      <h4 className="font-semibold text-orange-800">{t('copyright.commercial_license_title')}</h4>
                     </div>
                     <p className="text-sm text-orange-700 mb-2">
-                      需要购买许可证使用
+                      {t('copyright.commercial_license_desc')}
                     </p>
                     <ul className="text-xs text-orange-600 space-y-1">
-                      <li>• 所有用途均需要许可</li>
-                      <li>• 通常涉及许可费用</li>
-                      <li>• 示例: BDI-II, MMSE-2</li>
+                      <li>• {t('copyright.commercial_license_item_1')}</li>
+                      <li>• {t('copyright.commercial_license_item_2')}</li>
+                      <li>• {t('copyright.commercial_license_item_3')}</li>
                     </ul>
                   </Card>
 
                   <Card className="p-4 bg-red-50 border-red-200">
                     <div className="flex items-center space-x-2 mb-2">
                       <span className="text-xl">📧</span>
-                      <h4 className="font-semibold text-red-800">需联系版权方</h4>
+                      <h4 className="font-semibold text-red-800">{t('copyright.contact_required_title')}</h4>
                     </div>
                     <p className="text-sm text-red-700 mb-2">
-                      使用前必须联系确认
+                      {t('copyright.contact_required_desc')}
                     </p>
                     <ul className="text-xs text-red-600 space-y-1">
-                      <li>• 许可条件因用途而异</li>
-                      <li>• 建议详细说明使用目的</li>
-                      <li>• 示例: PHQ-9, GAD-7</li>
+                      <li>• {t('copyright.contact_required_item_1')}</li>
+                      <li>• {t('copyright.contact_required_item_2')}</li>
+                      <li>• {t('copyright.contact_required_item_3')}</li>
                     </ul>
                   </Card>
                 </div>
 
                 <Card className="p-4 bg-blue-50 border-blue-200">
-                  <h4 className="font-semibold text-blue-800 mb-3">联系版权方的最佳实践</h4>
+                  <h4 className="font-semibold text-blue-800 mb-3">{t('copyright.contact_best_practices')}</h4>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-blue-700">
                     <div>
-                      <h5 className="font-medium mb-1">邮件联系建议:</h5>
+                      <h5 className="font-medium mb-1">{t('copyright.email_contact_suggestions')}</h5>
                       <ul className="space-y-1 text-xs">
-                        <li>• 使用专业邮箱地址</li>
-                        <li>• 详细说明使用目的</li>
-                        <li>• 提供机构信息</li>
-                        <li>• 询问具体许可要求</li>
+                        <li>• {t('copyright.email_tip_1')}</li>
+                        <li>• {t('copyright.email_tip_2')}</li>
+                        <li>• {t('copyright.email_tip_3')}</li>
+                        <li>• {t('copyright.email_tip_4')}</li>
                       </ul>
                     </div>
                     <div>
-                      <h5 className="font-medium mb-1">预期响应时间:</h5>
+                      <h5 className="font-medium mb-1">{t('copyright.expected_response_times')}</h5>
                       <ul className="space-y-1 text-xs">
-                        <li>• 学术机构: 3-5个工作日</li>
-                        <li>• 商业公司: 1-2个工作日</li>
-                        <li>• 政府机构: 5-10个工作日</li>
-                        <li>• 个人咨询: 7-14个工作日</li>
+                        <li>• {t('copyright.response_academic')}</li>
+                        <li>• {t('copyright.response_commercial')}</li>
+                        <li>• {t('copyright.response_government')}</li>
+                        <li>• {t('copyright.response_individual')}</li>
                       </ul>
                     </div>
                   </div>
@@ -475,15 +475,15 @@ export default function CopyrightPage() {
           <TabsContent value="tickets">
             <Card>
               <CardHeader>
-                <CardTitle>联系工单管理</CardTitle>
-                <CardDescription>功能开发中，即将上线</CardDescription>
+                <CardTitle>{t('copyright.ticket_management')}</CardTitle>
+                <CardDescription>{t('copyright.feature_coming_soon')}</CardDescription>
               </CardHeader>
 
               <CardContent>
                 <div className="text-center py-8 text-muted-foreground">
                   <MessageSquare className="w-12 h-12 mx-auto mb-4 opacity-50" />
-                  <p>工单管理功能正在开发中</p>
-                  <p className="text-sm">请暂时使用量表详情页面的版权联系功能</p>
+                  <p>{t('copyright.ticket_feature_dev')}</p>
+                  <p className="text-sm">{t('copyright.use_detail_page')}</p>
                 </div>
               </CardContent>
             </Card>
@@ -492,34 +492,33 @@ export default function CopyrightPage() {
           <TabsContent value="guidelines">
             <Card>
               <CardHeader>
-                <CardTitle>版权合规指南</CardTitle>
-                <CardDescription>详细的版权使用规范和建议</CardDescription>
+                <CardTitle>{t('copyright.compliance_guide')}</CardTitle>
+                <CardDescription>{t('copyright.compliance_guide_desc')}</CardDescription>
               </CardHeader>
 
               <CardContent>
                 <div className="prose max-w-none text-sm">
-                  <h4>版权合规的重要性</h4>
+                  <h4>{t('copyright.importance_title')}</h4>
                   <p>
-                    使用未经授权的评估量表可能面临法律风险，包括版权侵权诉讼和经济损失。
-                    Open eCOA 平台帮助您识别许可要求并联系版权方获得合法授权。
+                    {t('copyright.importance_desc')}
                   </p>
 
-                  <h4>不同用途的许可要求</h4>
+                  <h4>{t('copyright.license_by_use_title')}</h4>
                   <ul>
-                    <li><strong>学术研究:</strong> 通常享有优惠或免费许可</li>
-                    <li><strong>临床实践:</strong> 可能需要机构许可</li>
-                    <li><strong>商业用途:</strong> 通常需要付费许可</li>
-                    <li><strong>药物试验:</strong> 需要严格的许可和监管合规</li>
+                    <li><strong>{t('copyright.license_academic').split(':')[0]}:</strong> {t('copyright.license_academic').split(':')[1]}</li>
+                    <li><strong>{t('copyright.license_clinical').split(':')[0]}:</strong> {t('copyright.license_clinical').split(':')[1]}</li>
+                    <li><strong>{t('copyright.license_commercial').split(':')[0]}:</strong> {t('copyright.license_commercial').split(':')[1]}</li>
+                    <li><strong>{t('copyright.license_trials').split(':')[0]}:</strong> {t('copyright.license_trials').split(':')[1]}</li>
                   </ul>
 
-                  <h4>许可申请流程</h4>
+                  <h4>{t('copyright.application_process_title')}</h4>
                   <ol>
-                    <li>确定量表的版权状态和许可类型</li>
-                    <li>准备详细的使用说明和项目信息</li>
-                    <li>联系版权方或通过 Open eCOA 平台发起联系</li>
-                    <li>等待回复并协商许可条件</li>
-                    <li>签署许可协议并支付相关费用</li>
-                    <li>在许可范围内合规使用</li>
+                    <li>{t('copyright.process_step_1')}</li>
+                    <li>{t('copyright.process_step_2')}</li>
+                    <li>{t('copyright.process_step_3')}</li>
+                    <li>{t('copyright.process_step_4')}</li>
+                    <li>{t('copyright.process_step_5')}</li>
+                    <li>{t('copyright.process_step_6')}</li>
                   </ol>
                 </div>
               </CardContent>

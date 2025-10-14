@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
 import { Search, Building, Users } from "lucide-react";
+import { useLanguage } from "@/hooks/useLanguage";
 
 interface Team {
   id: string;
@@ -24,6 +25,7 @@ interface TeamSelectorProps {
 }
 
 export function TeamSelector({ selectedTeam, onTeamSelect, disabled }: TeamSelectorProps) {
+  const { t } = useLanguage();
   const [open, setOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [teams, setTeams] = useState<Team[]>([]);
@@ -42,10 +44,10 @@ export function TeamSelector({ selectedTeam, onTeamSelect, disabled }: TeamSelec
       if (data.success) {
         setTeams(data.teams || []);
       } else {
-        console.error("加载团队失败:", data.error);
+        console.error("Failed to load teams:", data.error);
       }
     } catch (error) {
-      console.error("加载团队失败:", error);
+      console.error("Failed to load teams:", error);
     } finally {
       setLoading(false);
     }
@@ -64,12 +66,12 @@ export function TeamSelector({ selectedTeam, onTeamSelect, disabled }: TeamSelec
 
   return (
     <div>
-      <Label>选择团队 *</Label>
+      <Label>{t('admin.invoices.team_selector.label')}</Label>
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
-          <Button 
-            variant="outline" 
-            className="w-full justify-start" 
+          <Button
+            variant="outline"
+            className="w-full justify-start"
             disabled={disabled}
           >
             {selectedTeam ? (
@@ -85,17 +87,17 @@ export function TeamSelector({ selectedTeam, onTeamSelect, disabled }: TeamSelec
             ) : (
               <div className="flex items-center space-x-2 text-muted-foreground">
                 <Users className="w-4 h-4" />
-                <span>选择团队...</span>
+                <span>{t('admin.invoices.team_selector.placeholder')}</span>
               </div>
             )}
           </Button>
         </DialogTrigger>
-        
+
         <DialogContent className="max-w-2xl">
           <DialogHeader>
-            <DialogTitle>选择团队</DialogTitle>
+            <DialogTitle>{t('admin.invoices.team_selector.dialog_title')}</DialogTitle>
             <DialogDescription>
-              为发票选择对应的团队客户
+              {t('admin.invoices.team_selector.dialog_description')}
             </DialogDescription>
           </DialogHeader>
 
@@ -104,7 +106,7 @@ export function TeamSelector({ selectedTeam, onTeamSelect, disabled }: TeamSelec
             <div className="relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
               <Input
-                placeholder="搜索团队名称、域名或邮箱..."
+                placeholder={t('admin.invoices.team_selector.search_placeholder')}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="pl-10"
@@ -116,7 +118,7 @@ export function TeamSelector({ selectedTeam, onTeamSelect, disabled }: TeamSelec
               {loading ? (
                 <div className="text-center py-8">
                   <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-gray-900 mx-auto"></div>
-                  <p className="mt-2 text-sm text-muted-foreground">加载中...</p>
+                  <p className="mt-2 text-sm text-muted-foreground">{t('admin.invoices.team_selector.loading')}</p>
                 </div>
               ) : teams.length > 0 ? (
                 teams.map((team) => (
@@ -133,34 +135,34 @@ export function TeamSelector({ selectedTeam, onTeamSelect, disabled }: TeamSelec
                           {team.slug}
                         </Badge>
                       </div>
-                      
+
                       {team.legalName && team.legalName !== team.name && (
                         <p className="text-sm text-muted-foreground mt-1">
-                          法定名称: {team.legalName}
+                          {t('admin.invoices.team_selector.legal_name')}: {team.legalName}
                         </p>
                       )}
-                      
+
                       {team.description && (
                         <p className="text-sm text-muted-foreground mt-1">
                           {team.description}
                         </p>
                       )}
-                      
+
                       {team.billingEmail && (
                         <p className="text-xs text-muted-foreground mt-1">
-                          账单邮箱: {team.billingEmail}
+                          {t('admin.invoices.team_selector.billing_email')}: {team.billingEmail}
                         </p>
                       )}
                     </div>
-                    
+
                     <Button size="sm" variant="outline">
-                      选择
+                      {t('admin.invoices.team_selector.button_select')}
                     </Button>
                   </div>
                 ))
               ) : (
                 <div className="text-center py-8 text-muted-foreground">
-                  {searchQuery ? "没有找到匹配的团队" : "暂无团队"}
+                  {searchQuery ? t('admin.invoices.team_selector.no_teams_found') : t('admin.invoices.team_selector.no_teams')}
                 </div>
               )}
             </div>

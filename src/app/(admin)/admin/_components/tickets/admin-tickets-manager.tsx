@@ -108,10 +108,10 @@ export function AdminTicketsManager() {
         setStats(data.statistics || { total: 0, open: 0, in_progress: 0, waiting_response: 0, resolved: 0, closed: 0 });
         setHasMore(data.pagination?.hasMore || false);
       } else {
-        console.error("加载版权工单失败:", data.error);
+        console.error("Failed to load copyright tickets:", data.error);
       }
     } catch (error) {
-      console.error("加载版权工单失败:", error);
+      console.error("Failed to load copyright tickets:", error);
     } finally {
       setLoading(false);
     }
@@ -140,13 +140,13 @@ export function AdminTicketsManager() {
         fetchTickets();
         setUpdateDialogOpen(false);
         setSelectedTicket(null);
-        toast.success("工单状态更新成功！");
+        toast.success(t('admin.tickets.status_updated_successfully'));
       } else {
-        toast.error(data.error || "更新工单状态失败");
+        toast.error(data.error || t('admin.tickets.update_failed'));
       }
     } catch (error) {
-      console.error("更新工单状态错误:", error);
-      toast.error("网络错误，请稍后重试");
+      console.error("Error updating ticket status:", error);
+      toast.error(t('admin.tickets.network_error_retry'));
     }
   };
 
@@ -173,11 +173,11 @@ export function AdminTicketsManager() {
 
   const getStatusLabel = (status: string) => {
     const labels = {
-      open: "待处理",
-      in_progress: "处理中",
-      waiting_response: "等待回复",
-      resolved: "已解决",
-      closed: "已关闭"
+      open: t('admin.tickets.status_open'),
+      in_progress: t('admin.tickets.status_in_progress'),
+      waiting_response: t('admin.tickets.status_waiting_response'),
+      resolved: t('admin.tickets.status_resolved'),
+      closed: t('admin.tickets.status_closed')
     };
     return labels[status as keyof typeof labels] || status;
   };
@@ -194,10 +194,10 @@ export function AdminTicketsManager() {
 
   const getPriorityLabel = (priority: string) => {
     const labels = {
-      low: "低",
-      medium: "中等",
-      high: "高",
-      urgent: "紧急"
+      low: t('admin.tickets.priority_low'),
+      medium: t('admin.tickets.priority_medium'),
+      high: t('admin.tickets.priority_high'),
+      urgent: t('admin.tickets.priority_urgent')
     };
     return labels[priority as keyof typeof labels] || priority;
   };
@@ -225,7 +225,7 @@ export function AdminTicketsManager() {
         <div className="min-h-[100vh] flex items-center justify-center">
           <div className="text-center">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900 mx-auto"></div>
-            <p className="mt-2 text-sm text-muted-foreground">加载中...</p>
+            <p className="mt-2 text-sm text-muted-foreground">{t('admin.loading')}</p>
           </div>
         </div>
       </div>
@@ -238,7 +238,7 @@ export function AdminTicketsManager() {
         items={[
           {
             href: "/admin/tickets",
-            label: "版权工单管理"
+            label: t('admin.tickets.breadcrumb_title')
           }
         ]}
       />
@@ -248,10 +248,10 @@ export function AdminTicketsManager() {
           <div>
             <h1 className="text-2xl font-bold flex items-center space-x-2">
               <Shield className="w-6 h-6 text-blue-600" />
-              <span>版权工单管理</span>
+              <span>{t('admin.tickets.title')}</span>
             </h1>
             <p className="text-muted-foreground">
-              管理所有用户的版权许可申请，协助处理版权方联系和授权
+              {t('admin.tickets.description')}
             </p>
           </div>
         </div>
@@ -261,37 +261,37 @@ export function AdminTicketsManager() {
           <Card>
             <CardContent className="p-4 text-center">
               <div className="text-2xl font-bold text-blue-600">{stats.total}</div>
-              <div className="text-sm text-muted-foreground">总工单数</div>
+              <div className="text-sm text-muted-foreground">{t('admin.tickets.stats_total_tickets')}</div>
             </CardContent>
           </Card>
           <Card>
             <CardContent className="p-4 text-center">
               <div className="text-2xl font-bold text-yellow-600">{stats.open}</div>
-              <div className="text-sm text-muted-foreground">待处理</div>
+              <div className="text-sm text-muted-foreground">{t('admin.tickets.stats_open')}</div>
             </CardContent>
           </Card>
           <Card>
             <CardContent className="p-4 text-center">
               <div className="text-2xl font-bold text-blue-600">{stats.in_progress}</div>
-              <div className="text-sm text-muted-foreground">处理中</div>
+              <div className="text-sm text-muted-foreground">{t('admin.tickets.stats_in_progress')}</div>
             </CardContent>
           </Card>
           <Card>
             <CardContent className="p-4 text-center">
               <div className="text-2xl font-bold text-orange-600">{stats.waiting_response}</div>
-              <div className="text-sm text-muted-foreground">等待回复</div>
+              <div className="text-sm text-muted-foreground">{t('admin.tickets.stats_waiting_response')}</div>
             </CardContent>
           </Card>
           <Card>
             <CardContent className="p-4 text-center">
               <div className="text-2xl font-bold text-green-600">{stats.resolved}</div>
-              <div className="text-sm text-muted-foreground">已解决</div>
+              <div className="text-sm text-muted-foreground">{t('admin.tickets.stats_resolved')}</div>
             </CardContent>
           </Card>
           <Card>
             <CardContent className="p-4 text-center">
               <div className="text-2xl font-bold text-gray-600">{stats.closed}</div>
-              <div className="text-sm text-muted-foreground">已关闭</div>
+              <div className="text-sm text-muted-foreground">{t('admin.tickets.stats_closed')}</div>
             </CardContent>
           </Card>
         </div>
@@ -315,12 +315,12 @@ export function AdminTicketsManager() {
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">所有状态</SelectItem>
-                <SelectItem value="open">待处理</SelectItem>
-                <SelectItem value="in_progress">处理中</SelectItem>
-                <SelectItem value="waiting_response">等待回复</SelectItem>
-                <SelectItem value="resolved">已解决</SelectItem>
-                <SelectItem value="closed">已关闭</SelectItem>
+                <SelectItem value="all">{t('admin.tickets.filter_all_status')}</SelectItem>
+                <SelectItem value="open">{t('admin.tickets.status_open')}</SelectItem>
+                <SelectItem value="in_progress">{t('admin.tickets.status_in_progress')}</SelectItem>
+                <SelectItem value="waiting_response">{t('admin.tickets.status_waiting_response')}</SelectItem>
+                <SelectItem value="resolved">{t('admin.tickets.status_resolved')}</SelectItem>
+                <SelectItem value="closed">{t('admin.tickets.status_closed')}</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -331,35 +331,35 @@ export function AdminTicketsManager() {
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">所有优先级</SelectItem>
-                <SelectItem value="urgent">紧急</SelectItem>
-                <SelectItem value="high">高</SelectItem>
-                <SelectItem value="medium">中等</SelectItem>
-                <SelectItem value="low">低</SelectItem>
+                <SelectItem value="all">{t('admin.tickets.filter_all_priority')}</SelectItem>
+                <SelectItem value="urgent">{t('admin.tickets.priority_urgent')}</SelectItem>
+                <SelectItem value="high">{t('admin.tickets.priority_high')}</SelectItem>
+                <SelectItem value="medium">{t('admin.tickets.priority_medium')}</SelectItem>
+                <SelectItem value="low">{t('admin.tickets.priority_low')}</SelectItem>
               </SelectContent>
             </Select>
           </div>
 
-          <Button onClick={fetchTickets}>搜索</Button>
+          <Button onClick={fetchTickets}>{t('admin.tickets.button_search')}</Button>
         </div>
 
         {/* 工单列表 */}
         <Card>
           <CardHeader>
-            <CardTitle>版权工单列表</CardTitle>
+            <CardTitle>{t('admin.tickets.table_ticket_list')}</CardTitle>
           </CardHeader>
           <CardContent>
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>工单号</TableHead>
-                  <TableHead>用户</TableHead>
-                  <TableHead>量表</TableHead>
-                  <TableHead>版权方</TableHead>
-                  <TableHead>状态</TableHead>
-                  <TableHead>优先级</TableHead>
-                  <TableHead>创建时间</TableHead>
-                  <TableHead>操作</TableHead>
+                  <TableHead>{t('admin.tickets.table_ticket_number')}</TableHead>
+                  <TableHead>{t('admin.tickets.table_user')}</TableHead>
+                  <TableHead>{t('admin.tickets.table_scale')}</TableHead>
+                  <TableHead>{t('admin.tickets.table_copyright_holder')}</TableHead>
+                  <TableHead>{t('admin.tickets.table_status')}</TableHead>
+                  <TableHead>{t('admin.tickets.table_priority')}</TableHead>
+                  <TableHead>{t('admin.tickets.table_created_at')}</TableHead>
+                  <TableHead>{t('admin.tickets.table_actions')}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -400,18 +400,18 @@ export function AdminTicketsManager() {
                     <TableCell>
                       <div className="text-sm">
                         <div>{format(new Date(ticket.createdAt), "MM/dd/yyyy")}</div>
-                        <div className="text-muted-foreground">{ticket.daysSinceCreated}天前</div>
+                        <div className="text-muted-foreground">{t('admin.tickets.days_ago', { days: ticket.daysSinceCreated })}</div>
                       </div>
                     </TableCell>
                     <TableCell>
                       <div className="flex space-x-2">
-                        <Button 
-                          size="sm" 
+                        <Button
+                          size="sm"
                           variant="outline"
                           onClick={() => router.push(`/admin/tickets/${ticket.id}`)}
                         >
                           <Eye className="w-3 h-3 mr-1" />
-                          查看
+                          {t('admin.tickets.button_view')}
                         </Button>
                         <Button
                           size="sm"
@@ -419,7 +419,7 @@ export function AdminTicketsManager() {
                           onClick={() => openUpdateDialog(ticket)}
                         >
                           <Edit className="w-3 h-3 mr-1" />
-                          更新
+                          {t('admin.tickets.button_update')}
                         </Button>
                       </div>
                     </TableCell>
@@ -427,7 +427,7 @@ export function AdminTicketsManager() {
                 )) : (
                   <TableRow>
                     <TableCell colSpan={8} className="h-24 text-center">
-                      暂无版权工单记录
+                      {t('admin.tickets.no_tickets')}
                     </TableCell>
                   </TableRow>
                 )}
@@ -443,10 +443,10 @@ export function AdminTicketsManager() {
                 disabled={page === 1}
               >
                 <ChevronLeft className="h-4 w-4" />
-                上一页
+                {t('admin.tickets.pagination_previous')}
               </Button>
               <span className="text-sm text-muted-foreground">
-                第 {page} 页
+                {t('admin.tickets.pagination_page', { page })}
               </span>
               <Button
                 variant="outline"
@@ -454,7 +454,7 @@ export function AdminTicketsManager() {
                 onClick={() => setPage(page + 1)}
                 disabled={!hasMore}
               >
-                下一页
+                {t('admin.tickets.pagination_next')}
                 <ChevronRight className="h-4 w-4" />
               </Button>
             </div>
@@ -465,9 +465,9 @@ export function AdminTicketsManager() {
         <Dialog open={updateDialogOpen} onOpenChange={setUpdateDialogOpen}>
           <DialogContent className="max-w-2xl">
             <DialogHeader>
-              <DialogTitle>更新工单状态</DialogTitle>
+              <DialogTitle>{t('admin.tickets.update_dialog_title')}</DialogTitle>
               <DialogDescription>
-                工单 #{selectedTicket?.ticketNumber} - {selectedTicket?.subject}
+                {t('admin.tickets.update_dialog_description', { ticketNumber: selectedTicket?.ticketNumber, subject: selectedTicket?.subject })}
               </DialogDescription>
             </DialogHeader>
 
@@ -477,43 +477,43 @@ export function AdminTicketsManager() {
                 <div className="bg-gray-50 p-4 rounded-lg">
                   <div className="grid grid-cols-2 gap-4 text-sm">
                     <div>
-                      <span className="font-medium">用户:</span>
+                      <span className="font-medium">{t('admin.tickets.label_user')}</span>
                       <p className="text-muted-foreground">{selectedTicket.userName} ({selectedTicket.userEmail})</p>
                     </div>
                     <div>
-                      <span className="font-medium">量表:</span>
+                      <span className="font-medium">{t('admin.tickets.label_scale')}</span>
                       <p className="text-muted-foreground">{selectedTicket.scaleAcronym} - {selectedTicket.scaleName}</p>
                     </div>
                     <div>
-                      <span className="font-medium">版权方:</span>
+                      <span className="font-medium">{t('admin.tickets.label_copyright_holder')}</span>
                       <p className="text-muted-foreground">{selectedTicket.copyrightOrganization}</p>
                     </div>
                     <div>
-                      <span className="font-medium">预期用途:</span>
+                      <span className="font-medium">{t('admin.tickets.label_intended_use')}</span>
                       <p className="text-muted-foreground">{selectedTicket.intendedUse}</p>
                     </div>
                   </div>
                 </div>
 
                 <div>
-                  <Label>更新状态</Label>
+                  <Label>{t('admin.tickets.label_update_status')}</Label>
                   <Select value={updateForm.status} onValueChange={(value) =>
                     setUpdateForm({ ...updateForm, status: value })}>
                     <SelectTrigger>
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="open">待处理</SelectItem>
-                      <SelectItem value="in_progress">处理中</SelectItem>
-                      <SelectItem value="waiting_response">等待回复</SelectItem>
-                      <SelectItem value="resolved">已解决</SelectItem>
-                      <SelectItem value="closed">已关闭</SelectItem>
+                      <SelectItem value="open">{t('admin.tickets.status_open')}</SelectItem>
+                      <SelectItem value="in_progress">{t('admin.tickets.status_in_progress')}</SelectItem>
+                      <SelectItem value="waiting_response">{t('admin.tickets.status_waiting_response')}</SelectItem>
+                      <SelectItem value="resolved">{t('admin.tickets.status_resolved')}</SelectItem>
+                      <SelectItem value="closed">{t('admin.tickets.status_closed')}</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
 
                 <div>
-                  <Label>管理员备注</Label>
+                  <Label>{t('admin.tickets.label_admin_notes')}</Label>
                   <Textarea
                     value={updateForm.adminNotes}
                     onChange={(e) => setUpdateForm({ ...updateForm, adminNotes: e.target.value })}
@@ -523,7 +523,7 @@ export function AdminTicketsManager() {
                 </div>
 
                 <div>
-                  <Label>给用户的回复消息 (可选)</Label>
+                  <Label>{t('admin.tickets.label_response_message')}</Label>
                   <Textarea
                     value={updateForm.responseMessage}
                     onChange={(e) => setUpdateForm({ ...updateForm, responseMessage: e.target.value })}
@@ -534,12 +534,12 @@ export function AdminTicketsManager() {
 
                 <div className="flex justify-end space-x-2">
                   <Button variant="outline" onClick={() => setUpdateDialogOpen(false)}>
-                    取消
+                    {t('admin.tickets.button_cancel')}
                   </Button>
                   <Button
                     onClick={() => updateTicketStatus(selectedTicket.id, updateForm.status, updateForm.adminNotes)}
                   >
-                    更新工单
+                    {t('admin.tickets.button_update_ticket')}
                   </Button>
                 </div>
               </div>

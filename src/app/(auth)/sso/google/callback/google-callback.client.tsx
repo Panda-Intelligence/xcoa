@@ -10,8 +10,10 @@ import { googleSSOCallbackAction } from "./google-callback.action";
 import { googleSSOCallbackSchema } from "@/schemas/google-sso-callback.schema";
 import { Spinner } from "@/components/ui/spinner";
 import { REDIRECT_AFTER_SIGN_IN } from "@/constants";
+import { useLanguage } from "@/hooks/useLanguage";
 
 export default function GoogleCallbackClientComponent() {
+  const { t } = useLanguage();
   const router = useRouter();
   const searchParams = useSearchParams();
   const code = searchParams.get("code");
@@ -21,14 +23,14 @@ export default function GoogleCallbackClientComponent() {
   const { execute: handleCallback, isPending, error } = useServerAction(googleSSOCallbackAction, {
     onError: (error) => {
       toast.dismiss();
-      toast.error(error.err?.message || "Failed to sign in with Google");
+      toast.error(error.err?.message || t('auth.google_sign_in_failed'));
     },
     onStart: () => {
-      toast.loading("Signing you in with Google...");
+      toast.loading(t('auth.signing_in_google'));
     },
     onSuccess: () => {
       toast.dismiss();
-      toast.success("Signed in successfully");
+      toast.success(t('auth.signed_in_successfully'));
       window.location.href = REDIRECT_AFTER_SIGN_IN;
     },
   });
@@ -40,7 +42,7 @@ export default function GoogleCallbackClientComponent() {
         hasCalledCallback.current = true;
         handleCallback(result.data);
       } else {
-        toast.error("Invalid callback parameters");
+        toast.error(t('auth.invalid_callback_parameters'));
         router.push("/sign-in");
       }
     }

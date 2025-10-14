@@ -113,10 +113,10 @@ export function AdminInvoiceManager() {
         setStats(data.statistics || { total: 0, paid: 0, sent: 0, draft: 0 });
         setHasMore(data.pagination?.hasMore || false);
       } else {
-        console.error("加载发票失败:", data.error);
+        console.error("Failed to load invoices:", data.error);
       }
     } catch (error) {
-      console.error("加载发票失败:", error);
+      console.error("Failed to load invoices:", error);
     } finally {
       setLoading(false);
     }
@@ -128,7 +128,7 @@ export function AdminInvoiceManager() {
 
   const handleCreateInvoice = async () => {
     if (!selectedTeam) {
-      toast.warning("请选择团队");
+      toast.warning(t('admin.invoices.select_team_required'));
       return;
     }
 
@@ -154,13 +154,13 @@ export function AdminInvoiceManager() {
         setCreateDialogOpen(false);
         resetNewInvoice();
         fetchInvoices();
-        toast.success("发票创建成功！");
+        toast.success(t('admin.invoices.created_successfully'));
       } else {
-        toast.error(data.error || "创建发票失败");
+        toast.error(data.error || t('admin.invoices.create_failed'));
       }
     } catch (error) {
-      console.error("创建发票错误:", error);
-      toast.error("网络错误，请稍后重试");
+      console.error("Error creating invoice:", error);
+      toast.error(t('admin.invoices.network_error_retry'));
     }
   };
 
@@ -194,13 +194,13 @@ export function AdminInvoiceManager() {
       if (response.ok) {
         setInvoiceToDelete(null);
         fetchInvoices();
-        toast.success("发票删除成功！");
+        toast.success(t('admin.invoices.deleted_successfully'));
       } else {
-        toast.error(data.error || "删除发票失败");
+        toast.error(data.error || t('admin.invoices.delete_failed'));
       }
     } catch (error) {
-      console.error("删除发票错误:", error);
-      toast.error("网络错误，请稍后重试");
+      console.error("Error deleting invoice:", error);
+      toast.error(t('admin.invoices.network_error_retry'));
     }
   };
 
@@ -208,8 +208,8 @@ export function AdminInvoiceManager() {
     try {
       await generateInvoicePDF(invoice);
     } catch (error) {
-      console.error("PDF生成失败:", error);
-      toast.error("PDF生成失败，请稍后重试");
+      console.error("PDF generation failed:", error);
+      toast.error(t('admin.invoices.pdf_generation_failed'));
     }
   };
 
@@ -226,11 +226,11 @@ export function AdminInvoiceManager() {
 
   const getStatusLabel = (status: string) => {
     const labels = {
-      draft: "草稿",
-      sent: "已发送",
-      paid: "已支付",
-      overdue: "逾期",
-      cancelled: "已取消"
+      draft: t('admin.invoices.status_draft'),
+      sent: t('admin.invoices.status_sent'),
+      paid: t('admin.invoices.status_paid'),
+      overdue: t('admin.invoices.status_overdue'),
+      cancelled: t('admin.invoices.status_cancelled')
     };
     return labels[status as keyof typeof labels] || status;
   };
@@ -254,7 +254,7 @@ export function AdminInvoiceManager() {
         <div className="min-h-[100vh] flex items-center justify-center">
           <div className="text-center">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900 mx-auto"></div>
-            <p className="mt-2 text-sm text-muted-foreground">加载中...</p>
+            <p className="mt-2 text-sm text-muted-foreground">{t('admin.invoices.loading')}</p>
           </div>
         </div>
       </div>
@@ -277,10 +277,10 @@ export function AdminInvoiceManager() {
           <div>
             <h1 className="text-2xl font-bold flex items-center space-x-2">
               <FileText className="w-6 h-6 text-blue-600" />
-              <span>发票管理</span>
+              <span>{t('admin.invoices.title')}</span>
             </h1>
             <p className="text-muted-foreground">
-              管理所有系统发票，创建新发票并跟踪支付状态
+              {t('admin.invoices.description')}
             </p>
           </div>
 
@@ -289,14 +289,14 @@ export function AdminInvoiceManager() {
             <DialogTrigger asChild>
               <Button>
                 <Plus className="w-4 h-4 mr-2" />
-                创建发票
+                {t('admin.invoices.create_button')}
               </Button>
             </DialogTrigger>
             <DialogContent className="max-w-2xl">
               <DialogHeader>
-                <DialogTitle>创建新发票</DialogTitle>
+                <DialogTitle>{t('admin.invoices.create_dialog_title')}</DialogTitle>
                 <DialogDescription>
-                  为客户创建专业的服务发票
+                  {t('admin.invoices.create_dialog_description')}
                 </DialogDescription>
               </DialogHeader>
 
@@ -309,15 +309,15 @@ export function AdminInvoiceManager() {
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <Label>客户姓名 *</Label>
+                    <Label>{t('admin.invoices.customer_name')}</Label>
                     <Input
                       value={newInvoice.customerName}
                       onChange={(e) => setNewInvoice({ ...newInvoice, customerName: e.target.value })}
-                      placeholder="客户姓名"
+                      placeholder={t('admin.invoices.customer_name_placeholder')}
                     />
                   </div>
                   <div>
-                    <Label>客户邮箱 *</Label>
+                    <Label>{t('admin.invoices.customer_email')}</Label>
                     <Input
                       type="email"
                       value={newInvoice.customerEmail}
@@ -329,15 +329,15 @@ export function AdminInvoiceManager() {
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <Label>组织机构</Label>
+                    <Label>{t('admin.invoices.organization')}</Label>
                     <Input
                       value={newInvoice.customerOrganization}
                       onChange={(e) => setNewInvoice({ ...newInvoice, customerOrganization: e.target.value })}
-                      placeholder="客户所属机构"
+                      placeholder={t('admin.invoices.organization_placeholder')}
                     />
                   </div>
                   <div>
-                    <Label>VAT号码</Label>
+                    <Label>{t('admin.invoices.vat_number')}</Label>
                     <Input
                       value={newInvoice.customerVatNumber}
                       onChange={(e) => setNewInvoice({ ...newInvoice, customerVatNumber: e.target.value })}
@@ -347,25 +347,25 @@ export function AdminInvoiceManager() {
                 </div>
 
                 <div>
-                  <Label>客户地址</Label>
+                  <Label>{t('admin.invoices.customer_address')}</Label>
                   <Textarea
                     value={newInvoice.customerAddress}
                     onChange={(e) => setNewInvoice({ ...newInvoice, customerAddress: e.target.value })}
-                    placeholder="完整的客户地址..."
+                    placeholder={t('admin.invoices.customer_address_placeholder')}
                   />
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <Label>服务描述 *</Label>
+                    <Label>{t('admin.invoices.service_description')}</Label>
                     <Input
                       value={newInvoice.description}
                       onChange={(e) => setNewInvoice({ ...newInvoice, description: e.target.value })}
-                      placeholder="服务或产品描述"
+                      placeholder={t('admin.invoices.service_description_placeholder')}
                     />
                   </div>
                   <div>
-                    <Label>金额 *</Label>
+                    <Label>{t('admin.invoices.amount')}</Label>
                     <Input
                       type="number"
                       value={newInvoice.amount}
@@ -377,7 +377,7 @@ export function AdminInvoiceManager() {
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <Label>到期日期 *</Label>
+                    <Label>{t('admin.invoices.due_date')}</Label>
                     <Input
                       type="date"
                       value={newInvoice.dueDate}
@@ -385,17 +385,17 @@ export function AdminInvoiceManager() {
                     />
                   </div>
                   <div>
-                    <Label>货币</Label>
+                    <Label>{t('admin.invoices.currency')}</Label>
                     <Select value={newInvoice.currency} onValueChange={(value) =>
                       setNewInvoice({ ...newInvoice, currency: value })}>
                       <SelectTrigger>
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="USD">USD - 美元</SelectItem>
-                        <SelectItem value="EUR">EUR - 欧元</SelectItem>
-                        <SelectItem value="CNY">CNY - 人民币</SelectItem>
-                        <SelectItem value="GBP">GBP - 英镑</SelectItem>
+                        <SelectItem value="USD">{t('admin.invoices.currency_usd')}</SelectItem>
+                        <SelectItem value="EUR">{t('admin.invoices.currency_eur')}</SelectItem>
+                        <SelectItem value="CNY">{t('admin.invoices.currency_cny')}</SelectItem>
+                        <SelectItem value="GBP">{t('admin.invoices.currency_gbp')}</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
@@ -403,13 +403,13 @@ export function AdminInvoiceManager() {
 
                 <div className="flex justify-end space-x-2">
                   <Button variant="outline" onClick={() => setCreateDialogOpen(false)}>
-                    取消
+                    {t('common.cancel')}
                   </Button>
                   <Button
                     onClick={handleCreateInvoice}
                     disabled={!selectedTeam || !newInvoice.customerName || !newInvoice.customerEmail || !newInvoice.description || !newInvoice.amount}
                   >
-                    创建发票
+                    {t('admin.invoices.create_button')}
                   </Button>
                 </div>
               </div>
@@ -422,25 +422,25 @@ export function AdminInvoiceManager() {
           <Card>
             <CardContent className="p-4 text-center">
               <div className="text-2xl font-bold text-blue-600">{stats.total}</div>
-              <div className="text-sm text-muted-foreground">总发票数</div>
+              <div className="text-sm text-muted-foreground">{t('admin.invoices.stats_total')}</div>
             </CardContent>
           </Card>
           <Card>
             <CardContent className="p-4 text-center">
               <div className="text-2xl font-bold text-green-600">{stats.paid}</div>
-              <div className="text-sm text-muted-foreground">已支付</div>
+              <div className="text-sm text-muted-foreground">{t('admin.invoices.stats_paid')}</div>
             </CardContent>
           </Card>
           <Card>
             <CardContent className="p-4 text-center">
               <div className="text-2xl font-bold text-orange-600">{stats.sent}</div>
-              <div className="text-sm text-muted-foreground">待支付</div>
+              <div className="text-sm text-muted-foreground">{t('admin.invoices.stats_pending')}</div>
             </CardContent>
           </Card>
           <Card>
             <CardContent className="p-4 text-center">
               <div className="text-2xl font-bold text-gray-600">{stats.draft}</div>
-              <div className="text-sm text-muted-foreground">草稿</div>
+              <div className="text-sm text-muted-foreground">{t('admin.invoices.stats_draft')}</div>
             </CardContent>
           </Card>
         </div>
@@ -450,7 +450,7 @@ export function AdminInvoiceManager() {
           <div className="flex-1 relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
             <Input
-              placeholder="搜索发票号、描述或客户..."
+              placeholder={t('admin.invoices.search_placeholder')}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="pl-10"
@@ -464,34 +464,34 @@ export function AdminInvoiceManager() {
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">所有状态</SelectItem>
-                <SelectItem value="draft">草稿</SelectItem>
-                <SelectItem value="sent">已发送</SelectItem>
-                <SelectItem value="paid">已支付</SelectItem>
-                <SelectItem value="overdue">逾期</SelectItem>
+                <SelectItem value="all">{t('admin.invoices.filter_all')}</SelectItem>
+                <SelectItem value="draft">{t('admin.invoices.status_draft')}</SelectItem>
+                <SelectItem value="sent">{t('admin.invoices.status_sent')}</SelectItem>
+                <SelectItem value="paid">{t('admin.invoices.status_paid')}</SelectItem>
+                <SelectItem value="overdue">{t('admin.invoices.status_overdue')}</SelectItem>
               </SelectContent>
             </Select>
           </div>
 
-          <Button onClick={fetchInvoices}>搜索</Button>
+          <Button onClick={fetchInvoices}>{t('admin.invoices.search_button')}</Button>
         </div>
 
         {/* 发票列表 */}
         <Card>
           <CardHeader>
-            <CardTitle>发票列表</CardTitle>
+            <CardTitle>{t('admin.invoices.list_title')}</CardTitle>
           </CardHeader>
           <CardContent>
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>发票号</TableHead>
-                  <TableHead>客户</TableHead>
-                  <TableHead>团队</TableHead>
-                  <TableHead>状态</TableHead>
-                  <TableHead>金额</TableHead>
-                  <TableHead>开具日期</TableHead>
-                  <TableHead>操作</TableHead>
+                  <TableHead>{t('admin.invoices.table_invoice_number')}</TableHead>
+                  <TableHead>{t('admin.invoices.table_customer')}</TableHead>
+                  <TableHead>{t('admin.invoices.table_team')}</TableHead>
+                  <TableHead>{t('admin.invoices.table_status')}</TableHead>
+                  <TableHead>{t('admin.invoices.table_amount')}</TableHead>
+                  <TableHead>{t('admin.invoices.table_issue_date')}</TableHead>
+                  <TableHead>{t('admin.invoices.table_actions')}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -523,13 +523,13 @@ export function AdminInvoiceManager() {
                     </TableCell>
                     <TableCell>
                       <div className="flex space-x-2">
-                        <Button 
-                          size="sm" 
+                        <Button
+                          size="sm"
                           variant="outline"
                           onClick={() => router.push(`/admin/invoices/${invoice.id}`)}
                         >
                           <Eye className="w-3 h-3 mr-1" />
-                          查看
+                          {t('admin.invoices.button_view')}
                         </Button>
                         <Button
                           size="sm"
@@ -549,7 +549,7 @@ export function AdminInvoiceManager() {
                             }}
                           >
                             <Trash2 className="w-3 h-3 mr-1" />
-                            删除
+                            {t('admin.invoices.button_delete')}
                           </Button>
                         )}
                       </div>
@@ -558,7 +558,7 @@ export function AdminInvoiceManager() {
                 )) : (
                   <TableRow>
                     <TableCell colSpan={7} className="h-24 text-center">
-                      暂无发票记录
+                      {t('admin.invoices.no_records')}
                     </TableCell>
                   </TableRow>
                 )}
@@ -574,10 +574,10 @@ export function AdminInvoiceManager() {
                 disabled={page === 1}
               >
                 <ChevronLeft className="h-4 w-4" />
-                上一页
+                {t('admin.invoices.previous_page')}
               </Button>
               <span className="text-sm text-muted-foreground">
-                第 {page} 页
+                {t('admin.invoices.page_number').replace('{page}', page.toString())}
               </span>
               <Button
                 variant="outline"
@@ -585,7 +585,7 @@ export function AdminInvoiceManager() {
                 onClick={() => setPage(page + 1)}
                 disabled={!hasMore}
               >
-                下一页
+                {t('admin.invoices.next_page')}
                 <ChevronRight className="h-4 w-4" />
               </Button>
             </div>
@@ -597,10 +597,10 @@ export function AdminInvoiceManager() {
       <ConfirmDialog
         open={deleteConfirmOpen}
         onOpenChange={setDeleteConfirmOpen}
-        title="删除发票"
-        description="确定要删除这张发票吗？此操作不可逆转。"
-        confirmText="删除"
-        cancelText="取消"
+        title={t('admin.invoices.delete_dialog_title')}
+        description={t('admin.invoices.delete_dialog_description')}
+        confirmText={t('admin.invoices.button_delete')}
+        cancelText={t('common.cancel')}
         onConfirm={deleteInvoice}
         variant="destructive"
       />

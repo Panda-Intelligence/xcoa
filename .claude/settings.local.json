@@ -46,7 +46,14 @@
       "Bash(do echo \"=== $file ===\")",
       "Bash(head:*)",
       "WebFetch(domain:www.creative-tim.com)",
-      "WebFetch(domain:github.com)"
+      "WebFetch(domain:github.com)",
+      "Bash(pnpm i18n:check:*)",
+      "Bash(tsx scripts/i18n-check.ts:*)",
+      "Bash(pnpm type-check:*)",
+      "Bash(git diff:*)",
+      "Bash(git status:*)",
+      "Bash(pnpm typecheck:*)",
+      "Bash(npx tsc:*)"
     ],
     "deny": [],
     "ask": []

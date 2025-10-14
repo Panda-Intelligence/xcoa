@@ -32,6 +32,7 @@ import { PageHeader } from "@/components/page-header";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/hooks/useToast";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
+import { useLanguage } from "@/hooks/useLanguage";
 
 interface ClinicalCase {
   id: string;
@@ -63,6 +64,7 @@ interface CaseStats {
 export function AdminCasesManager() {
   const router = useRouter();
   const toast = useToast();
+  const { t } = useLanguage();
   const [cases, setCases] = useState<ClinicalCase[]>([]);
   const [stats, setStats] = useState<CaseStats>({ total: 0, published: 0, draft: 0, reviewed: 0 });
   const [scales, setScales] = useState<Array<{ id: string; name: string; acronym: string }>>([]);
@@ -107,10 +109,10 @@ export function AdminCasesManager() {
         setStats(data.statistics || { total: 0, published: 0, draft: 0, reviewed: 0 });
         setHasMore(data.pagination?.hasMore || false);
       } else {
-        console.error("加载临床案例失败:", data.error);
+        console.error("Failed to load clinical cases:", data.error);
       }
     } catch (error) {
-      console.error("加载临床案例失败:", error);
+      console.error("Failed to load clinical cases:", error);
     } finally {
       setLoading(false);
     }
@@ -128,7 +130,7 @@ export function AdminCasesManager() {
         })) || []);
       }
     } catch (error) {
-      console.error("加载量表列表失败:", error);
+      console.error("Failed to load scales:", error);
     }
   }, []);
 
@@ -151,13 +153,13 @@ export function AdminCasesManager() {
         setCreateDialogOpen(false);
         resetNewCase();
         fetchCases();
-        toast.success("临床案例创建成功！");
+        toast.success(t('admin.cases.created_successfully'));
       } else {
-        toast.error(data.error || "创建案例失败");
+        toast.error(data.error || t('admin.cases.create_failed'));
       }
     } catch (error) {
-      console.error("创建案例错误:", error);
-      toast.error("网络错误，请稍后重试");
+      console.error("Error creating case:", error);
+      toast.error(t('admin.cases.network_error_retry'));
     }
   };
 
@@ -178,13 +180,13 @@ export function AdminCasesManager() {
         setEditingCase(null);
         resetNewCase();
         fetchCases();
-        toast.success("案例更新成功！");
+        toast.success(t('admin.cases.updated_successfully'));
       } else {
-        toast.error(data.error || "更新案例失败");
+        toast.error(data.error || t('admin.cases.update_failed'));
       }
     } catch (error) {
-      console.error("更新案例错误:", error);
-      toast.error("网络错误，请稍后重试");
+      console.error("Error updating case:", error);
+      toast.error(t('admin.cases.network_error_retry'));
     }
   };
 
@@ -202,13 +204,13 @@ export function AdminCasesManager() {
       if (response.ok) {
         setCaseToDelete(null);
         fetchCases();
-        toast.success("案例删除成功！");
+        toast.success(t('admin.cases.deleted_successfully'));
       } else {
-        toast.error(data.error || "删除案例失败");
+        toast.error(data.error || t('admin.cases.delete_failed'));
       }
     } catch (error) {
-      console.error("删除案例错误:", error);
-      toast.error("网络错误，请稍后重试");
+      console.error("Error deleting case:", error);
+      toast.error(t('admin.cases.network_error_retry'));
     }
   };
 
@@ -257,9 +259,9 @@ export function AdminCasesManager() {
 
   const getStatusLabel = (status: string) => {
     const labels = {
-      draft: "草稿",
-      reviewed: "已审核",
-      published: "已发布"
+      draft: t('admin.cases.status_draft'),
+      reviewed: t('admin.cases.status_reviewed'),
+      published: t('admin.cases.status_published')
     };
     return labels[status as keyof typeof labels] || status;
   };
@@ -268,19 +270,19 @@ export function AdminCasesManager() {
     <div className="space-y-4">
       <div className="grid grid-cols-2 gap-4">
         <div>
-          <Label>案例标题 *</Label>
+          <Label>{t('admin.cases.label_case_title')}</Label>
           <Input
             value={newCase.title}
             onChange={(e) => setNewCase({ ...newCase, title: e.target.value })}
-            placeholder="案例标题"
+            placeholder={t('admin.cases.placeholder_case_title')}
           />
         </div>
         <div>
-          <Label>关联量表 *</Label>
+          <Label>{t('admin.cases.label_related_scale')}</Label>
           <Select value={newCase.scaleId} onValueChange={(value) =>
             setNewCase({ ...newCase, scaleId: value })}>
             <SelectTrigger>
-              <SelectValue placeholder="选择量表" />
+              <SelectValue placeholder={t('admin.cases.placeholder_select_scale')} />
             </SelectTrigger>
             <SelectContent>
               {scales.map(scale => (
@@ -295,98 +297,98 @@ export function AdminCasesManager() {
 
       <div className="grid grid-cols-3 gap-4">
         <div>
-          <Label>难度等级</Label>
+          <Label>{t('admin.cases.label_difficulty_level')}</Label>
           <Select value={newCase.difficultyLevel} onValueChange={(value) =>
             setNewCase({ ...newCase, difficultyLevel: value })}>
             <SelectTrigger>
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="beginner">初级</SelectItem>
-              <SelectItem value="intermediate">中级</SelectItem>
-              <SelectItem value="advanced">高级</SelectItem>
+              <SelectItem value="beginner">{t('admin.cases.difficulty_beginner')}</SelectItem>
+              <SelectItem value="intermediate">{t('admin.cases.difficulty_intermediate')}</SelectItem>
+              <SelectItem value="advanced">{t('admin.cases.difficulty_advanced')}</SelectItem>
             </SelectContent>
           </Select>
         </div>
         <div>
-          <Label>专科领域</Label>
+          <Label>{t('admin.cases.label_specialty')}</Label>
           <Input
             value={newCase.specialty}
             onChange={(e) => setNewCase({ ...newCase, specialty: e.target.value })}
-            placeholder="psychiatry"
+            placeholder={t('admin.cases.placeholder_specialty')}
           />
         </div>
         <div>
-          <Label>状态</Label>
+          <Label>{t('admin.cases.label_status')}</Label>
           <Select value={newCase.reviewStatus} onValueChange={(value) =>
             setNewCase({ ...newCase, reviewStatus: value })}>
             <SelectTrigger>
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="draft">草稿</SelectItem>
-              <SelectItem value="reviewed">已审核</SelectItem>
-              <SelectItem value="published">已发布</SelectItem>
+              <SelectItem value="draft">{t('admin.cases.status_draft')}</SelectItem>
+              <SelectItem value="reviewed">{t('admin.cases.status_reviewed')}</SelectItem>
+              <SelectItem value="published">{t('admin.cases.status_published')}</SelectItem>
             </SelectContent>
           </Select>
         </div>
       </div>
 
       <div>
-        <Label>作者</Label>
+        <Label>{t('admin.cases.label_author')}</Label>
         <Input
           value={newCase.author}
           onChange={(e) => setNewCase({ ...newCase, author: e.target.value })}
-          placeholder="案例作者"
+          placeholder={t('admin.cases.placeholder_author')}
         />
       </div>
 
       <div>
-        <Label>患者背景</Label>
+        <Label>{t('admin.cases.label_patient_background')}</Label>
         <Textarea
           value={newCase.patientBackground}
           onChange={(e) => setNewCase({ ...newCase, patientBackground: e.target.value })}
-          placeholder="描述患者的基本情况、症状和背景信息..."
+          placeholder={t('admin.cases.placeholder_patient_background')}
           rows={3}
         />
       </div>
 
       <div>
-        <Label>结果解读</Label>
+        <Label>{t('admin.cases.label_interpretation')}</Label>
         <Textarea
           value={newCase.interpretation}
           onChange={(e) => setNewCase({ ...newCase, interpretation: e.target.value })}
-          placeholder="量表评分结果的专业解读..."
+          placeholder={t('admin.cases.placeholder_interpretation')}
           rows={3}
         />
       </div>
 
       <div>
-        <Label>临床决策</Label>
+        <Label>{t('admin.cases.label_clinical_decision')}</Label>
         <Textarea
           value={newCase.clinicalDecision}
           onChange={(e) => setNewCase({ ...newCase, clinicalDecision: e.target.value })}
-          placeholder="基于评估结果的临床决策和治疗方案..."
+          placeholder={t('admin.cases.placeholder_clinical_decision')}
           rows={2}
         />
       </div>
 
       <div>
-        <Label>治疗结果</Label>
+        <Label>{t('admin.cases.label_outcome')}</Label>
         <Textarea
           value={newCase.outcome}
           onChange={(e) => setNewCase({ ...newCase, outcome: e.target.value })}
-          placeholder="治疗后的结果和患者改善情况..."
+          placeholder={t('admin.cases.placeholder_outcome')}
           rows={2}
         />
       </div>
 
       <div>
-        <Label>学习要点</Label>
+        <Label>{t('admin.cases.label_learning_points')}</Label>
         <Textarea
           value={newCase.learningPoints}
           onChange={(e) => setNewCase({ ...newCase, learningPoints: e.target.value })}
-          placeholder="从这个案例中可以学到的关键点，每行一个要点..."
+          placeholder={t('admin.cases.placeholder_learning_points')}
           rows={3}
         />
       </div>
@@ -399,7 +401,7 @@ export function AdminCasesManager() {
         <div className="min-h-[100vh] flex items-center justify-center">
           <div className="text-center">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900 mx-auto"></div>
-            <p className="mt-2 text-sm text-muted-foreground">加载中...</p>
+            <p className="mt-2 text-sm text-muted-foreground">{t('admin.cases.loading')}</p>
           </div>
         </div>
       </div>
@@ -412,7 +414,7 @@ export function AdminCasesManager() {
         items={[
           {
             href: "/admin/cases",
-            label: "临床案例管理"
+            label: t('admin.cases.breadcrumb_title')
           }
         ]}
       />
@@ -422,10 +424,10 @@ export function AdminCasesManager() {
           <div>
             <h1 className="text-2xl font-bold flex items-center space-x-2">
               <Beaker className="w-6 h-6 text-blue-600" />
-              <span>临床案例管理</span>
+              <span>{t('admin.cases.title')}</span>
             </h1>
             <p className="text-muted-foreground">
-              管理系统中的所有临床案例，创建、编辑和发布学习案例
+              {t('admin.cases.description')}
             </p>
           </div>
 
@@ -434,14 +436,14 @@ export function AdminCasesManager() {
             <DialogTrigger asChild>
               <Button>
                 <Plus className="w-4 h-4 mr-2" />
-                创建案例
+                {t('admin.cases.button_create_case')}
               </Button>
             </DialogTrigger>
             <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
               <DialogHeader>
-                <DialogTitle>创建新的临床案例</DialogTitle>
+                <DialogTitle>{t('admin.cases.form_create_title')}</DialogTitle>
                 <DialogDescription>
-                  创建一个新的临床学习案例
+                  {t('admin.cases.form_create_description')}
                 </DialogDescription>
               </DialogHeader>
 
@@ -449,13 +451,13 @@ export function AdminCasesManager() {
 
               <div className="flex justify-end space-x-2">
                 <Button variant="outline" onClick={() => setCreateDialogOpen(false)}>
-                  取消
+                  {t('admin.cases.button_cancel')}
                 </Button>
                 <Button
                   onClick={handleCreateCase}
                   disabled={!newCase.scaleId || !newCase.title}
                 >
-                  创建案例
+                  {t('admin.cases.button_create')}
                 </Button>
               </div>
             </DialogContent>
@@ -465,9 +467,9 @@ export function AdminCasesManager() {
           <Dialog open={editDialogOpen} onOpenChange={setEditDialogOpen}>
             <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
               <DialogHeader>
-                <DialogTitle>编辑临床案例</DialogTitle>
+                <DialogTitle>{t('admin.cases.form_edit_title')}</DialogTitle>
                 <DialogDescription>
-                  修改案例信息
+                  {t('admin.cases.form_edit_description')}
                 </DialogDescription>
               </DialogHeader>
 
@@ -475,13 +477,13 @@ export function AdminCasesManager() {
 
               <div className="flex justify-end space-x-2">
                 <Button variant="outline" onClick={() => setEditDialogOpen(false)}>
-                  取消
+                  {t('admin.cases.button_cancel')}
                 </Button>
                 <Button
                   onClick={handleEditCase}
                   disabled={!newCase.scaleId || !newCase.title}
                 >
-                  更新案例
+                  {t('admin.cases.button_update')}
                 </Button>
               </div>
             </DialogContent>
@@ -493,25 +495,25 @@ export function AdminCasesManager() {
           <Card>
             <CardContent className="p-4 text-center">
               <div className="text-2xl font-bold text-blue-600">{stats.total}</div>
-              <div className="text-sm text-muted-foreground">总案例数</div>
+              <div className="text-sm text-muted-foreground">{t('admin.cases.stats_total')}</div>
             </CardContent>
           </Card>
           <Card>
             <CardContent className="p-4 text-center">
               <div className="text-2xl font-bold text-green-600">{stats.published}</div>
-              <div className="text-sm text-muted-foreground">已发布</div>
+              <div className="text-sm text-muted-foreground">{t('admin.cases.stats_published')}</div>
             </CardContent>
           </Card>
           <Card>
             <CardContent className="p-4 text-center">
               <div className="text-2xl font-bold text-blue-600">{stats.reviewed}</div>
-              <div className="text-sm text-muted-foreground">已审核</div>
+              <div className="text-sm text-muted-foreground">{t('admin.cases.stats_reviewed')}</div>
             </CardContent>
           </Card>
           <Card>
             <CardContent className="p-4 text-center">
               <div className="text-2xl font-bold text-gray-600">{stats.draft}</div>
-              <div className="text-sm text-muted-foreground">草稿</div>
+              <div className="text-sm text-muted-foreground">{t('admin.cases.stats_draft')}</div>
             </CardContent>
           </Card>
         </div>
@@ -521,7 +523,7 @@ export function AdminCasesManager() {
           <div className="flex-1 relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
             <Input
-              placeholder="搜索案例标题、作者或量表..."
+              placeholder={t('admin.cases.search_placeholder')}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="pl-10"
@@ -535,34 +537,34 @@ export function AdminCasesManager() {
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">所有状态</SelectItem>
-                <SelectItem value="draft">草稿</SelectItem>
-                <SelectItem value="reviewed">已审核</SelectItem>
-                <SelectItem value="published">已发布</SelectItem>
+                <SelectItem value="all">{t('admin.cases.filter_all_status')}</SelectItem>
+                <SelectItem value="draft">{t('admin.cases.status_draft')}</SelectItem>
+                <SelectItem value="reviewed">{t('admin.cases.status_reviewed')}</SelectItem>
+                <SelectItem value="published">{t('admin.cases.status_published')}</SelectItem>
               </SelectContent>
             </Select>
           </div>
 
-          <Button onClick={fetchCases}>搜索</Button>
+          <Button onClick={fetchCases}>{t('admin.cases.button_search')}</Button>
         </div>
 
         {/* 案例列表 */}
         <Card>
           <CardHeader>
-            <CardTitle>临床案例列表</CardTitle>
+            <CardTitle>{t('admin.cases.table_title')}</CardTitle>
           </CardHeader>
           <CardContent>
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>案例标题</TableHead>
-                  <TableHead>关联量表</TableHead>
-                  <TableHead>专科</TableHead>
-                  <TableHead>难度</TableHead>
-                  <TableHead>状态</TableHead>
-                  <TableHead>作者</TableHead>
-                  <TableHead>创建时间</TableHead>
-                  <TableHead>操作</TableHead>
+                  <TableHead>{t('admin.cases.table_case_title')}</TableHead>
+                  <TableHead>{t('admin.cases.table_related_scale')}</TableHead>
+                  <TableHead>{t('admin.cases.table_specialty')}</TableHead>
+                  <TableHead>{t('admin.cases.table_difficulty')}</TableHead>
+                  <TableHead>{t('admin.cases.table_status')}</TableHead>
+                  <TableHead>{t('admin.cases.table_author')}</TableHead>
+                  <TableHead>{t('admin.cases.table_created_at')}</TableHead>
+                  <TableHead>{t('admin.cases.table_actions')}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -580,7 +582,7 @@ export function AdminCasesManager() {
                     <TableCell>{caseItem.specialty || "N/A"}</TableCell>
                     <TableCell>
                       <Badge variant="outline">
-                        {caseItem.difficultyLevel || "未设定"}
+                        {caseItem.difficultyLevel || t('admin.cases.difficulty_not_set')}
                       </Badge>
                     </TableCell>
                     <TableCell>
@@ -600,7 +602,7 @@ export function AdminCasesManager() {
                           onClick={() => router.push(`/insights/cases/${caseItem.id}`)}
                         >
                           <Eye className="w-3 h-3 mr-1" />
-                          查看
+                          {t('admin.cases.button_view')}
                         </Button>
                         <Button
                           size="sm"
@@ -608,7 +610,7 @@ export function AdminCasesManager() {
                           onClick={() => openEditDialog(caseItem)}
                         >
                           <Edit className="w-3 h-3 mr-1" />
-                          编辑
+                          {t('admin.cases.button_edit')}
                         </Button>
                         {caseItem.reviewStatus === "draft" && (
                           <Button
@@ -620,7 +622,7 @@ export function AdminCasesManager() {
                             }}
                           >
                             <Trash2 className="w-3 h-3 mr-1" />
-                            删除
+                            {t('admin.cases.button_delete')}
                           </Button>
                         )}
                       </div>
@@ -629,7 +631,7 @@ export function AdminCasesManager() {
                 )) : (
                   <TableRow>
                     <TableCell colSpan={8} className="h-24 text-center">
-                      暂无案例记录
+                      {t('admin.cases.no_cases')}
                     </TableCell>
                   </TableRow>
                 )}
@@ -645,10 +647,10 @@ export function AdminCasesManager() {
                 disabled={page === 1}
               >
                 <ChevronLeft className="h-4 w-4" />
-                上一页
+                {t('admin.cases.pagination_previous')}
               </Button>
               <span className="text-sm text-muted-foreground">
-                第 {page} 页
+                {t('admin.cases.pagination_page').replace('{page}', page.toString())}
               </span>
               <Button
                 variant="outline"
@@ -656,7 +658,7 @@ export function AdminCasesManager() {
                 onClick={() => setPage(page + 1)}
                 disabled={!hasMore}
               >
-                下一页
+                {t('admin.cases.pagination_next')}
                 <ChevronRight className="h-4 w-4" />
               </Button>
             </div>
@@ -668,10 +670,10 @@ export function AdminCasesManager() {
       <ConfirmDialog
         open={deleteConfirmOpen}
         onOpenChange={setDeleteConfirmOpen}
-        title="删除临床案例"
-        description="确定要删除这个临床案例吗？此操作不可逆转。"
-        confirmText="删除"
-        cancelText="取消"
+        title={t('admin.cases.delete_confirm_title')}
+        description={t('admin.cases.delete_confirm_description')}
+        confirmText={t('admin.cases.delete_confirm_button')}
+        cancelText={t('admin.cases.delete_cancel_button')}
         onConfirm={deleteCase}
         variant="destructive"
       />

@@ -220,7 +220,7 @@ export function SubscriptionManager() {
                     </p>
                     <p className="text-sm text-muted-foreground">
                       {subscription?.planExpiresAt
-                        ? new Date(subscription.planExpiresAt).toLocaleDateString(isZh ? 'zh-CN' : 'en-US')
+                        ? new Date(subscription.planExpiresAt).toLocaleDateString(language === 'zh' ? 'zh-CN' : 'en-US')
                         : t('billing.permanent')}
                     </p>
                   </div>

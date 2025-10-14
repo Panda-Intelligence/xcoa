@@ -50,8 +50,7 @@ interface DashboardData {
 }
 
 export default function InterpretationDashboard() {
-  const { language } = useLanguage();
-  const isZh = language === 'zh';
+  const { t } = useLanguage();
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState<DashboardData | null>(null);
 
@@ -79,7 +78,7 @@ export default function InterpretationDashboard() {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
         <div className="animate-pulse text-muted-foreground">
-          {isZh ? '加载中...' : 'Loading...'}
+          {t('admin.interpretations.dashboard.loading')}
         </div>
       </div>
     );
@@ -89,7 +88,7 @@ export default function InterpretationDashboard() {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
         <div className="text-muted-foreground">
-          {isZh ? '加载失败' : 'Failed to load'}
+          {t('admin.interpretations.dashboard.failed_to_load')}
         </div>
       </div>
     );
@@ -99,10 +98,10 @@ export default function InterpretationDashboard() {
     <div className="container mx-auto p-6 space-y-6">
       <div>
         <h1 className="text-3xl font-bold">
-          {isZh ? '解读生成监控台' : 'Interpretation Dashboard'}
+          {t('admin.interpretations.dashboard.title')}
         </h1>
         <p className="text-muted-foreground mt-1">
-          {isZh ? '实时监控 AI 解读生成进度和质量' : 'Monitor AI interpretation generation progress and quality'}
+          {t('admin.interpretations.dashboard.description')}
         </p>
       </div>
 
@@ -111,13 +110,13 @@ export default function InterpretationDashboard() {
           <CardHeader className="pb-3">
             <CardTitle className="text-sm font-medium flex items-center">
               <FileText className="w-4 h-4 mr-2 text-blue-600" />
-              总量表数
+              {t('admin.interpretations.dashboard.total_scales')}
             </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-3xl font-bold">{data.overview.totalScales}</div>
             <p className="text-xs text-muted-foreground mt-1">
-              已解读: {data.overview.totalInterpretations}
+              {t('admin.interpretations.dashboard.interpreted')} {data.overview.totalInterpretations}
             </p>
           </CardContent>
         </Card>
@@ -126,13 +125,13 @@ export default function InterpretationDashboard() {
           <CardHeader className="pb-3">
             <CardTitle className="text-sm font-medium flex items-center">
               <TrendingUp className="w-4 h-4 mr-2 text-green-600" />
-              覆盖率
+              {t('admin.interpretations.dashboard.coverage')}
             </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-3xl font-bold">{data.overview.coverage}</div>
             <p className="text-xs text-muted-foreground mt-1">
-              目标: 80%
+              {t('admin.interpretations.dashboard.target')} 80%
             </p>
           </CardContent>
         </Card>
@@ -141,7 +140,7 @@ export default function InterpretationDashboard() {
           <CardHeader className="pb-3">
             <CardTitle className="text-sm font-medium flex items-center">
               <AlertCircle className="w-4 h-4 mr-2 text-orange-600" />
-              待验证
+              {t('admin.interpretations.dashboard.needs_verification')}
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -149,7 +148,7 @@ export default function InterpretationDashboard() {
               {data.overview.needsVerification}
             </div>
             <p className="text-xs text-muted-foreground mt-1">
-              需要专家审核
+              {t('admin.interpretations.dashboard.expert_review_needed')}
             </p>
           </CardContent>
         </Card>
@@ -158,7 +157,7 @@ export default function InterpretationDashboard() {
           <CardHeader className="pb-3">
             <CardTitle className="text-sm font-medium flex items-center">
               <CheckCircle className="w-4 h-4 mr-2 text-emerald-600" />
-              已发布
+              {t('admin.interpretations.dashboard.published')}
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -166,7 +165,7 @@ export default function InterpretationDashboard() {
               {data.status.published}
             </div>
             <p className="text-xs text-muted-foreground mt-1">
-              可供用户查看
+              {t('admin.interpretations.dashboard.visible_to_users')}
             </p>
           </CardContent>
         </Card>
@@ -177,36 +176,36 @@ export default function InterpretationDashboard() {
           <CardHeader>
             <CardTitle className="flex items-center">
               <BarChart3 className="w-5 h-5 mr-2" />
-              状态分布
+              {t('admin.interpretations.dashboard.status_distribution')}
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-3">
               <div className="flex items-center justify-between">
                 <div className="flex items-center">
-                  <Badge variant="secondary" className="mr-2">草稿</Badge>
-                  <span className="text-sm text-muted-foreground">待处理</span>
+                  <Badge variant="secondary" className="mr-2">{t('admin.interpretations.review.badge_draft')}</Badge>
+                  <span className="text-sm text-muted-foreground">{t('admin.interpretations.dashboard.draft_pending')}</span>
                 </div>
                 <span className="font-semibold">{data.status.draft}</span>
               </div>
               <div className="flex items-center justify-between">
                 <div className="flex items-center">
-                  <Badge className="bg-yellow-500 text-white mr-2">审核中</Badge>
-                  <span className="text-sm text-muted-foreground">专家审核</span>
+                  <Badge className="bg-yellow-500 text-white mr-2">{t('admin.interpretations.review.badge_reviewing')}</Badge>
+                  <span className="text-sm text-muted-foreground">{t('admin.interpretations.dashboard.reviewing_expert')}</span>
                 </div>
                 <span className="font-semibold">{data.status.reviewing}</span>
               </div>
               <div className="flex items-center justify-between">
                 <div className="flex items-center">
-                  <Badge className="bg-blue-500 text-white mr-2">已审核</Badge>
-                  <span className="text-sm text-muted-foreground">待发布</span>
+                  <Badge className="bg-blue-500 text-white mr-2">{t('admin.interpretations.review.badge_approved')}</Badge>
+                  <span className="text-sm text-muted-foreground">{t('admin.interpretations.dashboard.approved_pending_publish')}</span>
                 </div>
                 <span className="font-semibold">{data.status.approved}</span>
               </div>
               <div className="flex items-center justify-between">
                 <div className="flex items-center">
-                  <Badge className="bg-green-500 text-white mr-2">已发布</Badge>
-                  <span className="text-sm text-muted-foreground">线上可见</span>
+                  <Badge className="bg-green-500 text-white mr-2">{t('admin.interpretations.review.badge_published')}</Badge>
+                  <span className="text-sm text-muted-foreground">{t('admin.interpretations.dashboard.published_live')}</span>
                 </div>
                 <span className="font-semibold">{data.status.published}</span>
               </div>
@@ -218,15 +217,15 @@ export default function InterpretationDashboard() {
           <CardHeader>
             <CardTitle className="flex items-center">
               <Zap className="w-5 h-5 mr-2" />
-              生成方式
+              {t('admin.interpretations.dashboard.generation_method')}
             </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
               <div className="flex items-center justify-between p-4 bg-purple-50 rounded-lg">
                 <div>
-                  <div className="font-semibold">AI 生成</div>
-                  <div className="text-sm text-muted-foreground">Claude 3.5 Sonnet</div>
+                  <div className="font-semibold">{t('admin.interpretations.dashboard.ai_generated')}</div>
+                  <div className="text-sm text-muted-foreground">{t('admin.interpretations.dashboard.claude_model')}</div>
                 </div>
                 <div className="text-2xl font-bold text-purple-600">
                   {data.generation.aiGenerated}
@@ -234,8 +233,8 @@ export default function InterpretationDashboard() {
               </div>
               <div className="flex items-center justify-between p-4 bg-blue-50 rounded-lg">
                 <div>
-                  <div className="font-semibold">人工创建</div>
-                  <div className="text-sm text-muted-foreground">专家编写</div>
+                  <div className="font-semibold">{t('admin.interpretations.dashboard.manual_created')}</div>
+                  <div className="text-sm text-muted-foreground">{t('admin.interpretations.dashboard.expert_written')}</div>
                 </div>
                 <div className="text-2xl font-bold text-blue-600">
                   {data.generation.manualCreated}
@@ -251,28 +250,28 @@ export default function InterpretationDashboard() {
           <CardHeader>
             <CardTitle className="flex items-center">
               <Users className="w-5 h-5 mr-2" />
-              用户参与度
+              {t('admin.interpretations.dashboard.user_engagement')}
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center">
                 <Eye className="w-4 h-4 mr-2 text-blue-500" />
-                <span className="text-sm">总查看次数</span>
+                <span className="text-sm">{t('admin.interpretations.dashboard.total_views')}</span>
               </div>
               <span className="font-semibold">{data.engagement.totalViews?.toLocaleString()}</span>
             </div>
             <div className="flex items-center justify-between">
               <div className="flex items-center">
                 <Heart className="w-4 h-4 mr-2 text-red-500" />
-                <span className="text-sm">有帮助反馈</span>
+                <span className="text-sm">{t('admin.interpretations.dashboard.helpful_feedback')}</span>
               </div>
               <span className="font-semibold">{data.engagement.totalHelpful?.toLocaleString()}</span>
             </div>
             <div className="flex items-center justify-between">
               <div className="flex items-center">
                 <TrendingUp className="w-4 h-4 mr-2 text-green-500" />
-                <span className="text-sm">有帮助率</span>
+                <span className="text-sm">{t('admin.interpretations.dashboard.helpful_rate')}</span>
               </div>
               <span className="font-semibold">{data.engagement.helpfulRate}</span>
             </div>
@@ -283,16 +282,16 @@ export default function InterpretationDashboard() {
           <CardHeader>
             <CardTitle className="flex items-center">
               <BarChart3 className="w-5 h-5 mr-2" />
-              质量评分
+              {t('admin.interpretations.dashboard.quality_scores')}
             </CardTitle>
-            <CardDescription>基于专家审核的平均分数</CardDescription>
+            <CardDescription>{t('admin.interpretations.dashboard.quality_scores_description')}</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             {data.quality.avgQualityScore ? (
               <>
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
-                    <span className="text-sm">整体质量</span>
+                    <span className="text-sm">{t('admin.interpretations.dashboard.overall_quality')}</span>
                     <span className="font-semibold">{data.quality.avgQualityScore.toFixed(1)}/100</span>
                   </div>
                   <div className="w-full bg-gray-200 rounded-full h-2">
@@ -304,7 +303,7 @@ export default function InterpretationDashboard() {
                 </div>
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
-                    <span className="text-sm">完整性</span>
+                    <span className="text-sm">{t('admin.interpretations.dashboard.completeness')}</span>
                     <span className="font-semibold">{data.quality.avgCompletenessScore?.toFixed(1)}/100</span>
                   </div>
                   <div className="w-full bg-gray-200 rounded-full h-2">
@@ -316,7 +315,7 @@ export default function InterpretationDashboard() {
                 </div>
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
-                    <span className="text-sm">准确性</span>
+                    <span className="text-sm">{t('admin.interpretations.dashboard.accuracy')}</span>
                     <span className="font-semibold">{data.quality.avgAccuracyScore?.toFixed(1)}/100</span>
                   </div>
                   <div className="w-full bg-gray-200 rounded-full h-2">
@@ -329,8 +328,8 @@ export default function InterpretationDashboard() {
               </>
             ) : (
               <div className="text-center py-8 text-muted-foreground">
-                <p>暂无质量评分数据</p>
-                <p className="text-sm mt-1">审核后将显示评分</p>
+                <p>{t('admin.interpretations.dashboard.no_quality_data')}</p>
+                <p className="text-sm mt-1">{t('admin.interpretations.dashboard.quality_data_after_review')}</p>
               </div>
             )}
           </CardContent>
@@ -342,11 +341,11 @@ export default function InterpretationDashboard() {
           <div className="flex items-center justify-between">
             <CardTitle className="flex items-center">
               <Clock className="w-5 h-5 mr-2" />
-              最近生成
+              {t('admin.interpretations.dashboard.recent_generations')}
             </CardTitle>
             <Link href="/admin/interpretations">
               <Button variant="outline" size="sm">
-                查看全部
+                {t('admin.interpretations.dashboard.view_all')}
               </Button>
             </Link>
           </div>

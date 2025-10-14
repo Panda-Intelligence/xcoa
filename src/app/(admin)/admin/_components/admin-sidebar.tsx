@@ -63,23 +63,23 @@ export function AdminSidebar({ ...props }: React.ComponentProps<typeof Sidebar>)
       isActive: true,
     },
     {
-      title: t('admin.copyright_holders'),
+      title: t('admin.copyright_holders_menu'),
       url: "/admin/copyright-holders" as Route,
       icon: Copyright,
       isActive: true,
     },
     {
-      title: '量表解读',
+      title: t('admin.interpretations.dashboard.title'),
       url: "/admin/interpretations" as Route,
       icon: BookOpen,
       isActive: true,
       items: [
         {
-          title: '审核管理',
+          title: t('admin.interpretations.review.title'),
           url: "/admin/interpretations" as Route,
         },
         {
-          title: '监控仪表板',
+          title: t('admin.interpretations.dashboard.title'),
           url: "/admin/interpretations/dashboard" as Route,
         },
       ],

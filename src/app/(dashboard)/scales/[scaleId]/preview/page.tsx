@@ -133,12 +133,12 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
     const timestamp = new Date();
 
     if (!value || (Array.isArray(value) && value.length === 0)) {
-      console.error('选择的答案为空或undefined!');
+      console.error('Selected answer is empty or undefined!');
       return;
     }
 
     setAnswers(prev => {
-      console.log('当前答案数组:', prev);
+      console.log('Current answers array:', prev);
       const existing = prev.find(a => a.itemNumber === itemNumber);
       let newAnswers: Answer[];
 
@@ -156,32 +156,32 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
         newAnswers = prev.map(a =>
           a.itemNumber === itemNumber ? newAnswer : a
         );
-        console.log('更新现有答案');
+        console.log('Updated existing answer');
       } else {
         newAnswers = [...prev, newAnswer];
-        console.log('添加新答案');
+        console.log('Added new answer');
       }
-      console.log('新答案数组:', newAnswers);
+      console.log('New answers array:', newAnswers);
       return newAnswers;
     });
 
     if (!completedItems.includes(itemNumber)) {
       setCompletedItems(prev => {
         const newCompleted = [...prev, itemNumber];
-        console.log('更新已完成题目:', newCompleted);
+        console.log('Updated completed items:', newCompleted);
         return newCompleted;
       });
       // 自动进入下一题
       autoAdvanceToNext();
     } else {
-      console.log('题目已经完成过');
+      console.log('Item already completed');
     }
     console.log('=== 答题调试结束 ===');
   }, [completedItems, autoAdvanceToNext]);
 
   // 开始交互模式
   const startInteractiveMode = () => {
-    console.log('开始交互模式...');
+    console.log('Starting interactive mode...');
     setViewMode('interactive');
     setStartTime(new Date());
     setCurrentItemIndex(0);
@@ -193,17 +193,17 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
 
     // 如果当前数据不是完整模式，重新获取完整数据
     if (!previewData?.preview?.isFullMode) {
-      console.log('加载完整模式数据...');
+      console.log('Loading full mode data...');
       setLoading(true);
       fetch(`/api/scales/${scaleId}/preview?mode=full`)
         .then(res => res.json())
         .then(data => {
-          console.log('完整模式数据加载结果:', data);
+          console.log('Full mode data loaded:', data);
           if (data.error) {
             console.error('Failed to load full scale data:', data.error);
           } else {
             setPreviewData(data);
-            console.log('设置了新的预览数据:', data.preview?.items?.length, '个题目');
+            console.log('Set new preview data:', data.preview?.items?.length, 'items');
           }
         })
         .catch(err => {
@@ -211,7 +211,7 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
         })
         .finally(() => setLoading(false));
     } else {
-      console.log('已经是完整模式，题目数量:', previewData.preview.items?.length);
+      console.log('Already in full mode, item count:', previewData.preview.items?.length);
     }
   };
 
@@ -294,7 +294,7 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
 
       return data.sessionId;
     } catch (error) {
-      console.error('保存结果失败:', error);
+      console.error('Failed to save results:', error);
       toast.error(error instanceof Error ? error.message : t('scale_preview.save_failed', 'Failed to save results'));
       throw error;
     } finally {
@@ -348,7 +348,7 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
         router.push(data.report.reportUrl);
       }
     } catch (error) {
-      console.error('生成报告失败:', error);
+      console.error('Failed to generate report:', error);
       toast.error(error instanceof Error ? error.message : t('scale_preview.report_generation_failed', 'Failed to generate report'));
     } finally {
       setIsGeneratingReport(false);
@@ -359,19 +359,19 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
   const calculateScore = useCallback(() => {
 
     if (!previewData?.preview?.items) {
-      console.log('没有预览数据或题目数据');
+      console.log('No preview data or items data');
       return { total: 0, interpretation: t('scale_preview.no_data', 'No data') };
     }
 
     if (answers.length === 0) {
-      console.log('没有任何答案');
+      console.log('No answers');
       return { total: 0, interpretation: t('scale_preview.not_started', 'Not yet started') };
     }
 
     const total = answers.reduce((sum, answer, index) => {
-      console.log(`处理答案${index + 1}:`, answer);
+      console.log(`Processing answer ${index + 1}:`, answer);
       const item = previewData.preview.items.find((i: any) => i.itemNumber === answer.itemNumber);
-      console.log('找到对应题目:', item ? '是' : '否');
+      console.log('Found corresponding item:', item ? 'yes' : 'no');
 
       if (item?.responseOptions && item.responseOptions.length > 0) {
         let score = 0;
@@ -397,11 +397,11 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
 
         return sum + score;
       }
-      console.log('题目没有选项或匹配失败');
+      console.log('Item has no options or match failed');
       return sum;
     }, 0);
 
-    console.log('最终总分:', total);
+    console.log('Final total score:', total);
 
     // 根据量表的切分值提供解读
     const scoring = previewData.scoring;
@@ -422,8 +422,7 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
       interpretation = t('scale_preview.total_score_format', 'Total score: {{score}} points', { score: total });
     }
 
-    console.log('最终解读:', interpretation);
-    console.log('=== 计分调试结束 ===');
+    console.log('Final interpretation:', interpretation);
     return { total, interpretation };
   }, [answers, previewData]);
 

@@ -32,6 +32,7 @@ import {
 import { PageHeader } from "@/components/page-header";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/hooks/useToast";
+import { useLanguage } from "@/hooks/useLanguage";
 import Link from "next/link";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 
@@ -80,6 +81,7 @@ interface ScaleStats {
 export function AdminScalesManager() {
   const router = useRouter();
   const toast = useToast();
+  const { t } = useLanguage();
   const [scales, setScales] = useState<EcoaScale[]>([]);
   const [stats, setStats] = useState<ScaleStats>({ total: 0, published: 0, draft: 0, validated: 0 });
   const [loading, setLoading] = useState(true);
@@ -125,10 +127,10 @@ export function AdminScalesManager() {
         setStats(data.statistics || { total: 0, published: 0, draft: 0, validated: 0 });
         setHasMore(data.pagination?.hasMore || false);
       } else {
-        console.error("加载量表失败:", data.error);
+        console.error("Failed to load scales:", data.error);
       }
     } catch (error) {
-      console.error("加载量表失败:", error);
+      console.error("Failed to load scales:", error);
     } finally {
       setLoading(false);
     }
@@ -155,13 +157,13 @@ export function AdminScalesManager() {
         setCreateDialogOpen(false);
         resetNewScale();
         fetchScales();
-        toast.success("量表创建成功！");
+        toast.success(t('admin.scales.created_successfully'));
       } else {
-        toast.error(data.error || "创建量表失败");
+        toast.error(data.error || t('admin.scales.create_failed'));
       }
     } catch (error) {
-      console.error("创建量表错误:", error);
-      toast.error("网络错误，请稍后重试");
+      console.error("Error creating scale:", error);
+      toast.error(t('admin.scales.network_error_retry'));
     }
   };
 
@@ -179,13 +181,13 @@ export function AdminScalesManager() {
       if (response.ok) {
         setScaleToDelete(null);
         fetchScales();
-        toast.success("量表删除成功！");
+        toast.success(t('admin.scales.deleted_successfully'));
       } else {
-        toast.error(data.error || "删除量表失败");
+        toast.error(data.error || t('admin.scales.delete_failed'));
       }
     } catch (error) {
-      console.error("删除量表错误:", error);
-      toast.error("网络错误，请稍后重试");
+      console.error("Error deleting scale:", error);
+      toast.error(t('admin.scales.network_error_retry'));
     }
   };
 
@@ -200,11 +202,49 @@ export function AdminScalesManager() {
 
   const getStatusLabel = (status: string) => {
     const labels = {
-      draft: "草稿",
-      validated: "已验证",
-      published: "已发布"
+      draft: t('admin.scales.status_draft'),
+      validated: t('admin.scales.status_validated'),
+      published: t('admin.scales.status_published')
     };
     return labels[status as keyof typeof labels] || status;
+  };
+
+  const getHolderTypeLabel = (type: string) => {
+    const labels = {
+      publisher: t('admin.scales.holder_type_publisher'),
+      research_institution: t('admin.scales.holder_type_research'),
+      individual: t('admin.scales.holder_type_individual'),
+      foundation: t('admin.scales.holder_type_foundation')
+    };
+    return labels[type as keyof typeof labels] || type;
+  };
+
+  const getLicenseTypeLabel = (type: string) => {
+    const labels = {
+      public_domain: t('admin.scales.license_public_domain'),
+      academic_free: t('admin.scales.license_academic_free'),
+      commercial: t('admin.scales.license_commercial'),
+      contact_required: t('admin.scales.license_contact_required')
+    };
+    return labels[type as keyof typeof labels] || type;
+  };
+
+  const resetNewScale = () => {
+    setNewScale({
+      name: "",
+      nameEn: "",
+      acronym: "",
+      description: "",
+      administrationTime: "",
+      targetPopulation: "",
+      ageRange: "",
+      validationStatus: "draft",
+      copyrightInfo: "",
+      copyrightHolderId: "",
+      licenseType: "contact_required",
+      licenseTerms: "",
+      usageRestrictions: ""
+    });
   };
 
   if (loading && page === 1) {
@@ -213,7 +253,7 @@ export function AdminScalesManager() {
         <div className="min-h-[100vh] flex items-center justify-center">
           <div className="text-center">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900 mx-auto"></div>
-            <p className="mt-2 text-sm text-muted-foreground">加载中...</p>
+            <p className="mt-2 text-sm text-muted-foreground">{t('admin.scales.loading')}</p>
           </div>
         </div>
       </div>
@@ -226,7 +266,7 @@ export function AdminScalesManager() {
         items={[
           {
             href: "/admin/scales",
-            label: "量表管理"
+            label: t('admin.scales.breadcrumb_title')
           }
         ]}
       />
@@ -236,10 +276,10 @@ export function AdminScalesManager() {
           <div>
             <h1 className="text-2xl font-bold flex items-center space-x-2">
               <Scale className="w-6 h-6 text-blue-600" />
-              <span>量表管理</span>
+              <span>{t('admin.scales.title')}</span>
             </h1>
             <p className="text-muted-foreground">
-              管理系统中的所有eCOA量表，创建、编辑和发布量表内容
+              {t('admin.scales.description')}
             </p>
           </div>
 
@@ -248,115 +288,115 @@ export function AdminScalesManager() {
             <DialogTrigger asChild>
               <Button>
                 <Plus className="w-4 h-4 mr-2" />
-                创建量表
+                {t('admin.scales.button_create_scale')}
               </Button>
             </DialogTrigger>
             <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
               <DialogHeader>
-                <DialogTitle>创建新量表</DialogTitle>
+                <DialogTitle>{t('admin.scales.form_create_title')}</DialogTitle>
                 <DialogDescription>
-                  创建一个新的eCOA量表
+                  {t('admin.scales.form_create_description')}
                 </DialogDescription>
               </DialogHeader>
 
               <Tabs defaultValue="basic" className="w-full">
                 <TabsList className="grid w-full grid-cols-2">
-                  <TabsTrigger value="basic">基本信息</TabsTrigger>
-                  <TabsTrigger value="copyright">版权信息</TabsTrigger>
+                  <TabsTrigger value="basic">{t('admin.scales.tab_basic_info')}</TabsTrigger>
+                  <TabsTrigger value="copyright">{t('admin.scales.tab_copyright_info')}</TabsTrigger>
                 </TabsList>
 
                 <TabsContent value="basic" className="space-y-4 mt-4">
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <Label>量表名称 (中文) *</Label>
+                      <Label>{t('admin.scales.label_scale_name_cn')}</Label>
                       <Input
                         value={newScale.name}
                         onChange={(e) => setNewScale({ ...newScale, name: e.target.value })}
-                        placeholder="患者健康问卷"
+                        placeholder={t('admin.scales.placeholder_scale_name_cn')}
                       />
                     </div>
                     <div>
-                      <Label>量表名称 (英文)</Label>
+                      <Label>{t('admin.scales.label_scale_name_en')}</Label>
                       <Input
                         value={newScale.nameEn}
                         onChange={(e) => setNewScale({ ...newScale, nameEn: e.target.value })}
-                        placeholder="Patient Health Questionnaire"
+                        placeholder={t('admin.scales.placeholder_scale_name_en')}
                       />
                     </div>
                   </div>
 
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <Label>缩写 *</Label>
+                      <Label>{t('admin.scales.label_acronym')}</Label>
                       <Input
                         value={newScale.acronym}
                         onChange={(e) => setNewScale({ ...newScale, acronym: e.target.value })}
-                        placeholder="PHQ-9"
+                        placeholder={t('admin.scales.placeholder_acronym')}
                       />
                     </div>
                     <div>
-                      <Label>状态</Label>
+                      <Label>{t('admin.scales.label_status')}</Label>
                       <Select value={newScale.validationStatus} onValueChange={(value) =>
                         setNewScale({ ...newScale, validationStatus: value })}>
                         <SelectTrigger>
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="draft">草稿</SelectItem>
-                          <SelectItem value="validated">已验证</SelectItem>
-                          <SelectItem value="published">已发布</SelectItem>
+                          <SelectItem value="draft">{t('admin.scales.status_draft')}</SelectItem>
+                          <SelectItem value="validated">{t('admin.scales.status_validated')}</SelectItem>
+                          <SelectItem value="published">{t('admin.scales.status_published')}</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
                   </div>
 
                   <div>
-                    <Label>描述</Label>
+                    <Label>{t('admin.scales.label_description')}</Label>
                     <Textarea
                       value={newScale.description}
                       onChange={(e) => setNewScale({ ...newScale, description: e.target.value })}
-                      placeholder="量表的详细描述..."
+                      placeholder={t('admin.scales.placeholder_description')}
                       rows={3}
                     />
                   </div>
 
                   <div className="grid grid-cols-3 gap-4">
                     <div>
-                      <Label>管理时间 (分钟)</Label>
+                      <Label>{t('admin.scales.label_administration_time')}</Label>
                       <Input
                         type="number"
                         value={newScale.administrationTime}
                         onChange={(e) => setNewScale({ ...newScale, administrationTime: e.target.value })}
-                        placeholder="10"
+                        placeholder={t('admin.scales.placeholder_administration_time')}
                       />
                     </div>
                     <div>
-                      <Label>目标人群</Label>
+                      <Label>{t('admin.scales.label_target_population')}</Label>
                       <Input
                         value={newScale.targetPopulation}
                         onChange={(e) => setNewScale({ ...newScale, targetPopulation: e.target.value })}
-                        placeholder="成年患者"
+                        placeholder={t('admin.scales.placeholder_target_population')}
                       />
                     </div>
                     <div>
-                      <Label>年龄范围</Label>
+                      <Label>{t('admin.scales.label_age_range')}</Label>
                       <Input
                         value={newScale.ageRange}
                         onChange={(e) => setNewScale({ ...newScale, ageRange: e.target.value })}
-                        placeholder="18-65岁"
+                        placeholder={t('admin.scales.placeholder_age_range')}
                       />
                     </div>
                   </div>
 
                   <div className="flex justify-end space-x-2">
                     <Button variant="outline" onClick={() => setCreateDialogOpen(false)}>
-                      取消
+                      {t('admin.scales.button_cancel')}
                     </Button>
                     <Button
                       onClick={handleCreateScale}
                       disabled={!newScale.name || !newScale.acronym}
                     >
-                      创建量表
+                      {t('admin.scales.button_create')}
                     </Button>
                   </div>
                 </TabsContent>
@@ -366,12 +406,12 @@ export function AdminScalesManager() {
                       <CopyrightHolderSearch
                         value={newScale.copyrightHolderId}
                         onSelect={(holderId) => setNewScale({ ...newScale, copyrightHolderId: holderId || "" })}
-                        label="版权方"
-                        placeholder="搜索并选择版权方..."
+                        label={t('admin.scales.label_copyright_holder')}
+                        placeholder={t('admin.scales.placeholder_copyright_holder')}
                       />
                     </div>
                     <div>
-                      <Label>许可类型</Label>
+                      <Label>{t('admin.scales.label_license_type')}</Label>
                       <Select
                         value={newScale.licenseType}
                         onValueChange={(value) => setNewScale({ ...newScale, licenseType: value })}
@@ -380,54 +420,54 @@ export function AdminScalesManager() {
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="public_domain">公共领域</SelectItem>
-                          <SelectItem value="academic_free">学术免费</SelectItem>
-                          <SelectItem value="commercial">商业许可</SelectItem>
-                          <SelectItem value="contact_required">需要联系</SelectItem>
+                          <SelectItem value="public_domain">{t('admin.scales.license_public_domain')}</SelectItem>
+                          <SelectItem value="academic_free">{t('admin.scales.license_academic_free')}</SelectItem>
+                          <SelectItem value="commercial">{t('admin.scales.license_commercial')}</SelectItem>
+                          <SelectItem value="contact_required">{t('admin.scales.license_contact_required')}</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
                   </div>
 
                   <div>
-                    <Label>版权信息</Label>
+                    <Label>{t('admin.scales.label_copyright_info')}</Label>
                     <Textarea
                       value={newScale.copyrightInfo}
                       onChange={(e) => setNewScale({ ...newScale, copyrightInfo: e.target.value })}
-                      placeholder="版权所有 © 2023 患者健康问卷开发团队"
+                      placeholder={t('admin.scales.placeholder_copyright_info')}
                       rows={2}
                     />
                   </div>
 
                   <div>
-                    <Label>许可条款</Label>
+                    <Label>{t('admin.scales.label_license_terms')}</Label>
                     <Textarea
                       value={newScale.licenseTerms}
                       onChange={(e) => setNewScale({ ...newScale, licenseTerms: e.target.value })}
-                      placeholder="详细的许可使用条款..."
+                      placeholder={t('admin.scales.placeholder_license_terms')}
                       rows={4}
                     />
                   </div>
 
                   <div>
-                    <Label>使用限制</Label>
+                    <Label>{t('admin.scales.label_usage_restrictions')}</Label>
                     <Textarea
                       value={newScale.usageRestrictions}
                       onChange={(e) => setNewScale({ ...newScale, usageRestrictions: e.target.value })}
-                      placeholder="使用的限制条件和注意事项..."
+                      placeholder={t('admin.scales.placeholder_usage_restrictions')}
                       rows={3}
                     />
                   </div>
 
                   <div className="flex justify-end space-x-2">
                     <Button variant="outline" onClick={() => setCreateDialogOpen(false)}>
-                      取消
+                      {t('admin.scales.button_cancel')}
                     </Button>
                     <Button
                       onClick={handleCreateScale}
                       disabled={!newScale.name || !newScale.acronym}
                     >
-                      创建量表
+                      {t('admin.scales.button_create')}
                     </Button>
                   </div>
                 </TabsContent>
@@ -441,25 +481,25 @@ export function AdminScalesManager() {
           <Card>
             <CardContent className="p-4 text-center">
               <div className="text-2xl font-bold text-blue-600">{stats.total}</div>
-              <div className="text-sm text-muted-foreground">总量表数</div>
+              <div className="text-sm text-muted-foreground">{t('admin.scales.stats_total')}</div>
             </CardContent>
           </Card>
           <Card>
             <CardContent className="p-4 text-center">
               <div className="text-2xl font-bold text-green-600">{stats.published}</div>
-              <div className="text-sm text-muted-foreground">已发布</div>
+              <div className="text-sm text-muted-foreground">{t('admin.scales.stats_published')}</div>
             </CardContent>
           </Card>
           <Card>
             <CardContent className="p-4 text-center">
               <div className="text-2xl font-bold text-blue-600">{stats.validated}</div>
-              <div className="text-sm text-muted-foreground">已验证</div>
+              <div className="text-sm text-muted-foreground">{t('admin.scales.stats_validated')}</div>
             </CardContent>
           </Card>
           <Card>
             <CardContent className="p-4 text-center">
               <div className="text-2xl font-bold text-gray-600">{stats.draft}</div>
-              <div className="text-sm text-muted-foreground">草稿</div>
+              <div className="text-sm text-muted-foreground">{t('admin.scales.stats_draft')}</div>
             </CardContent>
           </Card>
         </div>
@@ -469,7 +509,7 @@ export function AdminScalesManager() {
           <div className="flex-1 relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
             <Input
-              placeholder="搜索量表名称、缩写或描述..."
+              placeholder={t('admin.scales.search_placeholder')}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="pl-10"
@@ -483,33 +523,33 @@ export function AdminScalesManager() {
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">所有状态</SelectItem>
-                <SelectItem value="draft">草稿</SelectItem>
-                <SelectItem value="validated">已验证</SelectItem>
-                <SelectItem value="published">已发布</SelectItem>
+                <SelectItem value="all">{t('admin.scales.filter_all_status')}</SelectItem>
+                <SelectItem value="draft">{t('admin.scales.status_draft')}</SelectItem>
+                <SelectItem value="validated">{t('admin.scales.status_validated')}</SelectItem>
+                <SelectItem value="published">{t('admin.scales.status_published')}</SelectItem>
               </SelectContent>
             </Select>
           </div>
 
-          <Button onClick={fetchScales}>搜索</Button>
+          <Button onClick={fetchScales}>{t('admin.scales.button_search')}</Button>
         </div>
 
         {/* 量表列表 */}
         <Card>
           <CardHeader>
-            <CardTitle>量表列表</CardTitle>
+            <CardTitle>{t('admin.scales.table_title')}</CardTitle>
           </CardHeader>
           <CardContent>
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>量表信息</TableHead>
-                  <TableHead>缩写</TableHead>
-                  <TableHead>状态</TableHead>
-                  <TableHead>版权方</TableHead>
-                  <TableHead>许可类型</TableHead>
-                  <TableHead>题目数</TableHead>
-                  <TableHead>操作</TableHead>
+                  <TableHead>{t('admin.scales.table_scale_info')}</TableHead>
+                  <TableHead>{t('admin.scales.table_acronym')}</TableHead>
+                  <TableHead>{t('admin.scales.table_status')}</TableHead>
+                  <TableHead>{t('admin.scales.table_copyright_holder')}</TableHead>
+                  <TableHead>{t('admin.scales.table_license_type')}</TableHead>
+                  <TableHead>{t('admin.scales.table_items_count')}</TableHead>
+                  <TableHead>{t('admin.scales.table_actions')}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -556,33 +596,26 @@ export function AdminScalesManager() {
                             )}
                             <div className="flex items-center space-x-1 mt-1">
                               <Badge variant="outline" className="text-xs">
-                                {scale.copyrightHolder.organizationType === 'publisher' ? '出版商' :
-                                  scale.copyrightHolder.organizationType === 'research_institution' ? '研究机构' :
-                                    scale.copyrightHolder.organizationType === 'individual' ? '个人' :
-                                      scale.copyrightHolder.organizationType === 'foundation' ? '基金会' :
-                                        scale.copyrightHolder.organizationType}
+                                {getHolderTypeLabel(scale.copyrightHolder.organizationType)}
                               </Badge>
                               {scale.copyrightHolder.isVerified === 1 && (
                                 <Badge variant="outline" className="text-xs text-green-600">
-                                  已验证
+                                  {t('admin.scales.holder_verified')}
                                 </Badge>
                               )}
                             </div>
                           </div>
                         </Button>
                       ) : (
-                        <span className="text-muted-foreground">未设置</span>
+                        <span className="text-muted-foreground">{t('admin.scales.holder_not_set')}</span>
                       )}
                     </TableCell>
                     <TableCell>
                       {scale.licenseType ? (
                         <Badge variant="outline" className="text-xs">
-                          {scale.licenseType === 'public_domain' ? '公共领域' :
-                            scale.licenseType === 'academic_free' ? '学术免费' :
-                              scale.licenseType === 'commercial' ? '商业许可' :
-                                scale.licenseType === 'contact_required' ? '需联系' : scale.licenseType}
+                          {getLicenseTypeLabel(scale.licenseType)}
                         </Badge>
-                      ) : "未设置"}
+                      ) : t('admin.scales.license_not_set')}
                     </TableCell>
                     <TableCell className="text-center">
                       {scale.itemsCount}
@@ -612,7 +645,7 @@ export function AdminScalesManager() {
                 )) : (
                   <TableRow>
                     <TableCell colSpan={8} className="h-24 text-center">
-                      暂无量表记录
+                      {t('admin.scales.no_scales')}
                     </TableCell>
                   </TableRow>
                 )}
@@ -628,10 +661,10 @@ export function AdminScalesManager() {
                 disabled={page === 1}
               >
                 <ChevronLeft className="h-4 w-4" />
-                上一页
+                {t('admin.scales.pagination_previous')}
               </Button>
               <span className="text-sm text-muted-foreground">
-                第 {page} 页
+                {t('admin.scales.pagination_page', { page })}
               </span>
               <Button
                 variant="outline"
@@ -639,7 +672,7 @@ export function AdminScalesManager() {
                 onClick={() => setPage(page + 1)}
                 disabled={!hasMore}
               >
-                下一页
+                {t('admin.scales.pagination_next')}
                 <ChevronRight className="h-4 w-4" />
               </Button>
             </div>
@@ -651,10 +684,10 @@ export function AdminScalesManager() {
       <ConfirmDialog
         open={deleteConfirmOpen}
         onOpenChange={setDeleteConfirmOpen}
-        title="删除量表"
-        description="确定要删除这个量表吗？此操作不可逆转，相关的临床案例也会受到影响。"
-        confirmText="删除"
-        cancelText="取消"
+        title={t('admin.scales.delete_confirm_title')}
+        description={t('admin.scales.delete_confirm_description')}
+        confirmText={t('admin.scales.delete_confirm_button')}
+        cancelText={t('admin.scales.delete_cancel_button')}
         onConfirm={deleteScale}
         variant="destructive"
       />

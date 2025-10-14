@@ -518,36 +518,6 @@ export default function ScalePage({ params }: ScalePageProps) {
 
           {/* 侧边栏 */}
           <div className="space-y-6">
-            {/* 统计信息 */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-lg">{t('scale.usage_statistics')}</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <span className="flex items-center text-sm">
-                    <Eye className="w-4 h-4 mr-2 text-blue-500" />
-                    {t('scale.total_views')}
-                  </span>
-                  <span className="font-semibold">{statistics.totalViews}</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="flex items-center text-sm">
-                    <Eye className="w-4 h-4 mr-2 text-green-500" />
-                    {t('scale.recent_views')}
-                  </span>
-                  <span className="font-semibold">{statistics.recentViews}</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="flex items-center text-sm">
-                    <Heart className="w-4 h-4 mr-2 text-red-500" />
-                    {t('scale.favorite_count')}
-                  </span>
-                  <span className="font-semibold">{statistics.totalFavorites}</span>
-                </div>
-              </CardContent>
-            </Card>
-
             {/* 量表信息 */}
             <Card>
               <CardHeader>

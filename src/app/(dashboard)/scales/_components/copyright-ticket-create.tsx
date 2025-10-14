@@ -145,7 +145,7 @@ export function CopyrightTicketCreate() {
         toast.error(data.error || t('copyright_ticket_create.submission_error'));
       }
     } catch (error) {
-      console.error('提交工单失败:', error);
+      console.error('Failed to submit copyright ticket:', error);
       toast.error(t('copyright_ticket_create.submission_error'));
     } finally {
       setSubmitting(false);

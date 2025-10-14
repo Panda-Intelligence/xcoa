@@ -30,6 +30,7 @@ import {
   Globe,
 } from "lucide-react";
 import { useToast } from "@/hooks/useToast";
+import { useLanguage } from "@/hooks/useLanguage";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 
 interface CopyrightHolder {
@@ -66,6 +67,7 @@ interface CopyrightHolderStats {
 }
 
 export function CopyrightHolderManager() {
+  const { t } = useLanguage();
   const toast = useToast();
   const [holders, setHolders] = useState<CopyrightHolder[]>([]);
   const [stats, setStats] = useState<CopyrightHolderStats>({ 
@@ -114,11 +116,11 @@ export function CopyrightHolderManager() {
         setHolders(data.holders || []);
         setStats(data.statistics || stats);
       } else {
-        toast.error("加载版权方列表失败");
+        toast.error(t('admin.copyright_holders.toast_load_failed'));
       }
     } catch (error) {
-      console.error("获取版权方列表错误:", error);
-      toast.error("加载版权方列表失败");
+      console.error(t('admin.copyright_holders.error_load'), error);
+      toast.error(t('admin.copyright_holders.toast_load_failed'));
     } finally {
       setLoading(false);
     }
@@ -143,16 +145,16 @@ export function CopyrightHolderManager() {
       const data = await response.json();
 
       if (data.success) {
-        toast.success("版权方创建成功");
+        toast.success(t('admin.copyright_holders.toast_create_success'));
         setCreateDialogOpen(false);
         resetNewHolder();
         fetchHolders();
       } else {
-        toast.error(data.error || "创建版权方失败");
+        toast.error(data.error || t('admin.copyright_holders.toast_create_failed'));
       }
     } catch (error) {
-      console.error("创建版权方错误:", error);
-      toast.error("创建版权方失败");
+      console.error(t('admin.copyright_holders.error_create'), error);
+      toast.error(t('admin.copyright_holders.toast_create_failed'));
     }
   };
 
@@ -169,16 +171,16 @@ export function CopyrightHolderManager() {
       const data = await response.json();
 
       if (data.success) {
-        toast.success("版权方更新成功");
+        toast.success(t('admin.copyright_holders.toast_update_success'));
         setEditDialogOpen(false);
         setEditingHolder(null);
         fetchHolders();
       } else {
-        toast.error(data.error || "更新版权方失败");
+        toast.error(data.error || t('admin.copyright_holders.toast_update_failed'));
       }
     } catch (error) {
-      console.error("更新版权方错误:", error);
-      toast.error("更新版权方失败");
+      console.error(t('admin.copyright_holders.error_update'), error);
+      toast.error(t('admin.copyright_holders.toast_update_failed'));
     }
   };
 
@@ -194,15 +196,15 @@ export function CopyrightHolderManager() {
       const data = await response.json();
 
       if (data.success) {
-        toast.success("版权方删除成功");
+        toast.success(t('admin.copyright_holders.toast_delete_success'));
         setHolderToDelete(null);
         fetchHolders();
       } else {
-        toast.error(data.error || "删除版权方失败");
+        toast.error(data.error || t('admin.copyright_holders.toast_delete_failed'));
       }
     } catch (error) {
-      console.error("删除版权方错误:", error);
-      toast.error("删除版权方失败");
+      console.error(t('admin.copyright_holders.error_delete'), error);
+      toast.error(t('admin.copyright_holders.toast_delete_failed'));
     }
   };
 
@@ -260,10 +262,10 @@ export function CopyrightHolderManager() {
 
   const getTypeLabel = (type: string) => {
     const labelMap = {
-      publisher: "出版商",
-      research_institution: "研究机构",
-      individual: "个人",
-      foundation: "基金会",
+      publisher: t('admin.copyright_holders.org_type_publisher'),
+      research_institution: t('admin.copyright_holders.org_type_research'),
+      individual: t('admin.copyright_holders.org_type_individual'),
+      foundation: t('admin.copyright_holders.org_type_foundation'),
     };
     return labelMap[type as keyof typeof labelMap] || type;
   };
@@ -293,10 +295,10 @@ export function CopyrightHolderManager() {
             <div>
               <h1 className="text-2xl font-bold flex items-center space-x-2">
                 <Copyright className="w-6 h-6 text-blue-600" />
-                <span>版权方管理</span>
+                <span>{t('admin.copyright_holders.title')}</span>
               </h1>
               <p className="text-muted-foreground">
-                管理量表版权方信息和联系方式
+                {t('admin.copyright_holders.description')}
               </p>
             </div>
 
@@ -304,14 +306,14 @@ export function CopyrightHolderManager() {
               <DialogTrigger asChild>
                 <Button>
                   <Plus className="w-4 h-4 mr-2" />
-                  添加版权方
+                  {t('admin.copyright_holders.add_holder')}
                 </Button>
               </DialogTrigger>
               <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
                 <DialogHeader>
-                  <DialogTitle>创建版权方</DialogTitle>
+                  <DialogTitle>{t('admin.copyright_holders.create_holder')}</DialogTitle>
                   <DialogDescription>
-                    添加新的版权方信息
+                    {t('admin.copyright_holders.create_holder_desc')}
                   </DialogDescription>
                 </DialogHeader>
 
@@ -319,41 +321,41 @@ export function CopyrightHolderManager() {
                   {/* 基本信息 */}
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <Label>名称 (中文) *</Label>
+                      <Label>{t('admin.copyright_holders.name_cn_required')}</Label>
                       <Input
                         value={newHolder.name}
                         onChange={(e) => setNewHolder({ ...newHolder, name: e.target.value })}
-                        placeholder="北京师范大学出版社"
+                        placeholder={t('admin.copyright_holders.placeholder_name_cn')}
                       />
                     </div>
                     <div>
-                      <Label>名称 (英文)</Label>
+                      <Label>{t('admin.copyright_holders.name_en')}</Label>
                       <Input
                         value={newHolder.nameEn}
                         onChange={(e) => setNewHolder({ ...newHolder, nameEn: e.target.value })}
-                        placeholder="Beijing Normal University Publishing Group"
+                        placeholder={t('admin.copyright_holders.placeholder_name_en')}
                       />
                     </div>
                   </div>
 
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <Label>组织类型 *</Label>
+                      <Label>{t('admin.copyright_holders.organization_type_required')}</Label>
                       <Select value={newHolder.organizationType} onValueChange={(value) =>
                         setNewHolder({ ...newHolder, organizationType: value })}>
                         <SelectTrigger>
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="publisher">出版商</SelectItem>
-                          <SelectItem value="research_institution">研究机构</SelectItem>
-                          <SelectItem value="individual">个人</SelectItem>
-                          <SelectItem value="foundation">基金会</SelectItem>
+                          <SelectItem value="publisher">{t('admin.copyright_holders.org_type_publisher')}</SelectItem>
+                          <SelectItem value="research_institution">{t('admin.copyright_holders.org_type_research')}</SelectItem>
+                          <SelectItem value="individual">{t('admin.copyright_holders.org_type_individual')}</SelectItem>
+                          <SelectItem value="foundation">{t('admin.copyright_holders.org_type_foundation')}</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
                     <div>
-                      <Label>官网链接</Label>
+                      <Label>{t('admin.copyright_holders.website_link')}</Label>
                       <Input
                         value={newHolder.website}
                         onChange={(e) => setNewHolder({ ...newHolder, website: e.target.value })}
@@ -364,32 +366,32 @@ export function CopyrightHolderManager() {
 
                   {/* 联系信息 */}
                   <div className="space-y-4">
-                    <h3 className="font-medium text-sm">联系信息</h3>
+                    <h3 className="font-medium text-sm">{t('admin.copyright_holders.contact_info')}</h3>
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <Label>联系邮箱</Label>
+                        <Label>{t('admin.copyright_holders.contact_email')}</Label>
                         <Input
                           type="email"
                           value={newHolder.contactEmail}
                           onChange={(e) => setNewHolder({ ...newHolder, contactEmail: e.target.value })}
-                          placeholder="copyright@example.com"
+                          placeholder={t('admin.copyright_holders.placeholder_email')}
                         />
                       </div>
                       <div>
-                        <Label>联系电话</Label>
+                        <Label>{t('admin.copyright_holders.contact_phone')}</Label>
                         <Input
                           value={newHolder.contactPhone}
                           onChange={(e) => setNewHolder({ ...newHolder, contactPhone: e.target.value })}
-                          placeholder="+86-10-12345678"
+                          placeholder={t('admin.copyright_holders.placeholder_phone')}
                         />
                       </div>
                     </div>
                     <div>
-                      <Label>联系地址</Label>
+                      <Label>{t('admin.copyright_holders.contact_address')}</Label>
                       <Input
                         value={newHolder.contactAddress}
                         onChange={(e) => setNewHolder({ ...newHolder, contactAddress: e.target.value })}
-                        placeholder="北京市海淀区..."
+                        placeholder={t('admin.copyright_holders.placeholder_address')}
                       />
                     </div>
                   </div>
@@ -397,20 +399,20 @@ export function CopyrightHolderManager() {
                   {/* 描述信息 */}
                   <div className="space-y-4">
                     <div>
-                      <Label>描述 (中文)</Label>
+                      <Label>{t('admin.copyright_holders.description_cn')}</Label>
                       <Textarea
                         value={newHolder.description}
                         onChange={(e) => setNewHolder({ ...newHolder, description: e.target.value })}
-                        placeholder="版权方的详细描述..."
+                        placeholder={t('admin.copyright_holders.placeholder_description')}
                         rows={3}
                       />
                     </div>
                     <div>
-                      <Label>许可要求</Label>
+                      <Label>{t('admin.copyright_holders.license_requirements')}</Label>
                       <Textarea
                         value={newHolder.licenseRequirements}
                         onChange={(e) => setNewHolder({ ...newHolder, licenseRequirements: e.target.value })}
-                        placeholder="使用许可的具体要求..."
+                        placeholder={t('admin.copyright_holders.placeholder_license')}
                         rows={2}
                       />
                     </div>
@@ -423,26 +425,26 @@ export function CopyrightHolderManager() {
                         checked={newHolder.isActive}
                         onCheckedChange={(checked) => setNewHolder({ ...newHolder, isActive: checked })}
                       />
-                      <Label>启用状态</Label>
+                      <Label>{t('admin.copyright_holders.enable_status')}</Label>
                     </div>
                     <div className="flex items-center space-x-2">
                       <Switch
                         checked={newHolder.isVerified}
                         onCheckedChange={(checked) => setNewHolder({ ...newHolder, isVerified: checked })}
                       />
-                      <Label>已验证</Label>
+                      <Label>{t('admin.copyright_holders.verified_status')}</Label>
                     </div>
                   </div>
 
                   <div className="flex justify-end space-x-2">
                     <Button variant="outline" onClick={() => setCreateDialogOpen(false)}>
-                      取消
+                      {t('admin.copyright_holders.cancel')}
                     </Button>
                     <Button
                       onClick={handleCreateHolder}
                       disabled={!newHolder.name}
                     >
-                      创建版权方
+                      {t('admin.copyright_holders.create_holder')}
                     </Button>
                   </div>
                 </div>
@@ -455,7 +457,7 @@ export function CopyrightHolderManager() {
             <div className="flex-1 relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
               <Input
-                placeholder="搜索版权方名称、邮箱..."
+                placeholder={t('admin.copyright_holders.search_placeholder')}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
@@ -467,14 +469,14 @@ export function CopyrightHolderManager() {
               <Filter className="h-4 w-4 text-gray-500" />
               <Select value={typeFilter} onValueChange={setTypeFilter}>
                 <SelectTrigger className="w-40">
-                  <SelectValue placeholder="组织类型" />
+                  <SelectValue placeholder={t('admin.copyright_holders.organization_type')} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">所有类型</SelectItem>
-                  <SelectItem value="publisher">出版商</SelectItem>
-                  <SelectItem value="research_institution">研究机构</SelectItem>
-                  <SelectItem value="individual">个人</SelectItem>
-                  <SelectItem value="foundation">基金会</SelectItem>
+                  <SelectItem value="all">{t('admin.copyright_holders.all_types')}</SelectItem>
+                  <SelectItem value="publisher">{t('admin.copyright_holders.org_type_publisher')}</SelectItem>
+                  <SelectItem value="research_institution">{t('admin.copyright_holders.org_type_research')}</SelectItem>
+                  <SelectItem value="individual">{t('admin.copyright_holders.org_type_individual')}</SelectItem>
+                  <SelectItem value="foundation">{t('admin.copyright_holders.org_type_foundation')}</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -482,18 +484,18 @@ export function CopyrightHolderManager() {
             <div className="flex items-center space-x-2">
               <Select value={statusFilter} onValueChange={setStatusFilter}>
                 <SelectTrigger className="w-32">
-                  <SelectValue placeholder="状态" />
+                  <SelectValue placeholder={t('admin.status')} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">所有状态</SelectItem>
-                  <SelectItem value="active">活跃</SelectItem>
-                  <SelectItem value="verified">已验证</SelectItem>
+                  <SelectItem value="all">{t('admin.copyright_holders.all_status')}</SelectItem>
+                  <SelectItem value="active">{t('admin.copyright_holders.status_active')}</SelectItem>
+                  <SelectItem value="verified">{t('admin.copyright_holders.status_verified')}</SelectItem>
                 </SelectContent>
               </Select>
             </div>
 
             <Button onClick={handleSearch} disabled={loading}>
-              {loading ? "搜索中..." : "搜索"}
+              {loading ? t('admin.copyright_holders.searching') : t('admin.copyright_holders.search')}
             </Button>
           </div>
         </div>
@@ -507,31 +509,31 @@ export function CopyrightHolderManager() {
             <Card>
               <CardContent className="p-4 text-center">
                 <div className="text-2xl font-bold text-blue-600">{stats.total}</div>
-                <div className="text-sm text-muted-foreground">总版权方</div>
+                <div className="text-sm text-muted-foreground">{t('admin.copyright_holders.stats_total')}</div>
               </CardContent>
             </Card>
             <Card>
               <CardContent className="p-4 text-center">
                 <div className="text-2xl font-bold text-green-600">{stats.active}</div>
-                <div className="text-sm text-muted-foreground">活跃</div>
+                <div className="text-sm text-muted-foreground">{t('admin.copyright_holders.stats_active')}</div>
               </CardContent>
             </Card>
             <Card>
               <CardContent className="p-4 text-center">
                 <div className="text-2xl font-bold text-purple-600">{stats.verified}</div>
-                <div className="text-sm text-muted-foreground">已验证</div>
+                <div className="text-sm text-muted-foreground">{t('admin.copyright_holders.stats_verified')}</div>
               </CardContent>
             </Card>
             <Card>
               <CardContent className="p-4 text-center">
                 <div className="text-2xl font-bold text-orange-600">{stats.publishers}</div>
-                <div className="text-sm text-muted-foreground">出版商</div>
+                <div className="text-sm text-muted-foreground">{t('admin.copyright_holders.stats_publishers')}</div>
               </CardContent>
             </Card>
             <Card>
               <CardContent className="p-4 text-center">
                 <div className="text-2xl font-bold text-cyan-600">{stats.institutions}</div>
-                <div className="text-sm text-muted-foreground">机构</div>
+                <div className="text-sm text-muted-foreground">{t('admin.copyright_holders.stats_institutions')}</div>
               </CardContent>
             </Card>
           </div>
@@ -539,18 +541,18 @@ export function CopyrightHolderManager() {
           {/* 版权方列表 */}
           <Card>
             <CardHeader>
-              <CardTitle>版权方列表</CardTitle>
+              <CardTitle>{t('admin.copyright_holders.holder_list')}</CardTitle>
             </CardHeader>
             <CardContent>
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>版权方信息</TableHead>
-                    <TableHead>组织类型</TableHead>
-                    <TableHead>联系方式</TableHead>
-                    <TableHead>关联量表</TableHead>
-                    <TableHead>状态</TableHead>
-                    <TableHead>操作</TableHead>
+                    <TableHead>{t('admin.copyright_holders.holder_info')}</TableHead>
+                    <TableHead>{t('admin.copyright_holders.organization_type')}</TableHead>
+                    <TableHead>{t('admin.copyright_holders.contact_methods')}</TableHead>
+                    <TableHead>{t('admin.copyright_holders.related_scales')}</TableHead>
+                    <TableHead>{t('admin.status')}</TableHead>
+                    <TableHead>{t('admin.actions')}</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -594,17 +596,17 @@ export function CopyrightHolderManager() {
                       <TableCell>
                         <div className="text-center">
                           <div className="text-lg font-semibold">{holder.scalesCount || 0}</div>
-                          <div className="text-xs text-muted-foreground">个量表</div>
+                          <div className="text-xs text-muted-foreground">{t('admin.copyright_holders.scale_count')}</div>
                         </div>
                       </TableCell>
                       <TableCell>
                         <div className="flex flex-col space-y-1">
                           <Badge variant={holder.isActive ? "default" : "secondary"}>
-                            {holder.isActive ? "活跃" : "停用"}
+                            {holder.isActive ? t('admin.copyright_holders.status_active') : t('admin.copyright_holders.status_inactive')}
                           </Badge>
                           {holder.isVerified && (
                             <Badge variant="outline" className="text-green-600">
-                              已验证
+                              {t('admin.copyright_holders.status_verified')}
                             </Badge>
                           )}
                         </div>
@@ -637,7 +639,7 @@ export function CopyrightHolderManager() {
                       <TableCell colSpan={6} className="text-center py-8">
                         <div className="flex flex-col items-center space-y-2">
                           <Copyright className="w-12 h-12 text-gray-400" />
-                          <p className="text-muted-foreground">暂无版权方数据</p>
+                          <p className="text-muted-foreground">{t('admin.copyright_holders.no_holders')}</p>
                         </div>
                       </TableCell>
                     </TableRow>
@@ -653,9 +655,9 @@ export function CopyrightHolderManager() {
       <Dialog open={editDialogOpen} onOpenChange={setEditDialogOpen}>
         <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>编辑版权方</DialogTitle>
+            <DialogTitle>{t('admin.copyright_holders.edit_holder')}</DialogTitle>
             <DialogDescription>
-              修改版权方信息
+              {t('admin.copyright_holders.edit_holder_desc')}
             </DialogDescription>
           </DialogHeader>
 
@@ -663,41 +665,41 @@ export function CopyrightHolderManager() {
             {/* 基本信息 */}
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <Label>名称 (中文) *</Label>
+                <Label>{t('admin.copyright_holders.name_cn_required')}</Label>
                 <Input
                   value={newHolder.name}
                   onChange={(e) => setNewHolder({ ...newHolder, name: e.target.value })}
-                  placeholder="北京师范大学出版社"
+                  placeholder={t('admin.copyright_holders.placeholder_name_cn')}
                 />
               </div>
               <div>
-                <Label>名称 (英文)</Label>
+                <Label>{t('admin.copyright_holders.name_en')}</Label>
                 <Input
                   value={newHolder.nameEn}
                   onChange={(e) => setNewHolder({ ...newHolder, nameEn: e.target.value })}
-                  placeholder="Beijing Normal University Publishing Group"
+                  placeholder={t('admin.copyright_holders.placeholder_name_en')}
                 />
               </div>
             </div>
 
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <Label>组织类型 *</Label>
+                <Label>{t('admin.copyright_holders.organization_type_required')}</Label>
                 <Select value={newHolder.organizationType} onValueChange={(value) =>
                   setNewHolder({ ...newHolder, organizationType: value })}>
                   <SelectTrigger>
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="publisher">出版商</SelectItem>
-                    <SelectItem value="research_institution">研究机构</SelectItem>
-                    <SelectItem value="individual">个人</SelectItem>
-                    <SelectItem value="foundation">基金会</SelectItem>
+                    <SelectItem value="publisher">{t('admin.copyright_holders.org_type_publisher')}</SelectItem>
+                    <SelectItem value="research_institution">{t('admin.copyright_holders.org_type_research')}</SelectItem>
+                    <SelectItem value="individual">{t('admin.copyright_holders.org_type_individual')}</SelectItem>
+                    <SelectItem value="foundation">{t('admin.copyright_holders.org_type_foundation')}</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
               <div>
-                <Label>官网链接</Label>
+                <Label>{t('admin.copyright_holders.website_link')}</Label>
                 <Input
                   value={newHolder.website}
                   onChange={(e) => setNewHolder({ ...newHolder, website: e.target.value })}
@@ -708,32 +710,32 @@ export function CopyrightHolderManager() {
 
             {/* 联系信息 */}
             <div className="space-y-4">
-              <h3 className="font-medium text-sm">联系信息</h3>
+              <h3 className="font-medium text-sm">{t('admin.copyright_holders.contact_info')}</h3>
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <Label>联系邮箱</Label>
+                  <Label>{t('admin.copyright_holders.contact_email')}</Label>
                   <Input
                     type="email"
                     value={newHolder.contactEmail}
                     onChange={(e) => setNewHolder({ ...newHolder, contactEmail: e.target.value })}
-                    placeholder="copyright@example.com"
+                    placeholder={t('admin.copyright_holders.placeholder_email')}
                   />
                 </div>
                 <div>
-                  <Label>联系电话</Label>
+                  <Label>{t('admin.copyright_holders.contact_phone')}</Label>
                   <Input
                     value={newHolder.contactPhone}
                     onChange={(e) => setNewHolder({ ...newHolder, contactPhone: e.target.value })}
-                    placeholder="+86-10-12345678"
+                    placeholder={t('admin.copyright_holders.placeholder_phone')}
                   />
                 </div>
               </div>
               <div>
-                <Label>联系地址</Label>
+                <Label>{t('admin.copyright_holders.contact_address')}</Label>
                 <Input
                   value={newHolder.contactAddress}
                   onChange={(e) => setNewHolder({ ...newHolder, contactAddress: e.target.value })}
-                  placeholder="北京市海淀区..."
+                  placeholder={t('admin.copyright_holders.placeholder_address')}
                 />
               </div>
             </div>
@@ -741,20 +743,20 @@ export function CopyrightHolderManager() {
             {/* 描述信息 */}
             <div className="space-y-4">
               <div>
-                <Label>描述 (中文)</Label>
+                <Label>{t('admin.copyright_holders.description_cn')}</Label>
                 <Textarea
                   value={newHolder.description}
                   onChange={(e) => setNewHolder({ ...newHolder, description: e.target.value })}
-                  placeholder="版权方的详细描述..."
+                  placeholder={t('admin.copyright_holders.placeholder_description')}
                   rows={3}
                 />
               </div>
               <div>
-                <Label>许可要求</Label>
+                <Label>{t('admin.copyright_holders.license_requirements')}</Label>
                 <Textarea
                   value={newHolder.licenseRequirements}
                   onChange={(e) => setNewHolder({ ...newHolder, licenseRequirements: e.target.value })}
-                  placeholder="使用许可的具体要求..."
+                  placeholder={t('admin.copyright_holders.placeholder_license')}
                   rows={2}
                 />
               </div>
@@ -767,26 +769,26 @@ export function CopyrightHolderManager() {
                   checked={newHolder.isActive}
                   onCheckedChange={(checked) => setNewHolder({ ...newHolder, isActive: checked })}
                 />
-                <Label>启用状态</Label>
+                <Label>{t('admin.copyright_holders.enable_status')}</Label>
               </div>
               <div className="flex items-center space-x-2">
                 <Switch
                   checked={newHolder.isVerified}
                   onCheckedChange={(checked) => setNewHolder({ ...newHolder, isVerified: checked })}
                 />
-                <Label>已验证</Label>
+                <Label>{t('admin.copyright_holders.verified_status')}</Label>
               </div>
             </div>
 
             <div className="flex justify-end space-x-2">
               <Button variant="outline" onClick={() => setEditDialogOpen(false)}>
-                取消
+                {t('admin.copyright_holders.cancel')}
               </Button>
               <Button
                 onClick={handleEditHolder}
                 disabled={!newHolder.name}
               >
-                更新版权方
+                {t('admin.copyright_holders.update_holder')}
               </Button>
             </div>
           </div>
@@ -797,10 +799,10 @@ export function CopyrightHolderManager() {
       <ConfirmDialog
         open={deleteConfirmOpen}
         onOpenChange={setDeleteConfirmOpen}
-        title="删除版权方"
-        description="确定要删除这个版权方吗？这将影响相关的量表。此操作不可逆转。"
-        confirmText="删除"
-        cancelText="取消"
+        title={t('admin.copyright_holders.delete_holder')}
+        description={t('admin.copyright_holders.delete_confirm_desc')}
+        confirmText={t('admin.copyright_holders.delete_holder')}
+        cancelText={t('admin.copyright_holders.cancel')}
         onConfirm={handleDeleteHolder}
         variant="destructive"
       />

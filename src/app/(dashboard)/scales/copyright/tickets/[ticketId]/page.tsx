@@ -124,11 +124,11 @@ export default function TicketDetailPage({ params }: TicketDetailPageProps) {
         setUpdateMessageOpen(false);
         await fetchTicketDetails();
       } else {
-        toast.error(data.error || 'Failed to send message');
+        toast.error(data.error || t('copyright.tickets.failed_to_send_message'));
       }
     } catch (error) {
       console.error('Send message error:', error);
-      toast.error('Failed to send message');
+      toast.error(t('copyright.tickets.failed_to_send_message'));
     } finally {
       setSending(false);
     }
