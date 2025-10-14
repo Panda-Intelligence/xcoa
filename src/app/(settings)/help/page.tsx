@@ -22,7 +22,9 @@ import {
   FileText,
   Users,
   Settings,
-  CreditCard
+  CreditCard,
+  ThumbsUp,
+  ThumbsDown
 } from 'lucide-react';
 import { useLanguage } from '@/hooks/useLanguage';
 import Link from 'next/link';
@@ -209,11 +211,11 @@ export default function HelpPage() {
                             <div className="flex items-center justify-between pt-3 border-t">
                               <span className="text-sm text-muted-foreground">{t('help.feedback.question')}</span>
                               <div className="flex space-x-2">
-                                <Button size="sm" variant="outline">
-                                  {t('help.feedback.helpful')}
+                                <Button size="sm" variant="outline" className="px-3">
+                                  <ThumbsUp className="w-4 h-4" />
                                 </Button>
-                                <Button size="sm" variant="outline">
-                                  {t('help.feedback.not_helpful')}
+                                <Button size="sm" variant="outline" className="px-3">
+                                  <ThumbsDown className="w-4 h-4" />
                                 </Button>
                               </div>
                             </div>

@@ -27,7 +27,7 @@ export default async function SettingsLayout({
           items={[
             {
               href: "/settings",
-              label: "Overview" // Note: This will be translated in PageHeader component if needed
+              label: "common.overview"
             }
           ]}
         />

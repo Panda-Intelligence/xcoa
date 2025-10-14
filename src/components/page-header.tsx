@@ -1,3 +1,5 @@
+'use client';
+
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -7,6 +9,7 @@ import {
 } from "@/components/ui/breadcrumb"
 import { Separator } from "@/components/ui/separator"
 import { SidebarTrigger } from "@/components/ui/sidebar"
+import { useLanguage } from "@/hooks/useLanguage"
 import React from "react"
 
 interface BreadcrumbItem {
@@ -19,6 +22,8 @@ interface PageHeaderProps {
 }
 
 export function PageHeader({ items }: PageHeaderProps) {
+  const { t } = useLanguage();
+
   return (
     <header className="sticky top-0 z-40 bg-background border-b border-border flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
       <div className="flex items-center gap-2 px-4">
@@ -30,7 +35,7 @@ export function PageHeader({ items }: PageHeaderProps) {
               <React.Fragment key={item.href}>
                 <BreadcrumbItem className="hidden md:block">
                   <BreadcrumbLink href={item.href}>
-                    {item.label}
+                    {t(item.label)}
                   </BreadcrumbLink>
                 </BreadcrumbItem>
                 {index < items.length - 1 && (

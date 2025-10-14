@@ -191,21 +191,21 @@ export default function InterpretationDashboard() {
               </div>
               <div className="flex items-center justify-between">
                 <div className="flex items-center">
-                  <Badge className="bg-yellow-500 mr-2">审核中</Badge>
+                  <Badge className="bg-yellow-500 text-white mr-2">审核中</Badge>
                   <span className="text-sm text-muted-foreground">专家审核</span>
                 </div>
                 <span className="font-semibold">{data.status.reviewing}</span>
               </div>
               <div className="flex items-center justify-between">
                 <div className="flex items-center">
-                  <Badge className="bg-blue-500 mr-2">已审核</Badge>
+                  <Badge className="bg-blue-500 text-white mr-2">已审核</Badge>
                   <span className="text-sm text-muted-foreground">待发布</span>
                 </div>
                 <span className="font-semibold">{data.status.approved}</span>
               </div>
               <div className="flex items-center justify-between">
                 <div className="flex items-center">
-                  <Badge className="bg-green-500 mr-2">已发布</Badge>
+                  <Badge className="bg-green-500 text-white mr-2">已发布</Badge>
                   <span className="text-sm text-muted-foreground">线上可见</span>
                 </div>
                 <span className="font-semibold">{data.status.published}</span>
@@ -363,13 +363,13 @@ export default function InterpretationDashboard() {
                 </div>
                 <div className="flex items-center space-x-2">
                   {item.status === 'published' && (
-                    <Badge className="bg-green-500">已发布</Badge>
+                    <Badge className="bg-green-500 text-white">已发布</Badge>
                   )}
                   {item.status === 'approved' && (
-                    <Badge className="bg-blue-500">已审核</Badge>
+                    <Badge className="bg-blue-500 text-white">已审核</Badge>
                   )}
                   {item.status === 'reviewing' && (
-                    <Badge className="bg-yellow-500">审核中</Badge>
+                    <Badge className="bg-yellow-500 text-white">审核中</Badge>
                   )}
                   {item.status === 'draft' && (
                     <Badge variant="secondary">草稿</Badge>

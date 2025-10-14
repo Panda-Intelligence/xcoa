@@ -6,11 +6,11 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { 
-  Crown, 
-  Calendar, 
-  CreditCard, 
-  Users, 
+import {
+  Crown,
+  Calendar,
+  CreditCard,
+  Users,
   TrendingUp,
   AlertCircle,
   CheckCircle,
@@ -190,7 +190,7 @@ export function SubscriptionManager() {
                     </CardDescription>
                   </div>
                 </div>
-                
+
                 {subscription?.isActive && !isExpired ? (
                   <Badge variant="default" className="bg-green-500">
                     <CheckCircle className="w-3 h-3 mr-1" />
@@ -209,7 +209,7 @@ export function SubscriptionManager() {
               </div>
             </CardHeader>
 
-            <CardContent className="space-y-6">
+            <CardContent className="space-y-6 p-6">
               {/* Subscription Details */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div className="flex items-start gap-3">
@@ -349,8 +349,8 @@ export function SubscriptionManager() {
               {t('billing.back')}
             </Button>
           </div>
-          
-          <PricingPlans 
+
+          <PricingPlans
             currentPlan={currentPlan}
             onSelectPlan={handlePlanSelect}
           />

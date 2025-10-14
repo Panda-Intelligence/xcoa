@@ -33,7 +33,8 @@ const TRANSLATION_MODULES = [
   'reports',
   'landing',
   'forms',
-  'errors'
+  'errors',
+  'help'
 ];
 
 // 加载翻译文件（支持模块化加载）

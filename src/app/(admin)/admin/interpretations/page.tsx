@@ -267,11 +267,11 @@ export default function InterpretationReviewPage() {
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'published':
-        return <Badge className="bg-green-500"><CheckCircle className="w-3 h-3 mr-1" />已发布</Badge>;
+        return <Badge className="bg-green-500 text-white"><CheckCircle className="w-3 h-3 mr-1" />已发布</Badge>;
       case 'approved':
-        return <Badge className="bg-blue-500"><CheckCircle className="w-3 h-3 mr-1" />已审核</Badge>;
+        return <Badge className="bg-blue-500 text-white"><CheckCircle className="w-3 h-3 mr-1" />已审核</Badge>;
       case 'reviewing':
-        return <Badge className="bg-yellow-500"><Clock className="w-3 h-3 mr-1" />审核中</Badge>;
+        return <Badge className="bg-yellow-500 text-white"><Clock className="w-3 h-3 mr-1" />审核中</Badge>;
       case 'draft':
         return <Badge variant="secondary"><Edit className="w-3 h-3 mr-1" />草稿</Badge>;
       default:
