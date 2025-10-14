@@ -519,9 +519,9 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
       featureName={t('features.scale_preview')}
       featureDescription={t('features.scale_preview_desc')}
     >
-    <div className="min-h-screen bg-background">
-      {/* 头部导航 */}
-      <div className="bg-white border-b sticky top-0 z-10">
+    <div className="flex flex-col h-screen bg-background">
+      {/* 头部导航 - 固定 */}
+      <div className="flex-shrink-0 bg-white border-b z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center space-x-4">
@@ -590,6 +590,8 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
         </div>
       </div>
 
+      {/* 可滚动内容区域 */}
+      <div className="flex-1 overflow-auto">
       <div className={`${deviceStyles.container} ${deviceStyles.padding}`}>
         {/* 移动端模式切换 */}
         <div className="md:hidden mb-4">
@@ -1276,6 +1278,7 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
             </Card>
           )}
         </div>
+      </div>
       </div>
     </div>
     </FeatureGate>

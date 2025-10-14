@@ -31,10 +31,10 @@ interface UserSubscriptionInfo {
 }
 
 export function SubscriptionManager() {
-  const { language } = useLanguage();
+  const { t, language } = useLanguage();
   const toast = useToast();
   const isZh = language === 'zh';
-  
+
   const [loading, setLoading] = useState(true);
   const [subscription, setSubscription] = useState<UserSubscriptionInfo | null>(null);
   const [showPricing, setShowPricing] = useState(false);
@@ -47,13 +47,13 @@ export function SubscriptionManager() {
     try {
       const response = await fetch('/api/subscription/current');
       const data = await response.json();
-      
+
       if (data.success) {
         setSubscription(data.subscription);
       }
     } catch (error) {
       console.error('Failed to fetch subscription:', error);
-      toast.error(isZh ? '加载订阅信息失败' : 'Failed to load subscription');
+      toast.error(t('billing.failed_to_load_subscription'));
     } finally {
       setLoading(false);
     }
@@ -61,18 +61,18 @@ export function SubscriptionManager() {
 
   const handlePlanSelect = async (plan: SubscriptionPlan, billingInterval: 'monthly' | 'yearly' = 'monthly') => {
     if (plan === SUBSCRIPTION_PLANS.FREE) {
-      toast.error(isZh ? '暂不支持降级到免费版' : 'Downgrade to Free not supported yet');
+      toast.error(t('billing.downgrade_not_supported'));
       return;
     }
 
     if (!subscription?.teamId) {
-      toast.error(isZh ? '未找到团队信息' : 'Team information not found');
+      toast.error(t('billing.team_info_not_found'));
       return;
     }
 
     try {
-      toast.info(isZh ? '正在创建订阅会话...' : 'Creating checkout session...');
-      
+      toast.info(t('billing.creating_checkout_session'));
+
       const response = await fetch('/api/subscription/checkout', {
         method: 'POST',
         headers: {
@@ -90,23 +90,23 @@ export function SubscriptionManager() {
       if (data.success && data.url) {
         window.location.href = data.url;
       } else {
-        toast.error(data.message || (isZh ? '创建订阅会话失败' : 'Failed to create checkout session'));
+        toast.error(data.message || t('billing.failed_to_create_checkout'));
       }
     } catch (error) {
       console.error('Subscription checkout error:', error);
-      toast.error(isZh ? '订阅失败，请重试' : 'Subscription failed, please retry');
+      toast.error(t('billing.subscription_failed_retry'));
     }
   };
 
   const handleManageSubscription = async () => {
     if (!subscription?.teamId) {
-      toast.error(isZh ? '未找到团队信息' : 'Team information not found');
+      toast.error(t('billing.team_info_not_found'));
       return;
     }
 
     try {
-      toast.info(isZh ? '正在打开订阅管理门户...' : 'Opening subscription portal...');
-      
+      toast.info(t('billing.opening_subscription_portal'));
+
       const response = await fetch('/api/subscription/portal', {
         method: 'POST',
         headers: {
@@ -122,20 +122,16 @@ export function SubscriptionManager() {
       if (data.success && data.url) {
         window.location.href = data.url;
       } else if (data.error === 'Portal not configured') {
-        toast.error(
-          isZh 
-            ? '客户管理门户未配置。请联系管理员配置 Stripe 客户门户。' 
-            : 'Customer portal not configured. Please contact admin to set up Stripe customer portal.'
-        );
+        toast.error(t('billing.portal_not_configured'));
         if (data.configUrl) {
           console.log('Configure portal at:', data.configUrl);
         }
       } else {
-        toast.error(data.message || (isZh ? '打开管理门户失败' : 'Failed to open portal'));
+        toast.error(data.message || t('billing.failed_to_open_portal'));
       }
     } catch (error) {
       console.error('Portal error:', error);
-      toast.error(isZh ? '打开管理门户失败，请重试' : 'Failed to open portal, please retry');
+      toast.error(t('billing.failed_to_open_portal_retry'));
     }
   };
 
@@ -144,7 +140,7 @@ export function SubscriptionManager() {
       <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
         <div className="flex items-center justify-center min-h-[400px]">
           <div className="animate-pulse text-muted-foreground">
-            {isZh ? '加载中...' : 'Loading...'}
+            {t('common.loading')}
           </div>
         </div>
       </div>
@@ -161,10 +157,10 @@ export function SubscriptionManager() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold">
-            {isZh ? '订阅管理' : 'Subscription Management'}
+            {t('billing.subscription_management')}
           </h1>
           <p className="text-muted-foreground mt-1">
-            {isZh ? '管理您的订阅计划和账单' : 'Manage your subscription plan and billing'}
+            {t('billing.manage_subscription_billing')}
           </p>
         </div>
       </div>
@@ -190,7 +186,7 @@ export function SubscriptionManager() {
                       {isZh ? planDetails.name : planDetails.nameEn}
                     </CardTitle>
                     <CardDescription>
-                      {isZh ? '当前订阅计划' : 'Current subscription plan'}
+                      {t('billing.current_subscription_plan')}
                     </CardDescription>
                   </div>
                 </div>
@@ -198,16 +194,16 @@ export function SubscriptionManager() {
                 {subscription?.isActive && !isExpired ? (
                   <Badge variant="default" className="bg-green-500">
                     <CheckCircle className="w-3 h-3 mr-1" />
-                    {isZh ? '有效' : 'Active'}
+                    {t('billing.active')}
                   </Badge>
                 ) : isExpired ? (
                   <Badge variant="destructive">
                     <AlertCircle className="w-3 h-3 mr-1" />
-                    {isZh ? '已过期' : 'Expired'}
+                    {t('billing.expired')}
                   </Badge>
                 ) : (
                   <Badge variant="secondary">
-                    {isZh ? '免费版' : 'Free'}
+                    {t('billing.free')}
                   </Badge>
                 )}
               </div>
@@ -220,12 +216,12 @@ export function SubscriptionManager() {
                   <Calendar className="h-5 w-5 text-muted-foreground mt-0.5" />
                   <div>
                     <p className="text-sm font-medium">
-                      {isZh ? '订阅状态' : 'Status'}
+                      {t('billing.status')}
                     </p>
                     <p className="text-sm text-muted-foreground">
                       {subscription?.planExpiresAt
                         ? new Date(subscription.planExpiresAt).toLocaleDateString(isZh ? 'zh-CN' : 'en-US')
-                        : (isZh ? '永久有效' : 'Permanent')}
+                        : t('billing.permanent')}
                     </p>
                   </div>
                 </div>
@@ -234,11 +230,11 @@ export function SubscriptionManager() {
                   <CreditCard className="h-5 w-5 text-muted-foreground mt-0.5" />
                   <div>
                     <p className="text-sm font-medium">
-                      {isZh ? '月度积分' : 'Monthly Credits'}
+                      {t('billing.monthly_credits')}
                     </p>
                     <p className="text-sm text-muted-foreground">
                       {planDetails.limits.monthlyCredits === -1
-                        ? (isZh ? '无限' : 'Unlimited')
+                        ? t('billing.unlimited')
                         : planDetails.limits.monthlyCredits.toLocaleString()}
                     </p>
                   </div>
@@ -249,7 +245,7 @@ export function SubscriptionManager() {
                     <Users className="h-5 w-5 text-muted-foreground mt-0.5" />
                     <div>
                       <p className="text-sm font-medium">
-                        {isZh ? '团队' : 'Team'}
+                        {t('billing.team')}
                       </p>
                       <p className="text-sm text-muted-foreground">
                         {subscription.teamName}
@@ -264,7 +260,7 @@ export function SubscriptionManager() {
               {/* Features */}
               <div>
                 <h3 className="font-semibold mb-3">
-                  {isZh ? '包含功能' : 'Included Features'}
+                  {t('billing.included_features')}
                 </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                   {(isZh ? planDetails.features : planDetails.featuresEn).map((feature, index) => (
@@ -281,23 +277,23 @@ export function SubscriptionManager() {
                 {currentPlan === SUBSCRIPTION_PLANS.FREE && (
                   <Button onClick={() => setShowPricing(true)} className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white border-0 after:shadow-none">
                     <TrendingUp className="w-4 h-4 mr-2" />
-                    {isZh ? '升级订阅' : 'Upgrade Now'}
+                    {t('billing.upgrade_now')}
                   </Button>
                 )}
                 {currentPlan === SUBSCRIPTION_PLANS.STARTER && (
                   <Button onClick={() => setShowPricing(true)} className="bg-gradient-to-r from-purple-500 to-pink-500 text-white border-0 after:shadow-none">
                     <Crown className="w-4 h-4 mr-2" />
-                    {isZh ? '升级到企业版' : 'Upgrade to Enterprise'}
+                    {t('billing.upgrade_to_enterprise')}
                   </Button>
                 )}
                 {currentPlan !== SUBSCRIPTION_PLANS.FREE && subscription?.isActive && !isExpired && (
                   <>
                     <Button variant="outline" onClick={handleManageSubscription}>
                       <CreditCard className="w-4 h-4 mr-2" />
-                      {isZh ? '管理订阅' : 'Manage Subscription'}
+                      {t('billing.manage_subscription')}
                     </Button>
                     <Button variant="outline" onClick={() => setShowPricing(true)}>
-                      {isZh ? '查看所有计划' : 'View All Plans'}
+                      {t('billing.view_all_plans')}
                     </Button>
                   </>
                 )}
@@ -308,9 +304,7 @@ export function SubscriptionManager() {
                 <Alert variant="destructive">
                   <AlertCircle className="h-4 w-4" />
                   <AlertDescription>
-                    {isZh 
-                      ? '您的订阅已过期。请续订以继续使用高级功能。' 
-                      : 'Your subscription has expired. Please renew to continue using premium features.'}
+                    {t('billing.subscription_expired_message')}
                   </AlertDescription>
                 </Alert>
               )}
@@ -327,17 +321,15 @@ export function SubscriptionManager() {
                   </div>
                   <div>
                     <h3 className="font-semibold text-lg">
-                      {isZh ? '解锁所有功能' : 'Unlock All Features'}
+                      {t('billing.unlock_all_features')}
                     </h3>
                     <p className="text-sm text-muted-foreground">
-                      {isZh 
-                        ? '升级到企业版，获取版权管理、专业解读等高级功能' 
-                        : 'Upgrade to Enterprise for copyright management, professional interpretations and more'}
+                      {t('billing.upgrade_enterprise_description')}
                     </p>
                   </div>
                 </div>
                 <Button onClick={() => setShowPricing(true)} className="bg-gradient-to-r from-purple-500 to-pink-500 text-white border-0 after:shadow-none">
-                  {isZh ? '了解更多' : 'Learn More'}
+                  {t('billing.learn_more')}
                   <ArrowRight className="w-4 h-4 ml-2" />
                 </Button>
               </CardContent>
@@ -351,10 +343,10 @@ export function SubscriptionManager() {
         <div className="space-y-6">
           <div className="flex items-center justify-between">
             <h2 className="text-2xl font-bold">
-              {isZh ? '选择订阅计划' : 'Choose Your Plan'}
+              {t('billing.choose_your_plan')}
             </h2>
             <Button variant="outline" onClick={() => setShowPricing(false)}>
-              {isZh ? '返回' : 'Back'}
+              {t('billing.back')}
             </Button>
           </div>
           

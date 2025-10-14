@@ -147,9 +147,9 @@ export default function ScaleCopyrightPage({ params }: CopyrightPageProps) {
       featureName={t('features.copyright_info', '版权信息查看')}
       featureDescription={t('features.copyright_desc', '查看量表版权详情并申请许可')}
     >
-    <div className="min-h-screen bg-background">
-      {/* 头部导航 */}
-      <div className="bg-white border-b sticky top-0 z-10">
+    <div className="flex flex-col h-screen bg-background">
+      {/* 头部导航 - 固定 */}
+      <div className="flex-shrink-0 bg-white border-b z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center space-x-4">
@@ -183,7 +183,9 @@ export default function ScaleCopyrightPage({ params }: CopyrightPageProps) {
         </div>
       </div>
 
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      {/* 可滚动内容区域 */}
+      <div className="flex-1 overflow-auto">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="space-y-6">
           {/* 量表基本信息 */}
           <Card>
@@ -530,6 +532,7 @@ export default function ScaleCopyrightPage({ params }: CopyrightPageProps) {
               </div>
             </CardContent>
           </Card>
+        </div>
         </div>
       </div>
     </div>

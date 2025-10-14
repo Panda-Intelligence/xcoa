@@ -14,7 +14,6 @@ import {
   BookOpen,
   BarChart3,
   Plus,
-  Scale,
   ClipboardCheck
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -88,7 +87,7 @@ export default function ScalePage({ params }: ScalePageProps) {
       const result = await getScaleDetails(scaleId);
       setData(result);
       setLoading(false);
-      
+
       if (result?.scale) {
         const interpResponse = await fetch(`/api/scales/${scaleId}/interpretation?language=${language}`);
         if (interpResponse.ok) {
@@ -117,9 +116,6 @@ export default function ScalePage({ params }: ScalePageProps) {
 
   const { scale, items, userInteraction, relatedScales, statistics, meta } = data;
 
-  // 解析心理测量学属性
-  const psychometrics = scale.psychometricProperties || {};
-
   // 获取验证状态显示
   const getValidationBadge = (status: string) => {
     switch (status) {
@@ -136,13 +132,13 @@ export default function ScalePage({ params }: ScalePageProps) {
 
   const handleMarkHelpful = async () => {
     if (!interpretation || helpfulLoading) return;
-    
+
     setHelpfulLoading(true);
     try {
       const response = await fetch(`/api/interpretations/${interpretation.id}/helpful`, {
         method: 'POST',
       });
-      
+
       if (response.ok) {
         const result = await response.json();
         setInterpretation({
@@ -158,9 +154,9 @@ export default function ScalePage({ params }: ScalePageProps) {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100/50 dark:from-gray-900 dark:to-gray-800/50">
-      {/* 头部导航 */}
-      <div className="bg-white/80 backdrop-blur-lg border-b border-gray-200/80 sticky top-0 z-10 shadow-sm">
+    <div className="flex flex-col h-screen bg-gradient-to-br from-gray-50 to-gray-100/50 dark:from-gray-900 dark:to-gray-800/50">
+      {/* 头部导航 - 固定 */}
+      <div className="flex-shrink-0 bg-white/80 backdrop-blur-lg border-b border-gray-200/80 shadow-sm z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center space-x-4">
@@ -198,7 +194,9 @@ export default function ScalePage({ params }: ScalePageProps) {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+      {/* 可滚动内容区域 */}
+      <div className="flex-1 overflow-auto">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* 主要内容区域 */}
           <div className="lg:col-span-2 space-y-6">
@@ -236,11 +234,10 @@ export default function ScalePage({ params }: ScalePageProps) {
 
             <CardContent>
               <Tabs defaultValue="overview" className="w-full">
-                <TabsList className="grid w-full grid-cols-6">
+                <TabsList className="grid w-full grid-cols-5 mt-3">
                   <TabsTrigger value="overview">{t('common.overview')}</TabsTrigger>
                   <TabsTrigger value="interpretation">{t('scale.professional_interpretation_tab')}</TabsTrigger>
                   <TabsTrigger value="items">{t('scale.items')}</TabsTrigger>
-                  <TabsTrigger value="psychometrics">{t('scale.psychometrics')}</TabsTrigger>
                   <TabsTrigger value="cases">{t('scale.clinical_cases_tab')}</TabsTrigger>
                   <TabsTrigger value="copyright">{t('scale.copyright_tab')}</TabsTrigger>
                 </TabsList>
@@ -451,96 +448,13 @@ export default function ScalePage({ params }: ScalePageProps) {
                   )}
                 </TabsContent>
 
-                <TabsContent value="psychometrics" className="space-y-4">
-                  {psychometrics && Object.keys(psychometrics).length > 0 ? (
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      {psychometrics.reliability && (
-                        <Card className="p-4">
-                          <h4 className="font-semibold mb-2 flex items-center">
-                            <BarChart3 className="w-4 h-4 mr-2" />
-                            {t('scale.reliability_indicators')}
-                          </h4>
-                          <div className="space-y-2 text-sm">
-                            {psychometrics.reliability.cronbachAlpha && (
-                              <div className="flex justify-between">
-                                <span>Cronbach&apos;s α</span>
-                                <span className="font-medium">{psychometrics.reliability.cronbachAlpha}</span>
-                              </div>
-                            )}
-                            {psychometrics.reliability.testRetest && (
-                              <div className="flex justify-between">
-                                <span>{t('scale.test_retest_reliability')}</span>
-                                <span className="font-medium">{psychometrics.reliability.testRetest}</span>
-                              </div>
-                            )}
-                            {psychometrics.reliability.interRater && (
-                              <div className="flex justify-between">
-                                <span>{t('scale.inter_rater_reliability')}</span>
-                                <span className="font-medium">{psychometrics.reliability.interRater}</span>
-                              </div>
-                            )}
-                          </div>
-                        </Card>
-                      )}
-
-                      {psychometrics.validity && (
-                        <Card className="p-4">
-                          <h4 className="font-semibold mb-2 flex items-center">
-                            <CheckCircle className="w-4 h-4 mr-2" />
-                            {t('scale.validity_indicators')}
-                          </h4>
-                          <div className="space-y-2 text-sm">
-                            {psychometrics.validity.sensitivity && (
-                              <div className="flex justify-between">
-                                <span>{t('scale.sensitivity')}</span>
-                                <span className="font-medium">{psychometrics.validity.sensitivity}</span>
-                              </div>
-                            )}
-                            {psychometrics.validity.specificity && (
-                              <div className="flex justify-between">
-                                <span>{t('scale.specificity')}</span>
-                                <span className="font-medium">{psychometrics.validity.specificity}</span>
-                              </div>
-                            )}
-                            {psychometrics.validity.constructValidity && (
-                              <div className="flex justify-between">
-                                <span>{t('scale.construct_validity')}</span>
-                                <span className="font-medium">{psychometrics.validity.constructValidity}</span>
-                              </div>
-                            )}
-                          </div>
-                        </Card>
-                      )}
-
-                      {psychometrics.cutoffScores && (
-                        <Card className="p-4 md:col-span-2">
-                          <h4 className="font-semibold mb-2">{t('scale.cutoff_scores')}</h4>
-                          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm">
-                            {Object.entries(psychometrics.cutoffScores).map(([level, score]) => (
-                              <div key={level} className="text-center p-2 bg-secondary rounded">
-                                <div className="font-medium">{level}</div>
-                                <div className="text-muted-foreground">{score as string}{t('scale.points')}</div>
-                              </div>
-                            ))}
-                          </div>
-                        </Card>
-                      )}
-                    </div>
-                  ) : (
-                    <div className="text-center py-8 text-muted-foreground">
-                      <BarChart3 className="w-12 h-12 mx-auto mb-4 opacity-50" />
-                      <p>{t('scale.no_psychometric_data')}</p>
-                    </div>
-                  )}
-                </TabsContent>
-
                 <TabsContent value="cases" className="space-y-4">
                   <ClinicalCasesTab scaleId={scale.id} scaleAcronym={scale.acronym} />
                 </TabsContent>
 
                 <TabsContent value="copyright" className="space-y-4">
                   {/* 版权许可信息 */}
-                  <Card>
+                  <div>
                     <CardHeader>
                       <CardTitle className="flex items-center space-x-2">
                         <CheckCircle className="w-5 h-5 text-blue-600" />
@@ -595,7 +509,7 @@ export default function ScalePage({ params }: ScalePageProps) {
                         </ul>
                       </div>
                     </CardContent>
-                  </Card>
+                  </div>
                 </TabsContent>
               </Tabs>
             </CardContent>
@@ -678,29 +592,27 @@ export default function ScalePage({ params }: ScalePageProps) {
                     {t('scale.related_scales_description')}
                   </CardDescription>
                 </CardHeader>
-                <CardContent>
-                  <div className="space-y-3">
+                <CardContent className="p-0">
+                  <div className="divide-y divide-border">
                     {relatedScales.map((relatedScale: RelatedScale) => (
                       <Link
                         key={relatedScale.id}
                         href={`/scales/${relatedScale.id}`}
-                        className="block"
+                        className="block px-6 py-4 hover:bg-muted/50 transition-colors first:pt-0 last:pb-0"
                       >
-                        <Card className="p-3 hover:bg-secondary/50 transition-colors">
-                          <div className="flex items-start justify-between">
-                            <div className="flex-1">
-                              <h5 className="font-medium text-sm mb-1">
-                                {relatedScale.name}
-                              </h5>
-                              <p className="text-xs text-muted-foreground mb-2">
-                                {relatedScale.acronym} • {relatedScale.itemsCount} {t('scale.items')}
-                              </p>
-                              <p className="text-xs text-muted-foreground line-clamp-2">
-                                {relatedScale.description.substring(0, 80)}...
-                              </p>
-                            </div>
+                        <div className="flex items-start justify-between">
+                          <div className="flex-1">
+                            <h5 className="font-medium text-sm mb-1.5">
+                              {relatedScale.name}
+                            </h5>
+                            <p className="text-xs text-muted-foreground mb-2">
+                              {relatedScale.acronym} • {relatedScale.itemsCount} {t('scale.items')}
+                            </p>
+                            <p className="text-xs text-muted-foreground line-clamp-2">
+                              {relatedScale.description?.substring(0, 80) || ''}...
+                            </p>
                           </div>
-                        </Card>
+                        </div>
                       </Link>
                     ))}
                   </div>
@@ -708,6 +620,7 @@ export default function ScalePage({ params }: ScalePageProps) {
               </Card>
             )}
           </div>
+        </div>
         </div>
       </div>
     </div>

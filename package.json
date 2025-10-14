@@ -20,6 +20,7 @@
     "list:kv": "wrangler kv key list --namespace-id=$(node scripts/get-kv-id.mjs) --remote | jq '[.[].name]' > kv.log",
     "delete:kv": "wrangler kv bulk delete kv.log --namespace-id=$(node scripts/get-kv-id.mjs) --remote",
     "crawl": "ts-node scripts/crawlee/html.ts",
+    "crawl:4at": "ts-node scripts/crawlee/4at.ts",
     "check:stripe": "node scripts/check-stripe-config.js",
     "interpretation:generate": "tsx --tsconfig scripts/tsconfig.json scripts/interpretation/generate-batch.ts"
   },
