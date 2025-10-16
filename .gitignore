@@ -53,3 +53,5 @@ storage
 david-ai-main
 playwright-report
 test-results
+.workflow
+.playwright-mcp

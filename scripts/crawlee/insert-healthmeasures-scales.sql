@@ -1,0 +1,5 @@
+-- Auto-generated SQL insert statements for ecoa_scale from HealthMeasures
+-- Generated at: 2025-10-16T10:44:42.233Z
+-- Total NEW records: 0
+-- Total in file: 10, Already in DB: 67
+-- Source: HealthMeasures / NIH (healthmeasures.net)
