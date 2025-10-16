@@ -120,7 +120,7 @@ export default function ScaleFavoritesPage() {
     <div className="flex flex-col h-screen">
       <PageHeader
         items={[
-          { href: "/scales", label: t("scales_page.title") },
+          { href: "/scales/search", label: t("scales_page.title") },
           { href: "/scales/favorites", label: t("favorites.title") }
         ]}
       />

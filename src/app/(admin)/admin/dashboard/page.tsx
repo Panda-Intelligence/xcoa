@@ -85,7 +85,7 @@ export default function Page() {
 
         {/* 核心功能快速入口 */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          <Link href="/scales">
+          <Link href="/scales/search">
             <Card className="hover:shadow-md transition-shadow cursor-pointer h-full">
               <CardContent className="p-6 text-center">
                 <Search className="w-12 h-12 mx-auto mb-3 text-blue-600" />
@@ -294,7 +294,7 @@ export default function Page() {
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-              <Link href="/scales">
+              <Link href="/scales/search">
                 <Button variant="outline" className="w-full justify-start">
                   <Search className="w-4 h-4 mr-2" />
                   {t("dashboard.search_scales")}

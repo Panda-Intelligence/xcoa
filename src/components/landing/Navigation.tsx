@@ -23,7 +23,7 @@ const ActionButtons = () => {
   if (session) {
     return (
       <Button asChild>
-        <Link href="/scales">{t("common.dashboard")}</Link>
+        <Link href="/scales/search">{t("common.dashboard")}</Link>
       </Button>
     );
   }

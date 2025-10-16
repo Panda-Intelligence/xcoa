@@ -51,3 +51,5 @@ dist
 *.log
 storage
 david-ai-main
+playwright-report
+test-results

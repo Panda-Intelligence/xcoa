@@ -3,6 +3,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { PageHeader } from '@/components/page-header';
 import { Button } from '@/components/ui/button';
+import { useSubscription } from '@/hooks/useSubscription';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -51,6 +52,7 @@ export default function ScalesPage() {
   const router = useRouter();
   const { t, language } = useLanguage();
   const { fetchUserFavorites } = useFavoritesStore();
+  const { checkFeatureAccess, usage, hasReachedLimit, getRemainingUsage } = useSubscription();
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<SearchResult[]>([]);
   const [allScales, setAllScales] = useState<HotScale[]>([]);
@@ -210,6 +212,12 @@ export default function ScalesPage() {
   const handleSearch = async () => {
     if (!query.trim()) return;
 
+    // 检查搜索权限
+    const hasAccess = await checkFeatureAccess('search');
+    if (!hasAccess) {
+      return;
+    }
+
     setLoading(true);
     try {
       const endpoint = searchType === 'advanced' ? '/api/search/advanced' : `/api/search/${searchType}`;
@@ -262,7 +270,7 @@ export default function ScalesPage() {
     <div className="flex flex-col h-screen">
       <PageHeader
         items={[
-          { href: "/scales", label: t("scales_page.title") }
+          { href: "/scales/search", label: t("scales_page.title") }
         ]}
       />
 
@@ -280,6 +288,25 @@ export default function ScalesPage() {
           </CardHeader>
 
           <CardContent className="space-y-4">
+            {/* 搜索使用量提示 */}
+            {usage && getRemainingUsage('searches') !== null && (
+              <div className="mb-3 p-3 bg-muted/50 rounded-lg">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-medium">
+                    {hasReachedLimit('searches')
+                      ? '搜索次数已用完，升级解锁无限搜索'
+                      : `本月剩余搜索次数：${getRemainingUsage('searches')}次`
+                    }
+                  </span>
+                  {hasReachedLimit('searches') && (
+                    <Button size="sm" onClick={() => router.push('/pricing')}>
+                      立即升级
+                    </Button>
+                  )}
+                </div>
+              </div>
+            )}
+
             {/* 搜索输入 */}
             <div className="flex space-x-2">
               {/* 搜索选项 */}
@@ -348,7 +375,10 @@ export default function ScalesPage() {
                   onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
                 />
               </div>
-              <Button onClick={handleSearch} disabled={loading}>
+              <Button
+                onClick={handleSearch}
+                disabled={loading || hasReachedLimit('searches')}
+              >
                 {loading ? t("scales_page.searching") : t("scales_page.search")}
               </Button>
             </div>

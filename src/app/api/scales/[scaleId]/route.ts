@@ -11,6 +11,7 @@ import { eq, desc, count, sql, and } from 'drizzle-orm';
 import { getSessionFromCookie } from '@/utils/auth';
 import { getIP } from '@/utils/get-IP';
 import { z } from 'zod';
+import { checkFeatureAccess, incrementUsage } from '@/services/subscription';
 
 const scaleDetailParamsSchema = z.object({
   scaleId: z.string(),
@@ -28,6 +29,28 @@ export async function GET(
 
     const params = await context.params;
     const { scaleId } = scaleDetailParamsSchema.parse(params);
+
+    // 检查查看权限（如果URL包含checkAccess参数）
+    const { searchParams } = new URL(request.url);
+    const shouldCheckAccess = searchParams.get('checkAccess') === 'true';
+
+    if (shouldCheckAccess && session) {
+      const accessResult = await checkFeatureAccess(session.userId, 'scale_view');
+
+      if (!accessResult.allowed) {
+        return NextResponse.json(
+          {
+            error: 'Access denied',
+            reason: accessResult.reason,
+            requiresUpgrade: accessResult.requiresUpgrade
+          },
+          { status: 403 }
+        );
+      }
+
+      // 记录使用量
+      await incrementUsage(session.userId, 'scale_view');
+    }
 
     // 获取量表详细信息
     const [scale] = await db
@@ -182,12 +205,30 @@ export async function GET(
         (item.responseOptions ? JSON.parse(item.responseOptions) : []),
     }));
 
+    // 检查用户是否有权查看完整题目
+    let itemsToReturn = parsedItems;
+    if (session) {
+      const limits = await checkFeatureAccess(session.userId, 'scale_view');
+      // 如果是免费用户，只显示前3个题目作为预览
+      if (session && parsedItems.length > 3) {
+        const userPlan = await checkFeatureAccess(session.userId, 'scale_view');
+        if (!userPlan.allowed && parsedItems.length > 3) {
+          itemsToReturn = parsedItems.slice(0, 3);
+        }
+      }
+    } else if (parsedItems.length > 3) {
+      // 未登录用户只能看前3个题目
+      itemsToReturn = parsedItems.slice(0, 3);
+    }
+
     return NextResponse.json({
       scale: parsedScale,
-      items: parsedItems,
+      items: itemsToReturn,
       userInteraction: {
         isFavorited,
-        canDownload: true, // 可以基于用户权限调整
+        canDownload: user ? true : false, // 基于登录状态调整
+        hasFullAccess: itemsToReturn.length === parsedItems.length,
+        totalItems: parsedItems.length,
       },
       relatedScales,
       statistics: {

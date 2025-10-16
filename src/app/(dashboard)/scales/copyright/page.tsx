@@ -123,7 +123,7 @@ export default function CopyrightPage() {
     <div className="flex flex-col h-screen">
       <PageHeader
         items={[
-          { href: "/scales", label: "Dashboard" },
+          { href: "/scales/search", label: "Dashboard" },
           { href: "/scales/copyright", label: t('copyright.service_title') }
         ]}
       />
