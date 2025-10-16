@@ -206,7 +206,7 @@ export async function GET(
     const db = getDB();
 
     // Build query conditions
-    let conditions = [
+    const conditions = [
       eq(scaleResponseTable.userId, userId),
       eq(scaleResponseTable.scaleId, scaleId)
     ];

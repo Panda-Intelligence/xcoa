@@ -79,7 +79,8 @@
       "SlashCommand(/workflow:tools:concept-enhanced:*)",
       "Bash(~/.claude/scripts/gemini-wrapper:*)",
       "SlashCommand(/workflow:tools:task-generate:*)",
-      "SlashCommand(/workflow:session:complete)"
+      "SlashCommand(/workflow:session:complete)",
+      "Bash(SKIP_LINTER=true pnpm build:*)"
     ],
     "deny": [],
     "ask": []

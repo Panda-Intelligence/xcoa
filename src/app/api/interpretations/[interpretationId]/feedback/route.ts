@@ -6,7 +6,7 @@ import { getSessionFromCookie } from '@/utils/auth';
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: { interpretationId: string } }
+  { params }: { params: Promise<{ interpretationId: string }> }
 ) {
   try {
     // Our auth system exposes sessions via cookie
@@ -18,7 +18,7 @@ export async function POST(
       );
     }
 
-    const { interpretationId } = params;
+    const { interpretationId } = await params;
     const body = await request.json();
     const { isHelpful, rating, comment, issueType, issueDescription } = body;
 

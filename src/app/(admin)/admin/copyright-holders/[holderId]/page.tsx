@@ -5,7 +5,7 @@ import { PageHeader } from "@/components/page-header";
 import { useLanguage } from "@/hooks/useLanguage";
 
 interface PageProps {
-  params: { holderId: string };
+  params: Promise<{ holderId: string }>;
 }
 
 export default function AdminCopyrightHolderDetailPage({ params }: PageProps) {
