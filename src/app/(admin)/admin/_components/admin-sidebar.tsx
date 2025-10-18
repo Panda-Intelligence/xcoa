@@ -57,7 +57,7 @@ export function AdminSidebar({ ...props }: React.ComponentProps<typeof Sidebar>)
       isActive: true,
     },
     {
-      title: t('admin.scales'),
+      title: t('admin.scales_menu'),
       url: "/admin/scales" as Route,
       icon: Scale,
       isActive: true,
