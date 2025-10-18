@@ -478,9 +478,9 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
       <div className="min-h-screen bg-background">
         <div className="max-w-4xl mx-auto px-4 py-8">
           <div className="animate-pulse space-y-4">
-            <div className="h-8 bg-gray-200 rounded w-1/3"></div>
-            <div className="h-4 bg-gray-200 rounded w-2/3"></div>
-            <div className="h-32 bg-gray-200 rounded"></div>
+            <div className="h-8 bg-muted rounded w-1/3"></div>
+            <div className="h-4 bg-muted rounded w-2/3"></div>
+            <div className="h-32 bg-muted rounded"></div>
           </div>
         </div>
       </div>
@@ -637,31 +637,31 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
         <div className="space-y-6">
           {/* 进度条 (仅在交互模式显示) */}
           {viewMode === 'interactive' && (
-            <Card className="bg-blue-50 border-blue-200">
+            <Card className="bg-primary/10 border-blue-200">
               <CardContent className={deviceStyles.cardPadding}>
                 <div className="flex items-center justify-between mb-2">
-                  <span className={`${deviceStyles.fontSize} font-medium text-blue-800`}>
+                  <span className={`${deviceStyles.fontSize} font-medium text-primary`}>
                     {t("scale_preview.progress")}: {completedItems.length} / {preview?.items?.length || 0}
                   </span>
                   <div className="flex items-center space-x-2">
                     {startTime && (
-                      <div className="flex items-center space-x-1 text-blue-600">
+                      <div className="flex items-center space-x-1 text-primary">
                         <Timer className="w-3 h-3" />
                         <span className="text-xs">{getElapsedTime()}{t("scale_preview.minutes")}</span>
                       </div>
                     )}
-                    <div className="flex items-center space-x-1 text-green-600">
+                    <div className="flex items-center space-x-1 text-success">
                       <Check className="w-3 h-3" />
                       <span className="text-xs font-bold">{t("scale_preview.current_score")}: {scoreResult.total}{t("scale_preview.points")}</span>
                     </div>
-                    <span className={`${deviceStyles.fontSize} text-blue-600`}>
+                    <span className={`${deviceStyles.fontSize} text-primary`}>
                       {Math.round(progressPercentage)}% {t("scale_preview.completed")}
                     </span>
                   </div>
                 </div>
                 <Progress value={progressPercentage} className="h-2" />
                 {isTransitioning && (
-                  <div className="mt-2 text-xs text-blue-600 text-center">
+                  <div className="mt-2 text-xs text-primary text-center">
                     {t("scale_preview.loading_question")}
                   </div>
                 )}
@@ -696,13 +696,13 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
             <CardContent>
               <div className={`grid ${deviceMode === 'mobile' ? 'grid-cols-1 gap-2' : deviceStyles.gridCols} gap-4`}>
                 <div className="flex items-center space-x-2">
-                  <BookOpen className="w-4 h-4 text-blue-600" />
+                  <BookOpen className="w-4 h-4 text-primary" />
                   <span className={deviceStyles.fontSize}>
                     {scale.itemsCount} {t("common.items")}
                   </span>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <Clock className="w-4 h-4 text-green-600" />
+                  <Clock className="w-4 h-4 text-success" />
                   <span className={deviceStyles.fontSize}>
                     {scale.administrationTime} {t("scale_preview.minutes")}
                   </span>
@@ -740,7 +740,7 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
 
               {currentItem ? (
                 <DeviceFrame>
-                  <Card className={`bg-white border-2 ${isTransitioning ? 'border-green-300 bg-green-50' : 'border-blue-200'} transition-all duration-500`}>
+                  <Card className={`bg-white border ${isTransitioning ? 'border-green-300 bg-success/10' : 'border-blue-200'} transition-all duration-500`}>
                     <CardHeader>
                       <div className="flex items-center justify-between">
                         <CardTitle className={deviceStyles.fontSize}>
@@ -866,11 +866,11 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
                 </DeviceFrame>
               ) : (
                 // 如果没有当前题目，显示加载或错误信息
-                <Card className="bg-red-50 border-red-200">
+                <Card className="bg-destructive/10 border-red-200">
                   <CardContent className="p-4 text-center">
                     <AlertCircle className="w-8 h-8 mx-auto mb-2 text-red-500" />
                     <h3 className="font-medium text-red-800 mb-2">{t('scale_preview.cannot_load_questions')}</h3>
-                    <p className="text-sm text-red-600 mb-4">
+                    <p className="text-sm text-destructive mb-4">
                       {t('scale_preview.question_load_failed')}
                     </p>
                     <div className="space-y-2 text-xs text-red-500">
@@ -897,7 +897,7 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
 
           {/* 专业结果展示 */}
           {viewMode === 'interactive' && showResults && (
-            <Card className="bg-green-50 border-green-200">
+            <Card className="bg-success/10 border-green-200">
               <CardHeader>
                 <CardTitle className="text-green-800 flex items-center space-x-2">
                   <Check className="w-5 h-5" />
@@ -912,7 +912,7 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
                 {/* 核心结果 */}
                 <div className="bg-white rounded-lg p-4 mb-4 border border-green-200">
                   <div className="text-center mb-4">
-                    <div className="text-3xl font-bold text-green-600 mb-2">
+                    <div className="text-3xl font-bold text-success mb-2">
                       {scoreResult.total} {t('scale_preview.points')}
                     </div>
                     <div className="text-lg font-medium text-green-800">
@@ -923,7 +923,7 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
                   {scoring && (
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm">
                       {Object.entries(scoring).map(([level, score]) => (
-                        <div key={level} className={`text-center p-2 rounded ${scoreResult.total >= (score as number) ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-600'
+                        <div key={level} className={`text-center p-2 rounded ${scoreResult.total >= (score as number) ? 'bg-primary/10 text-primary' : 'bg-gray-100 text-muted-foreground'
                           }`}>
                           <div className="font-medium">{level}</div>
                           <div>{score}+</div>
@@ -937,14 +937,14 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
                 <div className={`grid ${deviceMode === 'mobile' ? 'grid-cols-2 gap-3' : 'grid-cols-2 md:grid-cols-4 gap-4'} text-sm mb-4`}>
                   <div className="bg-white p-3 rounded border">
                     <div className="flex items-center space-x-2 mb-1">
-                      <Target className="w-4 h-4 text-blue-600" />
+                      <Target className="w-4 h-4 text-primary" />
                       <span className="font-medium">{t("scale_preview.completed_items")}</span>
                     </div>
                     <span className="text-lg font-bold">{completedItems.length} / {preview?.items?.length || 0}</span>
                   </div>
                   <div className="bg-white p-3 rounded border">
                     <div className="flex items-center space-x-2 mb-1">
-                      <TrendingUp className="w-4 h-4 text-green-600" />
+                      <TrendingUp className="w-4 h-4 text-success" />
                       <span className="font-medium">{t("scale_preview.completion_rate")}</span>
                     </div>
                     <span className="text-lg font-bold">{Math.round(progressPercentage)}%</span>
@@ -967,9 +967,9 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
 
                 {/* 专业建议 */}
                 {previewInfo?.scoringInfo && (
-                  <div className="bg-blue-50 p-4 rounded-lg mb-4">
+                  <div className="bg-primary/10 p-4 rounded-lg mb-4">
                     <h4 className="font-medium text-blue-900 mb-2">{t('scale_preview.score_explanation')}</h4>
-                    <p className="text-sm text-blue-800">
+                    <p className="text-sm text-primary">
                       {previewInfo.scoringInfo}
                     </p>
                   </div>
@@ -1042,13 +1042,13 @@ export default function ScalePreviewPage({ params }: ScalePreviewPageProps) {
           {viewMode === 'preview' && (
             <>
               {/* 预览信息 */}
-              <Card className="bg-blue-50 border-blue-200">
+              <Card className="bg-primary/10 border-blue-200">
                 <CardHeader>
-                  <CardTitle className="flex items-center space-x-2 text-blue-800">
+                  <CardTitle className="flex items-center space-x-2 text-primary">
                     <Eye className="w-5 h-5" />
                     <span>{t("scale_preview.scale_preview_title")}</span>
                   </CardTitle>
-                  <CardDescription className="text-blue-700">
+                  <CardDescription className="text-primary">
                     {t("scale_preview.preview_description")}
                   </CardDescription>
                 </CardHeader>

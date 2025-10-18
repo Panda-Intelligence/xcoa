@@ -109,7 +109,7 @@ export default function InterpretationDashboard() {
         <Card>
           <CardHeader className="pb-3">
             <CardTitle className="text-sm font-medium flex items-center">
-              <FileText className="w-4 h-4 mr-2 text-blue-600" />
+              <FileText className="w-4 h-4 mr-2 text-primary" />
               {t('admin.interpretations.dashboard.total_scales')}
             </CardTitle>
           </CardHeader>
@@ -124,7 +124,7 @@ export default function InterpretationDashboard() {
         <Card>
           <CardHeader className="pb-3">
             <CardTitle className="text-sm font-medium flex items-center">
-              <TrendingUp className="w-4 h-4 mr-2 text-green-600" />
+              <TrendingUp className="w-4 h-4 mr-2 text-success" />
               {t('admin.interpretations.dashboard.coverage')}
             </CardTitle>
           </CardHeader>
@@ -197,14 +197,14 @@ export default function InterpretationDashboard() {
               </div>
               <div className="flex items-center justify-between">
                 <div className="flex items-center">
-                  <Badge className="bg-blue-500 text-white mr-2">{t('admin.interpretations.review.badge_approved')}</Badge>
+                  <Badge className="bg-primary/100 text-white mr-2">{t('admin.interpretations.review.badge_approved')}</Badge>
                   <span className="text-sm text-muted-foreground">{t('admin.interpretations.dashboard.approved_pending_publish')}</span>
                 </div>
                 <span className="font-semibold">{data.status.approved}</span>
               </div>
               <div className="flex items-center justify-between">
                 <div className="flex items-center">
-                  <Badge className="bg-green-500 text-white mr-2">{t('admin.interpretations.review.badge_published')}</Badge>
+                  <Badge className="bg-success/100 text-white mr-2">{t('admin.interpretations.review.badge_published')}</Badge>
                   <span className="text-sm text-muted-foreground">{t('admin.interpretations.dashboard.published_live')}</span>
                 </div>
                 <span className="font-semibold">{data.status.published}</span>
@@ -231,12 +231,12 @@ export default function InterpretationDashboard() {
                   {data.generation.aiGenerated}
                 </div>
               </div>
-              <div className="flex items-center justify-between p-4 bg-blue-50 rounded-lg">
+              <div className="flex items-center justify-between p-4 bg-primary/10 rounded-lg">
                 <div>
                   <div className="font-semibold">{t('admin.interpretations.dashboard.manual_created')}</div>
                   <div className="text-sm text-muted-foreground">{t('admin.interpretations.dashboard.expert_written')}</div>
                 </div>
-                <div className="text-2xl font-bold text-blue-600">
+                <div className="text-2xl font-bold text-primary">
                   {data.generation.manualCreated}
                 </div>
               </div>
@@ -256,7 +256,7 @@ export default function InterpretationDashboard() {
           <CardContent className="space-y-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center">
-                <Eye className="w-4 h-4 mr-2 text-blue-500" />
+                <Eye className="w-4 h-4 mr-2 text-primary" />
                 <span className="text-sm">{t('admin.interpretations.dashboard.total_views')}</span>
               </div>
               <span className="font-semibold">{data.engagement.totalViews?.toLocaleString()}</span>
@@ -294,9 +294,9 @@ export default function InterpretationDashboard() {
                     <span className="text-sm">{t('admin.interpretations.dashboard.overall_quality')}</span>
                     <span className="font-semibold">{data.quality.avgQualityScore.toFixed(1)}/100</span>
                   </div>
-                  <div className="w-full bg-gray-200 rounded-full h-2">
+                  <div className="w-full bg-muted rounded-full h-2">
                     <div
-                      className="bg-blue-600 h-2 rounded-full"
+                      className="bg-primary h-2 rounded-full"
                       style={{ width: `${data.quality.avgQualityScore}%` }}
                     />
                   </div>
@@ -306,7 +306,7 @@ export default function InterpretationDashboard() {
                     <span className="text-sm">{t('admin.interpretations.dashboard.completeness')}</span>
                     <span className="font-semibold">{data.quality.avgCompletenessScore?.toFixed(1)}/100</span>
                   </div>
-                  <div className="w-full bg-gray-200 rounded-full h-2">
+                  <div className="w-full bg-muted rounded-full h-2">
                     <div
                       className="bg-green-600 h-2 rounded-full"
                       style={{ width: `${data.quality.avgCompletenessScore}%` }}
@@ -318,7 +318,7 @@ export default function InterpretationDashboard() {
                     <span className="text-sm">{t('admin.interpretations.dashboard.accuracy')}</span>
                     <span className="font-semibold">{data.quality.avgAccuracyScore?.toFixed(1)}/100</span>
                   </div>
-                  <div className="w-full bg-gray-200 rounded-full h-2">
+                  <div className="w-full bg-muted rounded-full h-2">
                     <div
                       className="bg-purple-600 h-2 rounded-full"
                       style={{ width: `${data.quality.avgAccuracyScore}%` }}
@@ -362,10 +362,10 @@ export default function InterpretationDashboard() {
                 </div>
                 <div className="flex items-center space-x-2">
                   {item.status === 'published' && (
-                    <Badge className="bg-green-500 text-white">已发布</Badge>
+                    <Badge className="bg-success/100 text-white">已发布</Badge>
                   )}
                   {item.status === 'approved' && (
-                    <Badge className="bg-blue-500 text-white">已审核</Badge>
+                    <Badge className="bg-primary/100 text-white">已审核</Badge>
                   )}
                   {item.status === 'reviewing' && (
                     <Badge className="bg-yellow-500 text-white">审核中</Badge>

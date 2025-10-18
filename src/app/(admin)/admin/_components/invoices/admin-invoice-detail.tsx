@@ -139,11 +139,11 @@ export function AdminInvoiceDetail({ invoiceId }: AdminInvoiceDetailProps) {
 
   const getStatusColor = (status: string) => {
     const colorMap = {
-      draft: "bg-gray-100 text-gray-700",
-      sent: "bg-blue-100 text-blue-700",
+      draft: "bg-gray-100 text-foreground",
+      sent: "bg-primary/10 text-primary",
       paid: "bg-green-100 text-green-700",
       overdue: "bg-red-100 text-red-700",
-      cancelled: "bg-gray-100 text-gray-700"
+      cancelled: "bg-gray-100 text-foreground"
     };
     return colorMap[status as keyof typeof colorMap] || colorMap.draft;
   };
@@ -177,7 +177,7 @@ export function AdminInvoiceDetail({ invoiceId }: AdminInvoiceDetailProps) {
       <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
         <div className="min-h-[100vh] flex items-center justify-center">
           <div className="text-center">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900 mx-auto"></div>
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border mx-auto"></div>
             <p className="mt-2 text-sm text-muted-foreground">{t('admin.invoices.detail.loading')}</p>
           </div>
         </div>
@@ -226,8 +226,8 @@ export function AdminInvoiceDetail({ invoiceId }: AdminInvoiceDetailProps) {
           {/* 发票头部 */}
           <div className="flex justify-between items-start mb-8">
             <div>
-              <h1 className="text-3xl font-bold text-blue-600 mb-2">Open eCOA Platform</h1>
-              <p className="text-sm text-gray-600">
+              <h1 className="text-3xl font-bold text-primary mb-2">Open eCOA Platform</h1>
+              <p className="text-sm text-muted-foreground">
                 Professional eCOA Solutions<br />
                 Unit 13, Freeland Park<br />
                 Wareham Road, Poole, UK BH16 6FH<br />
@@ -237,7 +237,7 @@ export function AdminInvoiceDetail({ invoiceId }: AdminInvoiceDetailProps) {
             <div className="text-right">
               <h2 className="text-2xl font-bold mb-2">INVOICE</h2>
               <p className="text-lg font-semibold">{invoice.invoiceNumber}</p>
-              <p className="text-sm text-gray-600">
+              <p className="text-sm text-muted-foreground">
                 Issue Date: {new Date(invoice.issueDate).toLocaleDateString()}<br />
                 Due Date: {new Date(invoice.dueDate).toLocaleDateString()}
               </p>
@@ -248,7 +248,7 @@ export function AdminInvoiceDetail({ invoiceId }: AdminInvoiceDetailProps) {
           <div className="grid grid-cols-2 gap-8 mb-8">
             <div>
               <h3 className="font-semibold mb-2">Bill To:</h3>
-              <div className="text-sm text-gray-700">
+              <div className="text-sm text-foreground">
                 <p className="font-medium">{invoice.customerName}</p>
                 {invoice.customerOrganization && (
                   <p>{invoice.customerOrganization}</p>
@@ -292,7 +292,7 @@ export function AdminInvoiceDetail({ invoiceId }: AdminInvoiceDetailProps) {
               </div>
 
               {invoice.paidAt && (
-                <p className="text-sm text-gray-600 mt-2">
+                <p className="text-sm text-muted-foreground mt-2">
                   Paid on: {new Date(invoice.paidAt).toLocaleDateString()}
                 </p>
               )}
@@ -301,17 +301,17 @@ export function AdminInvoiceDetail({ invoiceId }: AdminInvoiceDetailProps) {
 
           {/* 服务项目 */}
           <div className="mb-8">
-            <table className="w-full border-collapse border border-gray-300">
+            <table className="w-full border-collapse border border">
               <thead>
                 <tr className="bg-gray-50">
-                  <th className="border border-gray-300 p-3 text-left">Description</th>
-                  <th className="border border-gray-300 p-3 text-right">Amount</th>
+                  <th className="border border p-3 text-left">Description</th>
+                  <th className="border border p-3 text-right">Amount</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <td className="border border-gray-300 p-3">{invoice.description}</td>
-                  <td className="border border-gray-300 p-3 text-right">
+                  <td className="border border p-3">{invoice.description}</td>
+                  <td className="border border p-3 text-right">
                     ${invoice.subtotal.toFixed(2)}
                   </td>
                 </tr>

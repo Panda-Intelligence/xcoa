@@ -38,9 +38,9 @@ export function SearchResults() {
   };
 
   const getMatchColor = (score: number) => {
-    if (score >= 0.9) return "text-green-600";
+    if (score >= 0.9) return "text-success";
     if (score >= 0.8) return "text-yellow-600";
-    return "text-red-600";
+    return "text-destructive";
   };
 
   return (

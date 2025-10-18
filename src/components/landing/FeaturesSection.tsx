@@ -12,7 +12,7 @@ export function FeaturesSection() {
       icon: Search,
       title: t('landing.feature_ai_search_title'),
       description: t('landing.feature_ai_search_description'),
-      color: "text-blue-500 dark:text-blue-400"
+      color: "text-primary dark:text-blue-400"
     },
     {
       icon: BookOpen,
@@ -95,9 +95,9 @@ export function FeaturesSection() {
               </div>
 
               <div className="space-y-4">
-                <div className="bg-white rounded-xl p-5 border border-gray-200 shadow-sm">
+                <div className="bg-card rounded-xl p-5 border shadow-sm">
                   <div className="flex items-start space-x-3">
-                    <div className="w-2 h-2 bg-blue-500 dark:bg-blue-400 rounded-full mt-2 flex-shrink-0" />
+                    <div className="w-2 h-2 bg-primary/100 dark:bg-blue-400 rounded-full mt-2 flex-shrink-0" />
                     <div>
                       <p className="text-sm text-muted-foreground mb-1">{t('landing.user_input')}</p>
                       <p className="font-medium text-foreground">&ldquo;{t('landing.cancer_quality_input')}&rdquo;</p>
@@ -118,7 +118,7 @@ export function FeaturesSection() {
             </div>
 
             <div className="relative">
-              <div className="bg-white rounded-2xl p-6 lg:p-8 shadow-xl border border-gray-200">
+              <div className="bg-card rounded-2xl p-6 lg:p-8 shadow-xl border">
                 <div className="space-y-4">
                   <div className="flex items-center space-x-2 text-sm text-muted-foreground">
                     <Search className="h-4 w-4 text-primary" />
@@ -133,7 +133,7 @@ export function FeaturesSection() {
                     ].map((item) => (
                       <div
                         key={item.name}
-                        className="flex items-center justify-between border-2 border-gray-200 p-4 rounded-xl hover:border-primary/50 hover:shadow-md transition-all duration-200 group cursor-pointer"
+                        className="flex items-center justify-between border p-4 rounded-xl hover:border-primary/50 hover:shadow-md transition-all duration-200 group cursor-pointer"
                       >
                         <div className="flex-1">
                           <p className="font-semibold text-sm text-foreground group-hover:text-primary transition-colors">{item.name}</p>

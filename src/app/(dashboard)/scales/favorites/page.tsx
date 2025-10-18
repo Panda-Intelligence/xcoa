@@ -103,11 +103,11 @@ export default function ScaleFavoritesPage() {
       <div className="min-h-screen bg-background">
         <div className="max-w-7xl mx-auto px-4 py-8">
           <div className="animate-pulse space-y-4">
-            <div className="h-8 bg-gray-200 rounded w-1/3"></div>
-            <div className="h-4 bg-gray-200 rounded w-2/3"></div>
+            <div className="h-8 bg-muted rounded w-1/3"></div>
+            <div className="h-4 bg-muted rounded w-2/3"></div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {Array.from({ length: 6 }).map((_, i) => (
-                <div key={i} className="h-32 bg-gray-200 rounded"></div>
+                <div key={i} className="h-32 bg-muted rounded"></div>
               ))}
             </div>
           </div>
@@ -144,7 +144,7 @@ export default function ScaleFavoritesPage() {
           {/* 搜索和筛选 */}
           <div className="flex flex-col items-center sm:flex-row gap-4">
             <div className="flex-1 relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
                 placeholder={t('favorites.search_placeholder')}
                 value={searchQuery}
@@ -154,7 +154,7 @@ export default function ScaleFavoritesPage() {
             </div>
 
             <div className="flex items-center space-x-2">
-              <Filter className="h-4 w-4 text-gray-500" />
+              <Filter className="h-4 w-4 text-muted-foreground" />
               <Select value={categoryFilter} onValueChange={setCategoryFilter}>
                 <SelectTrigger className="w-40">
                   <SelectValue />
@@ -198,7 +198,7 @@ export default function ScaleFavoritesPage() {
           {filteredFavorites.length === 0 ? (
             <Card>
               <CardContent className="text-center py-12">
-                <Heart className="w-12 h-12 mx-auto mb-4 text-gray-400" />
+                <Heart className="w-12 h-12 mx-auto mb-4 text-muted-foreground" />
                 <h3 className="text-lg font-medium mb-2">
                   {searchQuery || categoryFilter !== 'all' ? t('favorites.no_search_results_title') : t('favorites.no_favorites_title')}
                 </h3>
@@ -313,11 +313,11 @@ export default function ScaleFavoritesPage() {
               <CardContent>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
                   <div>
-                    <div className="text-2xl font-bold text-blue-600">{favorites.length}</div>
+                    <div className="text-2xl font-bold text-primary">{favorites.length}</div>
                     <div className="text-sm text-muted-foreground">{t('favorites.statistics.total_favorites')}</div>
                   </div>
                   <div>
-                    <div className="text-2xl font-bold text-green-600">{categories.length}</div>
+                    <div className="text-2xl font-bold text-success">{categories.length}</div>
                     <div className="text-sm text-muted-foreground">{t('favorites.statistics.categories_count')}</div>
                   </div>
                   <div>

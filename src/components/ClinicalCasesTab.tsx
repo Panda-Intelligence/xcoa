@@ -69,18 +69,18 @@ export function ClinicalCasesTab({ scaleId, scaleAcronym }: ClinicalCasesTabProp
   const getEvidenceLevelColor = (level: string) => {
     const colorMap = {
       'A': 'bg-green-100 text-green-800',
-      'B': 'bg-blue-100 text-blue-800',
+      'B': 'bg-primary/10 text-primary',
       'C': 'bg-yellow-100 text-yellow-800'
     };
-    return colorMap[level as keyof typeof colorMap] || 'bg-gray-100 text-gray-800';
+    return colorMap[level as keyof typeof colorMap] || 'bg-gray-100 text-foreground';
   };
 
   if (loading) {
     return (
       <div className="space-y-4">
         <div className="animate-pulse">
-          <div className="h-4 bg-gray-200 rounded w-1/4 mb-2"></div>
-          <div className="h-32 bg-gray-200 rounded"></div>
+          <div className="h-4 bg-muted rounded w-1/4 mb-2"></div>
+          <div className="h-32 bg-muted rounded"></div>
         </div>
       </div>
     );
@@ -89,7 +89,7 @@ export function ClinicalCasesTab({ scaleId, scaleAcronym }: ClinicalCasesTabProp
   if (cases.length === 0) {
     return (
       <div className="text-center py-8">
-        <Beaker className="w-12 h-12 mx-auto mb-4 text-gray-400" />
+        <Beaker className="w-12 h-12 mx-auto mb-4 text-muted-foreground" />
         <h3 className="text-lg font-medium mb-2">暂无临床试验案例</h3>
         <p className="text-muted-foreground mb-4">
           该量表的临床试验案例正在收集中
@@ -107,29 +107,29 @@ export function ClinicalCasesTab({ scaleId, scaleAcronym }: ClinicalCasesTabProp
   return (
     <div className="space-y-6">
       {/* 统计概览 */}
-      <Card className="bg-blue-50 border-blue-200">
+      <Card className="bg-primary/10 border-blue-200">
         <CardHeader>
-          <CardTitle className="text-blue-800">
+          <CardTitle className="text-primary">
             {scaleAcronym} 临床试验应用统计
           </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
             <div>
-              <div className="text-2xl font-bold text-blue-600">{statistics.totalCases}</div>
-              <div className="text-sm text-blue-700">试验案例</div>
+              <div className="text-2xl font-bold text-primary">{statistics.totalCases}</div>
+              <div className="text-sm text-primary">试验案例</div>
             </div>
             <div>
-              <div className="text-2xl font-bold text-green-600">{statistics.evidenceLevelA}</div>
-              <div className="text-sm text-blue-700">A级证据</div>
+              <div className="text-2xl font-bold text-success">{statistics.evidenceLevelA}</div>
+              <div className="text-sm text-primary">A级证据</div>
             </div>
             <div>
               <div className="text-2xl font-bold text-purple-600">{statistics.rctStudies}</div>
-              <div className="text-sm text-blue-700">RCT研究</div>
+              <div className="text-sm text-primary">RCT研究</div>
             </div>
             <div>
               <div className="text-2xl font-bold text-orange-600">{statistics.totalPatients}</div>
-              <div className="text-sm text-blue-700">总入组患者</div>
+              <div className="text-sm text-primary">总入组患者</div>
             </div>
           </div>
         </CardContent>
@@ -204,14 +204,14 @@ export function ClinicalCasesTab({ scaleId, scaleAcronym }: ClinicalCasesTabProp
               <div className="space-y-3">
                 <div>
                   <h5 className="font-medium text-sm mb-1">主要终点</h5>
-                  <p className="text-sm text-muted-foreground bg-blue-50 p-2 rounded">
+                  <p className="text-sm text-muted-foreground bg-primary/10 p-2 rounded">
                     {clinicalCase.primaryOutcome}
                   </p>
                 </div>
 
                 <div>
                   <h5 className="font-medium text-sm mb-1">关键结果</h5>
-                  <p className="text-sm text-muted-foreground bg-green-50 p-2 rounded">
+                  <p className="text-sm text-muted-foreground bg-success/10 p-2 rounded">
                     {clinicalCase.results}
                   </p>
                 </div>

@@ -150,10 +150,10 @@ export function ScaleInsights({ user, onBack }: ScaleInsightsProps) {
 
         <article className="prose prose-lg max-w-none">
           <header className="not-prose mb-8">
-            <h1 className="text-3xl font-bold text-gray-900 mb-4">
+            <h1 className="text-3xl font-bold text-foreground mb-4">
               {selectedArticle.title}
             </h1>
-            <div className="flex items-center space-x-6 text-sm text-gray-600 mb-4">
+            <div className="flex items-center space-x-6 text-sm text-muted-foreground mb-4">
               <div className="flex items-center space-x-1">
                 <Calendar className="h-4 w-4" />
                 <span>{selectedArticle.publishDate}</span>
@@ -179,8 +179,8 @@ export function ScaleInsights({ user, onBack }: ScaleInsightsProps) {
             </div>
           </header>
 
-          <div className="text-gray-700 leading-relaxed">
-            <p className="text-lg text-gray-600 mb-6">{selectedArticle.excerpt}</p>
+          <div className="text-foreground leading-relaxed">
+            <p className="text-lg text-muted-foreground mb-6">{selectedArticle.excerpt}</p>
             <div className="whitespace-pre-wrap">{selectedArticle.content}</div>
           </div>
         </article>
@@ -202,8 +202,8 @@ export function ScaleInsights({ user, onBack }: ScaleInsightsProps) {
 
       {/* Header */}
       <div className="text-center mb-12">
-        <h1 className="text-3xl font-bold text-gray-900 mb-4">量表解读中心</h1>
-        <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+        <h1 className="text-3xl font-bold text-foreground mb-4">量表解读中心</h1>
+        <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
           深入了解各类 eCOA 量表的使用方法、评分标准和临床应用，提升您的专业实践水平
         </p>
       </div>
@@ -211,7 +211,7 @@ export function ScaleInsights({ user, onBack }: ScaleInsightsProps) {
       {/* Search and Filter */}
       <div className="flex flex-col sm:flex-row gap-4 mb-8">
         <div className="flex-1 relative">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted-foreground" />
           <Input
             placeholder="搜索文章..."
             value={searchQuery}
@@ -220,7 +220,7 @@ export function ScaleInsights({ user, onBack }: ScaleInsightsProps) {
           />
         </div>
         <div className="flex items-center space-x-2">
-          <Filter className="h-4 w-4 text-gray-500" />
+          <Filter className="h-4 w-4 text-muted-foreground" />
           <Select value={selectedCategory} onValueChange={setSelectedCategory}>
             <SelectTrigger className="w-40">
               <SelectValue />
@@ -238,7 +238,7 @@ export function ScaleInsights({ user, onBack }: ScaleInsightsProps) {
       {/* Featured Articles */}
       {selectedCategory === "all" && searchQuery === "" && (
         <div className="mb-12">
-          <h2 className="text-2xl font-semibold text-gray-900 mb-6">精选文章</h2>
+          <h2 className="text-2xl font-semibold text-foreground mb-6">精选文章</h2>
           <div className="grid md:grid-cols-2 gap-6">
             {featuredArticles.map(article => (
               <Card key={article.id} className="cursor-pointer hover:shadow-lg transition-shadow group">
@@ -249,7 +249,7 @@ export function ScaleInsights({ user, onBack }: ScaleInsightsProps) {
                         <Star className="h-3 w-3 mr-1 fill-current" />
                         精选
                       </Badge>
-                      <CardTitle className="group-hover:text-blue-600 transition-colors">
+                      <CardTitle className="group-hover:text-primary transition-colors">
                         {article.title}
                       </CardTitle>
                     </div>
@@ -259,7 +259,7 @@ export function ScaleInsights({ user, onBack }: ScaleInsightsProps) {
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <div className="flex items-center justify-between text-sm text-gray-600 mb-4">
+                  <div className="flex items-center justify-between text-sm text-muted-foreground mb-4">
                     <div className="flex items-center space-x-4">
                       <div className="flex items-center space-x-1">
                         <Clock className="h-4 w-4" />
@@ -285,7 +285,7 @@ export function ScaleInsights({ user, onBack }: ScaleInsightsProps) {
                     variant="outline"
                     size="sm"
                     onClick={() => setSelectedArticle(article)}
-                    className="group-hover:bg-blue-50 group-hover:border-blue-200"
+                    className="group-hover:bg-primary/10 group-hover:border-blue-200"
                   >
                     阅读全文
                     <ArrowRight className="ml-2 h-4 w-4" />
@@ -299,18 +299,18 @@ export function ScaleInsights({ user, onBack }: ScaleInsightsProps) {
 
       {/* All Articles */}
       <div>
-        <h2 className="text-2xl font-semibold text-gray-900 mb-6">
+        <h2 className="text-2xl font-semibold text-foreground mb-6">
           {selectedCategory === "all" ? "所有文章" : `${selectedCategory} 相关文章`}
-          <span className="text-base font-normal text-gray-600 ml-2">
+          <span className="text-base font-normal text-muted-foreground ml-2">
             ({filteredArticles.length} 篇)
           </span>
         </h2>
 
         {filteredArticles.length === 0 ? (
           <div className="text-center py-12">
-            <BookOpen className="mx-auto h-12 w-12 text-gray-400 mb-4" />
-            <h3 className="text-lg font-medium text-gray-900 mb-2">暂无相关文章</h3>
-            <p className="text-gray-600">请尝试调整搜索条件或选择其他分类</p>
+            <BookOpen className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
+            <h3 className="text-lg font-medium text-foreground mb-2">暂无相关文章</h3>
+            <p className="text-muted-foreground">请尝试调整搜索条件或选择其他分类</p>
           </div>
         ) : (
           <div className="grid gap-6">
@@ -319,7 +319,7 @@ export function ScaleInsights({ user, onBack }: ScaleInsightsProps) {
                 <CardHeader>
                   <div className="flex items-start justify-between">
                     <div className="space-y-2">
-                      <CardTitle className="group-hover:text-blue-600 transition-colors">
+                      <CardTitle className="group-hover:text-primary transition-colors">
                         {article.title}
                       </CardTitle>
                       <CardDescription>
@@ -336,7 +336,7 @@ export function ScaleInsights({ user, onBack }: ScaleInsightsProps) {
                 </CardHeader>
                 <CardContent>
                   <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-6 text-sm text-gray-600">
+                    <div className="flex items-center space-x-6 text-sm text-muted-foreground">
                       <div className="flex items-center space-x-1">
                         <Calendar className="h-4 w-4" />
                         <span>{article.publishDate}</span>

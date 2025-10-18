@@ -252,12 +252,12 @@ export function CopyrightHolderManager() {
 
   const getTypeColor = (type: string) => {
     const colorMap = {
-      publisher: "bg-blue-100 text-blue-700",
+      publisher: "bg-primary/10 text-primary",
       research_institution: "bg-green-100 text-green-700",
       individual: "bg-purple-100 text-purple-700",
       foundation: "bg-orange-100 text-orange-700",
     };
-    return colorMap[type as keyof typeof colorMap] || "bg-gray-100 text-gray-700";
+    return colorMap[type as keyof typeof colorMap] || "bg-gray-100 text-foreground";
   };
 
   const getTypeLabel = (type: string) => {
@@ -294,7 +294,7 @@ export function CopyrightHolderManager() {
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-2xl font-bold flex items-center space-x-2">
-                <Copyright className="w-6 h-6 text-blue-600" />
+                <Copyright className="w-6 h-6 text-primary" />
                 <span>{t('admin.copyright_holders.title')}</span>
               </h1>
               <p className="text-muted-foreground">
@@ -455,7 +455,7 @@ export function CopyrightHolderManager() {
           {/* 搜索和筛选 */}
           <div className="flex flex-col sm:flex-row gap-4">
             <div className="flex-1 relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
                 placeholder={t('admin.copyright_holders.search_placeholder')}
                 value={searchQuery}
@@ -466,7 +466,7 @@ export function CopyrightHolderManager() {
             </div>
 
             <div className="flex items-center space-x-2">
-              <Filter className="h-4 w-4 text-gray-500" />
+              <Filter className="h-4 w-4 text-muted-foreground" />
               <Select value={typeFilter} onValueChange={setTypeFilter}>
                 <SelectTrigger className="w-40">
                   <SelectValue placeholder={t('admin.copyright_holders.organization_type')} />
@@ -508,13 +508,13 @@ export function CopyrightHolderManager() {
           <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
             <Card>
               <CardContent className="p-4 text-center">
-                <div className="text-2xl font-bold text-blue-600">{stats.total}</div>
+                <div className="text-2xl font-bold text-primary">{stats.total}</div>
                 <div className="text-sm text-muted-foreground">{t('admin.copyright_holders.stats_total')}</div>
               </CardContent>
             </Card>
             <Card>
               <CardContent className="p-4 text-center">
-                <div className="text-2xl font-bold text-green-600">{stats.active}</div>
+                <div className="text-2xl font-bold text-success">{stats.active}</div>
                 <div className="text-sm text-muted-foreground">{t('admin.copyright_holders.stats_active')}</div>
               </CardContent>
             </Card>
@@ -565,7 +565,7 @@ export function CopyrightHolderManager() {
                             <div className="text-sm text-muted-foreground">{holder.nameEn}</div>
                           )}
                           {holder.website && (
-                            <div className="text-xs text-blue-600">
+                            <div className="text-xs text-primary">
                               <Globe className="w-3 h-3 inline mr-1" />
                               {holder.website}
                             </div>
@@ -605,7 +605,7 @@ export function CopyrightHolderManager() {
                             {holder.isActive ? t('admin.copyright_holders.status_active') : t('admin.copyright_holders.status_inactive')}
                           </Badge>
                           {holder.isVerified && (
-                            <Badge variant="outline" className="text-green-600">
+                            <Badge variant="outline" className="text-success">
                               {t('admin.copyright_holders.status_verified')}
                             </Badge>
                           )}
@@ -627,7 +627,7 @@ export function CopyrightHolderManager() {
                               setHolderToDelete(holder.id);
                               setDeleteConfirmOpen(true);
                             }}
-                            className="text-red-600 hover:text-red-700"
+                            className="text-destructive hover:text-red-700"
                           >
                             <Trash2 className="w-3 h-3" />
                           </Button>
@@ -638,7 +638,7 @@ export function CopyrightHolderManager() {
                     <TableRow>
                       <TableCell colSpan={6} className="text-center py-8">
                         <div className="flex flex-col items-center space-y-2">
-                          <Copyright className="w-12 h-12 text-gray-400" />
+                          <Copyright className="w-12 h-12 text-muted-foreground" />
                           <p className="text-muted-foreground">{t('admin.copyright_holders.no_holders')}</p>
                         </div>
                       </TableCell>

@@ -92,7 +92,7 @@ export function RemoveMemberButton({
         <Button
           variant="ghost"
           size="icon"
-          className="h-8 w-8 text-red-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/20"
+          className="h-8 w-8 text-red-500 hover:text-destructive hover:bg-destructive/10 dark:hover:bg-red-950/20"
         >
           <TrashIcon className="h-4 w-4" />
           <span className="sr-only">Remove member</span>

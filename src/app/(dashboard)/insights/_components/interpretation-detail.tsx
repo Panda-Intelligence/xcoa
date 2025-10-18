@@ -98,7 +98,7 @@ export function InterpretationDetail({ scaleId }: InterpretationDetailProps) {
       <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
         <div className="min-h-[100vh] flex items-center justify-center">
           <div className="text-center">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900 mx-auto"></div>
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border mx-auto"></div>
             <p className="mt-2 text-sm text-muted-foreground">{t('insights.interpretation.loading')}</p>
           </div>
         </div>
@@ -153,13 +153,13 @@ export function InterpretationDetail({ scaleId }: InterpretationDetailProps) {
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="flex items-center space-x-2">
-                <Clock className="w-4 h-4 text-blue-600" />
+                <Clock className="w-4 h-4 text-primary" />
                 <span className="text-sm">
                   {t('insights.interpretation.administration_time')}: {interpretationData.interpretation.overview.administrationTime} {t('insights.interpretation.minutes')}
                 </span>
               </div>
               <div className="flex items-center space-x-2">
-                <Users className="w-4 h-4 text-green-600" />
+                <Users className="w-4 h-4 text-success" />
                 <span className="text-sm">
                   {t('insights.interpretation.target_population')}: {interpretationData.interpretation.overview.targetPopulation}
                 </span>
@@ -226,7 +226,7 @@ export function InterpretationDetail({ scaleId }: InterpretationDetailProps) {
                 <ul className="space-y-2 text-sm">
                   {interpretationData.interpretation.practicalConsiderations.administrationTips.map((tip: string, index: number) => (
                     <li key={index} className="flex items-start">
-                      <CheckCircle className="w-4 h-4 text-green-600 mr-2 mt-0.5 shrink-0" />
+                      <CheckCircle className="w-4 h-4 text-success mr-2 mt-0.5 shrink-0" />
                       {tip}
                     </li>
                   ))}
@@ -248,7 +248,7 @@ export function InterpretationDetail({ scaleId }: InterpretationDetailProps) {
                 <ul className="space-y-2 text-sm">
                   {interpretationData.interpretation.practicalConsiderations.culturalConsiderations.map((consideration: string, index: number) => (
                     <li key={index} className="flex items-start">
-                      <Info className="w-4 h-4 text-blue-600 mr-2 mt-0.5 shrink-0" />
+                      <Info className="w-4 h-4 text-primary mr-2 mt-0.5 shrink-0" />
                       {consideration}
                     </li>
                   ))}
@@ -259,7 +259,7 @@ export function InterpretationDetail({ scaleId }: InterpretationDetailProps) {
                 <ul className="space-y-2 text-sm">
                   {interpretationData.interpretation.practicalConsiderations.limitationsAndCautions.map((limitation: string, index: number) => (
                     <li key={index} className="flex items-start">
-                      <AlertTriangle className="w-4 h-4 text-red-600 mr-2 mt-0.5 shrink-0" />
+                      <AlertTriangle className="w-4 h-4 text-destructive mr-2 mt-0.5 shrink-0" />
                       {limitation}
                     </li>
                   ))}
@@ -314,7 +314,7 @@ export function InterpretationDetail({ scaleId }: InterpretationDetailProps) {
             <CardContent>
               <div className="space-y-4">
                 {interpretationData.interpretation.clinicalExamples.map((example, index) => (
-                  <Card key={index} className="p-4 bg-blue-50 border-blue-200">
+                  <Card key={index} className="p-4 bg-primary/10 border-blue-200">
                     <h4 className="font-medium mb-2">{example.caseTitle}</h4>
                     <p className="text-sm mb-2"><strong>{t('insights.interpretation.case_scenario')}</strong> {example.scenario}</p>
                     <p className="text-sm mb-2"><strong>{t('insights.interpretation.case_score')}</strong> {example.score}</p>

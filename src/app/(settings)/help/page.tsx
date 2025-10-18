@@ -113,7 +113,7 @@ export default function HelpPage() {
           {/* Page Title */}
           <div className="text-center py-8">
             <h1 className="text-3xl font-bold flex items-center justify-center space-x-3 mb-4">
-              <HelpCircle className="w-8 h-8 text-blue-600" />
+              <HelpCircle className="w-8 h-8 text-primary" />
               <span>{t('help.page_title')}</span>
             </h1>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
@@ -124,7 +124,7 @@ export default function HelpPage() {
           {/* Search Box */}
           <div className="max-w-2xl mx-auto w-full">
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
                 placeholder={t('help.search_placeholder')}
                 value={searchQuery}
@@ -161,7 +161,7 @@ export default function HelpPage() {
                 {filteredFAQ.length === 0 ? (
                   <Card>
                     <CardContent className="text-center py-12">
-                      <Search className="w-12 h-12 mx-auto mb-4 text-gray-400" />
+                      <Search className="w-12 h-12 mx-auto mb-4 text-muted-foreground" />
                       <h3 className="text-lg font-medium mb-2">{t('help.no_results.title')}</h3>
                       <p className="text-muted-foreground">
                         {t('help.no_results.description')}
@@ -185,9 +185,9 @@ export default function HelpPage() {
                           </div>
                           <div className="flex items-center space-x-2">
                             {expandedItems.has(item.id) ? (
-                              <ChevronDown className="w-4 h-4 text-gray-500" />
+                              <ChevronDown className="w-4 h-4 text-muted-foreground" />
                             ) : (
-                              <ChevronRight className="w-4 h-4 text-gray-500" />
+                              <ChevronRight className="w-4 h-4 text-muted-foreground" />
                             )}
                           </div>
                         </div>
@@ -233,7 +233,7 @@ export default function HelpPage() {
                 <Card>
                   <CardHeader>
                     <CardTitle className="flex items-center space-x-2">
-                      <Book className="w-5 h-5 text-blue-600" />
+                      <Book className="w-5 h-5 text-primary" />
                       <span>{t('help.guides.quick_start.title')}</span>
                     </CardTitle>
                     <CardDescription>
@@ -244,7 +244,7 @@ export default function HelpPage() {
                     <ul className="space-y-2 text-sm">
                       {tArray('help.guides.quick_start.items', []).map((item, index) => (
                         <li key={index} className="flex items-start space-x-2">
-                          <CheckCircle className="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0" />
+                          <CheckCircle className="w-4 h-4 text-success mt-0.5 flex-shrink-0" />
                           <span>{item}</span>
                         </li>
                       ))}
@@ -255,7 +255,7 @@ export default function HelpPage() {
                 <Card>
                   <CardHeader>
                     <CardTitle className="flex items-center space-x-2">
-                      <FileText className="w-5 h-5 text-green-600" />
+                      <FileText className="w-5 h-5 text-success" />
                       <span>{t('help.guides.copyright.title')}</span>
                     </CardTitle>
                     <CardDescription>
@@ -325,7 +325,7 @@ export default function HelpPage() {
                 <Card>
                   <CardHeader>
                     <CardTitle className="flex items-center space-x-2">
-                      <Mail className="w-5 h-5 text-blue-600" />
+                      <Mail className="w-5 h-5 text-primary" />
                       <span>{t('help.contact.email.title')}</span>
                     </CardTitle>
                     <CardDescription>
@@ -336,15 +336,15 @@ export default function HelpPage() {
                     <div className="space-y-3">
                       <div>
                         <span className="font-medium text-sm">{t('help.contact.email.customer_service')}</span>
-                        <p className="text-blue-600">support@openecoa.com</p>
+                        <p className="text-primary">support@openecoa.com</p>
                       </div>
                       <div>
                         <span className="font-medium text-sm">{t('help.contact.email.business')}</span>
-                        <p className="text-blue-600">business@openecoa.com</p>
+                        <p className="text-primary">business@openecoa.com</p>
                       </div>
                       <div>
                         <span className="font-medium text-sm">{t('help.contact.email.technical')}</span>
-                        <p className="text-blue-600">tech@openecoa.com</p>
+                        <p className="text-primary">tech@openecoa.com</p>
                       </div>
                       <Button className="w-full">
                         <Mail className="w-4 h-4 mr-2" />
@@ -357,7 +357,7 @@ export default function HelpPage() {
                 <Card>
                   <CardHeader>
                     <CardTitle className="flex items-center space-x-2">
-                      <MessageSquare className="w-5 h-5 text-green-600" />
+                      <MessageSquare className="w-5 h-5 text-success" />
                       <span>{t('help.contact.chat.title')}</span>
                     </CardTitle>
                     <CardDescription>
@@ -387,7 +387,7 @@ export default function HelpPage() {
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <Card>
                   <CardContent className="p-4 text-center">
-                    <Book className="w-8 h-8 mx-auto mb-2 text-blue-600" />
+                    <Book className="w-8 h-8 mx-auto mb-2 text-primary" />
                     <h4 className="font-medium mb-1">{t('help.contact.resources.manual.title')}</h4>
                     <p className="text-xs text-muted-foreground mb-3">
                       {t('help.contact.resources.manual.description')}
@@ -401,7 +401,7 @@ export default function HelpPage() {
 
                 <Card>
                   <CardContent className="p-4 text-center">
-                    <FileText className="w-8 h-8 mx-auto mb-2 text-green-600" />
+                    <FileText className="w-8 h-8 mx-auto mb-2 text-success" />
                     <h4 className="font-medium mb-1">{t('help.contact.resources.api_docs.title')}</h4>
                     <p className="text-xs text-muted-foreground mb-3">
                       {t('help.contact.resources.api_docs.description')}

@@ -78,11 +78,11 @@ export default function InterpretationPage() {
       <div className="min-h-screen bg-background">
         <div className="max-w-7xl mx-auto px-4 py-8">
           <div className="animate-pulse space-y-4">
-            <div className="h-8 bg-gray-200 rounded w-1/3"></div>
-            <div className="h-4 bg-gray-200 rounded w-2/3"></div>
+            <div className="h-8 bg-muted rounded w-1/3"></div>
+            <div className="h-4 bg-muted rounded w-2/3"></div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {Array.from({ length: 6 }).map((_, i) => (
-                <div key={i} className="h-64 bg-gray-200 rounded"></div>
+                <div key={i} className="h-64 bg-muted rounded"></div>
               ))}
             </div>
           </div>
@@ -111,7 +111,7 @@ export default function InterpretationPage() {
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-2xl font-bold flex items-center space-x-2">
-                <BookOpen className="w-6 h-6 text-blue-600" />
+                <BookOpen className="w-6 h-6 text-primary" />
                 <span>{t('insights.interpretation.guide_title')}</span>
               </h1>
               <p className="text-muted-foreground">
@@ -123,7 +123,7 @@ export default function InterpretationPage() {
           {/* 搜索 */}
           <div className='flex'>
             <div className="flex-1 relative max-w-md">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
                 placeholder={t('insights.interpretation.search_placeholder')}
                 value={searchQuery}
@@ -144,7 +144,7 @@ export default function InterpretationPage() {
             <div className="col-span-full">
               <Card>
                 <CardContent className="text-center py-12">
-                  <BookOpen className="w-12 h-12 mx-auto mb-4 text-gray-400" />
+                  <BookOpen className="w-12 h-12 mx-auto mb-4 text-muted-foreground" />
                   <h3 className="text-lg font-medium mb-2">
                     {searchQuery ? t('insights.interpretation.no_matching_scales') : t('insights.interpretation.no_guides_yet')}
                   </h3>
@@ -198,7 +198,7 @@ export default function InterpretationPage() {
 
                     {scale.targetPopulation && (
                       <div className="flex items-center space-x-2 text-sm">
-                        <Users className="w-3 h-3 text-green-600" />
+                        <Users className="w-3 h-3 text-success" />
                         <span className="text-muted-foreground">{scale.targetPopulation}</span>
                       </div>
                     )}
@@ -234,7 +234,7 @@ export default function InterpretationPage() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-8">
           <Card>
             <CardContent className="p-4 text-center">
-              <TrendingUp className="w-8 h-8 mx-auto mb-2 text-blue-600" />
+              <TrendingUp className="w-8 h-8 mx-auto mb-2 text-primary" />
               <h4 className="font-medium mb-1">{t('insights.interpretation.professional_interpretation')}</h4>
               <p className="text-xs text-muted-foreground">
                 {t('insights.interpretation.evidence_based_guidance')}
@@ -244,7 +244,7 @@ export default function InterpretationPage() {
 
           <Card>
             <CardContent className="p-4 text-center">
-              <Users className="w-8 h-8 mx-auto mb-2 text-green-600" />
+              <Users className="w-8 h-8 mx-auto mb-2 text-success" />
               <h4 className="font-medium mb-1">{t('insights.interpretation.clinical_application')}</h4>
               <p className="text-xs text-muted-foreground">
                 {t('insights.interpretation.clinical_guidance')}

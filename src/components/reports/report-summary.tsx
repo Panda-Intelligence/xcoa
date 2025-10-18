@@ -20,11 +20,11 @@ interface ReportSummaryProps {
 }
 
 const SEVERITY_CONFIG = {
-  normal: { label: '正常范围', color: 'bg-green-500', variant: 'default' as const },
+  normal: { label: '正常范围', color: 'bg-success/100', variant: 'default' as const },
   minimal: { label: '轻微', color: 'bg-lime-500', variant: 'secondary' as const },
   mild: { label: '轻度', color: 'bg-yellow-500', variant: 'secondary' as const },
   moderate: { label: '中度', color: 'bg-orange-500', variant: 'destructive' as const },
-  severe: { label: '重度', color: 'bg-red-500', variant: 'destructive' as const },
+  severe: { label: '重度', color: 'bg-destructive/100', variant: 'destructive' as const },
 };
 
 export function ReportSummary({

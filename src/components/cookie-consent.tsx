@@ -201,7 +201,7 @@ export function CookieConsentBanner() {
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <Shield className="h-5 w-5 text-green-600" />
+                    <Shield className="h-5 w-5 text-success" />
                     <div>
                       <Label className="text-base font-medium">{t('cookie_consent.necessary')}</Label>
                       <p className="text-sm text-muted-foreground">
@@ -219,7 +219,7 @@ export function CookieConsentBanner() {
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <Settings className="h-5 w-5 text-blue-600" />
+                    <Settings className="h-5 w-5 text-primary" />
                     <div>
                       <Label className="text-base font-medium">{t('cookie_consent.functional')}</Label>
                       <p className="text-sm text-muted-foreground">

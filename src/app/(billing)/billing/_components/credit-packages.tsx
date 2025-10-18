@@ -20,7 +20,7 @@ type CreditPackage = typeof CREDIT_PACKAGES[number];
 
 export const getPackageIcon = (index: number) => {
   if (index === 2) return <Zap className="h-6 w-6 text-yellow-500" />;
-  if (index === 1) return <Sparkles className="h-6 w-6 text-blue-500" />;
+  if (index === 1) return <Sparkles className="h-6 w-6 text-primary" />;
   return <Coins className="h-6 w-6 text-green-500" />;
 };
 

@@ -89,8 +89,8 @@ export function FavoriteButton({
         className={cn(
           'transition-colors',
           isFav 
-            ? 'text-red-500 hover:text-red-600' 
-            : 'text-gray-400 hover:text-red-500',
+            ? 'text-red-500 hover:text-destructive' 
+            : 'text-muted-foreground hover:text-red-500',
           className
         )}
         title={isFav ? t('scales.unfavorite', '取消收藏') : t('scales.favorite', '收藏')}
@@ -116,8 +116,8 @@ export function FavoriteButton({
         getSizeClasses(),
         'transition-all',
         isFav 
-          ? 'bg-red-500 hover:bg-red-600 text-white border-red-500' 
-          : 'hover:bg-red-50 hover:border-red-300 hover:text-red-600',
+          ? 'bg-destructive/100 hover:bg-red-600 text-white border-red-500' 
+          : 'hover:bg-destructive/10 hover:border-red-300 hover:text-destructive',
         className
       )}
     >

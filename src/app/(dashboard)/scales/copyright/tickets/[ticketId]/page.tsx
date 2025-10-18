@@ -137,27 +137,27 @@ export default function TicketDetailPage({ params }: TicketDetailPageProps) {
   const getStatusIcon = (status: string) => {
     switch (status) {
       case 'open':
-        return <Clock className="w-5 h-5 text-blue-600" />;
+        return <Clock className="w-5 h-5 text-primary" />;
       case 'in_progress':
         return <Mail className="w-5 h-5 text-yellow-600" />;
       case 'waiting_response':
         return <MessageSquare className="w-5 h-5 text-orange-600" />;
       case 'resolved':
-        return <CheckCircle className="w-5 h-5 text-green-600" />;
+        return <CheckCircle className="w-5 h-5 text-success" />;
       case 'closed':
-        return <XCircle className="w-5 h-5 text-gray-600" />;
+        return <XCircle className="w-5 h-5 text-muted-foreground" />;
       default:
-        return <Clock className="w-5 h-5 text-gray-600" />;
+        return <Clock className="w-5 h-5 text-muted-foreground" />;
     }
   };
 
   const getStatusColor = (status: string) => {
     const colorMap = {
-      open: 'bg-blue-100 text-blue-700 border-blue-200',
+      open: 'bg-primary/10 text-primary border-blue-200',
       in_progress: 'bg-yellow-100 text-yellow-700 border-yellow-200',
       waiting_response: 'bg-orange-100 text-orange-700 border-orange-200',
       resolved: 'bg-green-100 text-green-700 border-green-200',
-      closed: 'bg-gray-100 text-gray-700 border-gray-200',
+      closed: 'bg-gray-100 text-foreground border',
     };
     return colorMap[status as keyof typeof colorMap] || colorMap.open;
   };
@@ -167,9 +167,9 @@ export default function TicketDetailPage({ params }: TicketDetailPageProps) {
       <div className="min-h-screen bg-background">
         <div className="max-w-4xl mx-auto px-4 py-8">
           <div className="animate-pulse space-y-4">
-            <div className="h-8 bg-gray-200 rounded w-1/3"></div>
-            <div className="h-32 bg-gray-200 rounded"></div>
-            <div className="h-48 bg-gray-200 rounded"></div>
+            <div className="h-8 bg-muted rounded w-1/3"></div>
+            <div className="h-32 bg-muted rounded"></div>
+            <div className="h-48 bg-muted rounded"></div>
           </div>
         </div>
       </div>
@@ -313,8 +313,8 @@ export default function TicketDetailPage({ params }: TicketDetailPageProps) {
               <CardContent>
                 <div className="space-y-4">
                   <div className="flex items-start space-x-3">
-                    <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
-                      <User className="w-4 h-4 text-blue-600" />
+                    <div className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center">
+                      <User className="w-4 h-4 text-primary" />
                     </div>
                     <div className="flex-1">
                       <p className="font-medium text-sm">{t('copyright.tickets.ticket_created')}</p>
@@ -327,7 +327,7 @@ export default function TicketDetailPage({ params }: TicketDetailPageProps) {
                   {ticket.status === 'sent' && (
                     <div className="flex items-start space-x-3">
                       <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
-                        <Mail className="w-4 h-4 text-green-600" />
+                        <Mail className="w-4 h-4 text-success" />
                       </div>
                       <div className="flex-1">
                         <p className="font-medium text-sm">{t('copyright.tickets.email_sent')}</p>
@@ -355,7 +355,7 @@ export default function TicketDetailPage({ params }: TicketDetailPageProps) {
                   {ticket.licenseGranted && (
                     <div className="flex items-start space-x-3">
                       <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
-                        <CheckCircle className="w-4 h-4 text-green-600" />
+                        <CheckCircle className="w-4 h-4 text-success" />
                       </div>
                       <div className="flex-1">
                         <p className="font-medium text-sm">{t('copyright.tickets.license_granted')}</p>
@@ -379,27 +379,27 @@ export default function TicketDetailPage({ params }: TicketDetailPageProps) {
               </CardHeader>
               <CardContent className="space-y-3">
                 <div className="flex items-center space-x-2">
-                  <Building className="w-4 h-4 text-gray-500" />
+                  <Building className="w-4 h-4 text-muted-foreground" />
                   <span className="text-sm">{ticket.copyrightOrganization}</span>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <Mail className="w-4 h-4 text-gray-500" />
-                  <a href={`mailto:${ticket.copyrightEmail}`} className="text-sm text-blue-600 hover:underline">
+                  <Mail className="w-4 h-4 text-muted-foreground" />
+                  <a href={`mailto:${ticket.copyrightEmail}`} className="text-sm text-primary hover:underline">
                     {ticket.copyrightEmail}
                   </a>
                 </div>
                 {ticket.copyrightPhone && (
                   <div className="flex items-center space-x-2">
-                    <Phone className="w-4 h-4 text-gray-500" />
-                    <a href={`tel:${ticket.copyrightPhone}`} className="text-sm text-blue-600 hover:underline">
+                    <Phone className="w-4 h-4 text-muted-foreground" />
+                    <a href={`tel:${ticket.copyrightPhone}`} className="text-sm text-primary hover:underline">
                       {ticket.copyrightPhone}
                     </a>
                   </div>
                 )}
                 {ticket.copyrightWebsite && (
                   <div className="flex items-center space-x-2">
-                    <Globe className="w-4 h-4 text-gray-500" />
-                    <a href={ticket.copyrightWebsite} target="_blank" rel="noopener noreferrer" className="text-sm text-blue-600 hover:underline">
+                    <Globe className="w-4 h-4 text-muted-foreground" />
+                    <a href={ticket.copyrightWebsite} target="_blank" rel="noopener noreferrer" className="text-sm text-primary hover:underline">
                       {t('copyright.tickets.official_website')}
                     </a>
                   </div>
@@ -426,7 +426,7 @@ export default function TicketDetailPage({ params }: TicketDetailPageProps) {
                     {ticket.responseReceived ? (
                       <Badge className="bg-green-100 text-green-700">{t('copyright.tickets.responded_status')}</Badge>
                     ) : (
-                      <Badge className="bg-gray-100 text-gray-700">{t('copyright.tickets.waiting_for_response')}</Badge>
+                      <Badge className="bg-gray-100 text-foreground">{t('copyright.tickets.waiting_for_response')}</Badge>
                     )}
                   </div>
 
@@ -435,7 +435,7 @@ export default function TicketDetailPage({ params }: TicketDetailPageProps) {
                     {ticket.licenseGranted ? (
                       <Badge className="bg-green-100 text-green-700">{t('copyright.tickets.authorized')}</Badge>
                     ) : (
-                      <Badge className="bg-gray-100 text-gray-700">{t('copyright.tickets.pending_authorization')}</Badge>
+                      <Badge className="bg-gray-100 text-foreground">{t('copyright.tickets.pending_authorization')}</Badge>
                     )}
                   </div>
                 </div>
@@ -481,10 +481,10 @@ export default function TicketDetailPage({ params }: TicketDetailPageProps) {
 function getStatusColor(status: string) {
   const colorMap = {
     pending: 'bg-yellow-100 text-yellow-700 border-yellow-200',
-    sent: 'bg-blue-100 text-blue-700 border-blue-200',
+    sent: 'bg-primary/10 text-primary border-blue-200',
     responded: 'bg-purple-100 text-purple-700 border-purple-200',
     resolved: 'bg-green-100 text-green-700 border-green-200',
-    closed: 'bg-gray-100 text-gray-700 border-gray-200',
+    closed: 'bg-gray-100 text-foreground border',
     failed: 'bg-red-100 text-red-700 border-red-200',
   };
   return colorMap[status as keyof typeof colorMap] || colorMap.pending;

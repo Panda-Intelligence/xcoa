@@ -346,7 +346,7 @@ export function AdminScaleDetail({ scaleId }: AdminScaleDetailProps) {
       <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
         <div className="min-h-[100vh] flex items-center justify-center">
           <div className="text-center">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900 mx-auto"></div>
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border mx-auto"></div>
             <p className="mt-2 text-sm text-muted-foreground">{t('admin.scales.loading')}</p>
           </div>
         </div>
@@ -526,8 +526,8 @@ export function AdminScaleDetail({ scaleId }: AdminScaleDetailProps) {
                     <span className="font-medium">{t('admin.scales.detail.label_status')}:</span>
                     <Badge className={
                       scale.validationStatus === 'published' ? 'bg-green-100 text-green-700' :
-                      scale.validationStatus === 'validated' ? 'bg-blue-100 text-blue-700' :
-                      'bg-gray-100 text-gray-700'
+                      scale.validationStatus === 'validated' ? 'bg-primary/10 text-primary' :
+                      'bg-gray-100 text-foreground'
                     }>
                       {scale.validationStatus === 'published' ? t('admin.scales.status_published') :
                        scale.validationStatus === 'validated' ? t('admin.scales.status_validated') : t('admin.scales.status_draft')}

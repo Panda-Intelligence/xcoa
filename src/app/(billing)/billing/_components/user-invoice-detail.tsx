@@ -88,11 +88,11 @@ export function UserInvoiceDetail({ invoiceId }: UserInvoiceDetailProps) {
 
   const getStatusColor = (status: string) => {
     const colorMap = {
-      draft: "bg-gray-100 text-gray-700",
-      sent: "bg-blue-100 text-blue-700",
+      draft: "bg-gray-100 text-foreground",
+      sent: "bg-primary/10 text-primary",
       paid: "bg-green-100 text-green-700",
       overdue: "bg-red-100 text-red-700",
-      cancelled: "bg-gray-100 text-gray-700"
+      cancelled: "bg-gray-100 text-foreground"
     };
     return colorMap[status as keyof typeof colorMap] || colorMap.draft;
   };
@@ -113,7 +113,7 @@ export function UserInvoiceDetail({ invoiceId }: UserInvoiceDetailProps) {
       <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
         <div className="min-h-[100vh] flex items-center justify-center">
           <div className="text-center">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900 mx-auto"></div>
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border mx-auto"></div>
             <p className="mt-2 text-sm text-muted-foreground">{t('billing.loading')}</p>
           </div>
         </div>

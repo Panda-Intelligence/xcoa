@@ -162,11 +162,11 @@ export function AdminTicketsManager() {
 
   const getStatusColor = (status: string) => {
     const colorMap = {
-      open: "bg-blue-100 text-blue-700",
+      open: "bg-primary/10 text-primary",
       in_progress: "bg-yellow-100 text-yellow-700",
       waiting_response: "bg-orange-100 text-orange-700",
       resolved: "bg-green-100 text-green-700",
-      closed: "bg-gray-100 text-gray-700"
+      closed: "bg-gray-100 text-foreground"
     };
     return colorMap[status as keyof typeof colorMap] || colorMap.open;
   };
@@ -184,8 +184,8 @@ export function AdminTicketsManager() {
 
   const getPriorityColor = (priority: string) => {
     const colorMap = {
-      low: "bg-gray-100 text-gray-700",
-      medium: "bg-blue-100 text-blue-700",
+      low: "bg-gray-100 text-foreground",
+      medium: "bg-primary/10 text-primary",
       high: "bg-orange-100 text-orange-700",
       urgent: "bg-red-100 text-red-700"
     };
@@ -224,7 +224,7 @@ export function AdminTicketsManager() {
       <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
         <div className="min-h-[100vh] flex items-center justify-center">
           <div className="text-center">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900 mx-auto"></div>
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border mx-auto"></div>
             <p className="mt-2 text-sm text-muted-foreground">{t('admin.loading')}</p>
           </div>
         </div>
@@ -247,7 +247,7 @@ export function AdminTicketsManager() {
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-2xl font-bold flex items-center space-x-2">
-              <Shield className="w-6 h-6 text-blue-600" />
+              <Shield className="w-6 h-6 text-primary" />
               <span>{t('admin.tickets.title')}</span>
             </h1>
             <p className="text-muted-foreground">
@@ -260,7 +260,7 @@ export function AdminTicketsManager() {
         <div className="grid grid-cols-2 md:grid-cols-6 gap-4">
           <Card>
             <CardContent className="p-4 text-center">
-              <div className="text-2xl font-bold text-blue-600">{stats.total}</div>
+              <div className="text-2xl font-bold text-primary">{stats.total}</div>
               <div className="text-sm text-muted-foreground">{t('admin.tickets.stats_total_tickets')}</div>
             </CardContent>
           </Card>
@@ -272,7 +272,7 @@ export function AdminTicketsManager() {
           </Card>
           <Card>
             <CardContent className="p-4 text-center">
-              <div className="text-2xl font-bold text-blue-600">{stats.in_progress}</div>
+              <div className="text-2xl font-bold text-primary">{stats.in_progress}</div>
               <div className="text-sm text-muted-foreground">{t('admin.tickets.stats_in_progress')}</div>
             </CardContent>
           </Card>
@@ -284,13 +284,13 @@ export function AdminTicketsManager() {
           </Card>
           <Card>
             <CardContent className="p-4 text-center">
-              <div className="text-2xl font-bold text-green-600">{stats.resolved}</div>
+              <div className="text-2xl font-bold text-success">{stats.resolved}</div>
               <div className="text-sm text-muted-foreground">{t('admin.tickets.stats_resolved')}</div>
             </CardContent>
           </Card>
           <Card>
             <CardContent className="p-4 text-center">
-              <div className="text-2xl font-bold text-gray-600">{stats.closed}</div>
+              <div className="text-2xl font-bold text-muted-foreground">{stats.closed}</div>
               <div className="text-sm text-muted-foreground">{t('admin.tickets.stats_closed')}</div>
             </CardContent>
           </Card>
@@ -299,7 +299,7 @@ export function AdminTicketsManager() {
         {/* 搜索和筛选 */}
         <div className="flex flex-col sm:flex-row gap-4">
           <div className="flex-1 relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
               placeholder={t('admin.search_tickets_placeholder')}
               value={searchQuery}
@@ -309,7 +309,7 @@ export function AdminTicketsManager() {
           </div>
 
           <div className="flex items-center space-x-2">
-            <Filter className="h-4 w-4 text-gray-500" />
+            <Filter className="h-4 w-4 text-muted-foreground" />
             <Select value={statusFilter} onValueChange={setStatusFilter}>
               <SelectTrigger className="w-32">
                 <SelectValue />

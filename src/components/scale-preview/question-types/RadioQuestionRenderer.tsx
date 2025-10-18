@@ -75,9 +75,9 @@ export function RadioQuestionRenderer({
               ${deviceStyles.cardPadding} 
               rounded-lg 
               border border-transparent 
-              hover:bg-blue-50 hover:border-blue-200 
+              hover:bg-primary/10 hover:border-blue-200 
               transition-all cursor-pointer
-              ${value === option ? 'bg-blue-50 border-blue-300' : ''}
+              ${value === option ? 'bg-primary/10 border-blue-300' : ''}
               ${disabled ? 'opacity-50 cursor-not-allowed' : ''}
             `}
           >
@@ -102,7 +102,7 @@ export function RadioQuestionRenderer({
                   variant="outline" 
                   className={`
                     text-xs ml-2 shrink-0
-                    ${value === option ? 'bg-blue-100 text-blue-800' : ''}
+                    ${value === option ? 'bg-primary/10 text-primary' : ''}
                   `}
                 >
                   {optionIndex}分
@@ -115,9 +115,9 @@ export function RadioQuestionRenderer({
 
       {/* 选择状态指示 */}
       {value && (
-        <div className="mt-3 p-2 bg-green-50 border border-green-200 rounded text-sm text-green-700">
+        <div className="mt-3 p-2 bg-success/10 border border-green-200 rounded text-sm text-green-700">
           <div className="flex items-center space-x-2">
-            <span className="w-2 h-2 bg-green-500 rounded-full"></span>
+            <span className="w-2 h-2 bg-success/100 rounded-full"></span>
             <span>已选择: {value}</span>
           </div>
         </div>

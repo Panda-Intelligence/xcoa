@@ -193,8 +193,8 @@ export function AdminScalesManager() {
 
   const getStatusColor = (status: string) => {
     const colorMap = {
-      draft: "bg-gray-100 text-gray-700",
-      validated: "bg-blue-100 text-blue-700",
+      draft: "bg-gray-100 text-foreground",
+      validated: "bg-primary/10 text-primary",
       published: "bg-green-100 text-green-700"
     };
     return colorMap[status as keyof typeof colorMap] || colorMap.draft;
@@ -252,7 +252,7 @@ export function AdminScalesManager() {
       <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
         <div className="min-h-[100vh] flex items-center justify-center">
           <div className="text-center">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900 mx-auto"></div>
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border mx-auto"></div>
             <p className="mt-2 text-sm text-muted-foreground">{t('admin.scales.loading')}</p>
           </div>
         </div>
@@ -275,7 +275,7 @@ export function AdminScalesManager() {
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-2xl font-bold flex items-center space-x-2">
-              <Scale className="w-6 h-6 text-blue-600" />
+              <Scale className="w-6 h-6 text-primary" />
               <span>{t('admin.scales.title')}</span>
             </h1>
             <p className="text-muted-foreground">
@@ -480,25 +480,25 @@ export function AdminScalesManager() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <Card>
             <CardContent className="p-4 text-center">
-              <div className="text-2xl font-bold text-blue-600">{stats.total}</div>
+              <div className="text-2xl font-bold text-primary">{stats.total}</div>
               <div className="text-sm text-muted-foreground">{t('admin.scales.stats_total')}</div>
             </CardContent>
           </Card>
           <Card>
             <CardContent className="p-4 text-center">
-              <div className="text-2xl font-bold text-green-600">{stats.published}</div>
+              <div className="text-2xl font-bold text-success">{stats.published}</div>
               <div className="text-sm text-muted-foreground">{t('admin.scales.stats_published')}</div>
             </CardContent>
           </Card>
           <Card>
             <CardContent className="p-4 text-center">
-              <div className="text-2xl font-bold text-blue-600">{stats.validated}</div>
+              <div className="text-2xl font-bold text-primary">{stats.validated}</div>
               <div className="text-sm text-muted-foreground">{t('admin.scales.stats_validated')}</div>
             </CardContent>
           </Card>
           <Card>
             <CardContent className="p-4 text-center">
-              <div className="text-2xl font-bold text-gray-600">{stats.draft}</div>
+              <div className="text-2xl font-bold text-muted-foreground">{stats.draft}</div>
               <div className="text-sm text-muted-foreground">{t('admin.scales.stats_draft')}</div>
             </CardContent>
           </Card>
@@ -507,7 +507,7 @@ export function AdminScalesManager() {
         {/* 搜索和筛选 */}
         <div className="flex flex-col sm:flex-row gap-4">
           <div className="flex-1 relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
               placeholder={t('admin.scales.search_placeholder')}
               value={searchQuery}
@@ -517,7 +517,7 @@ export function AdminScalesManager() {
           </div>
 
           <div className="flex items-center space-x-2">
-            <Filter className="h-4 w-4 text-gray-500" />
+            <Filter className="h-4 w-4 text-muted-foreground" />
             <Select value={statusFilter} onValueChange={setStatusFilter}>
               <SelectTrigger className="w-32">
                 <SelectValue />
@@ -586,7 +586,7 @@ export function AdminScalesManager() {
                           onClick={() => router.push(`/admin/copyright-holders/${scale.copyrightHolder?.id}`)}
                         >
                           <div>
-                            <div className="font-medium text-blue-600 hover:text-blue-800">
+                            <div className="font-medium text-primary hover:text-primary">
                               {scale.copyrightHolder.name}
                             </div>
                             {scale.copyrightHolder.nameEn && (
@@ -599,7 +599,7 @@ export function AdminScalesManager() {
                                 {getHolderTypeLabel(scale.copyrightHolder.organizationType)}
                               </Badge>
                               {scale.copyrightHolder.isVerified === 1 && (
-                                <Badge variant="outline" className="text-xs text-green-600">
+                                <Badge variant="outline" className="text-xs text-success">
                                   {t('admin.scales.holder_verified')}
                                 </Badge>
                               )}

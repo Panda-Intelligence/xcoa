@@ -187,7 +187,7 @@ async function ReportDetailContent({ reportId }: { reportId: string }) {
             <div>
               <dt className="font-medium text-muted-foreground">状态</dt>
               <dd className="mt-1">
-                <span className="inline-flex items-center rounded-full bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20 dark:bg-green-500/10 dark:text-green-400 dark:ring-green-500/20">
+                <span className="inline-flex items-center rounded-full bg-success/10 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20 dark:bg-success/100/10 dark:text-green-400 dark:ring-green-500/20">
                   {report.status === 'completed' && '已完成'}
                   {report.status === 'generating' && '生成中'}
                   {report.status === 'failed' && '失败'}

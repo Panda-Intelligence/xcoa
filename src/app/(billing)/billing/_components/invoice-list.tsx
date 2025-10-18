@@ -94,11 +94,11 @@ export function InvoiceList() {
 
   const getStatusColor = (status: string) => {
     const colorMap = {
-      draft: 'bg-gray-100 text-gray-700',
-      sent: 'bg-blue-100 text-blue-700',
+      draft: 'bg-gray-100 text-foreground',
+      sent: 'bg-primary/10 text-primary',
       paid: 'bg-green-100 text-green-700',
       overdue: 'bg-red-100 text-red-700',
-      cancelled: 'bg-gray-100 text-gray-700'
+      cancelled: 'bg-gray-100 text-foreground'
     };
     return colorMap[status as keyof typeof colorMap] || colorMap.draft;
   };
@@ -154,12 +154,12 @@ export function InvoiceList() {
         {/* 统计信息 */}
         {data?.statistics && (
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-            <div className="text-center p-3 bg-blue-50 rounded-lg">
-              <div className="text-2xl font-bold text-blue-600">{data.statistics.total}</div>
-              <div className="text-sm text-blue-700">{t('billing.total')}</div>
+            <div className="text-center p-3 bg-primary/10 rounded-lg">
+              <div className="text-2xl font-bold text-primary">{data.statistics.total}</div>
+              <div className="text-sm text-primary">{t('billing.total')}</div>
             </div>
-            <div className="text-center p-3 bg-green-50 rounded-lg">
-              <div className="text-2xl font-bold text-green-600">{data.statistics.paid}</div>
+            <div className="text-center p-3 bg-success/10 rounded-lg">
+              <div className="text-2xl font-bold text-success">{data.statistics.paid}</div>
               <div className="text-sm text-green-700">{t('billing.paid')}</div>
             </div>
             <div className="text-center p-3 bg-orange-50 rounded-lg">
@@ -167,8 +167,8 @@ export function InvoiceList() {
               <div className="text-sm text-orange-700">{t('billing.pending')}</div>
             </div>
             <div className="text-center p-3 bg-gray-50 rounded-lg">
-              <div className="text-2xl font-bold text-gray-600">{data.statistics.draft}</div>
-              <div className="text-sm text-gray-700">{t('billing.draft')}</div>
+              <div className="text-2xl font-bold text-muted-foreground">{data.statistics.draft}</div>
+              <div className="text-sm text-foreground">{t('billing.draft')}</div>
             </div>
           </div>
         )}

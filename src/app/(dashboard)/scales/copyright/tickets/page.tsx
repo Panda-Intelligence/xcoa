@@ -137,8 +137,8 @@ export default function CopyrightTicketsPage() {
 
   const getStatusColor = (color: string) => {
     const colorMap = {
-      gray: 'bg-gray-100 text-gray-700 border-gray-200',
-      blue: 'bg-blue-100 text-blue-700 border-blue-200',
+      gray: 'bg-gray-100 text-foreground border',
+      blue: 'bg-primary/10 text-primary border-blue-200',
       yellow: 'bg-yellow-100 text-yellow-700 border-yellow-200',
       green: 'bg-green-100 text-green-700 border-green-200',
       red: 'bg-red-100 text-red-700 border-red-200',
@@ -153,11 +153,11 @@ export default function CopyrightTicketsPage() {
       <div className="min-h-screen bg-background">
         <div className="max-w-7xl mx-auto px-4 py-8">
           <div className="animate-pulse space-y-4">
-            <div className="h-8 bg-gray-200 rounded w-1/3" />
-            <div className="h-4 bg-gray-200 rounded w-2/3" />
+            <div className="h-8 bg-muted rounded w-1/3" />
+            <div className="h-4 bg-muted rounded w-2/3" />
             <div className="space-y-3">
               {Array.from({ length: 5 }).map((_, i) => (
-                <div key={i} className="h-24 bg-gray-200 rounded" />
+                <div key={i} className="h-24 bg-muted rounded" />
               ))}
             </div>
           </div>
@@ -181,7 +181,7 @@ export default function CopyrightTicketsPage() {
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-2xl font-bold flex items-center space-x-2">
-                <FileText className="w-6 h-6 text-blue-600" />
+                <FileText className="w-6 h-6 text-primary" />
                 <span>{t('copyright.tickets.authorization_tickets')}</span>
               </h1>
               <p className="text-muted-foreground">
@@ -201,7 +201,7 @@ export default function CopyrightTicketsPage() {
           <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
             <Card>
               <CardContent className="p-4 text-center">
-                <div className="text-2xl font-bold text-blue-600">{stats.total || 0}</div>
+                <div className="text-2xl font-bold text-primary">{stats.total || 0}</div>
                 <div className="text-sm text-muted-foreground">{t('copyright.tickets.total_tickets')}</div>
               </CardContent>
             </Card>
@@ -213,7 +213,7 @@ export default function CopyrightTicketsPage() {
             </Card>
             <Card>
               <CardContent className="p-4 text-center">
-                <div className="text-2xl font-bold text-blue-600">{stats.in_progress || 0}</div>
+                <div className="text-2xl font-bold text-primary">{stats.in_progress || 0}</div>
                 <div className="text-sm text-muted-foreground">{t('copyright.tickets.in_progress')}</div>
               </CardContent>
             </Card>
@@ -225,7 +225,7 @@ export default function CopyrightTicketsPage() {
             </Card>
             <Card>
               <CardContent className="p-4 text-center">
-                <div className="text-2xl font-bold text-green-600">{stats.resolved || 0}</div>
+                <div className="text-2xl font-bold text-success">{stats.resolved || 0}</div>
                 <div className="text-sm text-muted-foreground">{t('copyright.tickets.resolved')}</div>
               </CardContent>
             </Card>
@@ -234,7 +234,7 @@ export default function CopyrightTicketsPage() {
           {/* 搜索和筛选 */}
           <div className="flex flex-col sm:flex-row gap-4">
             <div className="flex-1 relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
                 placeholder={t('copyright.tickets.search_placeholder')}
                 value={searchQuery}
@@ -244,7 +244,7 @@ export default function CopyrightTicketsPage() {
             </div>
 
             <div className="flex items-center space-x-2">
-              <Filter className="h-4 w-4 text-gray-500" />
+              <Filter className="h-4 w-4 text-muted-foreground" />
               <Select value={statusFilter} onValueChange={setStatusFilter}>
                 <SelectTrigger className="w-32">
                   <SelectValue />
@@ -266,7 +266,7 @@ export default function CopyrightTicketsPage() {
             {filteredTickets.length === 0 ? (
               <Card>
                 <CardContent className="text-center py-12">
-                  <FileText className="w-12 h-12 mx-auto mb-4 text-gray-400" />
+                  <FileText className="w-12 h-12 mx-auto mb-4 text-muted-foreground" />
                   <h3 className="text-lg font-medium mb-2">
                     {searchQuery ? t('copyright.tickets.no_matching_tickets') : t('copyright.tickets.no_tickets_yet')}
                   </h3>
@@ -329,23 +329,23 @@ export default function CopyrightTicketsPage() {
                         <h5 className="font-medium mb-2 text-sm">{t('copyright.tickets.copyright_contact_info')}</h5>
                         <div className="space-y-1 text-sm">
                           <div className="flex items-center space-x-2">
-                            <FileText className="w-3 h-3 text-gray-500" />
+                            <FileText className="w-3 h-3 text-muted-foreground" />
                             <span>{ticket.copyrightOrganization}</span>
                           </div>
                           <div className="flex items-center space-x-2">
-                            <Mail className="w-3 h-3 text-gray-500" />
+                            <Mail className="w-3 h-3 text-muted-foreground" />
                             <span>{ticket.copyrightEmail}</span>
                           </div>
                           {ticket.copyrightPhone && (
                             <div className="flex items-center space-x-2">
-                              <Phone className="w-3 h-3 text-gray-500" />
+                              <Phone className="w-3 h-3 text-muted-foreground" />
                               <span>{ticket.copyrightPhone}</span>
                             </div>
                           )}
                           {ticket.copyrightWebsite && (
                             <div className="flex items-center space-x-2">
-                              <Globe className="w-3 h-3 text-gray-500" />
-                              <a href={ticket.copyrightWebsite} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
+                              <Globe className="w-3 h-3 text-muted-foreground" />
+                              <a href={ticket.copyrightWebsite} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">
                                 {t('copyright.tickets.official_website')}
                               </a>
                             </div>
@@ -356,11 +356,11 @@ export default function CopyrightTicketsPage() {
                       {/* 申请详情 */}
                       <div className="grid grid-cols-2 gap-4 text-sm">
                         <div>
-                          <span className="font-medium text-gray-600">{t('copyright.tickets.request_type')}:</span>
+                          <span className="font-medium text-muted-foreground">{t('copyright.tickets.request_type')}:</span>
                           <span className="ml-2">{ticket.requestType.replace('_', ' ')}</span>
                         </div>
                         <div>
-                          <span className="font-medium text-gray-600">{t('copyright.tickets.intended_use')}:</span>
+                          <span className="font-medium text-muted-foreground">{t('copyright.tickets.intended_use')}:</span>
                           <span className="ml-2">{ticket.intendedUse}</span>
                         </div>
                       </div>
@@ -368,7 +368,7 @@ export default function CopyrightTicketsPage() {
                       {/* 项目描述 */}
                       <div>
                         <h5 className="font-medium mb-1 text-sm">{t('copyright.tickets.project_description')}</h5>
-                        <p className="text-sm text-gray-600 bg-gray-50 p-2 rounded">
+                        <p className="text-sm text-muted-foreground bg-gray-50 p-2 rounded">
                           {ticket.projectDescription}
                         </p>
                       </div>
@@ -377,24 +377,24 @@ export default function CopyrightTicketsPage() {
                       <div className="flex items-center justify-between">
                         <div className="flex items-center space-x-4 text-sm">
                           {ticket.responseReceived ? (
-                            <div className="flex items-center space-x-1 text-green-600">
+                            <div className="flex items-center space-x-1 text-success">
                               <CheckCircle className="w-4 h-4" />
                               <span>{t('copyright.tickets.response_received')}</span>
                             </div>
                           ) : (
-                            <div className="flex items-center space-x-1 text-gray-500">
+                            <div className="flex items-center space-x-1 text-muted-foreground">
                               <Clock className="w-4 h-4" />
                               <span>{t('copyright.tickets.waiting_response')}</span>
                             </div>
                           )}
 
                           {ticket.licenseGranted ? (
-                            <div className="flex items-center space-x-1 text-green-600">
+                            <div className="flex items-center space-x-1 text-success">
                               <CheckCircle className="w-4 h-4" />
                               <span>{t('copyright.tickets.license_granted')}</span>
                             </div>
                           ) : (
-                            <div className="flex items-center space-x-1 text-gray-500">
+                            <div className="flex items-center space-x-1 text-muted-foreground">
                               <XCircle className="w-4 h-4" />
                               <span>{t('copyright.tickets.pending_authorization')}</span>
                             </div>

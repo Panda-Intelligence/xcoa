@@ -168,12 +168,12 @@ export function DateQuestionRenderer({
   return (
     <div className="space-y-3">
       {/* 日期类型提示 */}
-      <div className="text-sm text-blue-600 bg-blue-50 p-2 rounded border border-blue-200">
+      <div className="text-sm text-primary bg-primary/10 p-2 rounded border border-blue-200">
         <div className="flex items-center space-x-2">
           {needsTime() ? (
-            <Clock className="w-4 h-4 text-blue-500" />
+            <Clock className="w-4 h-4 text-primary" />
           ) : (
-            <Calendar className="w-4 h-4 text-blue-500" />
+            <Calendar className="w-4 h-4 text-primary" />
           )}
           <span>
             {needsTime() ? '日期时间选择：请选择具体的日期和时间' : '日期选择：请选择日期'}
@@ -240,7 +240,7 @@ export function DateQuestionRenderer({
             </Badge>
           )}
           {value && isValid && (
-            <Badge variant="outline" className="text-xs bg-green-50 text-green-700">
+            <Badge variant="outline" className="text-xs bg-success/10 text-green-700">
               已选择
             </Badge>
           )}
@@ -249,29 +249,29 @@ export function DateQuestionRenderer({
 
       {/* 日期相关提示 */}
       {item.question.toLowerCase().includes('出生') && (
-        <div className="text-xs text-gray-500 bg-gray-50 p-2 rounded">
+        <div className="text-xs text-muted-foreground bg-gray-50 p-2 rounded">
           💡 提示：出生日期不能选择未来的日期
         </div>
       )}
       
       {item.question.toLowerCase().includes('计划') && (
-        <div className="text-xs text-gray-500 bg-gray-50 p-2 rounded">
+        <div className="text-xs text-muted-foreground bg-gray-50 p-2 rounded">
           💡 提示：计划日期不能选择过去的日期
         </div>
       )}
 
       {/* 选择结果预览 */}
       {value && isValid && (
-        <div className="mt-3 p-3 bg-green-50 border border-green-200 rounded">
+        <div className="mt-3 p-3 bg-success/10 border border-green-200 rounded">
           <div className="flex items-start space-x-2">
-            <span className="w-2 h-2 bg-green-500 rounded-full mt-1.5 shrink-0"></span>
+            <span className="w-2 h-2 bg-success/100 rounded-full mt-1.5 shrink-0"></span>
             <div className="flex-1">
               <div className="text-sm text-green-700 font-medium mb-1">您选择的{needsTime() ? '时间' : '日期'}：</div>
-              <div className={`${deviceStyles.fontSize} text-green-600 font-medium`}>
+              <div className={`${deviceStyles.fontSize} text-success font-medium`}>
                 {formatDisplayDate(value)}
               </div>
               {needsTime() && (
-                <div className="text-xs text-green-600 mt-1">
+                <div className="text-xs text-success mt-1">
                   {new Date(value).toLocaleTimeString('zh-CN', { 
                     hour: '2-digit', 
                     minute: '2-digit',

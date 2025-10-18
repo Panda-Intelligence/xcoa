@@ -91,19 +91,19 @@ export function GoogleStyleSearch({ onBack }: GoogleStyleSearchProps) {
   const categories = [...new Set(results.map(r => r.category))];
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-background">
       {/* Clean Google-style search interface */}
       {!hasSearched && (
         <div className="min-h-screen flex flex-col">
           {/* Header with back button and search remaining */}
           <div className="flex items-center justify-between p-6">
-            <Button variant="ghost" size="sm" onClick={onBack} className="text-gray-600 hover:bg-gray-100">
+            <Button variant="ghost" size="sm" onClick={onBack} className="text-muted-foreground hover:bg-accent">
               <ArrowLeft className="h-4 w-4 mr-2" />
               {t('search.go_back')}
             </Button>
 
             {searchesRemaining !== null && searchesRemaining !== -1 && (
-              <div className="text-sm text-gray-600 bg-gray-50 px-3 py-1 rounded-full">
+              <div className="text-sm text-muted-foreground bg-muted px-3 py-1 rounded-full">
                 {t('search.searches_remaining').replace('{count}', searchesRemaining.toString())}
               </div>
             )}
@@ -113,7 +113,7 @@ export function GoogleStyleSearch({ onBack }: GoogleStyleSearchProps) {
           <div className="flex-1 flex flex-col justify-center items-center px-6 -mt-20">
             {/* Logo */}
             <div className="mb-8 text-center">
-              <h1 className="text-6xl md:text-7xl font-normal text-gray-800 mb-2 tracking-tight">
+              <h1 className="text-6xl md:text-7xl font-normal text-foreground mb-2 tracking-tight">
                 Open eCOA
               </h1>
             </div>
@@ -122,8 +122,8 @@ export function GoogleStyleSearch({ onBack }: GoogleStyleSearchProps) {
             <div className="w-full max-w-xl mb-8">
               <form onSubmit={handleSearch}>
                 <div className="relative">
-                  <div className="flex items-center bg-white border border-gray-200 rounded-full shadow-lg hover:shadow-xl transition-shadow duration-200 focus-within:shadow-xl">
-                    <Search className="absolute left-4 h-5 w-5 text-gray-400" />
+                  <div className="flex items-center bg-background border rounded-full shadow-lg hover:shadow-xl transition-shadow duration-200 focus-within:shadow-xl">
+                    <Search className="absolute left-4 h-5 w-5 text-muted-foreground" />
                     <Input
                       placeholder={t('search.placeholder')}
                       value={query}
@@ -135,7 +135,7 @@ export function GoogleStyleSearch({ onBack }: GoogleStyleSearchProps) {
                       <button
                         type="button"
                         onClick={() => setQuery("")}
-                        className="absolute right-16 h-5 w-5 text-gray-400 hover:text-gray-600"
+                        className="absolute right-16 h-5 w-5 text-muted-foreground hover:text-foreground"
                       >
                         <X className="h-4 w-4" />
                       </button>
@@ -145,7 +145,7 @@ export function GoogleStyleSearch({ onBack }: GoogleStyleSearchProps) {
                         type="submit"
                         size="sm"
                         variant="ghost"
-                        className="h-8 w-8 p-0 rounded-full hover:bg-gray-100"
+                        className="h-8 w-8 p-0 rounded-full hover:bg-accent"
                         disabled={loading}
                       >
                         {loading ? (
@@ -164,7 +164,7 @@ export function GoogleStyleSearch({ onBack }: GoogleStyleSearchProps) {
             <div className="flex gap-4 mb-8">
               <Button
                 variant="outline"
-                className="h-9 px-5 text-sm bg-gray-50 border-gray-200 hover:bg-gray-100 hover:border-gray-300"
+                className="h-9 px-5 text-sm bg-muted hover:bg-accent"
                 onClick={() => {
                   if (query.trim()) {
                     handleSearch();
@@ -176,7 +176,7 @@ export function GoogleStyleSearch({ onBack }: GoogleStyleSearchProps) {
               </Button>
               <Button
                 variant="outline"
-                className="h-9 px-5 text-sm bg-gray-50 border-gray-200 hover:bg-gray-100 hover:border-gray-300"
+                className="h-9 px-5 text-sm bg-muted hover:bg-accent"
                 onClick={() => {
                   setQuery("抑郁症筛查工具");
                   handleSearch();
@@ -189,7 +189,7 @@ export function GoogleStyleSearch({ onBack }: GoogleStyleSearchProps) {
 
             {/* Quick suggestions */}
             <div className="text-center">
-              <div className="text-sm text-gray-600 mb-3">{t('search.quick_search')}</div>
+              <div className="text-sm text-muted-foreground mb-3">{t('search.quick_search')}</div>
               <div className="flex flex-wrap justify-center gap-2">
                 {[
                   "MMSE-2",
@@ -206,7 +206,7 @@ export function GoogleStyleSearch({ onBack }: GoogleStyleSearchProps) {
                       setQuery(suggestion);
                       handleSearch();
                     }}
-                    className="text-sm text-blue-600 hover:underline px-2 py-1"
+                    className="text-sm text-primary hover:underline px-2 py-1"
                     disabled={loading}
                   >
                     {suggestion}
@@ -220,25 +220,25 @@ export function GoogleStyleSearch({ onBack }: GoogleStyleSearchProps) {
 
       {/* Results section with clean Google-style layout */}
       {hasSearched && (
-        <div className="bg-white min-h-screen">
+        <div className="bg-background min-h-screen">
           {/* Google-style search header */}
-          <div className="border-b border-gray-200 bg-white sticky top-0 z-20">
+          <div className="border-b bg-background sticky top-0 z-20">
             <div className="max-w-6xl mx-auto px-6 py-3">
               <div className="flex items-center gap-6">
                 {/* Logo */}
                 <div className="flex items-center gap-4">
-                  <Button variant="ghost" size="sm" onClick={() => setHasSearched(false)} className="text-gray-600">
+                  <Button variant="ghost" size="sm" onClick={() => setHasSearched(false)} className="text-muted-foreground">
                     <ArrowLeft className="h-4 w-4" />
                   </Button>
-                  <h1 className="text-xl text-blue-600 cursor-pointer">eCOA Pro</h1>
+                  <h1 className="text-xl text-primary cursor-pointer">eCOA Pro</h1>
                 </div>
 
                 {/* Search bar */}
                 <div className="flex-1 max-w-2xl">
                   <form onSubmit={handleSearch}>
                     <div className="relative">
-                      <div className="flex items-center bg-white border border-gray-200 rounded-full shadow-xs hover:shadow-md transition-shadow focus-within:shadow-md">
-                        <Search className="absolute left-3 h-4 w-4 text-gray-400" />
+                      <div className="flex items-center bg-background border rounded-full shadow-xs hover:shadow-md transition-shadow focus-within:shadow-md">
+                        <Search className="absolute left-3 h-4 w-4 text-muted-foreground" />
                         <Input
                           placeholder={t('search.placeholder')}
                           value={query}
@@ -250,7 +250,7 @@ export function GoogleStyleSearch({ onBack }: GoogleStyleSearchProps) {
                           <button
                             type="button"
                             onClick={() => setQuery("")}
-                            className="absolute right-10 h-4 w-4 text-gray-400 hover:text-gray-600"
+                            className="absolute right-10 h-4 w-4 text-muted-foreground hover:text-foreground"
                           >
                             <X className="h-3 w-3" />
                           </button>
@@ -260,7 +260,7 @@ export function GoogleStyleSearch({ onBack }: GoogleStyleSearchProps) {
                             type="submit"
                             size="sm"
                             variant="ghost"
-                            className="h-6 w-6 p-0 rounded-full hover:bg-gray-100"
+                            className="h-6 w-6 p-0 rounded-full hover:bg-accent"
                             disabled={loading}
                           >
                             {loading ? (
@@ -277,7 +277,7 @@ export function GoogleStyleSearch({ onBack }: GoogleStyleSearchProps) {
 
                 {/* Search remaining indicator */}
                 {searchesRemaining !== null && searchesRemaining !== -1 && (
-                  <div className="text-xs text-gray-500">
+                  <div className="text-xs text-muted-foreground">
                     {t('search.searches_remaining').replace('{count}', searchesRemaining.toString()).replace(': ', ' ')}
                   </div>
                 )}
@@ -289,13 +289,13 @@ export function GoogleStyleSearch({ onBack }: GoogleStyleSearchProps) {
 
             {/* Error Alert */}
             {error && (
-              <div className="text-red-600 text-sm mb-4 bg-red-50 p-3 rounded">
+              <div className="text-destructive text-sm mb-4 bg-destructive/10 p-3 rounded">
                 {error}
               </div>
             )}
 
             {/* Google-style search stats */}
-            <div className="text-sm text-gray-600 mb-6">
+            <div className="text-sm text-muted-foreground mb-6">
               {loading ? (
                 t('search.searching')
               ) : (
@@ -309,22 +309,22 @@ export function GoogleStyleSearch({ onBack }: GoogleStyleSearchProps) {
                 {filteredAndSortedResults.map((result) => (
                   <div key={result.id} className="max-w-2xl">
                     {/* URL */}
-                    <div className="text-sm text-gray-700 mb-1">
+                    <div className="text-sm text-muted-foreground mb-1">
                       ecoa-pro.com › scales › {result.id}
                     </div>
 
                     {/* Title */}
-                    <h3 className="text-xl text-blue-600 hover:underline cursor-pointer mb-2 leading-tight">
+                    <h3 className="text-xl text-primary hover:underline cursor-pointer mb-2 leading-tight">
                       {result.name}
                     </h3>
 
                     {/* Description */}
-                    <p className="text-sm text-gray-700 leading-normal mb-3">
+                    <p className="text-sm text-foreground leading-normal mb-3">
                       {result.description}
                     </p>
 
                     {/* Meta information in a cleaner format */}
-                    <div className="text-xs text-gray-600 flex flex-wrap gap-4">
+                    <div className="text-xs text-muted-foreground flex flex-wrap gap-4">
                       <span>{t('search.category')}: {result.category}</span>
                       <span>{t('search.items')}: {result.items_count}</span>
                       <span>{t('search.language')}: {result.languages.join(', ')}</span>
@@ -336,13 +336,13 @@ export function GoogleStyleSearch({ onBack }: GoogleStyleSearchProps) {
               </div>
             ) : !loading && (
               <div className="py-20 text-center">
-                <div className="text-gray-400 mb-4">
+                <div className="text-muted-foreground mb-4">
                   <Search className="h-16 w-16 mx-auto mb-4" />
                 </div>
-                <h3 className="text-lg text-gray-900 mb-2">
+                <h3 className="text-lg text-foreground mb-2">
                   {t('search.no_results_query').replace('{query}', query)}
                 </h3>
-                <div className="text-sm text-gray-600 space-y-1">
+                <div className="text-sm text-muted-foreground space-y-1">
                   <p>{t('search.suggestions_title')}:</p>
                   <ul className="list-none space-y-1 text-left max-w-md mx-auto">
                     <li>• {t('search.suggestion_check_spelling')}</li>
@@ -356,9 +356,9 @@ export function GoogleStyleSearch({ onBack }: GoogleStyleSearchProps) {
 
             {/* Google-style filters (optional, moved to bottom) */}
             {results.length > 0 && (
-              <div className="mt-8 pt-6 border-t border-gray-200">
+              <div className="mt-8 pt-6 border-t">
                 <div className="flex items-center gap-4 text-sm">
-                  <span className="text-gray-600">{t('search.filter_criteria')}:</span>
+                  <span className="text-muted-foreground">{t('search.filter_criteria')}:</span>
                   <Select value={filterCategory} onValueChange={setFilterCategory}>
                     <SelectTrigger className="w-32 h-8 text-xs">
                       <SelectValue />

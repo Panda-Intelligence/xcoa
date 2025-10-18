@@ -224,9 +224,9 @@ export function DrawingQuestionRenderer({
   return (
     <div className="space-y-4">
       {/* 画图类型提示 */}
-      <div className="text-sm text-blue-600 bg-blue-50 p-2 rounded border border-blue-200">
+      <div className="text-sm text-primary bg-primary/10 p-2 rounded border border-blue-200">
         <div className="flex items-center space-x-2">
-          <Palette className="w-4 h-4 text-blue-500" />
+          <Palette className="w-4 h-4 text-primary" />
           <span>画图题：请使用画板工具绘制您的答案</span>
         </div>
       </div>
@@ -265,8 +265,8 @@ export function DrawingQuestionRenderer({
                     type="button"
                     onClick={() => setBrushColor(color)}
                     className={`
-                      w-8 h-8 rounded border-2 transition-all
-                      ${brushColor === color ? 'border-gray-800 scale-110' : 'border-gray-300'}
+                      w-8 h-8 rounded border transition-all
+                      ${brushColor === color ? 'border scale-110' : 'border'}
                     `}
                     style={{ backgroundColor: color }}
                     title={color}
@@ -276,7 +276,7 @@ export function DrawingQuestionRenderer({
                   type="color"
                   value={brushColor}
                   onChange={(e) => setBrushColor(e.target.value)}
-                  className="w-8 h-8 rounded border-2 border-gray-300 cursor-pointer"
+                  className="w-8 h-8 rounded border border cursor-pointer"
                   title="自定义颜色"
                 />
               </div>
@@ -333,7 +333,7 @@ export function DrawingQuestionRenderer({
           绘图区域
         </Label>
         
-        <div className="border-2 border-gray-300 rounded-lg overflow-hidden bg-white">
+        <div className="border border rounded-lg overflow-hidden bg-white">
           <canvas
             ref={canvasRef}
             width={canvasSize.width}
@@ -353,7 +353,7 @@ export function DrawingQuestionRenderer({
           />
         </div>
         
-        <div className="text-xs text-gray-500">
+        <div className="text-xs text-muted-foreground">
           画布尺寸: {canvasSize.width} × {canvasSize.height} 像素
         </div>
       </div>
@@ -368,7 +368,7 @@ export function DrawingQuestionRenderer({
             <div className="flex items-center space-x-1">
               <span className="text-muted-foreground">颜色:</span>
               <div 
-                className="w-4 h-4 rounded border border-gray-300"
+                className="w-4 h-4 rounded border border"
                 style={{ backgroundColor: brushColor }}
               />
             </div>
@@ -377,7 +377,7 @@ export function DrawingQuestionRenderer({
         
         <div className="flex items-center space-x-2">
           {value && (
-            <Badge variant="outline" className="text-xs bg-green-50 text-green-700">
+            <Badge variant="outline" className="text-xs bg-success/10 text-green-700">
               已绘制
             </Badge>
           )}
@@ -386,9 +386,9 @@ export function DrawingQuestionRenderer({
 
       {/* 绘制结果预览 */}
       {value && (
-        <div className="mt-3 p-3 bg-green-50 border border-green-200 rounded">
+        <div className="mt-3 p-3 bg-success/10 border border-green-200 rounded">
           <div className="flex items-start space-x-2">
-            <span className="w-2 h-2 bg-green-500 rounded-full mt-1.5 shrink-0"></span>
+            <span className="w-2 h-2 bg-success/100 rounded-full mt-1.5 shrink-0"></span>
             <div className="flex-1">
               <div className="text-sm text-green-700 font-medium mb-2">您的绘制内容：</div>
               <div className="border border-green-300 rounded bg-white inline-block">
@@ -405,7 +405,7 @@ export function DrawingQuestionRenderer({
       )}
 
       {/* 使用提示 */}
-      <div className="text-xs text-gray-500 bg-gray-50 p-2 rounded">
+      <div className="text-xs text-muted-foreground bg-gray-50 p-2 rounded">
         💡 使用提示：
         {deviceMode === 'mobile' 
           ? '使用手指在画布上绘制，支持多点触控'

@@ -97,10 +97,10 @@ export default function ClinicalCasesPage() {
   const getDifficultyLevelColor = (level?: string) => {
     const colorMap = {
       'beginner': 'bg-green-100 text-green-800 border-green-200',
-      'intermediate': 'bg-blue-100 text-blue-800 border-blue-200',
+      'intermediate': 'bg-primary/10 text-primary border-blue-200',
       'advanced': 'bg-red-100 text-red-800 border-red-200'
     };
-    return level ? colorMap[level as keyof typeof colorMap] || 'bg-gray-100 text-gray-800 border-gray-200' : 'bg-gray-100 text-gray-800 border-gray-200';
+    return level ? colorMap[level as keyof typeof colorMap] || 'bg-gray-100 text-foreground border' : 'bg-gray-100 text-foreground border';
   };
 
   const getSpecialtyLabel = (specialty?: string) => {
@@ -119,11 +119,11 @@ export default function ClinicalCasesPage() {
       <div className="min-h-screen bg-background">
         <div className="max-w-7xl mx-auto px-4 py-8">
           <div className="animate-pulse space-y-4">
-            <div className="h-8 bg-gray-200 rounded w-1/3"></div>
-            <div className="h-4 bg-gray-200 rounded w-2/3"></div>
+            <div className="h-8 bg-muted rounded w-1/3"></div>
+            <div className="h-4 bg-muted rounded w-2/3"></div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {Array.from({ length: 4 }).map((_, i) => (
-                <div key={i} className="h-64 bg-gray-200 rounded"></div>
+                <div key={i} className="h-64 bg-muted rounded"></div>
               ))}
             </div>
           </div>
@@ -150,7 +150,7 @@ export default function ClinicalCasesPage() {
               <div className="flex items-center justify-between">
                 <div>
                   <h1 className="text-2xl font-bold flex items-center space-x-2">
-                    <Beaker className="w-6 h-6 text-blue-600" />
+                    <Beaker className="w-6 h-6 text-primary" />
                     <span>{t('insights.cases.case_library_title')}</span>
                   </h1>
                   <p className="text-muted-foreground">
@@ -163,13 +163,13 @@ export default function ClinicalCasesPage() {
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <Card>
                   <CardContent className="p-4 text-center">
-                    <div className="text-2xl font-bold text-blue-600">{statistics.totalCases || 0}</div>
+                    <div className="text-2xl font-bold text-primary">{statistics.totalCases || 0}</div>
                     <div className="text-sm text-muted-foreground">{t('insights.cases.total_cases')}</div>
                   </CardContent>
                 </Card>
                 <Card>
                   <CardContent className="p-4 text-center">
-                    <div className="text-2xl font-bold text-green-600">
+                    <div className="text-2xl font-bold text-success">
                       {statistics.byDifficultyLevel?.beginner || 0}
                     </div>
                     <div className="text-sm text-muted-foreground">{t('insights.cases.beginner_cases')}</div>
@@ -196,7 +196,7 @@ export default function ClinicalCasesPage() {
               {/* 搜索和筛选 */}
               <div className="flex flex-col sm:flex-row gap-4">
                 <div className="flex-1 relative">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                   <Input
                     placeholder={t('insights.cases.search_placeholder')}
                     value={searchQuery}
@@ -207,7 +207,7 @@ export default function ClinicalCasesPage() {
                 </div>
 
                 <div className="flex items-center space-x-2">
-                  <Filter className="h-4 w-4 text-gray-500" />
+                  <Filter className="h-4 w-4 text-muted-foreground" />
                   <Select value={specialtyFilter} onValueChange={setSpecialtyFilter}>
                     <SelectTrigger className="w-40">
                       <SelectValue placeholder={t('insights.cases.specialty')} />
@@ -254,7 +254,7 @@ export default function ClinicalCasesPage() {
               {cases.length === 0 ? (
                 <div className='mb-20'>
                   <CardContent className="text-center py-12">
-                    <Beaker className="w-12 h-12 mx-auto mb-4 text-gray-400" />
+                    <Beaker className="w-12 h-12 mx-auto mb-4 text-muted-foreground" />
                     <h3 className="text-lg font-medium mb-2">{t('insights.cases.no_matching_cases')}</h3>
                     <p className="text-muted-foreground">
                       {t('insights.cases.adjust_filters')}
@@ -312,7 +312,7 @@ export default function ClinicalCasesPage() {
                         {clinicalCase.patientBackground && (
                           <div>
                             <h5 className="font-medium text-sm mb-1">{t('insights.cases.patient_background')}</h5>
-                            <p className="text-sm text-muted-foreground bg-blue-50 p-2 rounded">
+                            <p className="text-sm text-muted-foreground bg-primary/10 p-2 rounded">
                               {clinicalCase.patientBackground}
                             </p>
                           </div>
@@ -322,7 +322,7 @@ export default function ClinicalCasesPage() {
                         {clinicalCase.interpretation && (
                           <div>
                             <h5 className="font-medium text-sm mb-1">{t('insights.cases.result_interpretation')}</h5>
-                            <p className="text-sm text-muted-foreground bg-green-50 p-2 rounded">
+                            <p className="text-sm text-muted-foreground bg-success/10 p-2 rounded">
                               {clinicalCase.interpretation}
                             </p>
                           </div>
@@ -384,7 +384,7 @@ export default function ClinicalCasesPage() {
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <Card>
                   <CardContent className="p-4 text-center">
-                    <Beaker className="w-8 h-8 mx-auto mb-2 text-blue-600" />
+                    <Beaker className="w-8 h-8 mx-auto mb-2 text-primary" />
                     <h4 className="font-medium mb-1">{t('insights.cases.research_design_guide')}</h4>
                     <p className="text-xs text-muted-foreground mb-3">
                       {t('insights.cases.scale_usage_guide')}
@@ -397,7 +397,7 @@ export default function ClinicalCasesPage() {
 
                 <Card>
                   <CardContent className="p-4 text-center">
-                    <BarChart3 className="w-8 h-8 mx-auto mb-2 text-green-600" />
+                    <BarChart3 className="w-8 h-8 mx-auto mb-2 text-success" />
                     <h4 className="font-medium mb-1">{t('insights.cases.statistical_analysis')}</h4>
                     <p className="text-xs text-muted-foreground mb-3">
                       {t('insights.cases.analysis_methods')}

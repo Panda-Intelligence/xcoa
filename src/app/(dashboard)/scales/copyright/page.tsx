@@ -111,12 +111,12 @@ export default function CopyrightPage() {
 
   const getLicenseColorClass = (color: string) => {
     const colorMap = {
-      green: 'bg-green-50 text-green-700 border-green-200',
+      green: 'bg-success/10 text-green-700 border-green-200',
       yellow: 'bg-yellow-50 text-yellow-700 border-yellow-200',
       orange: 'bg-orange-50 text-orange-700 border-orange-200',
-      red: 'bg-red-50 text-red-700 border-red-200',
+      red: 'bg-destructive/10 text-red-700 border-red-200',
     };
-    return colorMap[color as keyof typeof colorMap] || 'bg-gray-50 text-gray-700 border-gray-200';
+    return colorMap[color as keyof typeof colorMap] || 'bg-gray-50 text-foreground border';
   };
 
   return (
@@ -274,7 +274,7 @@ export default function CopyrightPage() {
                   <div className="grid grid-cols-3 gap-4">
                     <Card className="p-3">
                       <div className="flex items-center space-x-2">
-                        <CheckCircle className="w-4 h-4 text-green-600" />
+                        <CheckCircle className="w-4 h-4 text-success" />
                         <div>
                           <div className="font-semibold">{summary.canUseDirectly}</div>
                           <div className="text-xs text-muted-foreground">{t('copyright.can_use_directly_count')}</div>
@@ -294,7 +294,7 @@ export default function CopyrightPage() {
 
                     <Card className="p-3">
                       <div className="flex items-center space-x-2">
-                        <DollarSign className="w-4 h-4 text-blue-600" />
+                        <DollarSign className="w-4 h-4 text-primary" />
                         <div>
                           <div className="font-semibold">{summary.estimatedCost?.free || 0}</div>
                           <div className="text-xs text-muted-foreground">{t('copyright.free_use_count')}</div>
@@ -384,7 +384,7 @@ export default function CopyrightPage() {
 
               <CardContent className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <Card className="p-4 bg-green-50 border-green-200">
+                  <Card className="p-4 bg-success/10 border-green-200">
                     <div className="flex items-center space-x-2 mb-2">
                       <span className="text-xl">🆓</span>
                       <h4 className="font-semibold text-green-800">{t('copyright.public_domain_title')}</h4>
@@ -392,7 +392,7 @@ export default function CopyrightPage() {
                     <p className="text-sm text-green-700 mb-2">
                       {t('copyright.public_domain_desc')}
                     </p>
-                    <ul className="text-xs text-green-600 space-y-1">
+                    <ul className="text-xs text-success space-y-1">
                       <li>• {t('copyright.public_domain_item_1')}</li>
                       <li>• {t('copyright.public_domain_item_2')}</li>
                       <li>• {t('copyright.public_domain_item_3')}</li>
@@ -429,7 +429,7 @@ export default function CopyrightPage() {
                     </ul>
                   </Card>
 
-                  <Card className="p-4 bg-red-50 border-red-200">
+                  <Card className="p-4 bg-destructive/10 border-red-200">
                     <div className="flex items-center space-x-2 mb-2">
                       <span className="text-xl">📧</span>
                       <h4 className="font-semibold text-red-800">{t('copyright.contact_required_title')}</h4>
@@ -437,7 +437,7 @@ export default function CopyrightPage() {
                     <p className="text-sm text-red-700 mb-2">
                       {t('copyright.contact_required_desc')}
                     </p>
-                    <ul className="text-xs text-red-600 space-y-1">
+                    <ul className="text-xs text-destructive space-y-1">
                       <li>• {t('copyright.contact_required_item_1')}</li>
                       <li>• {t('copyright.contact_required_item_2')}</li>
                       <li>• {t('copyright.contact_required_item_3')}</li>
@@ -445,9 +445,9 @@ export default function CopyrightPage() {
                   </Card>
                 </div>
 
-                <Card className="p-4 bg-blue-50 border-blue-200">
-                  <h4 className="font-semibold text-blue-800 mb-3">{t('copyright.contact_best_practices')}</h4>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-blue-700">
+                <Card className="p-4 bg-primary/10 border-blue-200">
+                  <h4 className="font-semibold text-primary mb-3">{t('copyright.contact_best_practices')}</h4>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-primary">
                     <div>
                       <h5 className="font-medium mb-1">{t('copyright.email_contact_suggestions')}</h5>
                       <ul className="space-y-1 text-xs">

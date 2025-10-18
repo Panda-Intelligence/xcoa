@@ -394,7 +394,7 @@ export default function ScalesPage() {
             <div className="border rounded-md flex-1">
               <div className="animate-pulse p-4 space-y-3">
                 {Array.from({ length: 10 }).map((_, index) => (
-                  <div key={`skeleton-${index}`} className="h-12 bg-gray-200 rounded" />
+                  <div key={`skeleton-${index}`} className="h-12 bg-muted rounded" />
                 ))}
               </div>
             </div>
@@ -514,7 +514,7 @@ export default function ScalesPage() {
                       <div className="flex items-start justify-between">
                         <div className="flex-1">
                           <div className="flex items-center space-x-3 mb-2">
-                            <h3 className="font-semibold text-lg group-hover:text-blue-600 transition-colors">{result.name}</h3>
+                            <h3 className="font-semibold text-lg group-hover:text-primary transition-colors">{result.name}</h3>
                             <Badge variant="outline">{result.acronym}</Badge>
                             <span className="text-lg">{getLicenseIcon(result.licenseType)}</span>
                           </div>

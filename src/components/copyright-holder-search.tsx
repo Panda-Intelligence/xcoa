@@ -193,7 +193,7 @@ export function CopyrightHolderSearch({
                     {getOrgLabel(selectedHolder.organizationType)}
                   </Badge>
                   {selectedHolder.isVerified === 1 && (
-                    <Badge variant="outline" className="text-xs text-green-600">
+                    <Badge variant="outline" className="text-xs text-success">
                       已验证
                     </Badge>
                   )}
@@ -219,7 +219,7 @@ export function CopyrightHolderSearch({
         // 搜索界面
         <div className="relative">
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
               placeholder={placeholder}
               value={searchTerm}
@@ -230,7 +230,7 @@ export function CopyrightHolderSearch({
             />
             {loading && (
               <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
-                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-gray-400" />
+                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border" />
               </div>
             )}
           </div>
@@ -257,7 +257,7 @@ export function CopyrightHolderSearch({
                             {getOrgLabel(holder.organizationType)}
                           </Badge>
                           {holder.isVerified === 1 && (
-                            <Badge variant="outline" className="text-xs text-green-600">
+                            <Badge variant="outline" className="text-xs text-success">
                               已验证
                             </Badge>
                           )}

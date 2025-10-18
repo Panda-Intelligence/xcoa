@@ -134,7 +134,7 @@ export function HeroSection() {
 
               <div className="max-w-3xl mx-auto items-center">
                 <div className="bg-background rounded-full shadow-lg hover:shadow-xl transition-shadow duration-200">
-                  <div className="flex relative items-center border-2 rounded-full bg-gradient-to-r from-primary/20 via-secondary/10 to-primary/20">
+                  <div className="flex relative items-center border rounded-full bg-gradient-to-r from-primary/20 via-secondary/10 to-primary/20">
                     <Input
                       placeholder={t("landing.search_ecoa_scales")}
                       className="flex-1 px-3 h-16 py-5 text-lg rounded-full bg-transparent border-0 focus:ring-0 focus:outline-hidden"
@@ -158,13 +158,13 @@ export function HeroSection() {
 
                 </div>
                 {error && (
-                  <div className="mt-3 text-sm text-red-600 bg-red-50 p-3 rounded-md">
+                  <div className="mt-3 text-sm text-destructive bg-destructive/10 p-3 rounded-md">
                     {error}
                   </div>
                 )}
                 {searchesRemaining !== null && searchesRemaining >= 0 && !isAuthenticated && (
-                  <div className="mt-3 text-sm text-amber-600 bg-amber-50 p-2 rounded-md">
-                    {searchesRemaining > 0 
+                  <div className="mt-3 text-sm text-amber-700 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/20 p-2 rounded-md">
+                    {searchesRemaining > 0
                       ? `You have ${searchesRemaining} searches remaining today.`
                       : "This is your last search for today. Sign in for unlimited searches."}
                   </div>
@@ -241,8 +241,8 @@ export function HeroSection() {
               </div>
             )}
             {!isAuthenticated && results.length > 0 && (
-              <div className="bg-blue-50 p-4 rounded-md text-center">
-                <p className="text-sm text-blue-900 mb-3">
+              <div className="bg-primary/10 dark:bg-primary/20 p-4 rounded-md text-center border border-primary/20">
+                <p className="text-sm text-foreground mb-3">
                   Want to see more results and access full features?
                 </p>
                 <Button onClick={() => router.push('/sign-in')}>

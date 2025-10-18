@@ -125,9 +125,9 @@ export function OpenQuestionRenderer({
   return (
     <div className="space-y-3">
       {/* 输入类型提示 */}
-      <div className="text-sm text-blue-600 bg-blue-50 p-2 rounded border border-blue-200">
+      <div className="text-sm text-primary bg-primary/10 p-2 rounded border border-blue-200">
         <div className="flex items-center space-x-2">
-          <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
+          <span className="w-2 h-2 bg-primary/100 rounded-full"></span>
           <span>
             开放性问题：
             {isTextarea() ? '多行文本输入' : getInputType() === 'number' ? '数字输入' : '文本输入'}
@@ -199,7 +199,7 @@ export function OpenQuestionRenderer({
             </Badge>
           )}
           {value && isValid && (
-            <Badge variant="outline" className="text-xs bg-green-50 text-green-700">
+            <Badge variant="outline" className="text-xs bg-success/10 text-green-700">
               已填写
             </Badge>
           )}
@@ -208,7 +208,7 @@ export function OpenQuestionRenderer({
 
       {/* 格式提示 */}
       {getInputType() !== 'text' && (
-        <div className="text-xs text-gray-500 bg-gray-50 p-2 rounded">
+        <div className="text-xs text-muted-foreground bg-gray-50 p-2 rounded">
           {getInputType() === 'email' && '请输入有效的邮箱地址，如：example@email.com'}
           {getInputType() === 'tel' && '请输入有效的电话号码'}
           {getInputType() === 'number' && '请输入数字'}
@@ -218,12 +218,12 @@ export function OpenQuestionRenderer({
 
       {/* 输入内容预览 */}
       {value && (
-        <div className="mt-3 p-3 bg-green-50 border border-green-200 rounded">
+        <div className="mt-3 p-3 bg-success/10 border border-green-200 rounded">
           <div className="flex items-start space-x-2">
-            <span className="w-2 h-2 bg-green-500 rounded-full mt-1.5 shrink-0"></span>
+            <span className="w-2 h-2 bg-success/100 rounded-full mt-1.5 shrink-0"></span>
             <div className="flex-1">
               <div className="text-sm text-green-700 font-medium mb-1">您的回答：</div>
-              <div className={`${deviceStyles.fontSize} text-green-600 ${isTextarea() ? 'whitespace-pre-wrap' : ''}`}>
+              <div className={`${deviceStyles.fontSize} text-success ${isTextarea() ? 'whitespace-pre-wrap' : ''}`}>
                 {value}
               </div>
             </div>

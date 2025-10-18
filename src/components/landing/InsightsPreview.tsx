@@ -115,7 +115,7 @@ export function InsightsPreview({ onViewInsights }: InsightsPreviewProps) {
                     <Star className="h-3 w-3 mr-1 fill-current" />
                     {t('insights.featured')}
                   </Badge>
-                  <div className="flex items-center space-x-1 text-xs text-gray-500">
+                  <div className="flex items-center space-x-1 text-xs text-muted-foreground">
                     <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
                     <span>{article.rating}</span>
                   </div>
@@ -129,7 +129,7 @@ export function InsightsPreview({ onViewInsights }: InsightsPreviewProps) {
               </CardHeader>
 
               <CardContent>
-                <div className="flex items-center justify-between text-xs text-gray-600 mb-3">
+                <div className="flex items-center justify-between text-xs text-muted-foreground mb-3">
                   <div className="flex items-center space-x-3">
                     <div className="flex items-center space-x-1">
                       <Clock className="h-3 w-3" />

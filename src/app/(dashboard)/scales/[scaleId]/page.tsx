@@ -104,7 +104,7 @@ export default function ScalePage({ params }: ScalePageProps) {
   if (loading) {
     return <div className="min-h-screen bg-background flex items-center justify-center">
       <div className="text-center">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-gray-900 mx-auto mb-4" />
+        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border mx-auto mb-4" />
         <p>{t('common.loading', '加载中...')}</p>
       </div>
     </div>;
@@ -156,7 +156,7 @@ export default function ScalePage({ params }: ScalePageProps) {
   return (
     <div className="flex flex-col h-screen bg-gradient-to-br from-gray-50 to-gray-100/50 dark:from-gray-900 dark:to-gray-800/50">
       {/* 头部导航 - 固定 */}
-      <div className="flex-shrink-0 bg-white/80 backdrop-blur-lg border-b border-gray-200/80 shadow-sm z-10">
+      <div className="flex-shrink-0 bg-white/80 backdrop-blur-lg border-b border/80 shadow-sm z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center space-x-4">
@@ -224,7 +224,7 @@ export default function ScalePage({ params }: ScalePageProps) {
                       <span>{scale.administrationTime} {t('scale.minutes')}</span>
                     </span>
                     <span className="flex items-center gap-2 px-3 py-1.5 bg-white rounded-lg border">
-                      <Users className="w-4 h-4 text-blue-500" />
+                      <Users className="w-4 h-4 text-primary" />
                       <span>{scale.itemsCount} {t('scale.items')}</span>
                     </span>
                   </div>
@@ -293,12 +293,12 @@ export default function ScalePage({ params }: ScalePageProps) {
                 <TabsContent value="interpretation" className="space-y-6">
                   {interpretation ? (
                     <>
-                      <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                      <div className="bg-primary/10 border border-blue-200 rounded-lg p-4">
                         <div className="flex items-center justify-between mb-2">
                           <h4 className="font-semibold text-blue-900">{t('scale.ai_generated_interpretation')}</h4>
                           <Badge variant="outline" className="text-xs">v{interpretation.version}</Badge>
                         </div>
-                        <p className="text-sm text-blue-800">
+                        <p className="text-sm text-primary">
                           {t('scale.ai_generated_note')}{interpretation.viewCount}
                         </p>
                       </div>
@@ -307,7 +307,7 @@ export default function ScalePage({ params }: ScalePageProps) {
                         {interpretation.overview && (
                           <div>
                             <h4 className="font-semibold mb-3 flex items-center text-lg">
-                              <BookOpen className="w-5 h-5 mr-2 text-blue-600" />
+                              <BookOpen className="w-5 h-5 mr-2 text-primary" />
                               {t('scale.scale_overview_heading')}
                             </h4>
                             <div className="prose prose-sm max-w-none text-sm leading-relaxed text-muted-foreground">
@@ -319,7 +319,7 @@ export default function ScalePage({ params }: ScalePageProps) {
                         {interpretation.structure && (
                           <div>
                             <h4 className="font-semibold mb-3 flex items-center text-lg">
-                              <BarChart3 className="w-5 h-5 mr-2 text-green-600" />
+                              <BarChart3 className="w-5 h-5 mr-2 text-success" />
                               {t('scale.scale_structure_heading')}
                             </h4>
                             <div className="prose prose-sm max-w-none text-sm leading-relaxed text-muted-foreground">
@@ -367,7 +367,7 @@ export default function ScalePage({ params }: ScalePageProps) {
                         {interpretation.clinicalApplications && (
                           <div>
                             <h4 className="font-semibold mb-3 flex items-center text-lg">
-                              <Heart className="w-5 h-5 mr-2 text-red-600" />
+                              <Heart className="w-5 h-5 mr-2 text-destructive" />
                               {t('scale.clinical_applications_heading')}
                             </h4>
                             <div className="prose prose-sm max-w-none text-sm leading-relaxed text-muted-foreground">
@@ -457,7 +457,7 @@ export default function ScalePage({ params }: ScalePageProps) {
                   <div>
                     <CardHeader>
                       <CardTitle className="flex items-center space-x-2">
-                        <CheckCircle className="w-5 h-5 text-blue-600" />
+                        <CheckCircle className="w-5 h-5 text-primary" />
                         <span>{t('scale.copyright_license_info')}</span>
                       </CardTitle>
                     </CardHeader>
@@ -472,9 +472,9 @@ export default function ScalePage({ params }: ScalePageProps) {
                       )}
 
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <Card className="p-4 bg-blue-50 border-blue-200">
+                        <Card className="p-4 bg-primary/10 border-blue-200">
                           <h4 className="font-semibold mb-2 text-blue-900">{t('scale.need_license_question')}</h4>
-                          <p className="text-sm text-blue-800 mb-3">
+                          <p className="text-sm text-primary mb-3">
                             {t('scale.need_license_desc')}
                           </p>
                           <Link href={`/scales/copyright/create?scaleId=${scale.id}`}>
@@ -485,7 +485,7 @@ export default function ScalePage({ params }: ScalePageProps) {
                           </Link>
                         </Card>
 
-                        <Card className="p-4 bg-green-50 border-green-200">
+                        <Card className="p-4 bg-success/10 border-green-200">
                           <h4 className="font-semibold mb-2 text-green-900">{t('scale.view_existing_tickets')}</h4>
                           <p className="text-sm text-green-800 mb-3">
                             {t('scale.view_tickets_desc')}

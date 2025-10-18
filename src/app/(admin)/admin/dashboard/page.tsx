@@ -88,12 +88,12 @@ export default function Page() {
           <Link href="/scales/search">
             <Card className="hover:shadow-md transition-shadow cursor-pointer h-full">
               <CardContent className="p-6 text-center">
-                <Search className="w-12 h-12 mx-auto mb-3 text-blue-600" />
+                <Search className="w-12 h-12 mx-auto mb-3 text-primary" />
                 <h3 className="font-semibold mb-2">{t("scales.search_title")}</h3>
                 <p className="text-sm text-muted-foreground mb-3">
                   {t("scales.search_description")}
                 </p>
-                <div className="flex items-center justify-center text-sm text-blue-600">
+                <div className="flex items-center justify-center text-sm text-primary">
                   {t("dashboard.search_scales")} <ArrowRight className="w-3 h-3 ml-1" />
                 </div>
               </CardContent>
@@ -103,12 +103,12 @@ export default function Page() {
           <Link href="/scales/copyright">
             <Card className="hover:shadow-md transition-shadow cursor-pointer h-full">
               <CardContent className="p-6 text-center">
-                <Shield className="w-12 h-12 mx-auto mb-3 text-green-600" />
+                <Shield className="w-12 h-12 mx-auto mb-3 text-success" />
                 <h3 className="font-semibold mb-2">{t("copyright.service_title")}</h3>
                 <p className="text-sm text-muted-foreground mb-3">
                   {t("copyright.batch_check_description")}
                 </p>
-                <div className="flex items-center justify-center text-sm text-green-600">
+                <div className="flex items-center justify-center text-sm text-success">
                   {t("dashboard.check_license")} <ArrowRight className="w-3 h-3 ml-1" />
                 </div>
               </CardContent>
@@ -201,13 +201,13 @@ export default function Page() {
                   {Array.from({ length: 5 }).map((_, index) => (
                     <div key={index} className="flex items-center justify-between p-2 rounded animate-pulse">
                       <div className="flex items-center space-x-3">
-                        <div className="w-6 h-6 bg-gray-200 rounded"></div>
+                        <div className="w-6 h-6 bg-muted rounded"></div>
                         <div>
-                          <div className="w-16 h-4 bg-gray-200 rounded mb-1"></div>
-                          <div className="w-24 h-3 bg-gray-200 rounded"></div>
+                          <div className="w-16 h-4 bg-muted rounded mb-1"></div>
+                          <div className="w-24 h-3 bg-muted rounded"></div>
                         </div>
                       </div>
-                      <div className="w-8 h-4 bg-gray-200 rounded"></div>
+                      <div className="w-8 h-4 bg-muted rounded"></div>
                     </div>
                   ))}
                 </div>
@@ -242,13 +242,13 @@ export default function Page() {
             <CardContent>
               <div className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
-                  <div className="text-center p-3 bg-blue-50 rounded">
-                    <div className="text-lg font-semibold text-blue-600">8</div>
-                    <div className="text-xs text-blue-600">{t("dashboard.search_algorithms")}</div>
+                  <div className="text-center p-3 bg-primary/10 rounded">
+                    <div className="text-lg font-semibold text-primary">8</div>
+                    <div className="text-xs text-primary">{t("dashboard.search_algorithms")}</div>
                   </div>
-                  <div className="text-center p-3 bg-green-50 rounded">
-                    <div className="text-lg font-semibold text-green-600">95%+</div>
-                    <div className="text-xs text-green-600">{t("dashboard.search_accuracy")}</div>
+                  <div className="text-center p-3 bg-success/10 rounded">
+                    <div className="text-lg font-semibold text-success">95%+</div>
+                    <div className="text-xs text-success">{t("dashboard.search_accuracy")}</div>
                   </div>
                   <div className="text-center p-3 bg-purple-50 rounded">
                     <div className="text-lg font-semibold text-purple-600">17</div>

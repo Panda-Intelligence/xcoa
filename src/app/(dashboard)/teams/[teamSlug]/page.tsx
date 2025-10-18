@@ -235,8 +235,8 @@ export default async function TeamDashboardPage({ params }: TeamPageProps) {
                       </TableCell>
                       <TableCell>
                         {member.isActive
-                          ? <span className="text-green-600 dark:text-green-400">Active</span>
-                          : <span className="text-red-600 dark:text-red-400">Inactive</span>}
+                          ? <span className="text-success dark:text-green-400">Active</span>
+                          : <span className="text-destructive dark:text-red-400">Inactive</span>}
                       </TableCell>
                       {canRemoveMembers && (
                         <TableCell className="text-right">

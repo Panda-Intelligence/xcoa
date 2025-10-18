@@ -137,11 +137,11 @@ export function AdminTicketDetail({ ticketId }: AdminTicketDetailProps) {
 
   const getStatusColor = (status: string) => {
     const colorMap = {
-      open: "bg-blue-100 text-blue-700",
+      open: "bg-primary/10 text-primary",
       in_progress: "bg-yellow-100 text-yellow-700",
       waiting_response: "bg-orange-100 text-orange-700",
       resolved: "bg-green-100 text-green-700",
-      closed: "bg-gray-100 text-gray-700"
+      closed: "bg-gray-100 text-foreground"
     };
     return colorMap[status as keyof typeof colorMap] || colorMap.open;
   };
@@ -159,8 +159,8 @@ export function AdminTicketDetail({ ticketId }: AdminTicketDetailProps) {
 
   const getPriorityColor = (priority: string) => {
     const colorMap = {
-      low: "bg-gray-100 text-gray-700",
-      medium: "bg-blue-100 text-blue-700",
+      low: "bg-gray-100 text-foreground",
+      medium: "bg-primary/10 text-primary",
       high: "bg-orange-100 text-orange-700",
       urgent: "bg-red-100 text-red-700"
     };
@@ -172,7 +172,7 @@ export function AdminTicketDetail({ ticketId }: AdminTicketDetailProps) {
       <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
         <div className="min-h-[100vh] flex items-center justify-center">
           <div className="text-center">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900 mx-auto"></div>
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border mx-auto"></div>
             <p className="mt-2 text-sm text-muted-foreground">{t('admin.loading')}</p>
           </div>
         </div>
@@ -268,9 +268,9 @@ export function AdminTicketDetail({ ticketId }: AdminTicketDetailProps) {
             <CardContent>
               <div className="space-y-4">
                 {messages.length > 0 ? messages.map((message) => (
-                  <div key={message.id} className={`p-3 rounded-lg ${message.messageType === 'admin_note' ? 'bg-blue-50 border-l-4 border-blue-500' :
-                      message.messageType === 'admin_response' ? 'bg-green-50 border-l-4 border-green-500' :
-                        'bg-gray-50 border-l-4 border-gray-500'
+                  <div key={message.id} className={`p-3 rounded-lg ${message.messageType === 'admin_note' ? 'bg-primary/10 border-l-4 border-blue-500' :
+                      message.messageType === 'admin_response' ? 'bg-success/10 border-l-4 border-green-500' :
+                        'bg-gray-50 border-l-4 border'
                     }`}>
                     <div className="flex items-center justify-between mb-2">
                       <div className="flex items-center space-x-2">
@@ -371,7 +371,7 @@ export function AdminTicketDetail({ ticketId }: AdminTicketDetailProps) {
                 <div>
                   <span className="font-medium">{t('admin.tickets.label_website')}</span>
                   <a href={ticket.copyrightWebsite} target="_blank" rel="noopener noreferrer"
-                    className="text-sm text-blue-600 hover:underline">
+                    className="text-sm text-primary hover:underline">
                     {ticket.copyrightWebsite}
                   </a>
                 </div>
@@ -449,18 +449,18 @@ export function AdminTicketDetail({ ticketId }: AdminTicketDetailProps) {
               <div className="space-y-2">
                 <div className="flex items-center space-x-2 text-sm">
                   {ticket.responseReceived ? (
-                    <CheckCircle className="w-4 h-4 text-green-600" />
+                    <CheckCircle className="w-4 h-4 text-success" />
                   ) : (
-                    <Clock className="w-4 h-4 text-gray-500" />
+                    <Clock className="w-4 h-4 text-muted-foreground" />
                   )}
                   <span>{t('admin.tickets.copyright_response')} {ticket.responseReceived ? t('admin.tickets.response_received') : t('admin.tickets.response_not_received')}</span>
                 </div>
 
                 <div className="flex items-center space-x-2 text-sm">
                   {ticket.licenseGranted ? (
-                    <CheckCircle className="w-4 h-4 text-green-600" />
+                    <CheckCircle className="w-4 h-4 text-success" />
                   ) : (
-                    <Clock className="w-4 h-4 text-gray-500" />
+                    <Clock className="w-4 h-4 text-muted-foreground" />
                   )}
                   <span>{t('admin.tickets.license_granted')} {ticket.licenseGranted ? t('admin.tickets.license_granted_yes') : t('admin.tickets.license_pending')}</span>
                 </div>

@@ -130,12 +130,12 @@ export function CopyrightCard({ scaleId, initialData }: CopyrightCardProps) {
   // 获取许可类型颜色样式
   const getLicenseColorClass = (color: string) => {
     const colorMap = {
-      green: 'bg-green-50 text-green-700 border-green-200',
-      blue: 'bg-blue-50 text-blue-700 border-blue-200',
+      green: 'bg-success/10 text-green-700 border-green-200',
+      blue: 'bg-primary/10 text-primary border-blue-200',
       yellow: 'bg-yellow-50 text-yellow-700 border-yellow-200',
       orange: 'bg-orange-50 text-orange-700 border-orange-200',
-      red: 'bg-red-50 text-red-700 border-red-200',
-      gray: 'bg-gray-50 text-gray-700 border-gray-200',
+      red: 'bg-destructive/10 text-red-700 border-red-200',
+      gray: 'bg-gray-50 text-foreground border',
     };
     return colorMap[color as keyof typeof colorMap] || colorMap.gray;
   };
@@ -149,7 +149,7 @@ export function CopyrightCard({ scaleId, initialData }: CopyrightCardProps) {
       <Card>
         <CardContent className="p-6">
           <div className="flex items-center space-x-2">
-            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-gray-900"></div>
+            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border"></div>
             <span className="text-sm text-muted-foreground">加载版权信息...</span>
           </div>
         </CardContent>
@@ -200,7 +200,7 @@ export function CopyrightCard({ scaleId, initialData }: CopyrightCardProps) {
         <div className="grid grid-cols-2 gap-3">
           <div className="flex items-center space-x-2">
             {actions.canUseDirectly ? (
-              <CheckCircle className="w-4 h-4 text-green-600" />
+              <CheckCircle className="w-4 h-4 text-success" />
             ) : (
               <AlertCircle className="w-4 h-4 text-orange-600" />
             )}
@@ -210,7 +210,7 @@ export function CopyrightCard({ scaleId, initialData }: CopyrightCardProps) {
           </div>
 
           <div className="flex items-center space-x-2">
-            <DollarSign className="w-4 h-4 text-blue-600" />
+            <DollarSign className="w-4 h-4 text-primary" />
             <span className="text-sm">
               {copyright.license.typicalCost === 'FREE' ? '免费' :
                 copyright.license.typicalCost === 'PAID' ? '付费' : '咨询定价'}
@@ -448,14 +448,14 @@ export function CopyrightCard({ scaleId, initialData }: CopyrightCardProps) {
         </div>
 
         {/* 使用指导 */}
-        <div className="bg-blue-50 p-4 rounded-lg">
+        <div className="bg-primary/10 p-4 rounded-lg">
           <h5 className="font-medium mb-2 text-blue-900">使用指导</h5>
-          <p className="text-sm text-blue-800">
+          <p className="text-sm text-primary">
             {copyright.license.usageGuidelines || copyright.license.description}
           </p>
 
           {actions.requiresContact && (
-            <div className="mt-2 flex items-center text-sm text-blue-700">
+            <div className="mt-2 flex items-center text-sm text-primary">
               <Clock className="w-3 h-3 mr-1" />
               <span>预计回复时间: 1-5个工作日</span>
             </div>

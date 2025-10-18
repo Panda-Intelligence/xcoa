@@ -45,7 +45,7 @@ export function TeamsPageClient({ teams }: TeamsPageClientProps) {
       </div>
 
       {teams.length === 0 ? (
-        <Card className="border-dashed border-2">
+        <Card className="border-dashed border">
           <CardHeader>
             <CardTitle className="text-xl">{t("team.no_teams_yet", "You don't have any teams yet")}</CardTitle>
             <CardDescription>

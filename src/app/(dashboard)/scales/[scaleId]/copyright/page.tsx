@@ -111,12 +111,12 @@ export default function ScaleCopyrightPage({ params }: CopyrightPageProps) {
 
   const getLicenseColorClass = (color: string) => {
     const colorMap = {
-      green: 'bg-green-50 text-green-700 border-green-200',
-      blue: 'bg-blue-50 text-blue-700 border-blue-200',
+      green: 'bg-success/10 text-green-700 border-green-200',
+      blue: 'bg-primary/10 text-primary border-blue-200',
       yellow: 'bg-yellow-50 text-yellow-700 border-yellow-200',
       orange: 'bg-orange-50 text-orange-700 border-orange-200',
-      red: 'bg-red-50 text-red-700 border-red-200',
-      gray: 'bg-gray-50 text-gray-700 border-gray-200',
+      red: 'bg-destructive/10 text-red-700 border-red-200',
+      gray: 'bg-gray-50 text-foreground border',
     };
     return colorMap[color as keyof typeof colorMap] || colorMap.gray;
   };
@@ -126,9 +126,9 @@ export default function ScaleCopyrightPage({ params }: CopyrightPageProps) {
       <div className="min-h-screen bg-background">
         <div className="max-w-4xl mx-auto px-4 py-8">
           <div className="animate-pulse space-y-4">
-            <div className="h-8 bg-gray-200 rounded w-1/3"></div>
-            <div className="h-4 bg-gray-200 rounded w-2/3"></div>
-            <div className="h-32 bg-gray-200 rounded"></div>
+            <div className="h-8 bg-muted rounded w-1/3"></div>
+            <div className="h-4 bg-muted rounded w-2/3"></div>
+            <div className="h-32 bg-muted rounded"></div>
           </div>
         </div>
       </div>
@@ -198,7 +198,7 @@ export default function ScaleCopyrightPage({ params }: CopyrightPageProps) {
           </Card>
 
           {/* 许可类型显示 */}
-          <Card className={`border-2 ${getLicenseColorClass(copyright.license.color)}`}>
+          <Card className={`border ${getLicenseColorClass(copyright.license.color)}`}>
             <CardHeader>
               <CardTitle className="flex items-center space-x-3">
                 <span className="text-3xl">{copyright.license.icon}</span>
@@ -215,7 +215,7 @@ export default function ScaleCopyrightPage({ params }: CopyrightPageProps) {
               <div className="grid grid-cols-2 gap-4 mb-4">
                 <div className="flex items-center space-x-2">
                   {actions.canUseDirectly ? (
-                    <CheckCircle className="w-4 h-4 text-green-600" />
+                    <CheckCircle className="w-4 h-4 text-success" />
                   ) : (
                     <AlertCircle className="w-4 h-4 text-orange-600" />
                   )}
@@ -225,7 +225,7 @@ export default function ScaleCopyrightPage({ params }: CopyrightPageProps) {
                 </div>
 
                 <div className="flex items-center space-x-2">
-                  <DollarSign className="w-4 h-4 text-blue-600" />
+                  <DollarSign className="w-4 h-4 text-primary" />
                   <span className="text-sm">
                     {copyright.license.typicalCost === 'FREE' ? t('copyright.free') :
                       copyright.license.typicalCost === 'PAID' ? t('copyright.paid') : t('copyright.consult_pricing')}
@@ -233,9 +233,9 @@ export default function ScaleCopyrightPage({ params }: CopyrightPageProps) {
                 </div>
               </div>
 
-              <div className="bg-blue-50 p-4 rounded-lg">
+              <div className="bg-primary/10 p-4 rounded-lg">
                 <h4 className="font-medium mb-2 text-blue-900">{t('copyright.usage_guidelines')}</h4>
-                <p className="text-sm text-blue-800">
+                <p className="text-sm text-primary">
                   {copyright.license.usageGuidelines}
                 </p>
               </div>
@@ -248,7 +248,7 @@ export default function ScaleCopyrightPage({ params }: CopyrightPageProps) {
               <CardTitle>{t('copyright.copyright_statement')}</CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-sm bg-gray-50 p-4 rounded border-l-4 border-gray-300">
+              <p className="text-sm bg-gray-50 p-4 rounded border-l-4 border">
                 {copyright.info}
               </p>
             </CardContent>
@@ -456,7 +456,7 @@ export default function ScaleCopyrightPage({ params }: CopyrightPageProps) {
             <CardContent>
               {actions.canUseDirectly ? (
                 <div className="space-y-3">
-                  <div className="flex items-center space-x-2 text-green-600">
+                  <div className="flex items-center space-x-2 text-success">
                     <CheckCircle className="w-5 h-5" />
                     <span className="font-medium">{t('copyright.can_use_directly_msg')}</span>
                   </div>
@@ -487,9 +487,9 @@ export default function ScaleCopyrightPage({ params }: CopyrightPageProps) {
                     {t('copyright.needs_permission_desc')}
                   </p>
 
-                  <div className="bg-blue-50 p-4 rounded-lg">
+                  <div className="bg-primary/10 p-4 rounded-lg">
                     <h4 className="font-medium text-blue-900 mb-2">{t('copyright.contact_suggestions')}</h4>
-                    <ul className="text-sm text-blue-800 space-y-1">
+                    <ul className="text-sm text-primary space-y-1">
                       <li>• {t('copyright.contact_tips_list.0')}</li>
                       <li>• {t('copyright.contact_tips_list.1')}</li>
                       <li>• {t('copyright.contact_tips_list.2')}</li>

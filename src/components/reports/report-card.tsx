@@ -29,9 +29,9 @@ interface ReportCardProps {
 }
 
 const STATUS_CONFIG = {
-  generating: { label: '生成中', color: 'bg-blue-500', variant: 'secondary' as const },
-  completed: { label: '已完成', color: 'bg-green-500', variant: 'default' as const },
-  failed: { label: '生成失败', color: 'bg-red-500', variant: 'destructive' as const },
+  generating: { label: '生成中', color: 'bg-primary/100', variant: 'secondary' as const },
+  completed: { label: '已完成', color: 'bg-success/100', variant: 'default' as const },
+  failed: { label: '生成失败', color: 'bg-destructive/100', variant: 'destructive' as const },
 };
 
 const REPORT_TYPE_ICONS = {

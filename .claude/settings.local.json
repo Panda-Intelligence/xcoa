@@ -98,7 +98,20 @@
       "SlashCommand(/workflow:ui-design:capture:*)",
       "SlashCommand(/workflow:ui-design:style-extract:*)",
       "SlashCommand(/workflow:ui-design:layout-extract:*)",
-      "SlashCommand(/workflow:ui-design:generate:*)"
+      "SlashCommand(/workflow:ui-design:generate:*)",
+      "Bash(sort:*)",
+      "Bash(src/components/landing/ScaleInsights.tsx)",
+      "Bash(__NEW_LINE__ echo \"✅ ScaleInsights fixed\")",
+      "Bash({} +)",
+      "Bash(__NEW_LINE__ echo \"✅ Remaining blue colors fixed\")",
+      "Bash(__NEW_LINE__ echo \"✅ Final color cleanup complete\")",
+      "Bash(rm:*)",
+      "Bash(test:*)",
+      "Bash(codex --full-auto exec \"\nPURPOSE: Analyze and design optimal solution for implementing blog feature in OpeneCOA platform\nTASK: Evaluate current architecture, propose solution design, and identify key design decisions for blog integration\n\nCONTEXT: @{.workflow/WFS-blog-feature-implementation/.context/context-package.json,.workflow/WFS-blog-feature-implementation/workflow-session.json,CLAUDE.md,README.md}\n\n**MANDATORY FIRST STEP**: Read and analyze .workflow/WFS-blog-feature-implementation/.context/context-package.json to understand:\n- Task requirements from metadata.task_description\n- Relevant source files from assets[] array\n- Tech stack and reference patterns\n\n**ANALYSIS REQUIREMENTS**:\n1. CURRENT STATE ANALYSIS: Analyze insights feature, database schemas, UI components, integration points\n2. SOLUTION DESIGN: Blog route structure, MDX vs Contentlayer, database schema, SEO strategy\n3. KEY DESIGN DECISIONS: Content management choice, database design, comment system, SEO approach\n4. CRITICAL INSIGHTS: Cloudflare Workers compatibility, performance, security, risks\n5. OPTIMIZATION STRATEGIES: Edge caching, SSR vs static, image optimization\n6. FEASIBILITY ASSESSMENT: Complexity, compatibility, migration impact, effort\n7. CODE MODIFICATION TARGETS: Identify new files and existing modifications needed\n\n**OUTPUT FILE**: Write analysis to .workflow/WFS-blog-feature-implementation/.process/gemini-solution-design.md\n\nRULES:\n- Focus on SOLUTION DESIGN and KEY DECISIONS, NOT implementation steps\n- Provide architectural rationale and alternatives analysis\n- Identify code targets: new files as ''file'', existing as ''file:function:lines''\n- Do NOT create task lists or code snippets\n- MUST write to .workflow/WFS-blog-feature-implementation/.process/gemini-solution-design.md\n\" --skip-git-repo-check -s danger-full-access)",
+      "Bash(if [ ! -d \".workflow/WFS-blog-feature-implementation\" ])",
+      "Bash(then echo \"❌ Session WFS-blog-feature-implementation not found\")",
+      "Bash(exit 1)",
+      "Bash(else echo \"✓ Session validated\")"
     ],
     "deny": [],
     "ask": []

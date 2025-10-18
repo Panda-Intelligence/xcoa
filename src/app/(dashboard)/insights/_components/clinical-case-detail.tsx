@@ -72,10 +72,10 @@ export function ClinicalCaseDetail({ caseId }: ClinicalCaseDetailProps) {
   const getDifficultyLevelColor = (level?: string) => {
     const colorMap = {
       'beginner': 'bg-green-100 text-green-800 border-green-200',
-      'intermediate': 'bg-blue-100 text-blue-800 border-blue-200',
+      'intermediate': 'bg-primary/10 text-primary border-blue-200',
       'advanced': 'bg-red-100 text-red-800 border-red-200'
     };
-    return level ? colorMap[level as keyof typeof colorMap] || 'bg-gray-100 text-gray-800 border-gray-200' : 'bg-gray-100 text-gray-800 border-gray-200';
+    return level ? colorMap[level as keyof typeof colorMap] || 'bg-gray-100 text-foreground border' : 'bg-gray-100 text-foreground border';
   };
 
   const getSpecialtyLabel = (specialty?: string) => {
@@ -94,7 +94,7 @@ export function ClinicalCaseDetail({ caseId }: ClinicalCaseDetailProps) {
       <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
         <div className="min-h-[100vh] flex items-center justify-center">
           <div className="text-center">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900 mx-auto"></div>
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border mx-auto"></div>
             <p className="mt-2 text-sm text-muted-foreground">{t("common.loading", "Loading...")}</p>
           </div>
         </div>
@@ -200,9 +200,9 @@ export function ClinicalCaseDetail({ caseId }: ClinicalCaseDetailProps) {
               <CardContent>
                 <div className="grid grid-cols-2 gap-4">
                   {Object.entries(clinicalCase.scaleScores).map(([key, value]) => (
-                    <div key={key} className="flex justify-between items-center p-3 bg-blue-50 rounded">
+                    <div key={key} className="flex justify-between items-center p-3 bg-primary/10 rounded">
                       <span className="font-medium">{key}:</span>
-                      <span className="text-lg font-bold text-blue-600">{value}</span>
+                      <span className="text-lg font-bold text-primary">{value}</span>
                     </div>
                   ))}
                 </div>
@@ -217,7 +217,7 @@ export function ClinicalCaseDetail({ caseId }: ClinicalCaseDetailProps) {
                 <CardTitle>{t("insights.cases.result_interpretation")}</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-sm text-muted-foreground bg-blue-50 p-3 rounded">
+                <p className="text-sm text-muted-foreground bg-primary/10 p-3 rounded">
                   {clinicalCase.interpretation}
                 </p>
               </CardContent>
@@ -231,7 +231,7 @@ export function ClinicalCaseDetail({ caseId }: ClinicalCaseDetailProps) {
                 <CardTitle>{t("insights.cases.clinical_decision")}</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-sm text-muted-foreground bg-green-50 p-3 rounded">
+                <p className="text-sm text-muted-foreground bg-success/10 p-3 rounded">
                   {clinicalCase.clinicalDecision}
                 </p>
               </CardContent>
@@ -262,7 +262,7 @@ export function ClinicalCaseDetail({ caseId }: ClinicalCaseDetailProps) {
                 <div className="text-sm text-muted-foreground space-y-2">
                   {clinicalCase.learningPoints.split('\n').map((point, index) => (
                     <div key={index} className="flex items-start">
-                      <Target className="w-4 h-4 mr-2 mt-0.5 text-green-600 flex-shrink-0" />
+                      <Target className="w-4 h-4 mr-2 mt-0.5 text-success flex-shrink-0" />
                       {point}
                     </div>
                   ))}

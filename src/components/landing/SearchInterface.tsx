@@ -134,7 +134,7 @@ export function SearchInterface({ user, accessToken }: SearchInterfaceProps) {
                       <Globe className="w-3 h-3 mr-1" />
                       {result.languages.join(', ')}
                     </Badge>
-                    <Badge variant="outline" className="text-green-600">
+                    <Badge variant="outline" className="text-success">
                       <CheckCircle className="w-3 h-3 mr-1" />
                       {result.validation_status}
                     </Badge>

@@ -104,7 +104,7 @@ export function TeamSelector({ selectedTeam, onTeamSelect, disabled }: TeamSelec
           <div className="space-y-4">
             {/* 搜索 */}
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
                 placeholder={t('admin.invoices.team_selector.search_placeholder')}
                 value={searchQuery}
@@ -117,7 +117,7 @@ export function TeamSelector({ selectedTeam, onTeamSelect, disabled }: TeamSelec
             <div className="max-h-80 overflow-y-auto space-y-2">
               {loading ? (
                 <div className="text-center py-8">
-                  <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-gray-900 mx-auto"></div>
+                  <div className="animate-spin rounded-full h-6 w-6 border-b-2 border mx-auto"></div>
                   <p className="mt-2 text-sm text-muted-foreground">{t('admin.invoices.team_selector.loading')}</p>
                 </div>
               ) : teams.length > 0 ? (
@@ -129,7 +129,7 @@ export function TeamSelector({ selectedTeam, onTeamSelect, disabled }: TeamSelec
                   >
                     <div className="flex-1">
                       <div className="flex items-center space-x-2">
-                        <Building className="w-4 h-4 text-blue-600" />
+                        <Building className="w-4 h-4 text-primary" />
                         <span className="font-medium">{team.name}</span>
                         <Badge variant="outline" className="text-xs">
                           {team.slug}

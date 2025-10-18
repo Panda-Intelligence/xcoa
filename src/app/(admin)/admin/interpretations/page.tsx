@@ -264,9 +264,9 @@ export default function InterpretationReviewPage() {
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'published':
-        return <Badge className="bg-green-500 text-white"><CheckCircle className="w-3 h-3 mr-1" />{t('admin.interpretations.review.badge_published')}</Badge>;
+        return <Badge className="bg-success/100 text-white"><CheckCircle className="w-3 h-3 mr-1" />{t('admin.interpretations.review.badge_published')}</Badge>;
       case 'approved':
-        return <Badge className="bg-blue-500 text-white"><CheckCircle className="w-3 h-3 mr-1" />{t('admin.interpretations.review.badge_approved')}</Badge>;
+        return <Badge className="bg-primary/100 text-white"><CheckCircle className="w-3 h-3 mr-1" />{t('admin.interpretations.review.badge_approved')}</Badge>;
       case 'reviewing':
         return <Badge className="bg-yellow-500 text-white"><Clock className="w-3 h-3 mr-1" />{t('admin.interpretations.review.badge_reviewing')}</Badge>;
       case 'draft':
@@ -327,7 +327,7 @@ export default function InterpretationReviewPage() {
             <CardTitle className="text-sm font-medium">{t('admin.interpretations.review.stats_draft')}</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-gray-600">{stats.draft}</div>
+            <div className="text-2xl font-bold text-muted-foreground">{stats.draft}</div>
           </CardContent>
         </Card>
         <Card>
@@ -343,7 +343,7 @@ export default function InterpretationReviewPage() {
             <CardTitle className="text-sm font-medium">{t('admin.interpretations.review.stats_approved')}</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-blue-600">{stats.approved}</div>
+            <div className="text-2xl font-bold text-primary">{stats.approved}</div>
           </CardContent>
         </Card>
         <Card>
@@ -351,7 +351,7 @@ export default function InterpretationReviewPage() {
             <CardTitle className="text-sm font-medium">{t('admin.interpretations.review.stats_published')}</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-green-600">{stats.published}</div>
+            <div className="text-2xl font-bold text-success">{stats.published}</div>
           </CardContent>
         </Card>
       </div>
@@ -369,7 +369,7 @@ export default function InterpretationReviewPage() {
 
       {/* Batch Operations */}
       {selectedIds.length > 0 && (
-        <Card className="bg-blue-50 border-blue-200">
+        <Card className="bg-primary/10 border-blue-200">
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-4">
@@ -434,7 +434,7 @@ export default function InterpretationReviewPage() {
                 key={item.id}
                 className={`transition-colors ${
                   selectedInterpretation?.id === item.id ? 'ring-2 ring-blue-500' : ''
-                } ${selectedIds.includes(item.id) ? 'bg-blue-50' : ''}`}
+                } ${selectedIds.includes(item.id) ? 'bg-primary/10' : ''}`}
               >
                 <CardContent className="p-4">
                   <div className="flex items-start space-x-3">
@@ -533,7 +533,7 @@ export default function InterpretationReviewPage() {
                         {t('admin.interpretations.review.request_changes_button')}
                       </Button>
                       {selectedInterpretation.status === 'approved' && (
-                        <Button onClick={handlePublish} className="bg-blue-600">
+                        <Button onClick={handlePublish} className="bg-primary">
                           <Eye className="w-4 h-4 mr-2" />
                           {t('admin.interpretations.review.publish_button')}
                         </Button>

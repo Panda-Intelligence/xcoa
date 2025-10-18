@@ -40,9 +40,9 @@ export default function HotScales() {
         Array.from({ length: 6 }).map((_, index) => (
           <Card key={index} className="animate-pulse">
             <CardContent className="p-4">
-              <div className="h-4 bg-gray-200 rounded mb-2" />
-              <div className="h-3 bg-gray-200 rounded mb-1" />
-              <div className="h-2 bg-gray-200 rounded" />
+              <div className="h-4 bg-muted rounded mb-2" />
+              <div className="h-3 bg-muted rounded mb-1" />
+              <div className="h-2 bg-muted rounded" />
             </CardContent>
           </Card>
         ))
@@ -55,7 +55,7 @@ export default function HotScales() {
           onClick={() => router.push(`/scales/${scale.id}`)}>
           <CardContent className="p-4">
             <div className="flex items-center justify-between mb-2">
-              <h4 className="font-medium text-sm leading-tight group-hover:text-blue-600 transition-colors">{scale.name}</h4>
+              <h4 className="font-medium text-sm leading-tight group-hover:text-primary transition-colors">{scale.name}</h4>
               <Badge variant="outline">{scale.acronym}</Badge>
             </div>
 

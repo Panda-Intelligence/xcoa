@@ -80,9 +80,9 @@ export function LicenseBatchChecker({ scaleIds, onLicenseCheck }: LicenseBatchCh
   };
 
   const getLicenseIcon = (canUse: boolean, requiresPermission: boolean) => {
-    if (canUse) return <CheckCircle className="w-4 h-4 text-green-600" />;
+    if (canUse) return <CheckCircle className="w-4 h-4 text-success" />;
     if (requiresPermission) return <AlertCircle className="w-4 h-4 text-orange-600" />;
-    return <Clock className="w-4 h-4 text-gray-600" />;
+    return <Clock className="w-4 h-4 text-muted-foreground" />;
   };
 
   const getLicenseStatusText = (canUse: boolean, requiresPermission: boolean) => {
@@ -166,7 +166,7 @@ export function LicenseBatchChecker({ scaleIds, onLicenseCheck }: LicenseBatchCh
             <div className="grid grid-cols-3 gap-4">
               <Card className="p-3">
                 <div className="flex items-center space-x-2">
-                  <CheckCircle className="w-4 h-4 text-green-600" />
+                  <CheckCircle className="w-4 h-4 text-success" />
                   <div>
                     <div className="font-semibold">{summary.canUseDirectly}</div>
                     <div className="text-xs text-muted-foreground">可直接使用</div>
@@ -186,7 +186,7 @@ export function LicenseBatchChecker({ scaleIds, onLicenseCheck }: LicenseBatchCh
 
               <Card className="p-3">
                 <div className="flex items-center space-x-2">
-                  <DollarSign className="w-4 h-4 text-blue-600" />
+                  <DollarSign className="w-4 h-4 text-primary" />
                   <div>
                     <div className="font-semibold">{summary.estimatedCost.free}</div>
                     <div className="text-xs text-muted-foreground">免费使用</div>

@@ -165,7 +165,7 @@ export function CopyrightTicketCreate() {
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-2xl font-bold flex items-center space-x-2">
-              <Shield className="w-6 h-6 text-blue-600" />
+              <Shield className="w-6 h-6 text-primary" />
               <span>{t('copyright_ticket_create.page_title')}</span>
             </h1>
             <p className="text-muted-foreground">
@@ -228,7 +228,7 @@ export function CopyrightTicketCreate() {
                   )}
                 </>
               ) : (
-                <div className="flex items-center justify-between p-3 border rounded bg-blue-50">
+                <div className="flex items-center justify-between p-3 border rounded bg-primary/10">
                   <div className="flex items-center space-x-2">
                     <Badge variant="outline">{selectedScale.acronym}</Badge>
                     <span className="font-medium">{selectedScale.name}</span>
@@ -387,9 +387,9 @@ export function CopyrightTicketCreate() {
                   />
                 </div>
 
-                <div className="bg-blue-50 p-4 rounded-lg">
+                <div className="bg-primary/10 p-4 rounded-lg">
                   <h5 className="font-medium mb-2 text-blue-900">{t('copyright_ticket_create.tips_title')}</h5>
-                  <ul className="text-sm text-blue-800 space-y-1">
+                  <ul className="text-sm text-primary space-y-1">
                     <li>• {t('copyright_ticket_create.tip_1')}</li>
                     <li>• {t('copyright_ticket_create.tip_2')}</li>
                     <li>• {t('copyright_ticket_create.tip_3')}</li>
