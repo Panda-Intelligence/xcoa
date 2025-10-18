@@ -28,9 +28,9 @@ export function Footer() {
               <div className="flex flex-col items-start space-x-2 text-sm text-muted-foreground">
                 <div className="flex">
                   <MapPin className="h-4 w-4" />
-                  <span className="ml-2">Unit 13, Freeland Park</span>
+                  <span className="ml-2">{t('landing.footer.address_line1', 'Unit 13, Freeland Park')}</span>
                 </div>
-                <div className="flex ml-6!">Wareham Road, Poole</div>
+                <div className="flex ml-6!">{t('landing.footer.address_line2', 'Wareham Road, Poole')}</div>
                 <div className="flex ml-6!">UK, BH16 6FH</div>
               </div>
             </div>

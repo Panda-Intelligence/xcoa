@@ -7,6 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { Label } from '@/components/ui/label';
 import { Calendar, Clock } from 'lucide-react';
 import type { EcoaItem } from '@/db/schema';
+import { useLanguage } from '@/hooks/useLanguage';
 
 interface DateQuestionRendererProps {
   item: EcoaItem;
@@ -25,6 +26,7 @@ export function DateQuestionRenderer({
   disabled = false,
   deviceMode = 'desktop'
 }: DateQuestionRendererProps) {
+  const { t } = useLanguage();
   const [isFocused, setIsFocused] = useState(false);
 
   // 设备响应式样式
@@ -209,7 +211,7 @@ export function DateQuestionRenderer({
       {/* 快速选择选项 */}
       {!disabled && deviceMode !== 'mobile' && (
         <div className="space-y-2">
-          <Label className="text-sm text-muted-foreground">快速选择：</Label>
+          <Label className="text-sm text-muted-foreground">{t('forms.date_picker.quick_select', '快速选择：')}</Label>
           <div className="flex flex-wrap gap-2">
             {quickOptions.map((option, index) => (
               <Button
@@ -241,7 +243,7 @@ export function DateQuestionRenderer({
           )}
           {value && isValid && (
             <Badge variant="outline" className="text-xs bg-success/10 text-green-700">
-              已选择
+              {t('forms.date_picker.selected_label', '已选择')}
             </Badge>
           )}
         </div>

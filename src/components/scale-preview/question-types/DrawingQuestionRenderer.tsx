@@ -5,17 +5,18 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Label } from '@/components/ui/label';
 import { Slider } from '@/components/ui/slider';
-import { 
-  Palette, 
-  Eraser, 
-  RotateCcw, 
-  Download, 
+import {
+  Palette,
+  Eraser,
+  RotateCcw,
+  Download,
   Brush,
   Circle,
   Square,
   Minus
 } from 'lucide-react';
 import type { EcoaItem } from '@/db/schema';
+import { useLanguage } from '@/hooks/useLanguage';
 
 interface DrawingQuestionRendererProps {
   item: EcoaItem;
@@ -36,6 +37,7 @@ export function DrawingQuestionRenderer({
   disabled = false,
   deviceMode = 'desktop'
 }: DrawingQuestionRendererProps) {
+  const { t } = useLanguage();
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [isDrawing, setIsDrawing] = useState(false);
   const [currentTool, setCurrentTool] = useState<DrawingTool>('pen');
@@ -236,7 +238,7 @@ export function DrawingQuestionRenderer({
         <div className="space-y-3 p-3 bg-gray-50 rounded-lg border">
           {/* 工具选择 */}
           <div className="space-y-2">
-            <Label className="text-sm font-medium">绘图工具</Label>
+            <Label className="text-sm font-medium">{t('forms.drawing_tool.label', '绘图工具')}</Label>
             <div className="flex flex-wrap gap-2">
               {toolOptions.map(({ tool, icon: Icon, label }) => (
                 <Button
@@ -257,7 +259,7 @@ export function DrawingQuestionRenderer({
           {/* 颜色选择 */}
           {currentTool !== 'eraser' && (
             <div className="space-y-2">
-              <Label className="text-sm font-medium">颜色</Label>
+              <Label className="text-sm font-medium">{t('forms.drawing_tool.color', '颜色')}</Label>
               <div className="flex flex-wrap gap-2">
                 {colorOptions.map((color) => (
                   <button

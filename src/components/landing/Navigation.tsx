@@ -53,9 +53,9 @@ export function Navigation() {
               <div className="shrink-0">
                 <Logo width={56} height={56} className="text-primary" />
               </div>
-              {/* <div className="shrink-0">
-                <h1 className="text-xl font-semibold text-primary">Open eCOA</h1>
-              </div> */}
+              <div className="shrink-0">
+                <h1 className="text-xl font-semibold text-primary">{t('landing.nav.brand_name', 'Open eCOA')}</h1>
+              </div>
             </div>
           </Link>
 

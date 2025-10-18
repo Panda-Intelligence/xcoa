@@ -113,6 +113,13 @@
     "faq_user_types": "平台支持哪些用户类型和使用场景？",
     "faq_support_service": "如何获得技术支持和专业咨询？"
   },
+  "nav": {
+    "brand_name": "Open eCOA"
+  },
+  "footer": {
+    "address_line1": "Unit 13, Freeland Park",
+    "address_line2": "Wareham Road, Poole"
+  },
   "dashboard": {
     "quick_actions": "快速操作",
     "search_scales": "搜索量表",
@@ -140,35 +147,41 @@
     "in_development": "开发中"
   },
   "search": {
-    "title": "AI 智能搜索",
-    "description": "使用自然语言描述您的需求，AI 将为您推荐最适合的量表",
-    "placeholder": "例如：评估癌症患者生活质量的量表...",
-    "search_placeholder": "搜索量表或心理测量工具...",
-    "search_placeholder_small": "搜索量表...",
+    "brand_name": "eCOA Pro",
     "button": "搜索",
-    "searching": "搜索中...",
-    "results_title": "搜索结果",
-    "results_count": "找到 {count} 个相关量表",
-    "results_stats": "约 {count} 条结果 (用时 {time} 秒)",
-    "match_score": "匹配度: {score}%",
-    "used_by": "已被 {count}+ 研究使用",
-    "view_details": "查看详情",
+    "category": "类别",
+    "description": "使用自然语言描述您的需求，AI 将为您推荐最适合的量表",
     "download": "下载",
-    "need_upgrade": "需要升级",
+    "ecoa_search": "搜索",
+    "feeling_lucky": "手气不错",
+    "free_limitation": "免费版本限制：仅显示基础量表，升级至专业版获取完整 AI 推荐",
+    "go_back": "返回",
+    "items": "题项",
+    "language": "语言",
     "login_prompt": {
       "title": "开始使用 AI 搜索",
       "description": "登录后即可使用 AI 智能搜索功能"
     },
+    "match_score": "匹配度: {score}%",
+    "need_upgrade": "需要升级",
     "no_results": {
       "title": "未找到相关结果",
       "description": "尝试使用不同的关键词或更具体的描述"
     },
-    "free_limitation": "免费版本限制：仅显示基础量表，升级至专业版获取完整 AI 推荐",
-    "go_back": "返回",
-    "searches_remaining": "剩余 {count} 次",
-    "ecoa_search": "搜索",
-    "feeling_lucky": "手气不错",
+    "placeholder": "例如：评估癌症患者生活质量的量表...",
     "quick_search": "快速搜索",
+    "remaining_searches": "本月剩余搜索次数",
+    "results_count": "找到 {count} 个相关量表",
+    "results_stats": "约 {count} 条结果 (用时 {time} 秒)",
+    "results_title": "搜索结果",
+    "searches_remaining": "剩余 {count} 次",
+    "search_placeholder": "搜索量表或心理测量工具...",
+    "search_placeholder_small": "搜索量表...",
+    "searching": "搜索中...",
+    "status": "状态",
+    "title": "AI 智能搜索",
+    "used_by": "已被 {count}+ 研究使用",
+    "view_details": "查看详情",
     "search_suggestions": "搜索建议：",
     "category": "类别",
     "items": "题项",

@@ -40,6 +40,15 @@
     "overview": "Overview",
     "total_records": "Total {{total}} records"
   },
+  "table": {
+    "rows_per_page": "Rows per page"
+  },
+  "pagination": {
+    "go_to_first": "Go to first page",
+    "go_to_previous": "Go to previous page",
+    "go_to_next": "Go to next page",
+    "go_to_last": "Go to last page"
+  },
   "site": {
     "name": "OpeneCOA",
     "description": "Open eCOA Platform - Search, interpret, authorize, and report on eCOA scales. AI-powered intelligent search providing one-stop eCOA solutions for clinical research and medical practice.",
@@ -62,7 +71,8 @@
     "features": "Features",
     "pricing": "Pricing",
     "about_us": "About Us",
-    "contact_us": "Contact Us"
+    "contact_us": "Contact Us",
+    "blog": "Blog"
   },
   "sidebar": {
     "dashboard": "Dashboard",

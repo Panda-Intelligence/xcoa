@@ -40,6 +40,15 @@
     "overview": "概览",
     "total_records": "共 {{total}} 条记录"
   },
+  "table": {
+    "rows_per_page": "每页行数"
+  },
+  "pagination": {
+    "go_to_first": "转到第一页",
+    "go_to_previous": "转到上一页",
+    "go_to_next": "转到下一页",
+    "go_to_last": "转到最后一页"
+  },
   "site": {
     "name": "OpeneCOA",
     "description": "开放的 eCOA 量表平台 - 提供量表检索、专业解读、版权授权申请、eCOA 报告服务。AI 智能搜索，为临床研究和医疗实践提供一站式 eCOA 解决方案。",
@@ -62,7 +71,8 @@
     "features": "功能特性",
     "pricing": "订阅方案",
     "about_us": "关于我们",
-    "contact_us": "联系我们"
+    "contact_us": "联系我们",
+    "blog": "博客"
   },
   "sidebar": {
     "dashboard": "仪表盘",

@@ -230,7 +230,7 @@ export function GoogleStyleSearch({ onBack }: GoogleStyleSearchProps) {
                   <Button variant="ghost" size="sm" onClick={() => setHasSearched(false)} className="text-muted-foreground">
                     <ArrowLeft className="h-4 w-4" />
                   </Button>
-                  <h1 className="text-xl text-primary cursor-pointer">eCOA Pro</h1>
+                  <h1 className="text-xl text-primary cursor-pointer">{t('landing.search.brand_name', 'eCOA Pro')}</h1>
                 </div>
 
                 {/* Search bar */}

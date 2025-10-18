@@ -5,6 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Search, Sparkles, Loader2, FileText, Globe, CheckCircle } from "lucide-react";
+import { useLanguage } from "@/hooks/useLanguage";
 
 interface SearchResult {
   id: string;
@@ -23,6 +24,7 @@ interface SearchInterfaceProps {
 }
 
 export function SearchInterface({ user, accessToken }: SearchInterfaceProps) {
+  const { t } = useLanguage();
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<SearchResult[]>([]);
   const [loading, setLoading] = useState(false);
@@ -57,7 +59,7 @@ export function SearchInterface({ user, accessToken }: SearchInterfaceProps) {
         </p>
         {searchesRemaining !== null && searchesRemaining !== -1 && (
           <div className="text-sm text-muted-foreground">
-            本月剩余搜索次数: <span className="font-medium">{searchesRemaining}</span>
+            {t('landing.search.remaining_searches', '本月剩余搜索次数')}: <span className="font-medium">{searchesRemaining}</span>
           </div>
         )}
       </div>

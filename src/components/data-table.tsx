@@ -35,6 +35,7 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, ChevronDown } from "lucide-react"
+import { useLanguage } from "@/hooks/useLanguage"
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
@@ -67,6 +68,7 @@ export function DataTable<TData, TValue>({
   getRowHref,
   excludeClickableColumns = ["actions"],
 }: DataTableProps<TData, TValue>) {
+  const { t } = useLanguage()
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({})
   const [rowSelection, setRowSelection] = React.useState({})
@@ -96,7 +98,7 @@ export function DataTable<TData, TValue>({
     <div>
       <div className="flex items-center py-4">
         <div className="flex items-center space-x-2">
-          <p className="text-sm font-medium">Rows per page</p>
+          <p className="text-sm font-medium">{t('common.table.rows_per_page', 'Rows per page')}</p>
           <Select
             value={`${pageSize}`}
             onValueChange={(value: string) => {
