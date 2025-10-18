@@ -7,7 +7,7 @@ type Language = 'zh' | 'en';
 interface LanguageContextType {
   language: Language;
   setLanguage: (lang: Language) => void;
-  t: (key: string, defaultValue?: string) => string;
+  t: (key: string, defaultValue?: string, params?: Record<string, any>) => string;
   tArray: (key: string, defaultValue?: string[]) => string[];
   isLoading: boolean; // 新增loading状态
 }
@@ -89,6 +89,19 @@ async function loadTranslations(lang: Language) {
 // 获取嵌套对象的值
 function getNestedValue(obj: any, path: string): string | undefined {
   return path.split('.').reduce((current, key) => current?.[key], obj);
+}
+
+// 格式化翻译字符串，替换参数占位符
+function formatTranslation(template: string, params?: Record<string, any>): string {
+  if (!params || Object.keys(params).length === 0) {
+    return template;
+  }
+
+  return template.replace(/\{\{(\w+)\}\}/g, (match, key) => {
+    // 使用 !== undefined 而不是 falsy 检查，确保 0、false、'' 等值能正确显示
+    const value = params[key];
+    return value !== undefined && value !== null ? String(value) : match;
+  });
 }
 
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
@@ -178,7 +191,7 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  const t = (key: string, defaultValue?: string): string => {
+  const t = (key: string, defaultValue?: string, params?: Record<string, any>): string => {
     if (!translationsLoaded) {
       // loading期间返回默认值或空字符串，避免显示key
       return defaultValue || '';
@@ -187,7 +200,7 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
     const translation = getNestedValue(translations[language], key);
 
     if (translation) {
-      return translation;
+      return formatTranslation(translation, params);
     }
 
     // 尝试从另一种语言获取翻译
@@ -195,10 +208,10 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
     const fallbackTranslation = getNestedValue(translations[fallbackLang], key);
 
     if (fallbackTranslation) {
-      return fallbackTranslation;
+      return formatTranslation(fallbackTranslation, params);
     }
 
-    return defaultValue || key;
+    return formatTranslation(defaultValue || key, params);
   };
 
   const tArray = (key: string, defaultValue?: string[]): string[] => {

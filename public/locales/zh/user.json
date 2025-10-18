@@ -83,7 +83,7 @@
     "email_placeholder": "colleague@example.com",
     "send_invitation": "发送邀请",
     "remove_member_title": "移除团队成员",
-    "remove_member_confirm": "确定要移除此成员吗？"
+    "remove_member_confirm": "确定要移除 {{memberName}} 吗？"
   },
   "settings": {
     "profile": "个人资料",

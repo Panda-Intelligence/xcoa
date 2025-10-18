@@ -102,7 +102,7 @@ export function RemoveMemberButton({
         <DialogHeader>
           <DialogTitle>{t('team.remove_member_title')}</DialogTitle>
           <DialogDescription>
-            {t('team.remove_member_confirm').replace('{memberName}', memberName)}
+            {t('team.remove_member_confirm', undefined, { memberName })}
           </DialogDescription>
         </DialogHeader>
         <DialogFooter className="mt-4 flex flex-col gap-4 sm:flex-row">

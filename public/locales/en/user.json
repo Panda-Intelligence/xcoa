@@ -83,7 +83,7 @@
     "email_placeholder": "colleague@example.com",
     "send_invitation": "Send Invitation",
     "remove_member_title": "Remove team member",
-    "remove_member_confirm": "Are you sure you want to remove this member?"
+    "remove_member_confirm": "Are you sure you want to remove {{memberName}}?"
   },
   "settings": {
     "profile": "Profile",
