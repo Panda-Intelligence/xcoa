@@ -7,45 +7,49 @@ import { EMAIL_VERIFICATION_TOKEN_EXPIRATION_SECONDS } from "@/constants";
 import isProd from "@/utils/is-prod";
 import { usePathname } from "next/navigation";
 import { Route } from "next";
+import { useLanguage } from "@/hooks/useLanguage";
 
 export function EmailVerificationDialog() {
   const session = useSessionStore((store) => store.session);
   const user = session?.user;
   const pathname = usePathname() as Route;
+  const { t } = useLanguage();
 
   if (!user || user.emailVerified || pathname === "/verify-email") {
     return null;
   }
 
+  const hours = Math.floor(EMAIL_VERIFICATION_TOKEN_EXPIRATION_SECONDS / 3600);
+
   return (
     <Dialog open={true}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>邮箱验证</DialogTitle>
+          <DialogTitle>{t('auth.email_verification.title')}</DialogTitle>
           <DialogDescription>
-            请验证您的邮箱地址以继续使用平台功能
+            {t('auth.email_verification.description')}
           </DialogDescription>
         </DialogHeader>
-        
+
         <div className="space-y-4">
-          <p className="text-sm">
-            我们已向 <strong>{user.email}</strong> 发送了验证邮件
-          </p>
-          
+          <p className="text-sm" dangerouslySetInnerHTML={{
+            __html: t('auth.email_verification.sent_to', undefined, { email: user.email })
+          }} />
+
           {!isProd && (
             <div className="p-3 bg-yellow-50 border border-yellow-200 rounded">
               <p className="text-sm text-yellow-800">
-                <strong>开发模式:</strong> 验证链接已在控制台显示
+                <strong>{t('auth.email_verification.dev_mode')}:</strong> {t('auth.email_verification.dev_mode_message')}
               </p>
             </div>
           )}
-          
+
           <div className="flex justify-between">
             <Button variant="outline" size="sm">
-              重新发送
+              {t('auth.email_verification.resend')}
             </Button>
             <span className="text-xs text-muted-foreground">
-              链接将在 {Math.floor(EMAIL_VERIFICATION_TOKEN_EXPIRATION_SECONDS / 3600)} 小时后过期
+              {t('auth.email_verification.expires_in', undefined, { hours })}
             </span>
           </div>
         </div>

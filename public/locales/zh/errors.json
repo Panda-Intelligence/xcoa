@@ -9,6 +9,7 @@
     "payment_not_completed": "支付未完成",
     "invalid_payment_intent": "无效的支付意图",
     "failed_to_process_payment": "处理支付失败",
+    "purchase_failed": "购买失败",
     "server_error": "服务器错误",
     "page_not_found": "页面未找到",
     "network_error": "网络错误",

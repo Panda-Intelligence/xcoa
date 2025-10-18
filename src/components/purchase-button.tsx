@@ -6,6 +6,7 @@ import { useServerAction } from "zsa-react"
 import { purchaseAction } from "@/app/(dashboard)/marketplace/purchase.action"
 import type { PURCHASABLE_ITEM_TYPE } from "@/db/schema"
 import { useRouter } from "next/navigation"
+import { useLanguage } from "@/hooks/useLanguage"
 
 interface PurchaseButtonProps {
   itemId: string
@@ -14,18 +15,19 @@ interface PurchaseButtonProps {
 
 export default function PurchaseButton({ itemId, itemType }: PurchaseButtonProps) {
   const router = useRouter()
+  const { t } = useLanguage()
 
   const { execute: handlePurchase, isPending } = useServerAction(purchaseAction, {
     onError: (error) => {
       toast.dismiss();
-      toast.error(error.err?.message || "Failed to purchase item")
+      toast.error(error.err?.message || t('errors.purchase_failed'))
     },
     onStart: () => {
-      toast.loading("Processing purchase...")
+      toast.loading(t('common.processing'))
     },
     onSuccess: () => {
       toast.dismiss()
-      toast.success("Item purchased successfully!")
+      toast.success(t('billing.payment_successful'))
     },
   })
 
@@ -38,7 +40,7 @@ export default function PurchaseButton({ itemId, itemType }: PurchaseButtonProps
       }}
       disabled={isPending}
     >
-      {isPending ? "Processing..." : "Purchase"}
+      {isPending ? t('common.processing') : t('billing.purchase_now')}
     </ShinyButton>
   )
 }

@@ -232,6 +232,8 @@
       "related_scales": "关联量表",
       "scale_count": "个量表",
       "no_holders": "暂无版权方数据",
+      "no_holders_found": "未找到匹配的版权方",
+      "no_copyright_holder": "无版权方",
       "placeholder_name_cn": "北京师范大学出版社",
       "placeholder_name_en": "Beijing Normal University Publishing Group",
       "placeholder_email": "copyright@example.com",

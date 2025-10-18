@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent } from "@/components/ui/card";
 import { Search, X, Building, User, Users, BookOpen } from "lucide-react";
+import { useLanguage } from "@/hooks/useLanguage";
 
 interface CopyrightHolder {
   id: string;
@@ -31,11 +32,12 @@ interface CopyrightHolderSearchProps {
 export function CopyrightHolderSearch({
   value,
   onSelect,
-  placeholder = "搜索版权方...",
-  label = "版权方",
+  placeholder,
+  label,
   required = false,
   disabled = false,
 }: CopyrightHolderSearchProps) {
+  const { t } = useLanguage();
   const [searchTerm, setSearchTerm] = useState("");
   const [holders, setHolders] = useState<CopyrightHolder[]>([]);
   const [loading, setLoading] = useState(false);
@@ -87,10 +89,10 @@ export function CopyrightHolderSearch({
         setHolders(data.holders || []);
         setShowResults(true);
       } else {
-        console.error("搜索版权方失败:", data.error);
+        console.error(t('admin.copyright_holders.error_load'), data.error);
       }
     } catch (error) {
-      console.error("搜索版权方错误:", error);
+      console.error(t('admin.copyright_holders.error_load'), error);
     } finally {
       setLoading(false);
     }
@@ -106,7 +108,7 @@ export function CopyrightHolderSearch({
         setSelectedHolder(data.holder);
       }
     } catch (error) {
-      console.error("获取版权方信息错误:", error);
+      console.error(t('admin.copyright_holders.error_load'), error);
     }
   };
 
@@ -161,19 +163,19 @@ export function CopyrightHolderSearch({
 
   // 获取组织类型标签
   const getOrgLabel = (type: string) => {
-    const labels = {
-      publisher: "出版商",
-      research_institution: "研究机构",
-      individual: "个人",
-      foundation: "基金会",
+    const labels: Record<string, string> = {
+      publisher: t('admin.copyright_holders.org_type_publisher'),
+      research_institution: t('admin.copyright_holders.org_type_research'),
+      individual: t('admin.copyright_holders.org_type_individual'),
+      foundation: t('admin.copyright_holders.org_type_foundation'),
     };
-    return labels[type as keyof typeof labels] || type;
+    return labels[type] || type;
   };
 
   return (
     <div className="space-y-2" ref={containerRef}>
       <Label>
-        {label}
+        {label || t('admin.scales.label_copyright_holder')}
         {required && <span className="text-red-500 ml-1">*</span>}
       </Label>
 
@@ -194,12 +196,12 @@ export function CopyrightHolderSearch({
                   </Badge>
                   {selectedHolder.isVerified === 1 && (
                     <Badge variant="outline" className="text-xs text-success">
-                      已验证
+                      {t('admin.copyright_holders.status_verified')}
                     </Badge>
                   )}
                   {selectedHolder.scalesCount !== undefined && (
                     <span className="text-xs text-muted-foreground">
-                      {selectedHolder.scalesCount} 个量表
+                      {selectedHolder.scalesCount} {t('admin.copyright_holders.scale_count')}
                     </span>
                   )}
                 </div>
@@ -221,7 +223,7 @@ export function CopyrightHolderSearch({
           <div className="relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
-              placeholder={placeholder}
+              placeholder={placeholder || t('admin.copyright_holders.search_placeholder')}
               value={searchTerm}
               onChange={(e) => handleSearchChange(e.target.value)}
               onFocus={() => searchTerm && setShowResults(true)}
@@ -258,14 +260,14 @@ export function CopyrightHolderSearch({
                           </Badge>
                           {holder.isVerified === 1 && (
                             <Badge variant="outline" className="text-xs text-success">
-                              已验证
+                              {t('admin.copyright_holders.status_verified')}
                             </Badge>
                           )}
                         </div>
                       </div>
                     </div>
                     <div className="text-xs text-muted-foreground">
-                      {holder.scalesCount || 0} 个量表
+                      {holder.scalesCount || 0} {t('admin.copyright_holders.scale_count')}
                     </div>
                   </div>
                 ))}
@@ -277,13 +279,13 @@ export function CopyrightHolderSearch({
           {showResults && searchTerm && !loading && holders.length === 0 && (
             <Card className="absolute top-full left-0 right-0 z-50 mt-1">
               <CardContent className="p-4 text-center text-muted-foreground text-sm">
-                未找到匹配的版权方
+                {t('admin.copyright_holders.no_holders_found')}
               </CardContent>
             </Card>
           )}
         </div>
       )}
-      
+
       {/* 无版权方选项 */}
       {!selectedHolder && (
         <Button
@@ -294,7 +296,7 @@ export function CopyrightHolderSearch({
           disabled={disabled}
         >
           <X className="w-3 h-3 mr-2" />
-          无版权方
+          {t('admin.copyright_holders.no_copyright_holder')}
         </Button>
       )}
     </div>

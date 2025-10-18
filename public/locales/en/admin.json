@@ -232,6 +232,8 @@
       "related_scales": "Related Scales",
       "scale_count": "scales",
       "no_holders": "No copyright holders yet",
+      "no_holders_found": "No matching copyright holders found",
+      "no_copyright_holder": "No copyright holder",
       "placeholder_name_cn": "Beijing Normal University Press",
       "placeholder_name_en": "Beijing Normal University Publishing Group",
       "placeholder_email": "copyright@example.com",

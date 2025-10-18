@@ -10,6 +10,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
+import { useLanguage } from "@/hooks/useLanguage"
 
 interface ConfirmDialogProps {
   open: boolean
@@ -27,11 +28,13 @@ export function ConfirmDialog({
   onOpenChange,
   title,
   description,
-  confirmText = "确认",
-  cancelText = "取消",
+  confirmText,
+  cancelText,
   onConfirm,
   variant = "default",
 }: ConfirmDialogProps) {
+  const { t } = useLanguage()
+
   const handleConfirm = async () => {
     await onConfirm()
     onOpenChange(false)
@@ -45,7 +48,7 @@ export function ConfirmDialog({
           <AlertDialogDescription>{description}</AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>{cancelText}</AlertDialogCancel>
+          <AlertDialogCancel>{cancelText || t('common.cancel')}</AlertDialogCancel>
           <AlertDialogAction
             onClick={handleConfirm}
             className={
@@ -54,7 +57,7 @@ export function ConfirmDialog({
                 : ""
             }
           >
-            {confirmText}
+            {confirmText || t('common.confirm')}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

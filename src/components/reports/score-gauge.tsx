@@ -2,6 +2,7 @@
 
 import { PieChart, Pie, Cell, ResponsiveContainer } from 'recharts';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { useLanguage } from '@/hooks/useLanguage';
 
 interface ScoreGaugeProps {
   score: number;
@@ -24,12 +25,13 @@ const SEVERITY_COLORS = {
 export function ScoreGauge({
   score,
   maxScore,
-  title = '总分',
+  title,
   description,
   interpretation,
   severity = 'normal',
   className,
 }: ScoreGaugeProps) {
+  const { t } = useLanguage();
   const percentage = maxScore > 0 ? (score / maxScore) * 100 : 0;
 
   // Get color based on severity
@@ -44,7 +46,7 @@ export function ScoreGauge({
   return (
     <Card className={className}>
       <CardHeader className="pb-3">
-        <CardTitle>{title}</CardTitle>
+        <CardTitle>{title || t('reports.fields.total_score')}</CardTitle>
         {description && <CardDescription>{description}</CardDescription>}
       </CardHeader>
       <CardContent>
@@ -84,7 +86,7 @@ export function ScoreGauge({
         {interpretation && (
           <div className="mt-6 space-y-2">
             <div className="flex items-center justify-between">
-              <span className="text-sm font-medium">评估结果</span>
+              <span className="text-sm font-medium">{t('reports.fields.interpretation')}</span>
               <span
                 className="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium"
                 style={{ backgroundColor: `${gaugeColor}20`, color: gaugeColor }}
@@ -104,11 +106,7 @@ export function ScoreGauge({
                 style={{ backgroundColor: color }}
               />
               <span className="capitalize text-muted-foreground">
-                {level === 'normal' && '正常'}
-                {level === 'minimal' && '轻微'}
-                {level === 'mild' && '轻度'}
-                {level === 'moderate' && '中度'}
-                {level === 'severe' && '重度'}
+                {t(`reports.severity.${level}`)}
               </span>
             </div>
           ))}

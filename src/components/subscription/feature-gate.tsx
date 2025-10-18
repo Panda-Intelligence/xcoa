@@ -1,11 +1,10 @@
-'use client';
-
 import { ReactNode } from 'react';
 import { useRouter } from 'next/navigation';
 import type { EnterpriseFeature } from '@/constants/plans';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Lock } from 'lucide-react';
+import { useLanguage } from '@/hooks/useLanguage';
 
 interface FeatureGateProps {
   children: ReactNode;
@@ -16,6 +15,7 @@ interface FeatureGateProps {
 
 export function FeatureGate({ children, feature, featureName, featureDescription }: FeatureGateProps) {
   const router = useRouter();
+  const { t } = useLanguage();
 
   // TODO: Implement actual subscription check
   // For now, always allow access
@@ -28,10 +28,10 @@ export function FeatureGate({ children, feature, featureName, featureDescription
           <CardHeader>
             <div className="flex items-center space-x-2 text-orange-600 mb-2">
               <Lock className="w-5 h-5" />
-              <CardTitle>需要订阅</CardTitle>
+              <CardTitle>{t('billing.subscription')}</CardTitle>
             </div>
             <CardDescription>
-              此功能需要订阅才能使用
+              {t('billing.unlock_all_features')}
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -43,7 +43,7 @@ export function FeatureGate({ children, feature, featureName, featureDescription
               onClick={() => router.push('/pricing')}
               className="w-full"
             >
-              查看订阅方案
+              {t('billing.view_all_plans')}
             </Button>
           </CardContent>
         </Card>
