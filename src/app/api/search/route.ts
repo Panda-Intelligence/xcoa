@@ -6,6 +6,7 @@ import {
   userSearchHistoryTable,
   scaleUsageTable,
 } from '@/db/schema';
+import { blogPostsTable } from '@/db/schemas/blog';
 import { and, or, like, desc, eq, sql } from 'drizzle-orm';
 import { getSessionFromCookie } from '@/utils/auth';
 import { getIP } from '@/utils/get-IP';
@@ -24,7 +25,8 @@ const searchRequestSchema = z.object({
     itemsCountMin: z.number().optional(),
     itemsCountMax: z.number().optional(),
     administrationTimeMax: z.number().optional(),
-  }).optional().default({})
+  }).optional().default({}),
+  includeBlog: z.boolean().default(true), // Include blog posts in search results
 });
 
 export async function POST(request: NextRequest) {
@@ -35,7 +37,7 @@ export async function POST(request: NextRequest) {
     const ip = getIP(request);
 
     const body = await request.json();
-    const { query, category, sortBy, page, limit, filters } = searchRequestSchema.parse(body);
+    const { query, category, sortBy, page, limit, filters, includeBlog } = searchRequestSchema.parse(body);
 
     let actualLimit = limit;
     let searchesRemaining = -1;
@@ -251,10 +253,82 @@ export async function POST(request: NextRequest) {
         }
       }
 
+      // Search blog posts if includeBlog is true
+      let blogResults: Array<{
+        id: string;
+        title: string;
+        slug: string;
+        excerpt: string | null;
+        category: string | null;
+        publishedAt: Date | null;
+        match_score: number;
+        type: 'blog';
+      }> = [];
+
+      if (includeBlog && user) {
+        try {
+          const searchLower = query.toLowerCase();
+          const blogConditions = [
+            eq(blogPostsTable.status, 'published'),
+            or(
+              like(sql`LOWER(${blogPostsTable.title})`, `%${searchLower}%`),
+              like(sql`LOWER(${blogPostsTable.excerpt})`, `%${searchLower}%`),
+              like(sql`LOWER(${blogPostsTable.content})`, `%${searchLower}%`),
+              like(sql`LOWER(${blogPostsTable.category})`, `%${searchLower}%`)
+            )
+          ];
+
+          const blogPosts = await db
+            .select({
+              id: blogPostsTable.id,
+              title: blogPostsTable.title,
+              slug: blogPostsTable.slug,
+              excerpt: blogPostsTable.excerpt,
+              category: blogPostsTable.category,
+              publishedAt: blogPostsTable.publishedAt,
+            })
+            .from(blogPostsTable)
+            .where(and(...blogConditions))
+            .orderBy(desc(blogPostsTable.publishedAt))
+            .limit(5); // Limit blog results to 5
+
+          blogResults = blogPosts.map((post) => {
+            let matchScore = 0;
+
+            // Title match
+            if (post.title.toLowerCase().includes(searchLower)) {
+              matchScore = 85;
+            }
+            // Excerpt match
+            else if (post.excerpt?.toLowerCase().includes(searchLower)) {
+              matchScore = 70;
+            }
+            // Category match
+            else if (post.category?.toLowerCase().includes(searchLower)) {
+              matchScore = 60;
+            }
+            // Content match
+            else {
+              matchScore = 50;
+            }
+
+            return {
+              ...post,
+              match_score: matchScore,
+              type: 'blog' as const,
+            };
+          });
+        } catch (error) {
+          console.warn('Failed to search blog posts:', error);
+          // Continue without blog results if search fails
+        }
+      }
+
       // 更新用户剩余搜索次数（如果适用）
       if (!user) {
         return NextResponse.json({
           results: processedResults,
+          blogResults: [], // No blog results for unauthenticated users
           pagination: {
             page,
             limit: actualLimit,
@@ -265,7 +339,7 @@ export async function POST(request: NextRequest) {
           filters,
           searches_remaining: searchesRemaining,
           is_authenticated: false,
-          message: searchesRemaining > 0 
+          message: searchesRemaining > 0
             ? `You have ${searchesRemaining} searches remaining today. Sign in for unlimited searches and full access.`
             : 'This is your last search for today. Sign in for unlimited searches.',
         });
@@ -273,6 +347,7 @@ export async function POST(request: NextRequest) {
 
       return NextResponse.json({
         results: processedResults,
+        blogResults, // Include blog search results
         pagination: {
           page,
           limit,

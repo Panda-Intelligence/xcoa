@@ -111,7 +111,12 @@
       "Bash(if [ ! -d \".workflow/WFS-blog-feature-implementation\" ])",
       "Bash(then echo \"❌ Session WFS-blog-feature-implementation not found\")",
       "Bash(exit 1)",
-      "Bash(else echo \"✓ Session validated\")"
+      "Bash(else echo \"✓ Session validated\")",
+      "Bash(then echo \"❌ Session not found\")",
+      "Bash(if [ ! -f \".workflow/WFS-blog-feature-implementation/.context/context-package.json\" ])",
+      "Bash(then echo \"❌ Context package not found\")",
+      "Read(//private/var/folders/4s/2gjm727j6r34vt_63q90_cvc0000gn/T/**)",
+      "Bash(~/.claude/scripts/qwen-wrapper --approval-mode yolo -p \"\nPURPOSE: Analyze and design optimal solution for implementing blog feature in OpeneCOA platform\nTASK: Evaluate current architecture, propose solution design, and identify key design decisions for blog integration\n\nCONTEXT: @{.workflow/WFS-blog-feature-implementation/.context/context-package.json,.workflow/WFS-blog-feature-implementation/workflow-session.json,CLAUDE.md}\n\n**MANDATORY FIRST STEP**: Read and analyze .workflow/WFS-blog-feature-implementation/.context/context-package.json to understand:\n- Task requirements from metadata.task_description\n- Relevant source files from assets[] array  \n- Tech stack and existing patterns\n\n**ANALYSIS REQUIREMENTS**:\n1. CURRENT STATE ANALYSIS: Analyze insights feature patterns, database schemas, UI components\n2. SOLUTION DESIGN: Blog route structure, content management approach, database schema\n3. KEY DESIGN DECISIONS: MDX vs database-based content, comment system, SEO strategy\n4. CRITICAL INSIGHTS: Cloudflare Workers compatibility, performance considerations\n5. OPTIMIZATION STRATEGIES: Edge caching, content delivery, image handling\n6. FEASIBILITY ASSESSMENT: Technical complexity, compatibility, implementation effort\n7. CODE MODIFICATION TARGETS: New files to create and existing files to modify\n\n**OUTPUT FILE**: Write complete analysis to .workflow/WFS-blog-feature-implementation/.process/gemini-solution-design.md\n\nRULES:\n- Focus on SOLUTION DESIGN and ARCHITECTURAL DECISIONS, not implementation steps\n- Provide clear rationale for design choices with alternatives analysis\n- Identify code targets: new files as ''file'', modifications as ''file:function:lines''\n- Do NOT create task breakdowns or code examples\n- MUST write output to .workflow/WFS-blog-feature-implementation/.process/gemini-solution-design.md\n\")"
     ],
     "deny": [],
     "ask": []

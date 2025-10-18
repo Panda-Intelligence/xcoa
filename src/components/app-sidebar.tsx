@@ -12,6 +12,7 @@ import {
   BookOpen,
   HelpCircle,
   FileText,
+  BookMarked,
 } from "lucide-react"
 
 import { NavMain } from "@/components/nav-main"
@@ -122,6 +123,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             url: "/insights/cases" as Route,
           },
         ],
+      },
+      {
+        title: t('sidebar.blog'),
+        url: "/blog" as Route,
+        icon: BookMarked,
       },
       {
         title: t('sidebar.team_management'),
