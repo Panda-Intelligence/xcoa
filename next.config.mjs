@@ -4,7 +4,11 @@ import { initOpenNextCloudflareForDev } from '@opennextjs/cloudflare';
 // Only initialize the Cloudflare dev helpers in development to avoid
 // attempting to open listeners during production builds/CI.
 if (process.env.NODE_ENV === 'development') {
-  initOpenNextCloudflareForDev();
+  initOpenNextCloudflareForDev({
+    experimental: {
+      remoteBindings: false
+    }
+  });
 }
 
 // TODO cache-control headers don't work for static files

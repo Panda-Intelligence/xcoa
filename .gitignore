@@ -55,3 +55,6 @@ playwright-report
 test-results
 .workflow
 .playwright-mcp
+
+# Sentry Config File
+.env.sentry-build-plugin
