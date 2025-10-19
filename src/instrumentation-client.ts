@@ -4,32 +4,39 @@
 // The added config here will be used whenever a users loads a page in their browser.
 // https://docs.sentry.io/platforms/javascript/guides/nextjs/
 
-import * as Sentry from "@sentry/nextjs";
+type RouterTransitionHandler = (context?: unknown) => void;
 
-Sentry.init({
-  dsn: "https://a5628f1997f0695e142e0a46d1a25bda@o4508391005356032.ingest.us.sentry.io/4510214264193024",
+let routerTransitionHandler: RouterTransitionHandler = () => {};
 
-  // Add optional integrations for additional features
-  integrations: [
-    Sentry.replayIntegration(),
-  ],
+async function initSentryClient() {
+  try {
+    const Sentry = await import("@sentry/react");
 
-  // Define how likely traces are sampled. Adjust this value in production, or use tracesSampler for greater control.
-  tracesSampleRate: 1,
-  // Enable logs to be sent to Sentry
-  enableLogs: true,
+    const integrations: unknown[] = [];
+    const replayIntegration = (Sentry as unknown as { replayIntegration?: () => unknown }).replayIntegration;
+    if (typeof replayIntegration === "function") {
+      integrations.push(replayIntegration());
+    }
 
-  // Define how likely Replay events are sampled.
-  // This sets the sample rate to be 10%. You may want this to be 100% while
-  // in development and sample at a lower rate in production
-  replaysSessionSampleRate: 0.1,
+    Sentry.init({
+      dsn: "https://a5628f1997f0695e142e0a46d1a25bda@o4508391005356032.ingest.us.sentry.io/4510214264193024",
+      integrations,
+      tracesSampleRate: 1,
+      enableLogs: true,
+      replaysSessionSampleRate: 0.1,
+      replaysOnErrorSampleRate: 1.0,
+      sendDefaultPii: true,
+    });
+  } catch (error) {
+    if (process.env.NODE_ENV !== "production") {
+      console.warn("Sentry client initialization failed:", error);
+    }
+  }
+}
 
-  // Define how likely Replay events are sampled when an error occurs.
-  replaysOnErrorSampleRate: 1.0,
+if (typeof window !== "undefined") {
+  void initSentryClient();
+}
 
-  // Enable sending user PII (Personally Identifiable Information)
-  // https://docs.sentry.io/platforms/javascript/guides/nextjs/configuration/options/#sendDefaultPii
-  sendDefaultPii: true,
-});
-
-export const onRouterTransitionStart = Sentry.captureRouterTransitionStart;
+export const onRouterTransitionStart: RouterTransitionHandler = (context?: unknown) =>
+  routerTransitionHandler(context);
